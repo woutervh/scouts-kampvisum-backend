@@ -1,12 +1,49 @@
+################################
+# Varia                        #
+################################
 .DS_Store
-.idea
+node_modules
+/dist
+.npmrc
 .docker
+__pycache__
+
+################################
+# Python: local .env files     #
+################################
+.env
+.env.local
+.env.*.local
+
+################################
+# Log files                    #
+################################
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+################################
+# Editor directories and files #
+################################
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+public/config.json
+
+################################
+# Docker Specific GitIgnore    #
+################################
 /api
 /frontend
 
-############################
-#Eclipse Specific GitIgnore#
-############################
+################################
+# Eclipse Specific GitIgnore   #
+################################
 *.pydevproject
 .project
 .metadata
@@ -25,3 +62,4 @@ db.sqlite3
 
 # CDT-specific
 .cproject
+
