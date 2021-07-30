@@ -21,6 +21,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+db.sqlite3
 
 # CDT-specific
 .cproject
