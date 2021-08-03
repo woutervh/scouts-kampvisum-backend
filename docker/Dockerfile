@@ -10,8 +10,8 @@ RUN adduser --no-create-home --disabled-password --home /app --shell /bin/ash ap
 WORKDIR /app
 
 COPY docker/entrypoint*.sh /
-COPY kampvisum_api/manage.py ./
-COPY kampvisum_api/apps ./apps
+COPY scouts_kampvisum_api/manage.py ./
+COPY scouts_kampvisum_api/apps ./apps
 
 ENTRYPOINT ["/entrypoint.sh"]
 
