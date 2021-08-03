@@ -13,8 +13,29 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
+
+from django.urls import include, path
+from rest_framework import permissions
+from drf_yasg2.views import get_schema_view
+from drf_yasg2 import openapi
+
+# Open api schema
+schema_view = get_schema_view(
+    openapi.Info(
+        title='Scouts kampvisum API',
+        default_version='v1',
+        description='This is the api documentation for the Scouts kampvisum API',
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,)
+)
 
 urlpatterns = [
-    
+    path('api/auth/', include('scouts_auth.urls')),
+    path('api/docs/',
+         schema_view.with_ui('swagger', cache_timeout=0),
+         name='schema-swagger-ui'),
+    path('swagger/',
+         schema_view.with_ui('swagger', cache_timeout=0),
+         name='schema-swagger-ui'),
 ]
