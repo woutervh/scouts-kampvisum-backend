@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "scouts_kampvisum_api"
+version = "0.1.0"
+description = "An app for entering scout camp data"
+authors = ["Inuits"]
+license = "GPL v2.0"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "^3.2.6"
+mozilla-django-oidc = "^2.0.0"
+drf-yasg2 = "^1.19.4"
+cffi = "^1.14.6"
+django-cors-headers = "^3.7.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
