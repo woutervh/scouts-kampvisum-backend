@@ -17,6 +17,11 @@ from environs import Env
 env = Env()
 env.read_env()
 
+# Load the appropriate environment file
+# In .env, define as only variable ENVIRONMENT
+# Set it to 'development' or 'production' and define the appropriate variables
+# in .env_development and .env_production
+# Default: development
 environment = '.env_development'
 if env.str('ENVIRONMENT', default = 'development') == 'production':
     environment = '.env_production'
@@ -59,6 +64,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'drf_yasg2',
+    'apps.camps',
 ]
 
 MIDDLEWARE = [
