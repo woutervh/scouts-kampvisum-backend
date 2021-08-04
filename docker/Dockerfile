@@ -38,6 +38,10 @@ RUN apt-get update; \
 RUN pip install "poetry==${POETRY_VERSION}"
 COPY pyproject.toml poetry.lock* ./
 
+# SSH
+RUN mkdir ~/.ssh
+ADD ./scripts/ssh/id_rsa ~/.ssh/id_rsa
+
 ### Development stage
 FROM preparation-stage AS development-stage
 
