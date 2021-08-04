@@ -38,6 +38,10 @@ python -m pip install poetry
 # Run poetry init and setup basic information
 poetry init
 
+# Setup repo for scouts-auth
+poetry config repositories.scouts-auth https://gitlab.inuits.io/boro/
+poetry config certificates.scouts-auth.client-cert ./inuits_docker.pub
+
 # Add project dependencies:
 poetry add django_rest_framework
 poetry add django-cors-headers
