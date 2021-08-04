@@ -38,12 +38,6 @@ RUN apt-get update; \
 RUN pip install "poetry==${POETRY_VERSION}"
 COPY pyproject.toml poetry.lock* ./
 
-# SSH
-RUN eval $(ssh-agent -s)
-RUN echo "$SSH_PRIVATE_REPO_KEY" | tr -d '\r' | ssh-add -
-RUN mkdir -p /app/.ssh
-RUN chmod 700 /app/.ssh
-
 ### Development stage
 FROM preparation-stage AS development-stage
 
