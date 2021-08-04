@@ -38,6 +38,9 @@ RUN pip install "poetry==${POETRY_VERSION}"
 
 COPY pyproject.toml poetry.lock* ./
 
+### Setup ssh key
+RUN echo "      IdentityFile ./scripts/inuits_docker.pub" >> /etc/ssh/ssh_config
+
 ### Development stage
 FROM preparation-stage AS development-stage
 
