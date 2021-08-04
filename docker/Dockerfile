@@ -42,7 +42,7 @@ COPY pyproject.toml poetry.lock* ./
 ADD ./scripts/ssh/id_rsa /
 RUN chmod 600 /id_rsa
 RUN echo "    IdentityFile /id_rsa" >> /etc/ssh/ssh_config
-RUN echo -e "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+RUN echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
 
 ### Development stage
 FROM preparation-stage AS development-stage
