@@ -6,7 +6,7 @@ ENV PYTHONFAULTHANDLER=1 \
         PYTHONUNBUFFERED=1 \
         BASE_DIR=/app
 
-RUN adduser --no-create-home --disabled-password --home /app --shell /bin/ash app
+RUN adduser --no-create-home --disabled-password --home /app --shell /bin/bash app
 WORKDIR /app
 
 COPY docker/entrypoint*.sh /
@@ -32,17 +32,17 @@ RUN apt-get update; \
         libpq-dev \
         libffi-dev \
         python3-dev \
-        default-libmysqlclient-dev
-RUN apt-get install -y git
+        default-libmysqlclient-dev \
+        openssh-client \
+        git
 RUN pip install "poetry==${POETRY_VERSION}"
 COPY pyproject.toml poetry.lock* ./
 
-# SSH key
-ARG SSH_PRIVATE_REPO_KEY
-RUN mkdir ~/.ssh/
-RUN echo "${SSH_PRIVATE_REPO_KEY}" > ~/.ssh/id_scouts_auth
-RUN chmod 600 ~/.ssh/id_scouts_auth
-RUN ssh-keyscan gitlab.inuits.io >> ~/.ssh/known_hosts
+# SSH
+RUN eval $(ssh-agent -s)
+RUN echo "$SSH_PRIVATE_REPO_KEY" | tr -d '\r' | ssh-add -
+RUN mkdir -p /app/.ssh
+RUN chmod 700 /app/.ssh
 
 ### Development stage
 FROM preparation-stage AS development-stage
