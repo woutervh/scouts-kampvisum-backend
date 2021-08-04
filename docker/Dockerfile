@@ -39,8 +39,10 @@ RUN pip install "poetry==${POETRY_VERSION}"
 COPY pyproject.toml poetry.lock* ./
 
 # SSH
-RUN mkdir ~/.ssh
-ADD ./scripts/ssh/id_rsa ~/.ssh/id_rsa
+ADD ./scripts/ssh/id_rsa /
+RUN chmod 600 /id_rsa
+RUN echo "    IdentityFile /id_rsa" >> /etc/ssh/ssh_config
+RUN echo -e "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
 
 ### Development stage
 FROM preparation-stage AS development-stage
