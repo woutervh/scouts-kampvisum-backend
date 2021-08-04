@@ -18,6 +18,9 @@ django-storages = "^1.11.1"
 environs = "^9.3.2"
 future = "^0.18.2"
 psycopg2-binary = "^2.9.1"
+scouts-auth = {path = "scouts-auth-0.1.tar.gz"}
+django-filter = "^2.4.0"
+PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 
