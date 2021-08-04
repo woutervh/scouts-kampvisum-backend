@@ -42,7 +42,10 @@ COPY pyproject.toml poetry.lock* ./
 ADD ./scripts/ssh/id_rsa /
 RUN chmod 600 /id_rsa
 RUN echo "    IdentityFile /id_rsa" >> /etc/ssh/ssh_config
+# Avoids the need to perform a ssh-keyscan on the repository
 RUN echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+RUN git config --global user.email "boro@inuits.eu"
+RUN git config --global user.name "inuits"
 
 ### Development stage
 FROM preparation-stage AS development-stage
