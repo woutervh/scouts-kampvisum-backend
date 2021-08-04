@@ -33,6 +33,11 @@ poetry add mozilla_django_oidc
 poetry add drf_yasg2
 poetry add cffi
 poetry add django-cors-headers
+poetry add django-sql-middleware
+poetry add django-storages
+poetry add environs
+poetry add future
+poetry add psycopg2-binary # postgresql
 
 # Let poetry download all packages and generate the poetry.lock file
 poetry install
