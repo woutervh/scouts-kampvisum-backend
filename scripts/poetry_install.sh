@@ -30,7 +30,7 @@ EOF
 # https://nanthony007.medium.com/stop-using-pip-use-poetry-instead-db7164f4fc72
 
 # Using pip to install poetry avoids the need to pipe in dependencies in
-# a docker.
+# a docker when installing poetry there.
 python -m pip install poetry
 
 # To check if it is installed correctly: poetry -version
