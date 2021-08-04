@@ -22,7 +22,7 @@ EOF
 
 # Using pip to install poetry avoids the need to pipe in dependencies in
 # a docker.
-python3.9 -m pip install poetry
+python -m pip install poetry
 
 # Check if it is installed correctly: poetry -version
 
