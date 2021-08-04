@@ -34,10 +34,15 @@ RUN apt-get update; \
         python3-dev \
         default-libmysqlclient-dev
 RUN apt-get install -y git
-RUN echo "      IdentityFile scripts/inuits_docker.pub" >> /etc/ssh/ssh_config
 RUN pip install "poetry==${POETRY_VERSION}"
-
 COPY pyproject.toml poetry.lock* ./
+
+# SSH key
+ARG SSH_PRIVATE_REPO_KEY
+RUN mkdir ~/.ssh/
+RUN echo "${SSH_PRIVATE_REPO_KEY}" > ~/.ssh/id_scouts_auth
+RUN chmod 600 ~/.ssh/id_scouts_auth
+RUN ssh-keyscan gitlab.inuits.io >> ~/.ssh/known_hosts
 
 ### Development stage
 FROM preparation-stage AS development-stage
