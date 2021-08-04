@@ -1,26 +1,25 @@
 [tool.poetry]
-name = "scouts_kampvisum_api"
+name = "scouts-kampvisum-api"
 version = "0.1.0"
-description = "An app for entering scout camp data"
-authors = ["Inuits"]
+description = "Provides functionality for setting up a scouts kamp visum"
+authors = ["inuits <info@inuits.eu>"]
 license = "GPL v2.0"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-Django = "^3.2.6"
+django-rest-framework = "^0.1.0"
+django-cors-headers = "^3.7.0"
+django-sql-middleware = "^0.0.7"
+django-storages = "^1.11.1"
+django-filter = "^2.4.0"
 mozilla-django-oidc = "^2.0.0"
 drf-yasg2 = "^1.19.4"
 cffi = "^1.14.6"
-django-cors-headers = "^3.7.0"
-django-rest-framework = "^0.1.0"
-django-sql-middleware = "^0.0.7"
-django-storages = "^1.11.1"
+PyYAML = "^5.4.1"
 environs = "^9.3.2"
 future = "^0.18.2"
 psycopg2-binary = "^2.9.1"
-scouts-auth = {path = "scouts-auth-0.1.tar.gz"}
-django-filter = "^2.4.0"
-PyYAML = "^5.4.1"
+scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}
 
 [tool.poetry.dev-dependencies]
 
