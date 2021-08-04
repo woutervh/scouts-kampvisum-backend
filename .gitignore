@@ -15,7 +15,7 @@ __pycache__
 .env.local
 .env.*.local
 *.tar.gz
-.scouts-auth/
+scouts-auth/
 
 ################################
 # Log files                    #
