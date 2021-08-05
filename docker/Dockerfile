@@ -60,4 +60,4 @@ CMD ["--no-migrate"]
 RUN rm -f /id_rsa
 RUN rm -f /etc/ssh/ssh_config
 RUN mv /etc/ssh/ssh_config.backup /etc/ssh/ssh_config
-RUN apt purge openssh-client git
+RUN sudo apt purge openssh-client git
