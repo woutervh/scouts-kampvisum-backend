@@ -54,12 +54,16 @@ FROM preparation-stage AS development-stage
 RUN poetry config virtualenvs.create false
 RUN poetry install
 
-CMD ["--no-migrate"]
-
 # Cleanup
 RUN rm -f /id_rsa
 RUN rm -f /etc/ssh/ssh_config
 RUN mv /etc/ssh/ssh_config.backup /etc/ssh/ssh_config
-RUN apt-get purge \
+RUN apt-get purge -y \
         openssh-client \
         git
+RUN apt-get autoremove -y
+
+CMD ["--no-migrate"]
+
+
+
