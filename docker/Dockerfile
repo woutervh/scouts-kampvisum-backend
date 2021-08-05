@@ -6,7 +6,7 @@ ENV PYTHONFAULTHANDLER=1 \
         PYTHONUNBUFFERED=1 \
         BASE_DIR=/app
 
-RUN adduser --no-create-home --disabled-password --home /app --shell /bin/bash app
+RUN adduser --no-create-home --disabled-password --home /app --shell /bin/ash app
 WORKDIR /app
 
 COPY docker/entrypoint*.sh /
@@ -24,7 +24,7 @@ ENV APP_ENV=${APP_ENV} \
         PIP_DEFAULT_TIMEOUT=100 \
         PIP_DISABLE_PIP_VERSION_CHECK=1 \
         PIP_NO_CACHE_DIR=1 \
-        POETRY_VERSION=1.1.4
+        POETRY_VERSION=1.1.7
 
 RUN apt-get update; \
         apt-get install -y --no-install-recommends \
@@ -35,12 +35,13 @@ RUN apt-get update; \
         default-libmysqlclient-dev \
         openssh-client \
         git
-RUN pip install "poetry==${POETRY_VERSION}"
+RUN python -m pip install "poetry==${POETRY_VERSION}"
 COPY pyproject.toml poetry.lock* ./
 
 # SSH
 ADD ./scripts/ssh/id_rsa /
 RUN chmod 600 /id_rsa
+RUN cp /etc/ssh/ssh_config /etc/ssh/ssh_config.backup
 RUN echo "    IdentityFile /id_rsa" >> /etc/ssh/ssh_config
 # Avoids the need to perform a ssh-keyscan on the repository
 RUN echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
@@ -54,3 +55,9 @@ RUN poetry config virtualenvs.create false
 RUN poetry install
 
 CMD ["--no-migrate"]
+
+# Cleanup
+RUN rm -f /id_rsa
+RUN rm -f /etc/ssh/ssh_config
+RUN mv /etc/ssh/ssh_config.backup /etc/ssh/ssh_config
+RUN apt purge openssh-client git

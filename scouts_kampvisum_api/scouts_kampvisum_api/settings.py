@@ -23,10 +23,22 @@ env.read_env()
 # in .env_development and .env_production
 # Default: development
 environment = '.env_development'
-if env.str('ENVIRONMENT', default = 'development') == 'production':
+environment_conf = env.str('ENVIRONMENT', default = 'development')
+if environment_conf == 'production':
     environment = '.env_production'
-env = Env()
-env.read_env(environment)
+    
+    env = Env()
+    env.read_env(environment)
+else:
+    try:
+        env = Env()
+        env.read_env('.env_' + environment_conf)
+    except Exception:
+        print('Environment file .env_' + environment_conf + 'could not be' + 
+              'found. Defaulting to ' + environment + ' ...')
+        
+        env = Env()
+        env.read_env(environment)
 
 
 def correct_url(issuer, url):
@@ -105,7 +117,7 @@ WSGI_APPLICATION = 'scouts_kampvisum_api.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': env.str('DBENGINE'),
         'NAME': env.str('DBNAME'),
         'USER': env.str('DBUSER'),
         'PASSWORD': env.str('DBPASSWORD'),
