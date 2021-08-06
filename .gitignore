@@ -12,11 +12,16 @@ __pycache__
 # Python: local .env files     #
 ################################
 .env
+.env.dev # development builds in docker
+.env.dev.local # development build in local IDE
+.env.production # production
 .env.local
 .env.*.local
 *.tar.gz
 scouts-auth/
 lib/
+*.sqlite3
+
 
 ################################
 # Log files                    #
@@ -61,7 +66,6 @@ local.properties
 .classpath
 .settings/
 .loadpath
-db.sqlite3
 
 # CDT-specific
 .cproject
