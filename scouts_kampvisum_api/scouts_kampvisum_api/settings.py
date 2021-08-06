@@ -28,33 +28,33 @@ environments = [
     '.env.production'
 ]
 
-environment_conf = env.str('ENVIRONMENT')
+environment_conf = env.str('ENVIRONMENT', default = None)
 environment_loaded = False
 
-try:
-    env=Env()
-    env.read_env('.env.' + environment_conf)
-    
-    print('Environment file loaded: .env.' + environment_conf)
-    environment_loaded = True
-except Exception:
-    print ('WARN: Environment file .env.' + environment_conf + ' not found !' +
-           ' Defaulting to next configured default environment.')
-
-if not environment_loaded:
-    for environment in environments:
-        if environment == '.env.' + environment_conf:
-            pass
+if environment_conf:
+    try:
+        env=Env()
+        env.read_env('.env.' + environment_conf)
         
-        try:
-            env = Env()
-            env.read_env('.env.' + environment)
+        print('Environment file loaded: .env.' + environment_conf)
+        environment_loaded = True
+    except Exception:
+        print ('WARN: Environment file .env.' + environment_conf + ' not found !' +
+                ' Defaulting to next configured default environment.')
+    
+    if not environment_loaded:
+        for environment in environments:
+            if environment == '.env.' + environment_conf:
+                pass
             
-            print('Environment file loaded: .env.' + environment)
-            environment_loaded = True
-        except Exception:
-            pass
-
+            try:
+                env = Env()
+                env.read_env('.env.' + environment)
+                
+                print('Environment file loaded: .env.' + environment)
+                environment_loaded = True
+            except Exception:
+                pass
 
 # Last option
 if not environment_loaded:
