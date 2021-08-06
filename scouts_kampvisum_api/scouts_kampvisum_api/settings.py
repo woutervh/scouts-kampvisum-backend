@@ -404,6 +404,7 @@ logger.debug('OIDC_OP_TOKEN_ENDPOINT: ', OIDC_OP_TOKEN_ENDPOINT)
 logger.debug('OIDC_OP_USER_ENDPOINT: ', OIDC_OP_USER_ENDPOINT)
 logger.debug('OIDC_RP_CLIENT_ID: ', OIDC_RP_CLIENT_ID)
 
+LOGGING_CONFIG = None
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -430,4 +431,5 @@ LOGGING = {
         },
     },
 }
-
+import logging.config
+logging.config.dictConfig(LOGGING)
