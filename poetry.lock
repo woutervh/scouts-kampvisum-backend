@@ -469,7 +469,7 @@ PyYAML = "^5.4.1"
 type = "git"
 url = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git"
 reference = "master"
-resolved_reference = "ad2e7231f06e9f89add21a4e543e1354eab85761"
+resolved_reference = "b907db7d7394c5d47ebe4d12813efd09d339231a"
 
 [[package]]
 name = "six"

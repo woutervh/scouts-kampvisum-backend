@@ -32,6 +32,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('api/auth/', include('scouts_auth.urls')),
+    path('api/oidc/', include('scouts_auth.urls')),
     path('api/docs/',
          schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
