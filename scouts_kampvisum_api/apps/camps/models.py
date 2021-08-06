@@ -4,7 +4,10 @@ from django.core.exceptions import ValidationError
 
 
 class Camp(models.Model):
-    '''A model for a scout camp.''' 
+    '''
+    A model for a scout camp.
+    ''' 
+    
     id = models.AutoField(db_column='campid', primary_key=True)
     name = models.TextField()
     start_date = models.DateField()

@@ -8,14 +8,20 @@ from .models import Camp
 
 
 class CampOutputSerializer(serializers.ModelSerializer):
-    '''Serialize a Camp object'''
+    '''
+    Serialize a Camp object
+    '''
+    
     class Meta:
         model = Camp
         #fields = [ 'id', 'start_date', 'end_date', 'uuid' ]
         fields = '__all__'
 
 class CampInputSerializer(serializers.Serializer):
-    '''Deserialize values into a Camp object'''
+    '''
+    Deserialize values into a Camp object
+    '''
+    
     name = serializers.CharField()
     start_date = serializers.DateField()
     end_date = serializers.DateField()

@@ -8,7 +8,7 @@ from .models import Camp
 
 
 class CampFilter(django_filters.FilterSet):
-    term = django_filters.CharFilter(method="search_term_filter")
+    term = django_filters.CharFilter(method='search_term_filter')
 
     class Meta:
         model = Camp

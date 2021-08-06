@@ -16,7 +16,9 @@ from .serializers import CampOutputSerializer, CampInputSerializer
 
 
 class CampViewSet(viewsets.GenericViewSet):
-    '''A viewset for viewing and editing camp instances.'''
+    '''
+    A viewset for viewing and editing camp instances.
+    '''
     
     serializer_class = CampOutputSerializer
     queryset = Camp.objects.all()
@@ -26,21 +28,27 @@ class CampViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: CampOutputSerializer},
     )
     def create(self, request):
-        input_serializer = CampInputSerializer(data=request.data, context={"request": request})
+        input_serializer = CampInputSerializer(
+            data=request.data, context={'request': request}
+        )
         input_serializer.is_valid(raise_exception=True)
 
         camp = CampService.camp_create(
             **input_serializer.validated_data
         )
 
-        output_serializer = CampOutputSerializer(camp, context={"request": request})
+        output_serializer = CampOutputSerializer(
+            camp, context={'request': request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
     
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampOutputSerializer})
     def retrieve(self, request, pk=None):
         camp = self.get_object()
-        serializer = CampOutputSerializer(camp, context={"request": request})
+        serializer = CampOutputSerializer(
+            camp, context={'request': request}
+        )
 
         return Response(serializer.data)
     
@@ -52,13 +60,20 @@ class CampViewSet(viewsets.GenericViewSet):
         camp = self.get_object()
 
         serializer = CampInputSerializer(
-            data=request.data, instance=camp, context={"request": request}, partial=True
+            data=request.data,
+            instance=camp,
+            context={'request': request},
+            partial=True
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_camp = CampService.camp_update(camp=camp, **serializer.validated_data)
+        updated_camp = CampService.camp_update(
+            camp=camp, **serializer.validated_data
+        )
 
-        output_serializer = CampOutputSerializer(updated_camp, context={"request": request})
+        output_serializer = CampOutputSerializer(
+            updated_camp, context={'request': request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
     
