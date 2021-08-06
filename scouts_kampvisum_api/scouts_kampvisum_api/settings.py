@@ -36,11 +36,12 @@ if environment_conf:
         env=Env()
         env.read_env('.env.' + environment_conf)
         
-        print('Environment file loaded: .env.' + environment_conf)
         environment_loaded = True
+        print('Environment file loaded: .env.', environment_conf)
     except Exception:
-        print ('WARN: Environment file .env.' + environment_conf + ' not found !' +
-                ' Defaulting to next configured default environment.')
+        print ('WARN: Environment file .env.', environment_conf,
+               ' not found ! ',
+               'Defaulting to next configured default environment.')
     
     if not environment_loaded:
         for environment in environments:
@@ -51,17 +52,10 @@ if environment_conf:
                 env = Env()
                 env.read_env('.env.' + environment)
                 
-                print('Environment file loaded: .env.' + environment)
+                print('Environment file loaded: .env.', environment)
                 environment_loaded = True
             except Exception:
                 pass
-
-# Last option
-if not environment_loaded:
-    env = Env()
-    env.read_env('.env')
-    
-    print('Environment file loaded: .env.' + environment)
 
 
 def correct_url(issuer, url):
