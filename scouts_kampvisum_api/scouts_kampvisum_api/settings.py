@@ -22,19 +22,19 @@ env.read_env()
 # Set it to 'development' or 'production' and define the appropriate variables
 # in .env_development and .env_production
 # Default: development
-environment = '.env_development'
-environment_conf = env.str('ENVIRONMENT', default = 'development')
+environment = '.env.dev.local'
+environment_conf = env.str('ENVIRONMENT', default = 'dev.local')
 if environment_conf == 'production':
-    environment = '.env_production'
+    environment = '.env.production'
     
     env = Env()
     env.read_env(environment)
 else:
     try:
         env = Env()
-        env.read_env('.env_' + environment_conf)
+        env.read_env('.env.' + environment_conf)
     except Exception:
-        print('Environment file .env_' + environment_conf + 'could not be' + 
+        print('Environment file .env.' + environment_conf + 'could not be' + 
               'found. Defaulting to ' + environment + ' ...')
         
         env = Env()
