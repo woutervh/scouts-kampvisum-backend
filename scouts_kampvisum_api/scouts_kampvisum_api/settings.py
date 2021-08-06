@@ -15,6 +15,38 @@ from environs import Env
 
 logger = logging.getLogger(__name__)
 
+# https://stackoverflow.com/questions/53014435/why-is-logging-in-my-django-settings-py-ignored
+LOGGING_CONFIG = None
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'level': 'DEBUG',
+            'filename': 'scouts-kampvisum.debug.log',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'DEBUG',
+    },
+    'loggers': {
+        'mozilla_django_oidc': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+import logging.config
+logging.config.dictConfig(LOGGING)
+
+
 env = Env()
 env.read_env()
 
@@ -398,38 +430,11 @@ OIDC_DRF_AUTH_BACKEND = 'scouts_auth.oidc.InuitsOIDCAuthenticationBackend'
 OIDC_OP_JWKS_ENDPOINT = correct_url(
     OIDC_OP_ISSUER, env.str('OIDC_OP_JWKS_ENDPOINT'))
 
+
 logger.debug('OIDC_OP_ISSUER: ', OIDC_OP_ISSUER)
 logger.debug('OIDC_OP_JWKS_ENDPOINT: ', OIDC_OP_JWKS_ENDPOINT)
 logger.debug('OIDC_OP_TOKEN_ENDPOINT: ', OIDC_OP_TOKEN_ENDPOINT)
 logger.debug('OIDC_OP_USER_ENDPOINT: ', OIDC_OP_USER_ENDPOINT)
 logger.debug('OIDC_RP_CLIENT_ID: ', OIDC_RP_CLIENT_ID)
 
-LOGGING_CONFIG = None
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'level': 'DEBUG',
-        },
-        'file': {
-            'class': 'logging.FileHandler',
-            'level': 'DEBUG',
-            'filename': 'scouts-kampvisum.debug.log',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'DEBUG',
-    },
-    'loggers': {
-        'mozilla_django_oidc': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
-import logging.config
-logging.config.dictConfig(LOGGING)
+
