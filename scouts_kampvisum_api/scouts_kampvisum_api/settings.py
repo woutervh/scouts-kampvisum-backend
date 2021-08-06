@@ -10,9 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 '''
 
-import os
+import os, logging
 from environs import Env
 
+logger = logging.getLogger(__name__)
 
 env = Env()
 env.read_env()
@@ -37,9 +38,9 @@ if environment_conf:
         env.read_env('.env.' + environment_conf)
         
         environment_loaded = True
-        print('Environment file loaded: .env.', environment_conf)
+        logger.debug('Environment file loaded: .env.', environment_conf)
     except Exception:
-        print ('WARN: Environment file .env.', environment_conf,
+        logger.warn('WARN: Environment file .env.', environment_conf,
                ' not found ! ',
                'Defaulting to next configured default environment.')
     
@@ -52,7 +53,7 @@ if environment_conf:
                 env = Env()
                 env.read_env('.env.' + environment)
                 
-                print('Environment file loaded: .env.', environment)
+                logger.debug('Environment file loaded: .env.', environment)
                 environment_loaded = True
             except Exception:
                 pass
@@ -397,6 +398,11 @@ OIDC_DRF_AUTH_BACKEND = 'scouts_auth.oidc.InuitsOIDCAuthenticationBackend'
 OIDC_OP_JWKS_ENDPOINT = correct_url(
     OIDC_OP_ISSUER, env.str('OIDC_OP_JWKS_ENDPOINT'))
 
+logger.debug('OIDC_OP_ISSUER', OIDC_OP_ISSUER)
+logger.debug('OIDC_OP_JWKS_ENDPOINT', OIDC_OP_JWKS_ENDPOINT)
+logger.debug('OIDC_OP_TOKEN_ENDPOINT', OIDC_OP_TOKEN_ENDPOINT)
+logger.debug('OIDC_OP_USER_ENDPOINT', OIDC_OP_USER_ENDPOINT)
+logger.debug('OIDC_RP_CLIENT_ID', OIDC_RP_CLIENT_ID)
 
 LOGGING = {
     'version': 1,
