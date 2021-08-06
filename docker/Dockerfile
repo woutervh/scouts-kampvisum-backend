@@ -6,7 +6,7 @@ ENV PYTHONFAULTHANDLER=1 \
         PYTHONUNBUFFERED=1 \
         BASE_DIR=/app
 
-RUN adduser --no-create-home --disabled-password --home /app --shell /bin/ash app
+RUN adduser --no-create-home --disabled-password --home /app --shell /bin/bash app
 WORKDIR /app
 
 COPY docker/entrypoint*.sh /
@@ -54,7 +54,7 @@ FROM preparation-stage AS development-stage
 RUN poetry config virtualenvs.create false
 RUN poetry install
 
-# Cleanup
+# Cleanup SSH
 RUN rm -f /id_rsa
 RUN rm -f /etc/ssh/ssh_config
 RUN mv /etc/ssh/ssh_config.backup /etc/ssh/ssh_config
