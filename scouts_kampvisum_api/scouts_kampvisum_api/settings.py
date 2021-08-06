@@ -22,23 +22,46 @@ env.read_env()
 # Set it to 'development' or 'production' and define the appropriate variables
 # in .env_development and .env_production
 # Default: development
-environment = '.env.dev.local'
-environment_conf = env.str('ENVIRONMENT', default = 'dev.local')
-if environment_conf == 'production':
-    environment = '.env.production'
+environments = [
+    '.env.dev.local',
+    '.env.dev',
+    '.env.production'
+]
+
+environment_conf = env.str('ENVIRONMENT')
+environment_loaded = False
+
+try:
+    env=Env()
+    env.read_env('.env.' + environment_conf)
     
-    env = Env()
-    env.read_env(environment)
-else:
-    try:
-        env = Env()
-        env.read_env('.env.' + environment_conf)
-    except Exception:
-        print('Environment file .env.' + environment_conf + 'could not be' + 
-              'found. Defaulting to ' + environment + ' ...')
+    print('Environment file loaded: .env.' + environment_conf)
+    environment_loaded = True
+except Exception:
+    print ('WARN: Environment file .env.' + environment_conf + ' not found !' +
+           ' Defaulting to next configured default environment.')
+
+if not environment_loaded:
+    for environment in environments:
+        if environment == '.env.' + environment_conf:
+            pass
         
-        env = Env()
-        env.read_env(environment)
+        try:
+            env = Env()
+            env.read_env('.env.' + environment)
+            
+            print('Environment file loaded: .env.' + environment)
+            environment_loaded = True
+        except Exception:
+            pass
+
+
+# Last option
+if not environment_loaded:
+    env = Env()
+    env.read_env('.env')
+    
+    print('Environment file loaded: .env.' + environment)
 
 
 def correct_url(issuer, url):
