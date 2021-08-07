@@ -48,7 +48,6 @@ poetry add django-cors-headers
 poetry add django-sql-middleware
 poetry add django-storages
 poetry add django-filter
-poetry add mozilla_django_oidc
 poetry add drf_yasg2
 poetry add cffi
 poetry add pyyaml
