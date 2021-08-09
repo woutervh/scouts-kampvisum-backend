@@ -443,7 +443,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "scouts-auth"
-version = "0.1.0"
+version = "0.2.0"
 description = "Provides authentication functionality for the scouts group admin"
 category = "main"
 optional = false
@@ -469,7 +469,7 @@ PyYAML = "^5.4.1"
 type = "git"
 url = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git"
 reference = "master"
-resolved_reference = "75fa6bdde3e5a3d4a7b5c3ca7e8ed303340eeab6"
+resolved_reference = "5cc90f5ee9f8b2e7669f7fdd2ceee13aa8dd6178"
 
 [[package]]
 name = "six"
