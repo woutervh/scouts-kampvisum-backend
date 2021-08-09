@@ -19,6 +19,7 @@ PyYAML = "^5.4.1"
 environs = "^9.3.2"
 future = "^0.18.2"
 psycopg2-binary = "^2.9.1"
+django-safedelete = "^1.0.0"
 scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}
 
 [tool.poetry.dev-dependencies]

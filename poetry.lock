@@ -137,6 +137,17 @@ python-versions = "*"
 djangorestframework = "*"
 
 [[package]]
+name = "django-safedelete"
+version = "1.0.0"
+description = "Mask your objects instead of deleting them from your database."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Django = "*"
+
+[[package]]
 name = "django-sql-middleware"
 version = "0.0.7"
 description = "Simple SQL Middleware for Django"
@@ -207,20 +218,20 @@ validation = ["swagger-spec-validator (>=2.1.0)"]
 
 [[package]]
 name = "environs"
-version = "9.3.2"
+version = "9.3.3"
 description = "simplified environment variable parsing"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-marshmallow = ">=2.7.0"
+marshmallow = ">=3.0.0"
 python-dotenv = "*"
 
 [package.extras]
-dev = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url", "flake8 (==3.9.0)", "flake8-bugbear (==21.3.2)", "mypy (==0.812)", "pre-commit (>=2.4,<3.0)", "tox"]
+dev = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url", "flake8 (==3.9.2)", "flake8-bugbear (==21.4.3)", "mypy (==0.910)", "pre-commit (>=2.4,<3.0)", "tox"]
 django = ["dj-database-url", "dj-email-url", "django-cache-url"]
-lint = ["flake8 (==3.9.0)", "flake8-bugbear (==21.3.2)", "mypy (==0.812)", "pre-commit (>=2.4,<3.0)"]
+lint = ["flake8 (==3.9.2)", "flake8-bugbear (==21.4.3)", "mypy (==0.910)", "pre-commit (>=2.4,<3.0)"]
 tests = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url"]
 
 [[package]]
@@ -443,7 +454,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "scouts-auth"
-version = "0.2.0"
+version = "0.2.1"
 description = "Provides authentication functionality for the scouts group admin"
 category = "main"
 optional = false
@@ -469,7 +480,7 @@ PyYAML = "^5.4.1"
 type = "git"
 url = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git"
 reference = "master"
-resolved_reference = "5cc90f5ee9f8b2e7669f7fdd2ceee13aa8dd6178"
+resolved_reference = "962dceee0a459dee9f33f2a9af02b8cdcb5999b0"
 
 [[package]]
 name = "six"
@@ -519,7 +530,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "1f3ae6d33a2975733558208a0eeed586169ab07107489e63d7637b4593dd43b3"
+content-hash = "04d5eff6e166f61bc2bae2841112c4f876a08dc7d4e50733d30b6b12d251fd2a"
 
 [metadata.files]
 asgiref = [
@@ -618,6 +629,10 @@ django-filter = [
 django-rest-framework = [
     {file = "django-rest-framework-0.1.0.tar.gz", hash = "sha256:47a8f496fa69e3b6bd79f68dd7a1527d907d6b77f009e9db7cf9bb21cc565e4a"},
 ]
+django-safedelete = [
+    {file = "django-safedelete-1.0.0.tar.gz", hash = "sha256:194470a379d41685298105b2dd6d9d9e6b17cec63fdfc52b225010140a85e28b"},
+    {file = "django_safedelete-1.0.0-py3-none-any.whl", hash = "sha256:1c847de679dc6aaac2af6c05647898e43dc0775611d86c1975703f29c793e1a4"},
+]
 django-sql-middleware = [
     {file = "django-sql-middleware-0.0.7.tar.gz", hash = "sha256:884cb3c2ff44d6fc26494655d3bb24859a04c6b15f56a03b4498b2d950547075"},
     {file = "django_sql_middleware-0.0.7-py3-none-any.whl", hash = "sha256:a10d849122694ddedb35f9b8cdd2e1755453626836b4863ee181bd90e2b4c564"},
@@ -635,8 +650,8 @@ drf-yasg2 = [
     {file = "drf_yasg2-1.19.4.tar.gz", hash = "sha256:7037a8041eb5d1073fa504a284fc889685f93d0bfd008a963db1b366db786734"},
 ]
 environs = [
-    {file = "environs-9.3.2-py2.py3-none-any.whl", hash = "sha256:6bef733b88cc901e787cf24fb2eaa72621b0656226ea4e332ab24ed0cba36fcf"},
-    {file = "environs-9.3.2.tar.gz", hash = "sha256:2eb671afd37e6e9820131b918bbbcaa6658d0fb420ebf35bdfb750ae39c51a66"},
+    {file = "environs-9.3.3-py2.py3-none-any.whl", hash = "sha256:ee5466156b50fe03aa9fec6e720feea577b5bf515d7f21b2c46608272557ba26"},
+    {file = "environs-9.3.3.tar.gz", hash = "sha256:72b867ff7b553076cdd90f3ee01ecc1cf854987639c9c459f0ed0d3d44ae490c"},
 ]
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},

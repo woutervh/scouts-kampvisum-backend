@@ -129,10 +129,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'safedelete',
     'rest_framework',
     'django_filters',
     'drf_yasg2',
-    'apps.camps',
+    'apps.scout_groups',
+    'apps.scout_camps',
     'storages',
     'sqlmiddleware',
 ]

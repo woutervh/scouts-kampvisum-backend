@@ -22,3 +22,22 @@ class Camp(models.Model):
         if not self.start_date or not self.end_date:
             raise ValidationError("Start and end dates need to be known")
 
+
+class ConcernCategory(models.Model):
+    
+    def clean(self):
+        pass
+
+
+class ConcernSubCategory(models.Model):
+    
+    def clean(self):
+        pass
+
+
+class CampConcern(models.Model):
+    
+    def clean(self):
+        pass
+
+

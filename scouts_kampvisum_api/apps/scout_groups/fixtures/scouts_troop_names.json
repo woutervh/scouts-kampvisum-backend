@@ -1,0 +1,135 @@
+[
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 1,
+		"fields": {
+			"name": "kapoenen"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 2,
+		"fields": {
+			"name": "elfjes"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 3,
+		"fields": {
+			"name": "zeehondjes"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 4,
+		"fields": {
+			"name": "welpen"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 5,
+		"fields": {
+			"name": "kabouters"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 6,
+		"fields": {
+			"name": "zeewelpen"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 7,
+		"fields": {
+			"name": "wouters"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 8,
+		"fields": {
+			"name": "kawellen"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 9,
+		"fields": {
+			"name": "jongverkenners"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 10,
+		"fields": {
+			"name": "jonggidsen"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 11,
+		"fields": {
+			"name": "scheepsmakkers"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 12,
+		"fields": {
+			"name": "jonggivers"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 13,
+		"fields": {
+			"name": "verkenners"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 14,
+		"fields": {
+			"name": "gidsen"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 15,
+		"fields": {
+			"name": "zeeverkenners"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 16,
+		"fields": {
+			"name": "givers"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 17,
+		"fields": {
+			"name": "jins"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 1,
+		"fields": {
+			"name": "loodsen"
+		}
+	},
+	{
+		"model": "apps.scout_groups.models.ScoutsTroopName",
+		"pk": 1,
+		"fields": {
+			"name": "leiding"
+		}
+	}
+]
