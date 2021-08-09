@@ -1,5 +1,5 @@
 ### Base stage
-FROM python:3.7-slim AS base-stage
+FROM python:3.8-slim AS base-stage
 
 ENV PYTHONFAULTHANDLER=1 \
         PYTHONHASHSEED=random \
