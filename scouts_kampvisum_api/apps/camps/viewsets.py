@@ -33,7 +33,7 @@ class CampViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        camp = CampService.camp_create(
+        camp = CampService().camp_create(
             **input_serializer.validated_data
         )
 
@@ -67,7 +67,7 @@ class CampViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_camp = CampService.camp_update(
+        updated_camp = CampService().camp_update(
             camp=camp, **serializer.validated_data
         )
 
