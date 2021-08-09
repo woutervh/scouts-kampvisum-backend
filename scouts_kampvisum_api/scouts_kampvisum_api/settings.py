@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 '''
 
-import os, logging
+import os, logging, logging.config
 from environs import Env
+
 
 logger = logging.getLogger(__name__)
 
@@ -41,12 +42,17 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'scouts_auth': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
 }
-import logging.config
 logging.config.dictConfig(LOGGING)
 
 
+# Environment loading
 env = Env()
 env.read_env()
 
@@ -70,10 +76,10 @@ if environment_conf:
         env.read_env('.env.' + environment_conf)
         
         environment_loaded = True
-        logger.debug('Environment file loaded: .env.', environment_conf)
+        logger.debug('Environment file loaded: .env.' +  environment_conf)
     except Exception:
-        logger.warn('WARN: Environment file .env.', environment_conf,
-               ' not found ! ',
+        logger.warn('WARN: Environment file .env.' + environment_conf,
+               ' not found ! ' +
                'Defaulting to next configured default environment.')
     
     if not environment_loaded:
@@ -85,7 +91,7 @@ if environment_conf:
                 env = Env()
                 env.read_env('.env.' + environment)
                 
-                logger.debug('Environment file loaded: .env.', environment)
+                logger.debug('Environment file loaded: .env.' + environment)
                 environment_loaded = True
             except Exception:
                 pass
@@ -118,7 +124,7 @@ BASE_URL = env.str('BASE_URL', default = '/')
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
-    'scouts_auth.apps.ScoutsAuthConfig',
+    'scouts_auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -214,6 +220,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = 'static/'
 STATIC_ROOT = env.str('STATIC_ROOT')
+
 
 # DEFAULT PRIMARY KEY FIELD TYPE
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -334,38 +341,39 @@ OIDC_MAX_STATES = env.int('OIDC_MAX_STATES', default = 50)
 # Sets the GET parameter that is being used to define the redirect URL after
 # succesful authentication
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_REDIRECT_FIELD_NAME
-OIDC_REDIRECT_FIELD_NAME = env.str(
-    'OIDC_REDIRECT_FIELD_NAME', default = 'next')
+
+#OIDC_REDIRECT_FIELD_NAME = env.str(
+#    'OIDC_REDIRECT_FIELD_NAME', default = 'next')
 # Allows you to substitute a custom class-based view to be used as
 # OpenID Connect callback URL.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_CALLBACK_CLASS
-OIDC_CALLBACK_CLASS = env.str(
-    'OIDC_CALLBACK_CLASS',
-    default = 'mozilla_django_oidc.views.OIDCAuthenticationCallbackView')
+#OIDC_CALLBACK_CLASS = env.str(
+#    'OIDC_CALLBACK_CLASS',
+#    default = 'mozilla_django_oidc.views.OIDCAuthenticationCallbackView')
 # Allows you to substitute a custom class-based view to be used as OpenID
 # Connect authenticate URL.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_AUTHENTICATE_CLASS
-OIDC_AUTHENTICATE_CLASS = env.str(
-    'OIDC_AUTHENTICATE_CLASS',
-    default = 'mozilla_django_oidc.views.OIDCAuthenticationRequestView')
+#OIDC_AUTHENTICATE_CLASS = env.str(
+#    'OIDC_AUTHENTICATE_CLASS',
+#    default = 'mozilla_django_oidc.views.OIDCAuthenticationRequestView')
 # The OpenID Connect scopes to request during login.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_RP_SCOPES
-OIDC_RP_SCOPES = env.str('OIDC_RP_SCOPES', default = 'openid email')
+#OIDC_RP_SCOPES = env.str('OIDC_RP_SCOPES', default = 'openid email')
 # Controls whether the OpenID Connect client stores the OIDC access_token in
 # the user session.
 # The session key used to store the data is oidc_access_token.
 # By default we want to store as few credentials as possible so
 # this feature defaults to False and it’s use is discouraged.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_STORE_ACCESS_TOKEN
-OIDC_STORE_ACCESS_TOKEN = env.bool('OIDC_STORE_ACCESS_TOKEN', default = False)
+#OIDC_STORE_ACCESS_TOKEN = env.bool('OIDC_STORE_ACCESS_TOKEN', default = False)
 # Controls whether the OpenID Connect client stores the OIDC id_token in the
 # user session. The session key used to store the data is oidc_id_token.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_STORE_ID_TOKEN
-OIDC_STORE_ID_TOKEN = env.bool('OIDC_STORE_ID_TOKEN', default = False)
+#OIDC_STORE_ID_TOKEN = env.bool('OIDC_STORE_ID_TOKEN', default = False)
 # Additional parameters to include in the initial authorization request.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_AUTH_REQUEST_EXTRA_PARAMS
-OIDC_AUTH_REQUEST_EXTRA_PARAMS = env.list(
-    'OIDC_AUTH_REQUEST_EXTRA_PARAMS', default = [])
+#OIDC_AUTH_REQUEST_EXTRA_PARAMS = env.list(
+#    'OIDC_AUTH_REQUEST_EXTRA_PARAMS', default = [])
 # Sets the algorithm the IdP uses to sign ID tokens.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_RP_SIGN_ALGO
 OIDC_RP_SIGN_ALGO = env.str('OIDC_RP_SIGN_ALGO', default = 'HS256')
@@ -373,30 +381,30 @@ OIDC_RP_SIGN_ALGO = env.str('OIDC_RP_SIGN_ALGO', default = 'HS256')
 # algorithm. Should be the signing key in PEM or DER format.
 # REQUIRED IF OIDC_OP_JWKS_ENDPOINT IS NOT SET
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_RP_IDP_SIGN_KEY
-OIDC_RP_IDP_SIGN_KEY = env.bool('OIDC_RP_IDP_SIGN_KEY', default = None)
+#OIDC_RP_IDP_SIGN_KEY = env.bool('OIDC_RP_IDP_SIGN_KEY', default = None)
 # Path to redirect to on successful login. If you don’t specify this,
 # the default Django value will be used.
-LOGIN_REDIRECT_URL = env.str(
-    'LOGIN_REDIRECT_URL', default = '/accounts/profile/')
+#LOGIN_REDIRECT_URL = env.str(
+#    'LOGIN_REDIRECT_URL', default = BASE_URL)
 # Path to redirect to on an unsuccessful login attempt.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#LOGIN_REDIRECT_URL_FAILURE
-LOGIN_REDIRECT_URL_FAILURE = env.str(
-    'LOGIN_REDIRECT_URL_FAILURE', default = '/')
+#LOGIN_REDIRECT_URL_FAILURE = env.str(
+#    'LOGIN_REDIRECT_URL_FAILURE', default = '/')
 # After the logout view has logged the user out, it redirects to this url path.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#LOGOUT_REDIRECT_URL
-LOGOUT_REDIRECT_URL = env.bool('LOGOUT_REDIRECT_URL', default = None)
+#LOGOUT_REDIRECT_URL = env.bool('LOGOUT_REDIRECT_URL', default = None)
 # Function path that returns a URL to redirect the user to after
 # auth.logout() is called.
 # Changed in version 0.7.0: The function must now take a request parameter.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_OP_LOGOUT_URL_METHOD
-OIDC_OP_LOGOUT_URL_METHOD = env.str('OIDC_OP_LOGOUT_URL_METHOD', default = '')
+#OIDC_OP_LOGOUT_URL_METHOD = env.str('OIDC_OP_LOGOUT_URL_METHOD', default = '')
 # URL pattern name for OIDCAuthenticationCallbackView. Will be passed to
 # reverse. The pattern can also include namespace in order to resolve
 # included urls.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_AUTHENTICATION_CALLBACK_URL
-OIDC_AUTHENTICATION_CALLBACK_URL = env.str(
-    'OIDC_AUTHENTICATION_CALLBACK_URL',
-    default = 'oidc_authentication_callback')
+#OIDC_AUTHENTICATION_CALLBACK_URL = env.str(
+#    'OIDC_AUTHENTICATION_CALLBACK_URL',
+#    default = 'oidc_authentication_callback')
 # Controls whether the authentication backend is going to allow unsecured JWT
 # tokens (tokens with header {"alg":"none"}). This needs to be set to True if
 # OP is returning unsecured JWT tokens and RP wants to accept them.
@@ -406,12 +414,12 @@ OIDC_ALLOW_UNSECURED_JWT = env.bool(
 # Use HTTP Basic Authentication instead of sending the client secret in
 # token request POST body.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_TOKEN_USE_BASIC_AUTH
-OIDC_TOKEN_USE_BASIC_AUTH = env.bool(
-    'OIDC_TOKEN_USE_BASIC_AUTH', default = False)
+#OIDC_TOKEN_USE_BASIC_AUTH = env.bool(
+#    'OIDC_TOKEN_USE_BASIC_AUTH', default = False)
 # Allow using GET method to logout user
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#ALLOW_LOGOUT_GET_METHOD
-ALLOW_LOGOUT_GET_METHOD = env.bool(
-    'ALLOW_LOGOUT_GET_METHOD', default = False)
+#ALLOW_LOGOUT_GET_METHOD = env.bool(
+#    'ALLOW_LOGOUT_GET_METHOD', default = False)
 # If you’ve created a custom Django OIDCAuthenticationBackend and added that
 # to your AUTHENTICATION_BACKENDS, the DRF class should be smart enough to
 # figure that out. Alternatively, you can manually set the OIDC backend to use:

@@ -4,9 +4,9 @@ from django.core.exceptions import ValidationError
 
 
 class Camp(models.Model):
-    '''
+    """
     A model for a scout camp.
-    ''' 
+    """ 
     
     id = models.AutoField(db_column='campid', primary_key=True)
     name = models.TextField()
@@ -20,5 +20,5 @@ class Camp(models.Model):
 
     def clean(self):
         if not self.start_date or not self.end_date:
-            raise ValidationError('Start and end dates need to be known')
+            raise ValidationError("Start and end dates need to be known")
 

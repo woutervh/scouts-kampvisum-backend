@@ -46,3 +46,9 @@ if [[ $? -eq 0 ]]; then
 	sudo rm -rf "$SCRIPT_DIR/lib/scouts-auth"
 fi
 
+cd "$SCRIPT_DIR"
+
+
+# Install the lib with pip, to run without poetry
+python -m pip uninstall scouts_auth
+python -m pip install lib/scouts_auth-0.1.0.tar.gz

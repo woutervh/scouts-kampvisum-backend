@@ -16,8 +16,8 @@ Including another URLconf
 
 from django.urls import include, path
 from rest_framework import permissions
-from drf_yasg2.views import get_schema_view
 from drf_yasg2 import openapi
+from drf_yasg2.views import get_schema_view
 
 # Open api schema
 schema_view = get_schema_view(
@@ -31,13 +31,13 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('api/auth/', include('scouts_auth.urls')),
-    path('api/oidc/', include('scouts_auth.urls')),
+    path('api/', include('scouts_auth.urls')),
     path('api/docs/',
          schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
     path('swagger/',
          schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
-    path('/api/', include('apps.camps.urls')),
+    path('api/', include('apps.camps.urls')),
 ]
+
