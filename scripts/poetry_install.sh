@@ -35,6 +35,10 @@ python -m pip install poetry
 
 # To check if it is installed correctly: poetry -version
 
+# Remove any existing version of this package
+echo "Removing existing scouts-auth with poetry"
+poetry remove scouts-auth
+
 # Run poetry init and setup basic information
 poetry init
 
@@ -62,5 +66,4 @@ poetry install
 
 # Generate the requirements.txt
 poetry export -f requirements.txt --output requirements.txt
-
 

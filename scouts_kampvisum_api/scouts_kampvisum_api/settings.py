@@ -44,7 +44,7 @@ LOGGING = {
         },
         'scouts_auth': {
             'handlers': ['console', 'file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
     },
@@ -129,14 +129,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
+    'sqlmiddleware',
     'safedelete',
+    'apps.base',
+    'apps.scouts_camps',
+    'apps.scouts_groups',
     'rest_framework',
     'django_filters',
     'drf_yasg2',
-    'apps.scout_groups',
-    'apps.scout_camps',
-    'storages',
-    'sqlmiddleware',
 ]
 
 MIDDLEWARE = [

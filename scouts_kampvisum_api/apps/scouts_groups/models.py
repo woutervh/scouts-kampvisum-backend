@@ -1,13 +1,11 @@
-import uuid
 from django.db import models
-from safedelete.models import SafeDeleteModel
-from safedelete.models import HARD_DELETE, SOFT_DELETE
+from safedelete.models import HARD_DELETE
 
-from scouts_auth.models import ScoutsGroup
+from ..base.models import BaseModel, ScoutsGroup
 
 # FIXTURE: scouts_troop_names
 # Taken from https://nl.wikipedia.org/wiki/Tak_(scouting)
-class ScoutsTroopName(SafeDeleteModel):
+class ScoutsTroopName(BaseModel):
     """
     A simple string model to represent a Scouts Troop name.
     
@@ -18,10 +16,6 @@ class ScoutsTroopName(SafeDeleteModel):
     # Setting to HARD_DELETE because a troop name may be incorrect
     _safedelete_policy = HARD_DELETE
     
-    id = models.AutoField(
-        primary_key=True, editable=False)
-    uuid = models.UUIDField(
-        primary_key=False, default=uuid.uuid4(), editable=False, unique=True)
     name = models.CharField(
         max_length=128)
     
@@ -29,15 +23,15 @@ class ScoutsTroopName(SafeDeleteModel):
         pass
 
 
-class ScoutsTroop(SafeDeleteModel):
+class ScoutsTroop(BaseModel):
     """
     A model for Scouts Troops, linking them to their Scouts Group and name.
     """
     
-    _safedelete_policy = SOFT_DELETE
-    
-    group = models.ForeignKey(ScoutsGroup, on_delete = models.CASCADE)
-    name = models.ForeignKey(ScoutsTroopName, on_delete = models.DO_NOTHING)
+    group = models.ForeignKey(
+        ScoutsGroup, on_delete = models.CASCADE)
+    name = models.ForeignKey(
+        ScoutsTroopName, on_delete = models.DO_NOTHING)
     
     def clean(self):
         pass

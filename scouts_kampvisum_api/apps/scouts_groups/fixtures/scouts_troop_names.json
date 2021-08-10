@@ -1,133 +1,133 @@
 [
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 1,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "kapoenen"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 2,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "elfjes"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 3,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "zeehondjes"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 4,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "welpen"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 5,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "kabouters"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 6,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "zeewelpen"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 7,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "wouters"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 8,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "kawellen"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 9,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "jongverkenners"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 10,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "jonggidsen"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 11,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "scheepsmakkers"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 12,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "jonggivers"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 13,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "verkenners"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 14,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "gidsen"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 15,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "zeeverkenners"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 16,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "givers"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
 		"pk": 17,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "jins"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
-		"pk": 1,
+		"pk": 18,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "loodsen"
 		}
 	},
 	{
-		"model": "apps.scout_groups.models.ScoutsTroopName",
-		"pk": 1,
+		"pk": 19,
+		"model": "scouts_groups.ScoutsTroopName",
 		"fields": {
 			"name": "leiding"
 		}

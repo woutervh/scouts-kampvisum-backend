@@ -1,8 +1,3 @@
-'''
-Created on Jul 27, 2021
-
-@author: boro
-'''
 from rest_framework import routers
 from .viewsets import CampViewSet
 
