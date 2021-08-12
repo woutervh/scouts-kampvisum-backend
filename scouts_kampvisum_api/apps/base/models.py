@@ -5,8 +5,6 @@ from django.dispatch import receiver
 from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE
 
-from scouts_auth.models import ScoutsAuthGroup
-
 
 class BaseModel(SafeDeleteModel):
     
@@ -19,10 +17,6 @@ class BaseModel(SafeDeleteModel):
     
     class Meta:
         abstract = True
-
-
-class ScoutsGroup(ScoutsAuthGroup):
-    pass
 
 
 @receiver(pre_save, sender=BaseModel)

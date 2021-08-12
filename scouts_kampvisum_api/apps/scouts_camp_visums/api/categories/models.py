@@ -1,8 +1,8 @@
-
 from django.db import models
-from ...base.models import BaseModel
 
+from ....base.models import BaseModel
 from .managers import ScoutsCampVisumCategoryManager
+
 
 class ScoutsCampVisumCategory(BaseModel):
     
@@ -20,19 +20,4 @@ class ScoutsCampVisumCategory(BaseModel):
     def clean(self):
         pass
 
-
-class ScoutsCampVisumSubCategory(BaseModel):
-    
-    category = models.ForeignKey(
-        ScoutsCampVisumCategory, on_delete=models.CASCADE)
-    name = models.CharField(
-        max_length=128)
-    
-    class Meta:
-        #@TODO order by category, then name ?
-        ordering = ['name']
-        unique_together = (('category', 'name'))
-    
-    def clean(self):
-        pass
 

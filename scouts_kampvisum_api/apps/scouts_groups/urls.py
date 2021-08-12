@@ -1,9 +1,9 @@
 from rest_framework import routers
-from .viewsets import ScoutsTroopNameViewSet
+from .api.sections.viewsets import ScoutsSectionNameViewSet
 
 
 router = routers.SimpleRouter()
 
-router.register(r'troops', ScoutsTroopNameViewSet, 'troop')
+router.register(r'troops', ScoutsSectionNameViewSet, 'troop')
 
 urlpatterns = router.urls

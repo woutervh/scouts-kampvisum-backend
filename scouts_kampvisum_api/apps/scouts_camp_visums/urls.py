@@ -1,6 +1,6 @@
 from rest_framework import routers
-from .categories.viewsets import ScoutsCampVisumCategoryViewSet
-from .categories.viewsets import ScoutsCampVisumSubCategoryViewSet
+from .api.categories.viewsets import ScoutsCampVisumCategoryViewSet
+from .api.categories.viewsets import ScoutsCampVisumSubCategoryViewSet
 
 
 router = routers.SimpleRouter()

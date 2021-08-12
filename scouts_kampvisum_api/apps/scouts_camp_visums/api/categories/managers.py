@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class ScoutsCampVisumCategoryManager(models.Manager):
     """
     Loads ScoutsCampVisumCategory instances by their name, not their id.

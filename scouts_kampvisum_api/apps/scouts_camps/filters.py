@@ -1,13 +1,10 @@
-'''
-Created on Jul 27, 2021
-
-@author: boro
-'''
 import django_filters
+
 from .models import ScoutsCamp
 
 
 class ScoutsCampFilter(django_filters.FilterSet):
+    
     term = django_filters.CharFilter(method='search_term_filter')
 
     class Meta:

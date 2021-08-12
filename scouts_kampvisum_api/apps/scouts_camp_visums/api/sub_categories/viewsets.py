@@ -4,70 +4,70 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
-from scouts_kampvisum_api.apps.scouts_groups.api.sections.models import ScoutsSectionName
-from .services import ScoutsSectionNameService
-from .serializers import ScoutsSectionNameSerializer
+
+from .models import ScoutsCampVisumSubCategory
+from .services import ScoutsCampVisumSubCategoryService
+from .serializers import ScoutsCampVisumSubCategorySerializer
 
 
-class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
+class ScoutsCampVisumSubCategoryViewSet(viewsets.GenericViewSet):
     """
-    A viewset for viewing and editing scout section names.
+    A viewset for viewing and editing ScoutsCampVisumSubCategory instances.
     """
     
-    serializer_class = ScoutsSectionNameSerializer
-    queryset = ScoutsSectionName.objects.all()
+    serializer_class = ScoutsCampVisumSubCategorySerializer
+    queryset = ScoutsCampVisumSubCategory.objects.all()
     
     @swagger_auto_schema(
-        request_body=ScoutsSectionNameSerializer,
-        responses={status.HTTP_201_CREATED: ScoutsSectionNameSerializer},
+        request_body=ScoutsCampVisumSubCategorySerializer,
+        responses={
+            status.HTTP_201_CREATED: ScoutsCampVisumSubCategorySerializer
+        },
     )
     def create(self, request):
         """
-        Creates a new ScoutSectionName.
+        Creates a new ScoutsCampVisumSubCategory instance.
         """
-        
-        input_serializer = ScoutsSectionNameSerializer(
+        input_serializer = ScoutsCampVisumSubCategorySerializer(
             data=request.data, context={'request': request}
         )
         input_serializer.is_valid(raise_exception=True)
 
-        instance = ScoutsSectionNameService().name_create(
+        instance = ScoutsCampVisumSubCategoryService().camp_create(
             **input_serializer.validated_data
         )
 
-        output_serializer = ScoutsSectionNameSerializer(
+        output_serializer = ScoutsCampVisumSubCategorySerializer(
             instance, context={'request': request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
     
     @swagger_auto_schema(
-        responses={status.HTTP_200_OK: ScoutsSectionNameSerializer}
+        responses={status.HTTP_200_OK: ScoutsCampVisumSubCategorySerializer}
     )
     def retrieve(self, request, pk=None):
         """
-        Retrieves an existing ScoutSectionName object.
+        Gets and returns a ScoutsCampVisumSubCategory instance from the db.
         """
-        
         instance = self.get_object()
-        serializer = ScoutsSectionNameSerializer(
+        serializer = ScoutsCampVisumSubCategorySerializer(
             instance, context={'request': request}
         )
 
         return Response(serializer.data)
     
     @swagger_auto_schema(
-        request_body=ScoutsSectionNameSerializer,
-        responses={status.HTTP_200_OK: ScoutsSectionNameSerializer},
+        request_body=ScoutsCampVisumSubCategorySerializer,
+        responses={status.HTTP_200_OK: ScoutsCampVisumSubCategorySerializer},
     )
     def partial_update(self, request, pk=None):
         """
-        Updates an existing ScoutsSectionName object.
+        Updates a ScoutsCampVisumSubCategory instance.
         """
-        
         instance = self.get_object()
 
-        serializer = ScoutsSectionNameSerializer(
+        serializer = ScoutsCampVisumSubCategorySerializer(
             data=request.data,
             instance=instance,
             context={'request': request},
@@ -75,11 +75,11 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_instance = ScoutsSectionNameService().name_update(
+        updated_instance = ScoutsCampVisumSubCategoryService().update(
             instance=instance, **serializer.validated_data
         )
 
-        output_serializer = ScoutsSectionNameSerializer(
+        output_serializer = ScoutsCampVisumSubCategorySerializer(
             updated_instance, context={'request': request}
         )
 
@@ -90,29 +90,31 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
     )
     def delete(self, request, pk):
         """
-        Deletes a ScoutsSectionName instance.
+        Deletes a ScoutsCampVisumSubCategory instance.
         """
-        
-        instance = get_object_or_404(ScoutsSectionName.objects, pk=pk)
+        instance = get_object_or_404(ScoutsCampVisumSubCategory.objects, pk=pk)
         instance.delete()
         
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
     
     @swagger_auto_schema(
-        responses={status.HTTP_200_OK: ScoutsSectionNameSerializer}
+        responses={status.HTTP_200_OK: ScoutsCampVisumSubCategorySerializer}
     )
     def list(self, request):
         """
-        Retrieves a list of all existing ScoutsSectionName instances.
+        Gets all ScoutsCampVisumSubCategory instances (filtered).
         """
-        
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = ScoutsSectionNameSerializer(page, many=True)
+            serializer = ScoutsCampVisumSubCategorySerializer(
+                page, many=True
+            )
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = ScoutsSectionNameSerializer(instances, many=True)
+            serializer = ScoutsCampVisumSubCategorySerializer(
+                instances, many=True
+            )
             return Response(serializer.data)
 

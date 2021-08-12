@@ -1,29 +1,42 @@
-'''
-Created on Jul 27, 2021
-
-@author: boro
-'''
 from rest_framework import serializers
-from .models import ScoutsTroopName
+from .models import ScoutsSectionName, DefaultScoutsSectionName, ScoutsSection
+from ..groups.serializers import ScoutsGroupTypeSerializer
 
 
-class ScoutsTroopNameSerializer(serializers.ModelSerializer):
-    '''
-    Serialize a ScoutTroopName object
-    '''
+class ScoutsSectionNameSerializer(serializers.ModelSerializer):
+    """
+    Serializes a ScoutSectionName object
+    """
+    
+    name = serializers.CharField(max_length=128)
     
     class Meta:
-        model = ScoutsTroopName
-        #fields = [ 'id', 'start_date', 'end_date', 'uuid' ]
+        model = ScoutsSectionName
         fields = '__all__'
 
-class ScoutsTroopNameDeserializer(serializers.Serializer):
-    '''
-    Deserialize values into a Camp object
-    '''
-    
-    name = serializers.CharField()
 
-    def validate(self, data):
-        return data
+class DefaultScoutsSectionNameSerializer(serializers.ModelSerializer):
+    """
+    Serializes a DefaultScoutSectionName object
+    """
+    
+    name = ScoutsSectionNameSerializer()
+    type = ScoutsGroupTypeSerializer()
+    
+    class Meta:
+        model = DefaultScoutsSectionName
+        fields = '__all__'
+
+
+class ScoutsSectionSerializer(serializers.ModelSerializer):
+    """
+    Serializes a ScoutSection object
+    """
+    
+    group = ScoutsSection
+    name = serializers.CharField(max_length=128)
+    
+    class Meta:
+        model = ScoutsSection
+        fields = '__all__'
 

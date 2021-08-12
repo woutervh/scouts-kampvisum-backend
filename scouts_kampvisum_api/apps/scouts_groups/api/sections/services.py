@@ -1,37 +1,32 @@
-'''
-Created on Jul 27, 2021
-
-@author: boro
-'''
-import uuid
-from .models import ScoutsTroopName
+from .models import ScoutsSectionName
 
 
-class ScoutsTroopNameService():
-    def name_create(self, *, name) -> ScoutsTroopName:
-        '''
+class ScoutsSectionNameService():
+    def name_create(self, *, name) -> ScoutsSectionName:
+        """
         Saves a ScoutsTroopName object to the DB.
-        '''
+        """
         
-        name = ScoutsTroopName(
+        instance = ScoutsSectionName(
             name = name,
-            uuid = uuid.uuid4(),
         )
         
-        name.full_clean()
-        name.save()
+        instance.full_clean()
+        instance.save()
         
-        return name
+        return instance
     
-    def name_update(self, *, name: ScoutsTroopName, **fields) -> ScoutsTroopName:
-        '''
-        Updates an existing ScoutsTroopName object in the DB.
-        '''
+    def name_update(
+            self, *,
+            instance: ScoutsSectionName, **fields) -> ScoutsSectionName:
+        """
+        Updates an existing ScoutsSectionName object in the DB.
+        """
         
-        name.name = fields.get('name', name.name)
+        instance.name = fields.get('name', instance.name)
         
-        name.full_clean()
-        name.save()
+        instance.full_clean()
+        instance.save()
         
-        return name
+        return instance
 

@@ -1,24 +1,19 @@
-'''
-Created on Jul 27, 2021
-
-@author: boro
-'''
-
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
+
 from .models import ScoutsCamp
 from .services import ScoutsCampService
 from .serializers import ScoutsCampSerializer, ScoutsCampDeserializer
 
 
 class ScoutsCampViewSet(viewsets.GenericViewSet):
-    '''
+    """
     A viewset for viewing and editing camp instances.
-    '''
+    """
     
     serializer_class = ScoutsCampSerializer
     queryset = ScoutsCamp.objects.all()
