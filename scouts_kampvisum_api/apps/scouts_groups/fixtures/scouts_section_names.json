@@ -1,133 +1,133 @@
 [
 	{
 		"pk": 1,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "kapoenen"
 		}
 	},
 	{
 		"pk": 2,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "elfjes"
 		}
 	},
 	{
 		"pk": 3,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeehondjes"
 		}
 	},
 	{
 		"pk": 4,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "welpen"
 		}
 	},
 	{
 		"pk": 5,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "kabouters"
 		}
 	},
 	{
 		"pk": 6,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeewelpen"
 		}
 	},
 	{
 		"pk": 7,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "wouters"
 		}
 	},
 	{
 		"pk": 8,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "kawellen"
 		}
 	},
 	{
 		"pk": 9,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "jongverkenners"
 		}
 	},
 	{
 		"pk": 10,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "jonggidsen"
 		}
 	},
 	{
 		"pk": 11,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "scheepsmakkers"
 		}
 	},
 	{
 		"pk": 12,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "jonggivers"
 		}
 	},
 	{
 		"pk": 13,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "verkenners"
 		}
 	},
 	{
 		"pk": 14,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "gidsen"
 		}
 	},
 	{
 		"pk": 15,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeeverkenners"
 		}
 	},
 	{
 		"pk": 16,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "givers"
 		}
 	},
 	{
 		"pk": 17,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "jins"
 		}
 	},
 	{
 		"pk": 18,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "loodsen"
 		}
 	},
 	{
 		"pk": 19,
-		"model": "scouts_groups.ScoutsTroopName",
+		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "leiding"
 		}

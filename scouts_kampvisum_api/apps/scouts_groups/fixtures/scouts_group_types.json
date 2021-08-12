@@ -3,21 +3,21 @@
 		"pk": 1,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"name": "Scouts"
+			"type": "Scouts"
 		}
 	},
 	{
 		"pk": 2,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"name": "Akabe"
+			"type": "Akabe"
 		}
 	},
 	{
 		"pk": 3,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"name": "Zeescouts"
+			"type": "Zeescouts"
 		}
 	}
 ]
