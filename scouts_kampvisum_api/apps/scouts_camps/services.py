@@ -1,19 +1,14 @@
-'''
-Created on Jul 27, 2021
-
-@author: boro
-'''
 import uuid
-from .models import Camp
+from .models import ScoutsCamp
 
 
-class CampService():
-    def camp_create(self, *, name, start_date, end_date) -> Camp:
+class ScoutsCampService():
+    def camp_create(self, *, name, start_date, end_date) -> ScoutsCamp:
         '''
-        Saves a Camp object to the DB.
+        Saves a ScoutsCamp object to the DB.
         '''
         
-        camp = Camp(
+        camp = ScoutsCamp(
             name=name,
             start_date=start_date,
             end_date=end_date,
@@ -25,9 +20,9 @@ class CampService():
         
         return camp
     
-    def camp_update(self, *, camp: Camp, **fields) -> Camp:
+    def camp_update(self, *, camp: ScoutsCamp, **fields) -> ScoutsCamp:
         '''
-        Updates an existing Camp object in the DB.
+        Updates an existing ScoutsCamp object in the DB.
         '''
         
         camp.name = fields.get('name', camp.name)

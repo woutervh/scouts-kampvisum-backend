@@ -1,11 +1,10 @@
-import uuid
 from django.db import models
 from django.core.exceptions import ValidationError
 
 from ..base.models import BaseModel
 
 
-class Camp(BaseModel):
+class ScoutsCamp(BaseModel):
     """
     A model for a scout camp.
     """ 

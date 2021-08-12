@@ -1,0 +1,114 @@
+[
+	{
+		"pk": 1,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Datum",
+			"category": [ "Planning" ]
+		}
+	},
+	{
+		"pk": 2,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Activiteiten",
+			"category": [ "Planning" ]
+		}
+	},
+	{
+		"pk": 3,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Menu",
+			"category": [ "Planning" ]
+		}
+	},
+	{
+		"pk": 4,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Locatie(s) - kaartje",
+			"category": [ "Logistiek" ]
+		}
+	},
+	{
+		"pk": 5,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Locatie(s) - info",
+			"category": [ "Logistiek" ]
+		}
+	},
+	{
+		"pk": 6,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Vervoer",
+			"category": [ "Logistiek" ]
+		}
+	},
+	{
+		"pk": 7,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Materiaal",
+			"category": [ "Logistiek" ]
+		}
+	},
+	{
+		"pk": 8,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Ouders",
+			"category": [ "Communicatie & afspraken" ]
+		}
+	},
+	{
+		"pk": 9,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Afspraken",
+			"category": [ "Communicatie & afspraken" ]
+		}
+	},
+	{
+		"pk": 10,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Verzekeringen",
+			"category": [ "Veiligheid" ]
+		}
+	},
+	{
+		"pk": 11,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Zorgverlening",
+			"category": [ "Veiligheid" ]
+		}
+	},
+	{
+		"pk": 12,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Leiding",
+			"category": [ "Leden & leiding" ]
+		}
+	},
+	{
+		"pk": 13,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Leden",
+			"category": [ "Leden & leiding" ]
+		}
+	},
+	{
+		"pk": 14,
+		"model": "scouts_camp_visums.ScoutsCampVisumSubCategory",
+		"fields": {
+			"name": "Begroting",
+			"category": [ "Budget" ]
+		}
+	}
+]

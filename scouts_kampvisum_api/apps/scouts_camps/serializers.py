@@ -4,22 +4,22 @@ Created on Jul 27, 2021
 @author: boro
 '''
 from rest_framework import serializers
-from .models import Camp
+from .models import ScoutsCamp
 
 
-class CampOutputSerializer(serializers.ModelSerializer):
+class ScoutsCampSerializer(serializers.ModelSerializer):
     '''
-    Serialize a Camp object
+    Serialize a ScoutsCamp object
     '''
     
     class Meta:
-        model = Camp
+        model = ScoutsCamp
         #fields = [ 'id', 'start_date', 'end_date', 'uuid' ]
         fields = '__all__'
 
-class CampInputSerializer(serializers.Serializer):
+class ScoutsCampDeserializer(serializers.Serializer):
     '''
-    Deserialize values into a Camp object
+    Deserialize values into a ScoutsCamp object
     '''
     
     name = serializers.CharField()

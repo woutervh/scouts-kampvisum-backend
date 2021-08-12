@@ -133,6 +133,7 @@ INSTALLED_APPS = [
     'sqlmiddleware',
     'safedelete',
     'apps.base',
+    'apps.scouts_camp_visums',
     'apps.scouts_camps',
     'apps.scouts_groups',
     'rest_framework',
