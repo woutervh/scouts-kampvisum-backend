@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class ScoutsCampChecksConfig(AppConfig):
+class ScoutsCampVisumsConfig(AppConfig):
     
-    name = 'apps.scouts_camp_checks'
+    name = 'apps.scouts_camp_visums'
 

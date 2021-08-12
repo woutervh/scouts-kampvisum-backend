@@ -4,14 +4,14 @@ Created on Jul 27, 2021
 @author: boro
 '''
 import django_filters
-from .models import Camp
+from .models import ScoutsCamp
 
 
-class CampFilter(django_filters.FilterSet):
+class ScoutsCampFilter(django_filters.FilterSet):
     term = django_filters.CharFilter(method='search_term_filter')
 
     class Meta:
-        model = Camp
+        model = ScoutsCamp
         fields = []
 
     def search_term_filter(self, queryset, name, value):

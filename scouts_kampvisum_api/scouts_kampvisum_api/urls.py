@@ -32,6 +32,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('api/', include('scouts_auth.urls')),
+    path('api/', include('apps.scouts_camp_visums.urls')),
     path('api/', include('apps.scouts_camps.urls')),
     path('api/', include('apps.scouts_groups.urls')),
     path('api/docs/',

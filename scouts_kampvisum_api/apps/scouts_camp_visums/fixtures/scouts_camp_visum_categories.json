@@ -1,9 +1,44 @@
 [
 	{
 		"pk": 1,
-		"model": "scouts_camp_checks.ScoutsCampCheckCategory",
+		"model": "scouts_camp_visums.ScoutsCampVisumCategory",
 		"fields": {
 			"name": "Planning"
 		}
 	},
+	{
+		"pk": 2,
+		"model": "scouts_camp_visums.ScoutsCampVisumCategory",
+		"fields": {
+			"name": "Logistiek"
+		}
+	},
+	{
+		"pk": 3,
+		"model": "scouts_camp_visums.ScoutsCampVisumCategory",
+		"fields": {
+			"name": "Communicatie & afspraken"
+		}
+	},
+	{
+		"pk": 4,
+		"model": "scouts_camp_visums.ScoutsCampVisumCategory",
+		"fields": {
+			"name": "Veiligheid"
+		}
+	},
+	{
+		"pk": 5,
+		"model": "scouts_camp_visums.ScoutsCampVisumCategory",
+		"fields": {
+			"name": "Leden & leiding"
+		}
+	},
+	{
+		"pk": 6,
+		"model": "scouts_camp_visums.ScoutsCampVisumCategory",
+		"fields": {
+			"name": "Budget"
+		}
+	}
 ]
