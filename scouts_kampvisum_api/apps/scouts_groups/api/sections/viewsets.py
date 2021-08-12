@@ -4,7 +4,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
-from scouts_kampvisum_api.apps.scouts_groups.api.sections.models import ScoutsSectionName
+
+from .models import ScoutsSectionName
 from .services import ScoutsSectionNameService
 from .serializers import ScoutsSectionNameSerializer
 
