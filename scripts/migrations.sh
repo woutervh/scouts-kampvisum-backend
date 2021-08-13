@@ -2,6 +2,7 @@
 
 python manage.py makemigrations scouts_auth
 python manage.py makemigrations base
+python manage.py makemigrations scouts_camp_visums
 python manage.py makemigrations scouts_camps
 python manage.py makemigrations scouts_groups
 python manage.py makemigrations

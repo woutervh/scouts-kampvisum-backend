@@ -18,13 +18,11 @@ class ScoutsGroupType(BaseModel):
         pass
 
 
-class ScoutsGroup(ScoutsAuthGroup):
+class ScoutsGroup(BaseModel):
     """
     A ScoutsGroup.
     
-    This class is a simple extension of the ScoutsAuthGroup found in the
-    scouts_auth package and should probably be modelled in a base model for
-    scouts applications at some point in time.
+    Data is loaded with a call to the ScoutsGroupService, using the name
     
     ScoutsAuthGroup fields:
     id = models.AutoField(
