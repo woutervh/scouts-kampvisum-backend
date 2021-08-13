@@ -1,6 +1,5 @@
 from django.db import models
 
-from scouts_auth.models import ScoutsAuthGroup
 from ....base.models import BaseModel
 
 

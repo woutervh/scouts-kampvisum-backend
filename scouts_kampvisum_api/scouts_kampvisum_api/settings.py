@@ -444,6 +444,7 @@ OIDC_DRF_AUTH_BACKEND = 'scouts_auth.oidc.InuitsOIDCAuthenticationBackend'
 OIDC_OP_JWKS_ENDPOINT = correct_url(
     OIDC_OP_ISSUER, env.str('OIDC_OP_JWKS_ENDPOINT'))
 
+GROUP_ADMIN_BASE_ENDPOINT = env.str('GROUP_ADMIN_BASE_ENDPOINT')
 
 logger.debug('OIDC_OP_ISSUER: ' + OIDC_OP_ISSUER)
 logger.debug('OIDC_OP_JWKS_ENDPOINT: ' + OIDC_OP_JWKS_ENDPOINT)

@@ -1,6 +1,7 @@
 import requests, logging
 from django.conf import settings
 
+from .api import GroupAdminApi as api
 from ..scouts_groups.api.groups.models import ScoutsGroup
 
 logger = logging.getLogger(__name__)
@@ -22,8 +23,10 @@ class GroupAdminService:
         return None
     
     def get_groups(self, groups):
-        settings
-        response = requests.get()
-        logger.info('GROUPS: %s', groups)
+        response = api.get_request(api.get_groups_endpoint())
+        
+        json = response.json()
+        
+        logger.info('GROUPS: %s', json)
         
         return None
