@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ScoutsSectionName, DefaultScoutsSectionName, ScoutsSection
+from .models import ScoutsSectionName, ScoutsSection
 from ..groups.serializers import ScoutsGroupTypeSerializer
 
 
@@ -12,19 +12,6 @@ class ScoutsSectionNameSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ScoutsSectionName
-        fields = '__all__'
-
-
-class DefaultScoutsSectionNameSerializer(serializers.ModelSerializer):
-    """
-    Serializes a DefaultScoutSectionName object
-    """
-    
-    name = ScoutsSectionNameSerializer()
-    type = ScoutsGroupTypeSerializer()
-    
-    class Meta:
-        model = DefaultScoutsSectionName
         fields = '__all__'
 
 

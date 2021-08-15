@@ -25,24 +25,19 @@ class ScoutsSectionName(BaseModel):
         pass
 
 
-class DefaultScoutsSectionName(BaseModel):
-    """
-    A model defining the default section names for a Scouts group type.
-    """
-    
-    name = models.ForeignKey(ScoutsSectionName, on_delete=models.CASCADE)
-    type = models.ForeignKey(ScoutsGroupType, on_delete=models.CASCADE)
-
-
 class ScoutsSection(BaseModel):
     """
     A model for a scouts section, linked to their scouts group and name.
     """
     
     group = models.ForeignKey(
-        ScoutsGroup, on_delete = models.CASCADE)
+        ScoutsGroup,
+        related_name='group',
+        on_delete = models.CASCADE)
     name = models.ForeignKey(
-        ScoutsSectionName, on_delete = models.DO_NOTHING)
+        ScoutsSectionName,
+        related_name='section_name',
+        on_delete = models.DO_NOTHING)
     
     def clean(self):
         pass

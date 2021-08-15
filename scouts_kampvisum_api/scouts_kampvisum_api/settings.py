@@ -34,7 +34,7 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console', 'file'],
-        'level': 'DEBUG',
+        'level': 'INFO',
     },
     'loggers': {
         'mozilla_django_oidc': {
@@ -135,12 +135,20 @@ INSTALLED_APPS = [
     'apps.base',
     'apps.groupadmin',
     'apps.scouts_camp_visums',
-    'apps.scouts_camps',
     'apps.scouts_groups',
+    'apps.scouts_camps',
     'rest_framework',
     'django_filters',
     'drf_yasg2',
 ]
+
+MIGRATION_MODULES = {
+    'apps.base': 'migrations',
+    'apps.groupadmin': 'migrations',
+    'apps.scouts_camp_visums': 'migrations',
+    'apps.scouts_groups': 'migrations',
+    'apps.scouts_camps': 'migrations'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

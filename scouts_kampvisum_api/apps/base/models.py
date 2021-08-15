@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from rest_framework import serializers
 from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE
 
@@ -17,6 +18,15 @@ class BaseModel(SafeDeleteModel):
     
     class Meta:
         abstract = True
+
+
+class RecursiveField(serializers.Serializer):
+    """
+    Utility class that allows a deserialization of self-referencing classes.
+    """
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
 
 
 @receiver(pre_save, sender=BaseModel)

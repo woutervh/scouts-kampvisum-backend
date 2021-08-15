@@ -3,7 +3,7 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 base_endpoint = settings.GROUP_ADMIN_BASE_ENDPOINT
-active_user = settings.AUTH_USER_MODEL
+
 
 class GroupAdminApi:
     """
@@ -11,11 +11,12 @@ class GroupAdminApi:
     """
     
     @staticmethod
-    def get_request(endpoint):
-        return requests.get("{0}".format(endpoint),
-            headers={"Authorization": "Bearer {0}".format(
-                active_user.access_token)},
-        )
+    def get_request(endpoint: str, active_user):
+        #return requests.get("{0}".format(endpoint),
+        #    headers={"Authorization": "Bearer {0}".format(
+        #        active_user.access_token)},
+        #)
+        return requests.get(endpoint)
     
     @staticmethod
     def get_groups_endpoint():

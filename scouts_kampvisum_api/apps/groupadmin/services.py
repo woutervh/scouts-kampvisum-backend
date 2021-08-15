@@ -1,8 +1,10 @@
 import requests, logging
 from django.conf import settings
 
+from scouts_auth.models import User as ScoutsAuthUser
 from .api import GroupAdminApi as api
 from ..scouts_groups.api.groups.models import ScoutsGroup
+from ..scouts_groups.api.groups.serializers import ScoutsGroupSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -15,18 +17,14 @@ class GroupAdminService:
         response.raise_for_status()
         json = response.json()
         
-        logger.info("GROUP")
-        logger.info(json)
-        
-        addresses = json.get('adressen', [])
-        
-        return None
+        return json
     
-    def get_groups(self, groups):
-        response = api.get_request(api.get_groups_endpoint())
+    def get_groups(self, active_user, group_links):
+        groups = []
         
-        json = response.json()
+        for href in group_links:
+            groups.append(self.get_group(href))
         
-        logger.info('GROUPS: %s', json)
+        logger.info('GROUPS: %s', groups)
         
-        return None
+        return groups

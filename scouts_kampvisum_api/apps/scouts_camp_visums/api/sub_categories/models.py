@@ -12,7 +12,6 @@ class ScoutsCampVisumSubCategory(BaseModel):
         max_length=128)
     
     class Meta:
-        #@TODO order by category, then name ?
         ordering = ['name']
         unique_together = (('category', 'name'))
     

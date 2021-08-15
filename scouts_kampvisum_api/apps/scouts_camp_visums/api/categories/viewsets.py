@@ -27,6 +27,7 @@ class ScoutsCampVisumCategoryViewSet(viewsets.GenericViewSet):
         """
         Creates a new ScoutsCampVisumCategory instance.
         """
+        
         input_serializer = ScoutsCampVisumCategorySerializer(
             data=request.data, context={'request': request}
         )
@@ -49,6 +50,7 @@ class ScoutsCampVisumCategoryViewSet(viewsets.GenericViewSet):
         """
         Gets and returns a ScoutsCampVisumCategory instance from the db.
         """
+        
         instance = self.get_object()
         serializer = ScoutsCampVisumCategorySerializer(
             instance, context={'request': request}
@@ -64,6 +66,7 @@ class ScoutsCampVisumCategoryViewSet(viewsets.GenericViewSet):
         """
         Updates a ScoutsCampVisumCategory instance.
         """
+        
         instance = self.get_object()
 
         serializer = ScoutsCampVisumCategorySerializer(
@@ -91,6 +94,7 @@ class ScoutsCampVisumCategoryViewSet(viewsets.GenericViewSet):
         """
         Deletes a ScoutsCampVisumCategory instance.
         """
+        
         instance = get_object_or_404(ScoutsCampVisumCategory.objects, pk=pk)
         instance.delete()
         
@@ -103,6 +107,7 @@ class ScoutsCampVisumCategoryViewSet(viewsets.GenericViewSet):
         """
         Gets all ScoutsCampVisumCategory instances (filtered).
         """
+        
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
@@ -121,6 +126,7 @@ class ScoutsCampVisumCategoryViewSet(viewsets.GenericViewSet):
         """
         Retrieves a list of sub-categories for this ScoutsKampVisumCategory.
         """
+        
         instance = self.get_object()
         instances = instance.sub_categories.all().order_by('name')
 
