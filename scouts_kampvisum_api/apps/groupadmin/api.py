@@ -10,6 +10,8 @@ class GroupAdminApi:
     Constructs endpoints for various GroupAdmin API calls.
     """
     
+    default_scouts_group_type = 'Scouts'
+    
     @staticmethod
     def get_request(endpoint: str, active_user):
         #return requests.get("{0}".format(endpoint),

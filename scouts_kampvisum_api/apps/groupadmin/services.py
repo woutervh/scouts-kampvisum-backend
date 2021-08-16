@@ -25,6 +25,5 @@ class GroupAdminService:
         for href in group_links:
             groups.append(self.get_group(href))
         
-        logger.info('GROUPS: %s', groups)
-        
         return groups
+

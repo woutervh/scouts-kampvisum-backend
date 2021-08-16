@@ -3,7 +3,8 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from ....base.models import RecursiveField
-from .models import ScoutsGroupType, ScoutsLocation, ScoutsAddress, ScoutsGroup
+from ....groupadmin.api import GroupAdminApi
+from .models import ScoutsGroupType, ScoutsAddress, ScoutsGroup
 
 
 class ScoutsGroupTypeSerializer(serializers.ModelSerializer):
@@ -11,7 +12,8 @@ class ScoutsGroupTypeSerializer(serializers.ModelSerializer):
     Serializes a ScoutsGroupType object.
     """
     
-    type = models.CharField(max_length=64)
+    type = models.CharField(
+        max_length=64, default=GroupAdminApi.default_scouts_group_type)
     
     class Meta:
         model = ScoutsGroupType
@@ -26,28 +28,13 @@ class ScoutsGroupTypeSerializer(serializers.ModelSerializer):
         return type
 
 
-class ScoutsLocationSerializer(serializers.ModelSerializer):
+class GroupAdminLocationSerializer(serializers.Serializer):
     """
-    Serializes a ScoutsLocation object.
+    Serializes a geolocation from GroupAdmin.
     """
     
-    latitude = models.CharField(default='')
-    longitude = models.CharField(default='')
-    
-    class Meta:
-        model = ScoutsLocation
-        fields = '__all__'
-    
-    def create(self, validated_data)-> ScoutsLocation:
-        return ScoutsLocation(**validated_data)
-    
-    def update(self, instance, validated_data) -> ScoutsLocation:
-        instance.latitude = validated_data.get(
-            'latitude', instance.latitude)
-        instance.longitude = validated_data.get(
-            'longitude', instance.longitude)
-        
-        return instance
+    latitude = serializers.CharField(default='')
+    longitude = serializers.CharField(default='')
 
 
 class GroupAdminAddressSerializer(serializers.Serializer):
@@ -66,7 +53,7 @@ class GroupAdminAddressSerializer(serializers.Serializer):
     postalAddress = serializers.BooleanField(
         source='postadres', default=False)
     status = serializers.CharField(default='')
-    location = ScoutsLocationSerializer(source='positie', default=None)
+    location = GroupAdminLocationSerializer(source='positie', default=None)
     description = serializers.CharField(source='omschrijving', default='')
 
 
@@ -96,76 +83,23 @@ class GroupAdminGroupSerializer(serializers.Serializer):
         source='publiek-inschrijven', default=False)
 
 
-class ScoutsAddressSerializer(serializers.ModelSerializer):
-    """
-    Serializes a ScoutsAddress object.
-    """
-    
-    # id
-    group_admin_id = serializers.CharField()
-    # land
-    country = serializers.CharField()
-    # postcode
-    postalCode = serializers.CharField()
-    # gemeente
-    city = serializers.CharField()
-    # straat
-    street = serializers.CharField()
-    # nummer
-    number = serializers.CharField()
-    # bus
-    bus = serializers.CharField()
-    # telefoon
-    phone = serializers.CharField()
-    # postadres
-    postalAddress = serializers.BooleanField()
-    # status
-    status = serializers.CharField()
-    # email
-    email = serializers.CharField()
-    # positie
-    location = ScoutsLocationSerializer()
-    # omschrijving
-    description = serializers.CharField()
-    
-    class Meta:
-        model = ScoutsAddress
-        fields = '__all__'
-    
-    def create(self, validated_data) -> ScoutsAddress:
-        return ScoutsAddress(**validated_data)
-    
-    def update(self, instance, validated_data) -> ScoutsAddress:
-        instance.id = validated_data.get(
-            'id', instance.id)
-        instance.country = validated_data.get(
-            'land', instance.id)
-        instance.postal_code = validated_data.get(
-            'postcode', instance.postal_code)
-        instance.city= validated_data.get('gemeente', instance.city)
-        instance.street = validated_data.get('straat', instance.street)
-        instance.number = validated_data.get('nummer', instance.number)
-        instance.box = validated_data.get('bus', instance.box)
-        instance.phone = validated_data.get('telefoon', instance.phone)
-        instance.postal_address = validated_data.get(
-            'postadres', instance.postal_address)
-        instance.status = validated_data.get('status', instance.status)
-        instance.position = ScoutsLocationSerializer(source='positie')
-        instance.description = validated_data(
-            'omschrijving', instance.description)
-        
-        return instance
-
-
 class ScoutsGroupSerializer(serializers.ModelSerializer):
     """
     Serializes a ScoutGroup object.
     """
     
-    type = ScoutsGroupTypeSerializer()
-    name = serializers.CharField()
-    location = serializers.CharField()
-    uuid = serializers.UUIDField()
+    group_admin_id = serializers.CharField(default='')
+    number = serializers.CharField(default='')
+    name = serializers.CharField(default='')
+    foundation = serializers.DateTimeField(default=timezone.now)
+    only_leaders = serializers.BooleanField(default=False)
+    show_members_improved = serializers.BooleanField(default=False)
+    email = serializers.CharField(default='')
+    website = serializers.CharField(default='')
+    info = serializers.CharField(default='')
+    sub_groups = RecursiveField(default=list(), many=True)
+    group_type = ScoutsGroupTypeSerializer()
+    public_registration = serializers.BooleanField(default=False)
     
     class Meta:
         model = ScoutsGroup
@@ -174,15 +108,14 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
     def create(self, validated_data) -> ScoutsGroup:
         return ScoutsGroup(**validated_data)
     
-    def update(self, instance, validated_data) -> ScoutsGroup:
-        instance.type = ScoutsGroupType.objects.get(type='Scouts')
+    def update(self, instance: ScoutsGroup, validated_data) -> ScoutsGroup:
+        instance.group_type = ScoutsGroupType.objects.get(type='Scouts')
         instance.group_admin_id = validated_data.get(
             'id', instance.group_admin_id)
         instance.number = validated_data.get(
             'groepsnummer', instance.number)
         instance.name = validated_data.get(
             'naam', instance.name)
-        instance.addresses = ScoutsAddressSerializer(many=True)
         instance.foundation = validated_data.get(
             'opgericht', instance.foundation)
         instance.only_leaders = validated_data.get(
@@ -196,6 +129,63 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
         instance.group_type = validated_data.get('soort', instance.group_type)
         instance.public_registration = validated_data.get(
             'publiek-inschrijven', instance.public_registration)
+        
+        return instance
+
+
+class ScoutsAddressSerializer(serializers.ModelSerializer):
+    """
+    Serializes a ScoutsAddress object.
+    """
+    
+    group = ScoutsGroupSerializer()
+    group_admin_id = serializers.CharField()
+    country = serializers.CharField()
+    postalCode = serializers.CharField()
+    city = serializers.CharField()
+    street = serializers.CharField()
+    number = serializers.CharField()
+    bus = serializers.CharField()
+    phone = serializers.CharField()
+    postalAddress = serializers.BooleanField()
+    status = serializers.CharField()
+    email = serializers.CharField()
+    latitude = models.CharField(default='')
+    longitude = models.CharField(default='')
+    description = serializers.CharField()
+    
+    class Meta:
+        model = ScoutsAddress
+        fields = '__all__'
+    
+    def create(self, validated_data) -> ScoutsAddress:
+        return ScoutsAddress(**validated_data)
+    
+    def update(self, instance, validated_data) -> ScoutsAddress:
+        instance.group = ScoutsGroupSerializer(source='addressen')
+        instance.id = validated_data.get('id', instance.id)
+        instance.country = validated_data.get(
+            'country', instance.id)
+        instance.postal_code = validated_data.get(
+            'postal_code', instance.postal_code)
+        instance.city= validated_data.get('city', instance.city)
+        instance.street = validated_data.get('street', instance.street)
+        instance.number = validated_data.get('number', instance.number)
+        instance.box = validated_data.get('box', instance.box)
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.postal_address = validated_data.get(
+            'postal_address', instance.postal_address)
+        instance.status = validated_data.get('status', instance.status)
+        
+        position_data = validated_data.get('position')
+        if position_data:
+            instance.latitude = position_data.get(
+                'latitude', instance.latitude)
+            instance.longitude = position_data.get(
+                'longitude', instance.longitude)
+        
+        instance.description = validated_data(
+            'description', instance.description)
         
         return instance
 

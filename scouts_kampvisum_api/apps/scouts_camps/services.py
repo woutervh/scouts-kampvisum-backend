@@ -21,17 +21,17 @@ class ScoutsCampService():
         
         return camp
     
-    def camp_update(self, *, camp: ScoutsCamp, **fields) -> ScoutsCamp:
+    def camp_update(self, *, instance: ScoutsCamp, **fields) -> ScoutsCamp:
         """
         Updates an existing ScoutsCamp object in the DB.
         """
         
-        camp.name = fields.get('name', camp.name)
-        camp.start_date = fields.get('start_date', camp.start_date)
-        camp.end_date = fields.get('end_date', camp.end_date)
+        instance.name = fields.get('name', instance.name)
+        instance.start_date = fields.get('start_date', instance.start_date)
+        instance.end_date = fields.get('end_date', instance.end_date)
         
-        camp.full_clean()
-        camp.save()
+        instance.full_clean()
+        instance.save()
         
-        return camp
+        return instance
 

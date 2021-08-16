@@ -19,5 +19,12 @@
 		"fields": {
 			"type": "Zeescouts"
 		}
+	},
+	{
+		"pk": 4,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Test"
+		}
 	}
 ]
