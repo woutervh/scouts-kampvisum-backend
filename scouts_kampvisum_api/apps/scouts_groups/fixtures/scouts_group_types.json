@@ -3,28 +3,140 @@
 		"pk": 1,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Scouts"
+			"type": "Groep"
 		}
 	},
 	{
 		"pk": 2,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Akabe"
+			"type": "District"
 		}
 	},
 	{
 		"pk": 3,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Zeescouts"
+			"type": "Gouw"
 		}
 	},
 	{
 		"pk": 4,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
+			"type": "Zeescouts"
+		}
+	},
+	{
+		"pk": 5,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Akabe"
+		}
+	},
+	{
+		"pk": 6,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Akabetak"
+		}
+	},
+	{
+		"pk": 7,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Jeugdverblijf"
+		}
+	},
+	{
+		"pk": 8,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "OpenKamp"
+		}
+	},
+	{
+		"pk": 9,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Jin"
+		}
+	},
+	{
+		"pk": 10,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Jambe"
+		}
+	},
+	{
+		"pk": 11,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Technieken"
+		}
+	},
+	{
+		"pk": 12,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Givers"
+		}
+	},
+	{
+		"pk": 13,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Jamboree"
+		}
+	},
+	{
+		"pk": 14,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "HO"
+		}
+	},
+	{
+		"pk": 15,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "HONL"
+		}
+	},
+	{
+		"pk": 16,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Tijdschriften"
+		}
+	},
+	{
+		"pk": 17,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
 			"type": "Test"
+		}
+	},
+	{
+		"pk": 18,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Verbond"
+		}
+	},
+	{
+		"pk": 19,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Ploeg"
+		}
+	},
+	{
+		"pk": 20,
+		"model": "scouts_groups.ScoutsGroupType",
+		"fields": {
+			"type": "Akazeetak"
 		}
 	}
 ]
