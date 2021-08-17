@@ -52,7 +52,7 @@ fi
 cd "$SCRIPT_DIR"
 
 # Install all dependencies from requirements.txt, for local testing
-python -m pip install -r $(grep -v '^ *#' requirements.txt | grep .)
+#python -m pip install -r $(grep -v '^ *#' requirements.txt | grep .)
 
 # Install the lib with pip, to run without poetry
 python -m pip uninstall --yes scouts-auth

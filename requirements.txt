@@ -80,6 +80,9 @@ django-cors-headers==3.7.0; python_version >= "3.6" \
 django-filter==2.4.0; python_version >= "3.5" \
     --hash=sha256:84e9d5bb93f237e451db814ed422a3a625751cbc9968b484ecc74964a8696b06 \
     --hash=sha256:e00d32cebdb3d54273c48f4f878f898dced8d5dfaad009438fe61ebdf535ace1
+django-rest-enumfield==0.2.0 \
+    --hash=sha256:0e3c1121e136dd7163c92737dcd67e0c6b78e78793b740b0811753343c7da8fe \
+    --hash=sha256:80792326d5d8fad8a66729e9404a4078fe16f7eb8b2a910b37157d96df415611
 django-rest-framework==0.1.0 \
     --hash=sha256:47a8f496fa69e3b6bd79f68dd7a1527d907d6b77f009e9db7cf9bb21cc565e4a
 django-safedelete==1.0.0 \

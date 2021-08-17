@@ -1,7 +1,7 @@
 #!/bin/bash
 
 APPS=("base" "groupadmin" "scouts_camp_visums" "scouts_groups" "scouts_camps")
-FIXTURES=("scouts_group_types.json" "scouts_section_names.json" "scouts_camp_visum_categories.json" "scouts_camp_visum_sub_categories.json")
+FIXTURES=("scouts_group_types.json" "scouts_section_names.json" "scouts_default_section_names.json" "scouts_camp_visum_categories.json" "scouts_camp_visum_sub_categories.json")
 
 make_migration() {
 	echo "============================================================"

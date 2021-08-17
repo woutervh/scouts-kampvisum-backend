@@ -126,6 +126,18 @@ python-versions = ">=3.5"
 Django = ">=2.2"
 
 [[package]]
+name = "django-rest-enumfield"
+version = "0.2.0"
+description = "EnumField for Django REST Framework"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+django = "*"
+djangorestframework = "*"
+
+[[package]]
 name = "django-rest-framework"
 version = "0.1.0"
 description = "alias."
@@ -530,7 +542,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "04d5eff6e166f61bc2bae2841112c4f876a08dc7d4e50733d30b6b12d251fd2a"
+content-hash = "01168ba78bfcf6c1576f4f72ff8490c50434c30788befb8075dd7155b614892a"
 
 [metadata.files]
 asgiref = [
@@ -627,6 +639,10 @@ django-cors-headers = [
 django-filter = [
     {file = "django-filter-2.4.0.tar.gz", hash = "sha256:84e9d5bb93f237e451db814ed422a3a625751cbc9968b484ecc74964a8696b06"},
     {file = "django_filter-2.4.0-py3-none-any.whl", hash = "sha256:e00d32cebdb3d54273c48f4f878f898dced8d5dfaad009438fe61ebdf535ace1"},
+]
+django-rest-enumfield = [
+    {file = "django-rest-enumfield-0.2.0.tar.gz", hash = "sha256:0e3c1121e136dd7163c92737dcd67e0c6b78e78793b740b0811753343c7da8fe"},
+    {file = "django_rest_enumfield-0.2.0-py2.py3-none-any.whl", hash = "sha256:80792326d5d8fad8a66729e9404a4078fe16f7eb8b2a910b37157d96df415611"},
 ]
 django-rest-framework = [
     {file = "django-rest-framework-0.1.0.tar.gz", hash = "sha256:47a8f496fa69e3b6bd79f68dd7a1527d907d6b77f009e9db7cf9bb21cc565e4a"},
