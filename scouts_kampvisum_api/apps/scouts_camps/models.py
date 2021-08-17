@@ -10,12 +10,10 @@ class ScoutsCamp(BaseModel):
     """ 
     
     name = models.TextField()
+    
+    # @TODO model period, exceptions, test-driven
     start_date = models.DateField()
     end_date = models.DateField()
-    
-    class Meta:
-        db_table = 'camps'
-        managed = True
 
     def clean(self):
         if not self.start_date or not self.end_date:

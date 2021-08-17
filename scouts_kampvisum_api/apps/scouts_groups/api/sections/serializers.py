@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import ScoutsSectionName, ScoutsSection
 from ..groups.serializers import ScoutsGroupTypeSerializer
+from ..groups.serializers import ScoutsGroupSerializer
+from ....groupadmin.api import MemberGender
 
 
 class ScoutsSectionNameSerializer(serializers.ModelSerializer):
@@ -9,6 +11,20 @@ class ScoutsSectionNameSerializer(serializers.ModelSerializer):
     """
     
     name = serializers.CharField(max_length=128)
+    gender = serializers.ChoiceField(choices = MemberGender)
+    
+    class Meta:
+        model = ScoutsSectionName
+        fields = '__all__'
+
+
+class ScoutsDefaultSectionNameSerializer(serializers.ModelSerializer):
+    """
+    Serializes a ScoutDefaultSectionName object
+    """
+    
+    group_type = ScoutsGroupTypeSerializer
+    name = ScoutsSectionNameSerializer
     
     class Meta:
         model = ScoutsSectionName
@@ -20,7 +36,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
     Serializes a ScoutSection object
     """
     
-    group = ScoutsSection
+    group = ScoutsGroupSerializer
     name = serializers.CharField(max_length=128)
     
     class Meta:

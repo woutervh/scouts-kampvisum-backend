@@ -3,133 +3,152 @@
 		"pk": 1,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "kapoenen"
+			"name": "kapoenen",
+			"gender": "M"
 		}
 	},
 	{
 		"pk": 2,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "elfjes"
+			"name": "elfjes",
+			"gender": "F"
 		}
 	},
 	{
 		"pk": 3,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "zeehondjes"
+			"name": "zeehondjes",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 4,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "welpen"
+			"name": "welpen",
+			"gender": "M"
 		}
 	},
 	{
 		"pk": 5,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "kabouters"
+			"name": "kabouters",
+			"gender": "F"
 		}
 	},
 	{
 		"pk": 6,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "zeewelpen"
+			"name": "zeewelpen",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 7,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "wouters"
+			"name": "wouters",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 8,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "kawellen"
+			"name": "kawellen",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 9,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "jongverkenners"
+			"name": "jongverkenners",
+			"gender": "M"
 		}
 	},
 	{
 		"pk": 10,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "jonggidsen"
+			"name": "jonggidsen",
+			"gender": "F"
 		}
 	},
 	{
 		"pk": 11,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "scheepsmakkers"
+			"name": "scheepsmakkers",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 12,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "jonggivers"
+			"name": "jonggivers",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 13,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "verkenners"
+			"name": "verkenners",
+			"gender": "M"
 		}
 	},
 	{
 		"pk": 14,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "gidsen"
+			"name": "gidsen",
+			"gender": "F"
 		}
 	},
 	{
 		"pk": 15,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "zeeverkenners"
+			"name": "zeeverkenners",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 16,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "givers"
+			"name": "givers",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 17,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "jins"
+			"name": "jins",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 18,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "loodsen"
+			"name": "loodsen",
+			"gender": "H"
 		}
 	},
 	{
 		"pk": 19,
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
-			"name": "leiding"
+			"name": "leiding",
+			"gender": "H"
 		}
 	}
 ]

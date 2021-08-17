@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from ....base.models import BaseModel
+from .managers import ScoutsGroupTypeManager
 
 
 class ScoutsGroupType(BaseModel):
@@ -13,10 +14,15 @@ class ScoutsGroupType(BaseModel):
         max_length=64,
         null=False,
         blank=False)
+
+    objects = ScoutsGroupTypeManager()
     
     class Meta:
         abstract = False
         ordering = ['type']
+    
+    def natural_key(self):
+        return (self.type, )
     
     def clean(self):
         pass
@@ -50,7 +56,7 @@ class ScoutsGroup(BaseModel):
         blank=True,
         on_delete=models.CASCADE
     )
-    group_type = models.ForeignKey(
+    type = models.ForeignKey(
         ScoutsGroupType,
         related_name='group_type',
         null=True,

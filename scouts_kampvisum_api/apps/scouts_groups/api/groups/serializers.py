@@ -7,27 +7,6 @@ from ....groupadmin.api import GroupAdminApi
 from .models import ScoutsGroupType, ScoutsAddress, ScoutsGroup
 
 
-class ScoutsGroupTypeSerializer(serializers.ModelSerializer):
-    """
-    Serializes a ScoutsGroupType object.
-    """
-    
-    type = models.CharField(
-        max_length=64, default=GroupAdminApi.default_scouts_group_type)
-    
-    class Meta:
-        model = ScoutsGroupType
-        fields = '__all__'
-    
-    def create(self, validated_data) -> ScoutsGroupType:
-        return ScoutsGroupType(**validated_data)
-    
-    def update(self, instance, validated_data) -> ScoutsGroupType:
-        instance.type = validated_data.get('type', instance.type)
-        
-        return type
-
-
 class GroupAdminLocationSerializer(serializers.Serializer):
     """
     Serializes a geolocation from GroupAdmin.
@@ -78,9 +57,31 @@ class GroupAdminGroupSerializer(serializers.Serializer):
     info = serializers.CharField(source='vrijeInfo')
     sub_groups = RecursiveField(
         source='onderliggendeGroepen', default=list(), many=True)
-    group_type = serializers.CharField(source='soort', default='')
+    group_type = serializers.CharField(
+        source='soort', default=GroupAdminApi.default_scouts_group_type)
     public_registration = serializers.BooleanField(
         source='publiek-inschrijven', default=False)
+
+
+class ScoutsGroupTypeSerializer(serializers.ModelSerializer):
+    """
+    Serializes a ScoutsGroupType object.
+    """
+    
+    type = models.CharField(
+        max_length=64, default=GroupAdminApi.default_scouts_group_type)
+    
+    class Meta:
+        model = ScoutsGroupType
+        fields = '__all__'
+    
+    def create(self, validated_data) -> ScoutsGroupType:
+        return ScoutsGroupType(**validated_data)
+    
+    def update(self, instance, validated_data) -> ScoutsGroupType:
+        instance.type = validated_data.get('type', instance.type)
+        
+        return type
 
 
 class ScoutsGroupSerializer(serializers.ModelSerializer):
@@ -98,7 +99,7 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
     website = serializers.CharField(default='')
     info = serializers.CharField(default='')
     sub_groups = RecursiveField(default=list(), many=True)
-    group_type = ScoutsGroupTypeSerializer()
+    type = ScoutsGroupTypeSerializer()
     public_registration = serializers.BooleanField(default=False)
     
     class Meta:
@@ -109,26 +110,25 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
         return ScoutsGroup(**validated_data)
     
     def update(self, instance: ScoutsGroup, validated_data) -> ScoutsGroup:
-        instance.group_type = ScoutsGroupType.objects.get(type='Scouts')
         instance.group_admin_id = validated_data.get(
-            'id', instance.group_admin_id)
+            'group_admin_id', instance.group_admin_id)
         instance.number = validated_data.get(
-            'groepsnummer', instance.number)
+            'number', instance.number)
         instance.name = validated_data.get(
-            'naam', instance.name)
+            'name', instance.name)
         instance.foundation = validated_data.get(
-            'opgericht', instance.foundation)
+            'foundation', instance.foundation)
         instance.only_leaders = validated_data.get(
-            'enkelLeiding', instance.only_leaders)
+            'only_leaders', instance.only_leaders)
         instance.show_members_improved = validated_data.get(
-            'ledenVerbeterdTonen', instance.show_members_improved)
+            'show_members_improved', instance.show_members_improved)
         instance.email = validated_data.get('email', instance.email)
         instance.website = validated_data.get('website', instance.website)
-        instance.info = validated_data.get('vrijeInfo', instance.info)
+        instance.info = validated_data.get('info', instance.info)
         instance.sub_groups = ScoutsGroupSerializer(many=True)
-        instance.group_type = validated_data.get('soort', instance.group_type)
+        instance.type = ScoutsGroupTypeSerializer()
         instance.public_registration = validated_data.get(
-            'publiek-inschrijven', instance.public_registration)
+            'public_registration', instance.public_registration)
         
         return instance
 

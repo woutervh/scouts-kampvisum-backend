@@ -1,7 +1,9 @@
+from apps.scouts_groups.api.sections.managers import ScoutsSectionNameManager
 from django.db import models
 from safedelete.models import HARD_DELETE
 
 from ....base.models import BaseModel
+from ....groupadmin.api import MemberGender
 from ..groups.models import ScoutsGroupType, ScoutsGroup
 
 # FIXTURE: scouts_section_names
@@ -20,6 +22,39 @@ class ScoutsSectionName(BaseModel):
     
     name = models.CharField(
         max_length=128)
+    gender = models.CharField(
+        max_length=12,
+        choices=MemberGender.choices,
+        default=MemberGender.MIXED
+    )
+
+    objects = ScoutsSectionNameManager()
+
+    def natural_key(self):
+        return (self.name, )
+    
+    def clean(self):
+        pass
+
+
+class ScoutsDefaultSectionName(BaseModel):
+    """
+    A model that configures default section names for a particular group type.
+    
+    Currently, if the group is not a zeescouts group, it is assumed the group
+    type is 'Groep'.
+    """
+    
+    type = models.ForeignKey(
+        ScoutsGroupType,
+        null=True,
+        on_delete=models.CASCADE)
+    name = models.ForeignKey(
+        ScoutsSectionName,
+        on_delete = models.DO_NOTHING)
+
+    class Meta:
+        unique_together = (('type', 'name'))
     
     def clean(self):
         pass
@@ -32,11 +67,9 @@ class ScoutsSection(BaseModel):
     
     group = models.ForeignKey(
         ScoutsGroup,
-        related_name='group',
         on_delete = models.CASCADE)
     name = models.ForeignKey(
         ScoutsSectionName,
-        related_name='section_name',
         on_delete = models.DO_NOTHING)
     
     def clean(self):

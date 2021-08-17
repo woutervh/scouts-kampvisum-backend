@@ -20,4 +20,3 @@ class ScoutsCampVisumCategory(BaseModel):
     def clean(self):
         pass
 
-

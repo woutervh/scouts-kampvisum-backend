@@ -183,6 +183,10 @@ class ScoutsGroupService:
         return fields
     
     def import_groupadmin_group(self, fields):
+        """
+        Parses GroupAdmin group data and saves it as a ScoutsGroup object.
+        """
+        
         group_admin_id = fields.get('group_admin_id', '')
         group_type = ScoutsGroupType.objects.get(type=fields.get(
             'group_type', GroupAdminApi.default_scouts_group_type))

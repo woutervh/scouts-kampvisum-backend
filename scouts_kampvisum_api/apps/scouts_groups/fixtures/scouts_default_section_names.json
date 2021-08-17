@@ -1,0 +1,162 @@
+[
+	{
+		"pk": 1,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "kapoenen" ]
+		}
+	},
+	{
+		"pk": 2,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "elfjes" ]
+		}
+	},
+	{
+		"pk": 3,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "welpen" ]
+		}
+	},
+	{
+		"pk": 4,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "kabouters" ]
+		}
+	},
+	{
+		"pk": 5,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "wouters" ]
+		}
+	},
+	{
+		"pk": 6,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "kawellen" ]
+		}
+	},
+	{
+		"pk": 7,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "jongverkenners" ]
+		}
+	},
+	{
+		"pk": 8,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "jonggidsen" ]
+		}
+	},
+	{
+		"pk": 9,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "jonggivers" ]
+		}
+	},
+	{
+		"pk": 10,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "verkenners" ]
+		}
+	},
+	{
+		"pk": 11,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "gidsen" ]
+		}
+	},
+	{
+		"pk": 12,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "givers" ]
+		}
+	},
+	{
+		"pk": 13,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "jins" ]
+		}
+	},
+	{
+		"pk": 14,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "leiding" ]
+		}
+	},
+	{
+		"pk": 15,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "zeehondjes" ]
+		}
+	},
+	{
+		"pk": 16,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "zeewelpen" ]
+		}
+	},
+	{
+		"pk": 17,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "scheepsmakkers" ]
+		}
+	},
+	{
+		"pk": 18,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "zeeverkenners" ]
+		}
+	},
+	{
+		"pk": 19,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "loodsen" ]
+		}
+	},
+	{
+		"pk": 20,
+		"model": "scouts_groups.ScoutsDefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "leiding" ]
+		}
+	}
+]
