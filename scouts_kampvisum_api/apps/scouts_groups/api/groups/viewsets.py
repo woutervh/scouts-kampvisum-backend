@@ -8,6 +8,7 @@ from drf_yasg2.utils import swagger_auto_schema
 from .models import ScoutsGroup
 from .services import ScoutsGroupService
 from .serializers import GroupAdminGroupSerializer, ScoutsGroupSerializer
+from ..sections.serializers import ScoutsSectionSerializer
 from ....groupadmin.services import GroupAdminService
 
 
@@ -86,6 +87,28 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         else:
             serializer = ScoutsGroupSerializer(instances, many=True)
             return Response(serializer.data)
+    
+    @action(
+        detail=True, methods=['get'], permission_classes=[IsAuthenticated],
+        url_path='sections')
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: ScoutsSectionSerializer},
+    )
+    def get_sections(self, request, pk=None):
+        """
+        Retrieves a list of sections for this ScoutsGroup.
+        """
+        
+        instance = self.get_object()
+        instances = instance.sections.all()
+
+        if len(instances) == 0:
+            instances 
+
+        output_serializer = ScoutsSectionSerializer(
+            instances, many=True)
+
+        return Response(output_serializer.data)
 
 
 class GroupAdminGroupViewSet(viewsets.GenericViewSet):

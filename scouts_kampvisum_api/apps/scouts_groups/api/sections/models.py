@@ -67,10 +67,12 @@ class ScoutsSection(BaseModel):
     
     group = models.ForeignKey(
         ScoutsGroup,
+        related_name='sections',
         on_delete = models.CASCADE)
     name = models.ForeignKey(
         ScoutsSectionName,
         on_delete = models.DO_NOTHING)
+    hidden = models.BooleanField(default=False)
     
     def clean(self):
         pass
