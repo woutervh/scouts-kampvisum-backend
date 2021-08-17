@@ -9,6 +9,83 @@ from ....groupadmin.api import GroupAdminApi
 logger = logging.getLogger(__name__)
 
 
+class ScoutsAddressService:
+    
+    def address_update_or_create(self,
+                                 group: ScoutsGroup,
+                                 fields):
+        qs = ScoutsAddress.objects.filter(
+        group_admin_uuid=fields.get('group_admin_uuid', ''))
+        
+        if qs.count() == 1:
+            self.address_update(qs[0], group, fields)
+        else:
+            self.address_create(group, fields)
+    
+    def address_create(self,
+            group: ScoutsGroup,
+            fields) -> ScoutsAddress:
+        """
+        Saves a new ScoutsAddress.
+        """
+        
+        logger.info("Creating address for group '%s'", group.name)
+        
+        instance = ScoutsAddress()
+        
+        instance.group_admin_uuid = fields.get(
+            'group_admin_uuid', '')
+        instance.country = fields.get('country', '')
+        instance.postal_code = fields.get('postal_code', '')
+        instance.city = fields.get('city', '')
+        instance.street = fields.get('street', '')
+        instance.number = fields.get('number', '')
+        instance.box = fields.get('box', '')
+        instance.postal_address = fields.get(
+            'postal_address', False)
+        instance.status = fields.get('status', '')
+        instance.latitude = fields.get('latitude', '')
+        instance.longitude = fields.get('longitude', '')
+        instance.description = fields.get('description', '')
+        instance.group = group
+        
+        instance.full_clean()
+        instance.save()
+        
+        return instance
+    
+    def address_update(self,
+            instance: ScoutsAddress,
+            group: ScoutsGroup,
+            fields) -> ScoutsAddress:
+        """
+        Updates an existing ScoutsAddress.
+        """
+        
+        logger.info("Updating address for group '%s'", group.name)
+        
+        instance.group_admin_uuid = fields.get(
+            'group_admin_uuid', instance.group_admin_uuid)
+        instance.country = fields.get('country', instance.country)
+        instance.postal_code = fields.get('postal_code', instance.postal_code)
+        instance.city = fields.get('city', instance.city)
+        instance.street = fields.get('street', instance.street)
+        instance.number = fields.get('number', instance.number)
+        instance.box = fields.get('box', instance.box)
+        instance.postal_address = fields.get(
+            'postal_address', instance.postal_address)
+        instance.status = fields.get('status', instance.status)
+        instance.latitude = fields.get('latitude', instance.latitude)
+        instance.longitude = fields.get('longitude', instance.longitude)
+        instance.description = fields.get('description', instance.description)
+        instance.group = group
+        
+        instance.full_clean()
+        instance.save()
+        
+        return instance
+
+
 class ScoutsGroupService:
     """
     Provides CRUD operations for ScoutsGroup objects.
@@ -54,10 +131,7 @@ class ScoutsGroupService:
         instance.save()
         
         for address in addresses:
-            address.group = instance
-            
-            address.full_clean()
-            ScoutsAddress.objects.update_or_create()
+            ScoutsAddressService().address_update_or_create(instance, address)
         
         return instance
     
@@ -90,28 +164,23 @@ class ScoutsGroupService:
         instance.full_clean()
         instance.save()
         
+        for address in addresses:
+            ScoutsAddressService().address_update_or_create(instance, address)
+        
         return instance
     
-    def import_groupadmin_address(self, address):
-        scouts_address = ScoutsAddress()
+    def flatten_groupadmin_address(self, fields):
+        """
+        Flattens latitude and longitude into the address dictionary.
+        """
         
-        scouts_address.group_admin_id = address.get('id', '')
-        scouts_address.country = address.get('country', '')
-        scouts_address.postal_code = address.get('postal_code', '')
-        scouts_address.city = address.get('city', '')
-        scouts_address.street = address.get('street', '')
-        scouts_address.number = address.get('number', '')
-        scouts_address.box = address.get('box', '')
-        scouts_address.postal_address = address.get('postal_address', False)
-        scouts_address.status = address.get('status', '')
-        scouts_address.description = address.get('description', '')
-        
-        location = address.get('location', dict())
+        location = fields.get('location', None)
         if location:
-            scouts_address.latitude = location.get('latitude', ''),
-            scouts_address.longitude = location.get('longitude', '')
+            fields['latitude'] = location.get('latitude', '')
+            fields['longitude'] = location.get('longitude', '')
+            fields.pop('location')
         
-        return scouts_address
+        return fields
     
     def import_groupadmin_group(self, fields):
         group_admin_id = fields.get('group_admin_id', '')
@@ -120,7 +189,8 @@ class ScoutsGroupService:
         scouts_group_addresses = list()
         addresses = fields.get('addresses', list())
         for address in addresses:
-            scouts_address = self.import_groupadmin_address(address)
+            scouts_address = self.flatten_groupadmin_address(
+                address)
             
             scouts_group_addresses.append(scouts_address)
         
@@ -174,50 +244,3 @@ class ScoutsGroupService:
             group_admin_id__in=list(set(group_admin_ids))).order_by(
                 'group_admin_id')
 
-
-class ScoutsAddressService:
-    
-    def address_create(self,
-            instance: ScoutsAddress,
-            group: ScoutsGroup) -> ScoutsAddress:
-        """
-        Saves a new ScoutsAddress.
-        """
-        
-        if instance.location:
-            instance.location.full_clean()
-            instance.location.save()
-        
-        instance.group = instance
-        instance.full_clean()
-        instance.save()
-        
-        return instance
-    
-    def address_update(self,
-            instance: ScoutsAddress,
-            group: ScoutsGroup,
-            **fields) -> ScoutsAddress:
-        """
-        Updates an existing ScoutsAddress.
-        """
-        
-        instance.group_admin_id = fields.get('id', instance.group_admin_id)
-        instance.country = fields.get('country', '')
-        instance.postal_code = fields.get('postal_code', '')
-        instance.city = fields.get('city', '')
-        instance.street = fields.get('street', '')
-        instance.number = fields.get('number', '')
-        instance.box = fields.get('box', '')
-        instance.postal_address = fields.get('postal_address', False)
-        instance.status = fields.get('status', '')
-        instance.description = fields.get('description', '')
-        instance.group = group
-        
-        if fields.get('location'):
-            pass
-        
-        instance.full_clean()
-        instance.save()
-        
-        return instance

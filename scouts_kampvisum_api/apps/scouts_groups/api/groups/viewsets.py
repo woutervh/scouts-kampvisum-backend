@@ -74,17 +74,17 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         """
         
         user = request.user
-        user.fetch_detailed_group_info()
+        groups = [group.id for group in user.partial_scouts_groups]
+        logger.info('GROUPS: %s', groups)
         
-        instances = GroupAdminService().get_groups(
-            user, user.partial_scouts_groups)
+        instances = ScoutsGroup.objects.filter(group_admin_id__in=groups)
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = GroupAdminGroupSerializer(page, many=True)
+            serializer = ScoutsGroupSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = GroupAdminGroupSerializer(instances, many=True)
+            serializer = ScoutsGroupSerializer(instances, many=True)
             return Response(serializer.data)
 
 

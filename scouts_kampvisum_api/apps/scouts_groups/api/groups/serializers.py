@@ -42,15 +42,15 @@ class GroupAdminAddressSerializer(serializers.Serializer):
     Serializes an address from GroupAdmin.
     """
     
-    group_admin_id = serializers.CharField(source='id', default='')
+    group_admin_uuid = serializers.CharField(source='id', default='')
     country = serializers.CharField(source='land', default='')
-    postalCode = serializers.CharField(source='postcode', default='')
+    postal_code = serializers.CharField(source='postcode', default='')
     city = serializers.CharField(source='gemeente', default='')
     street = serializers.CharField(source='straat', default='')
     number = serializers.CharField(source='nummer', default='')
     box = serializers.CharField(source='bus', default='')
     phone = serializers.CharField(source='telefoon', default='')
-    postalAddress = serializers.BooleanField(
+    postal_address = serializers.BooleanField(
         source='postadres', default=False)
     status = serializers.CharField(default='')
     location = GroupAdminLocationSerializer(source='positie', default=None)
@@ -139,7 +139,7 @@ class ScoutsAddressSerializer(serializers.ModelSerializer):
     """
     
     group = ScoutsGroupSerializer()
-    group_admin_id = serializers.CharField()
+    group_admin_uuid = serializers.CharField()
     country = serializers.CharField()
     postalCode = serializers.CharField()
     city = serializers.CharField()
@@ -163,7 +163,7 @@ class ScoutsAddressSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data) -> ScoutsAddress:
         instance.group = ScoutsGroupSerializer(source='addressen')
-        instance.id = validated_data.get('id', instance.id)
+        instance.group_admin_uuid = validated_data.get('id', instance.id)
         instance.country = validated_data.get(
             'country', instance.id)
         instance.postal_code = validated_data.get(

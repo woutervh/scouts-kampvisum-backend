@@ -45,7 +45,7 @@ class ScoutsGroup(BaseModel):
         max_length=128, default='', null=True, blank=True)
     sub_groups = models.ForeignKey(
         'ScoutsGroup',
-        related_name='sub_groups',
+        related_name='%(class)s_sub_groups',
         null=True,
         blank=True,
         on_delete=models.CASCADE
@@ -73,8 +73,8 @@ class ScoutsAddress(BaseModel):
         null=True,
         blank=False,
         on_delete=models.CASCADE)
-    group_admin_id = models.CharField(
-        max_length=32, default='', unique=True, null=True, blank=True)
+    group_admin_uuid = models.CharField(
+        max_length=64, default='', unique=True, null=True, blank=True)
     country = models.CharField(
         max_length=2, default='', null=True, blank=True)
     postal_code = models.CharField(
