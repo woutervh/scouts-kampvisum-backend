@@ -19,7 +19,9 @@ class GroupAdminService:
         
         return json
     
-    def get_groups(self, active_user, group_links):
+    def get_groups(self, active_user:ScoutsAuthUser):
+        active_user.fetch_detailed_group_info()
+        group_links = active_user.partial_scouts_groups
         groups = []
         
         for href in group_links:

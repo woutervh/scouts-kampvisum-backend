@@ -1,5 +1,5 @@
 from rest_framework import routers
-from .viewsets import ScoutsCampViewSet
+from .views import ScoutsCampViewSet
 
 
 router = routers.SimpleRouter()

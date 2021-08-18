@@ -7,7 +7,7 @@ from drf_yasg2.utils import swagger_auto_schema
 
 from .models import ScoutsGroup
 from .services import ScoutsGroupService
-from .serializers import GroupAdminGroupSerializer, ScoutsGroupSerializer
+from .serializers import ScoutsGroupSerializer
 from ..sections.serializers import ScoutsSectionSerializer
 from ....groupadmin.services import GroupAdminService
 
@@ -48,15 +48,8 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         """
         Retrieves authorized groups from GroupAdmin and stores them.
         """
-        
         user = request.user
-        user.fetch_detailed_group_info()
-        
-        instances = GroupAdminService().get_groups(
-            user, user.partial_scouts_groups)
-        serializer = GroupAdminGroupSerializer(instances, many=True)
-        
-        groups = ScoutsGroupService().import_groupadmin_groups(serializer.data)
+        groups = ScoutsGroupService().import_groupadmin_groups(user)
         page = self.paginate_queryset(groups)
         
         if page is not None:
@@ -109,34 +102,4 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
             instances, many=True)
 
         return Response(output_serializer.data)
-
-
-class GroupAdminGroupViewSet(viewsets.GenericViewSet):
-    """
-    A viewset for viewing scout groups for the current user.
-    """
-    
-    serializer_class = GroupAdminGroupSerializer
-    
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: GroupAdminGroupSerializer}
-    )
-    def list(self, request):
-        """
-        Lists authorized groups from GroupAdmin.
-        """
-        
-        user = request.user
-        user.fetch_detailed_group_info()
-        
-        instances = GroupAdminService().get_groups(
-            user, user.partial_scouts_groups)
-        page = self.paginate_queryset(instances)
-
-        if page is not None:
-            serializer = GroupAdminGroupSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = GroupAdminGroupSerializer(instances, many=True)
-            return Response(serializer.data)
 

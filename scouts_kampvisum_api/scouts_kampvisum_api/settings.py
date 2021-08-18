@@ -42,9 +42,9 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'scouts_auth': {
+        'scouts-auth': {
             'handlers': ['console', 'file'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True,
         },
     },
@@ -132,6 +132,7 @@ INSTALLED_APPS = [
     'safedelete',
     'storages',
     'sqlmiddleware',
+    'apps.setup',
     'apps.base',
     'apps.groupadmin',
     'apps.scouts_camp_visums',

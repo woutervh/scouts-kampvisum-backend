@@ -1,9 +1,12 @@
 import logging
 from django.utils import timezone
 
+from scouts_auth.models import User as ScoutsAuthUser
 from .models import ScoutsAddress
 from .models import ScoutsGroupType, ScoutsGroup
-from ....groupadmin.api import GroupAdminApi
+from apps.groupadmin.api import GroupAdminApi
+from apps.groupadmin.services import GroupAdminService
+from apps.groupadmin.serializers import GroupAdminGroupSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -124,7 +127,7 @@ class ScoutsGroupService:
                 website=website,
                 info=info,
                 #sub_groups=sub_groups,
-                group_type=group_type,
+                type=group_type,
                 public_registration=public_registration,
         )
         instance.full_clean()
@@ -186,10 +189,11 @@ class ScoutsGroupService:
         """
         Parses GroupAdmin group data and saves it as a ScoutsGroup object.
         """
-        
+        logger.info(fields)
         group_admin_id = fields.get('group_admin_id', '')
         group_type = ScoutsGroupType.objects.get(type=fields.get(
-            'group_type', GroupAdminApi.default_scouts_group_type))
+            'type', GroupAdminApi.default_scouts_group_type))
+        
         scouts_group_addresses = list()
         addresses = fields.get('addresses', list())
         for address in addresses:
@@ -235,12 +239,16 @@ class ScoutsGroupService:
         
         return instance
     
-    def import_groupadmin_groups(self, groups):
+    def import_groupadmin_groups(self, user:ScoutsAuthUser):
         """
         Imports groups from GroupAdmin, saves them and returns unique objects.
         """
+        
         group_admin_ids = list()
-        for group in groups:
+        groups = GroupAdminService().get_groups(user)
+        serializer = GroupAdminGroupSerializer(groups, many=True)
+
+        for group in serializer.data:
             group_admin_ids.append(group.get('group_admin_id'))
             self.import_groupadmin_group(group)
         
