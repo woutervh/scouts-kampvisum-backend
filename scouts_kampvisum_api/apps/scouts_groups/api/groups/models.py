@@ -63,6 +63,9 @@ class ScoutsGroup(BaseModel):
         blank=False,
         on_delete=models.CASCADE)
     public_registration = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['group_admin_id', 'number']
     
     def clean(self):
         pass
