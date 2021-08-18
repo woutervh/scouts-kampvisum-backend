@@ -14,7 +14,11 @@ class ScoutsGroupType(BaseModel):
         max_length=64,
         null=False,
         blank=False)
-
+    parent = models.ForeignKey(
+        'ScoutsGroupType',
+        null=True,
+        on_delete=models.CASCADE)
+    
     objects = ScoutsGroupTypeManager()
     
     class Meta:

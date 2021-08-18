@@ -11,7 +11,8 @@ class ScoutsSectionNameSerializer(serializers.ModelSerializer):
     """
     
     name = serializers.CharField(max_length=128)
-    gender = serializers.ChoiceField(choices = MemberGender)
+    gender = serializers.ChoiceField(
+        choices = MemberGender, default=MemberGender.MIXED)
     
     class Meta:
         model = ScoutsSectionName

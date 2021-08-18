@@ -14,6 +14,7 @@ class ScoutsGroupTypeSerializer(serializers.ModelSerializer):
     
     type = models.CharField(
         max_length=64, default=GroupAdminApi.default_scouts_group_type)
+    parent = RecursiveField()
     
     class Meta:
         model = ScoutsGroupType
@@ -24,6 +25,7 @@ class ScoutsGroupTypeSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data) -> ScoutsGroupType:
         instance.type = validated_data.get('type', instance.type)
+        instance.parent = validated_data.get('parent', instance.parent)
         
         return type
 

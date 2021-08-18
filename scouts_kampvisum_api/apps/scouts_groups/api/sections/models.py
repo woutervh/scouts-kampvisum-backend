@@ -30,6 +30,9 @@ class ScoutsSectionName(BaseModel):
 
     objects = ScoutsSectionNameManager()
 
+    class Meta:
+        unique_together = (('name', 'gender'))
+
     def natural_key(self):
         return (self.name, )
     

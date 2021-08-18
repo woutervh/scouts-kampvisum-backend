@@ -6,6 +6,7 @@ class SetupItem:
 
     ok = False
     endpoint = ''
+    creation_count = 0
     objects = ()
 
     def __init__(self, ok=False, endpoint='') -> None:
@@ -61,6 +62,7 @@ class SetupItemSerializer(serializers.Serializer):
     """
 
     ok = serializers.BooleanField(default=False)
+    creation_count = serializers.IntegerField(default=0)
     endpoint = serializers.CharField(default='')
 
 

@@ -69,7 +69,7 @@ class ScoutsCampViewSet(viewsets.GenericViewSet):
         output_serializer = ScoutsCampSerializer(
             updated_camp, context={'request': request}
         )
-
+        
         return Response(output_serializer.data, status=status.HTTP_200_OK)
     
     @swagger_auto_schema(

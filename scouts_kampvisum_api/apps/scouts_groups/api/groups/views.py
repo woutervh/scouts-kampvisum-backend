@@ -69,7 +69,6 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         
         user = request.user
         groups = [group.id for group in user.partial_scouts_groups]
-        logger.info('GROUPS: %s', groups)
         
         instances = ScoutsGroup.objects.filter(group_admin_id__in=groups)
         page = self.paginate_queryset(instances)
@@ -96,7 +95,8 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         instances = instance.sections.all()
 
         if len(instances) == 0:
-            instances 
+            logger.warn('No sections defined for group with id %s\
+                - Did you forget to call setup ?', pk)
 
         output_serializer = ScoutsSectionSerializer(
             instances, many=True)

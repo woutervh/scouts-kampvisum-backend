@@ -43,11 +43,14 @@ class SetupViewSet(viewsets.GenericViewSet):
         """
         Returns a simple JSON list that describes the initial data status.
         """
-        groups = ScoutsGroupService().import_groupadmin_groups(request.user)
-
         instance = Setup()
 
-        instance
+        groups = ScoutsGroupService().import_groupadmin_groups(request.user)
+        section_count = ScoutsGroupService().link_default_sections()
+
+        instance.groups.creation_count = len(groups)
+        instance.sections.creation_count = section_count
+
         serializer = SetupSerializer(instance, context={'request': request})
 
         return Response(serializer.data)

@@ -4,6 +4,8 @@ from django.utils import timezone
 from scouts_auth.models import User as ScoutsAuthUser
 from .models import ScoutsAddress
 from .models import ScoutsGroupType, ScoutsGroup
+from ..sections.services import ScoutsDefaultSectionNameService
+from ..sections.services import ScoutsSectionService
 from apps.groupadmin.api import GroupAdminApi
 from apps.groupadmin.services import GroupAdminService
 from apps.groupadmin.serializers import GroupAdminGroupSerializer
@@ -163,6 +165,7 @@ class ScoutsGroupService:
         instance.email = fields.get('email', instance.email)
         instance.website = fields.get('website', instance.website)
         instance.info = fields.get('info', instance.info)
+        instance.type = ScoutsGroupType.objects.get(type=fields.get('type'))
         
         instance.full_clean()
         instance.save()
@@ -189,7 +192,6 @@ class ScoutsGroupService:
         """
         Parses GroupAdmin group data and saves it as a ScoutsGroup object.
         """
-        logger.info(fields)
         group_admin_id = fields.get('group_admin_id', '')
         group_type = ScoutsGroupType.objects.get(type=fields.get(
             'type', GroupAdminApi.default_scouts_group_type))
@@ -247,7 +249,7 @@ class ScoutsGroupService:
         group_admin_ids = list()
         groups = GroupAdminService().get_groups(user)
         serializer = GroupAdminGroupSerializer(groups, many=True)
-
+        
         for group in serializer.data:
             group_admin_ids.append(group.get('group_admin_id'))
             self.import_groupadmin_group(group)
@@ -255,4 +257,34 @@ class ScoutsGroupService:
         return ScoutsGroup.objects.filter(
             group_admin_id__in=list(set(group_admin_ids))).order_by(
                 'group_admin_id')
+    
+    def link_default_sections(self):
+        """
+        Links default sections to a group.
+        """
+        groups = ScoutsGroup.objects.all()
+        service = ScoutsDefaultSectionNameService()
+        section_service = ScoutsSectionService()
+        creation_count = 0
+
+        for group in groups:
+            logger.debug('link_default_sections: GROUP: %s (%s)',
+                group, group.name)
+
+            sections = group.sections.all()
+
+            logger.debug('link_default_sections: SECTIONS: %s (%s)',
+                sections, sections.count())
+            if sections.count() == 0:
+                names = service.load_for_type(group.type)
+
+                logger.debug('link_default_sections: NAMES: %s (%s)',
+                    names, len(names))
+
+                for name in names:
+                    logger.debug('link_default_sections: NAME: %s', name)
+                    section = section_service.create(group, name.name, False)
+                    creation_count += 1
+        
+        return creation_count
 

@@ -10,14 +10,16 @@
 		"pk": 2,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "District"
+			"type": "District",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 3,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Gouw"
+			"type": "Gouw",
+			"parent": [ "Groep"]
 		}
 	},
 	{
@@ -31,84 +33,96 @@
 		"pk": 5,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Akabe"
+			"type": "Akabe",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 6,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Akabetak"
+			"type": "Akabetak",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 7,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Jeugdverblijf"
+			"type": "Jeugdverblijf",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 8,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "OpenKamp"
+			"type": "OpenKamp",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 9,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Jin"
+			"type": "Jin",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 10,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Jambe"
+			"type": "Jambe",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 11,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Technieken"
+			"type": "Technieken",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 12,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Givers"
+			"type": "Givers",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 13,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Jamboree"
+			"type": "Jamboree",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 14,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "HO"
+			"type": "HO",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 15,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "HONL"
+			"type": "HONL",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 16,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Tijdschriften"
+			"type": "Tijdschriften",
+			"parent": [ "Groep"]
 		}
 	},
 	{
@@ -122,21 +136,24 @@
 		"pk": 18,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Verbond"
+			"type": "Verbond",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 19,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Ploeg"
+			"type": "Ploeg",
+			"parent": [ "Groep"]
 		}
 	},
 	{
 		"pk": 20,
 		"model": "scouts_groups.ScoutsGroupType",
 		"fields": {
-			"type": "Akazeetak"
+			"type": "Akazeetak",
+			"parent": [ "Zeescouts"]
 		}
 	}
 ]

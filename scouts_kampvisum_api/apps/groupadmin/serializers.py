@@ -56,7 +56,7 @@ class GroupAdminGroupSerializer(serializers.Serializer):
     info = serializers.CharField(source='vrijeInfo')
     sub_groups = RecursiveField(
         source='onderliggendeGroepen', default=list(), many=True)
-    group_type = serializers.CharField(
+    type = serializers.CharField(
         source='soort', default=GroupAdminApi.default_scouts_group_type)
     public_registration = serializers.BooleanField(
         source='publiek-inschrijven', default=False)
