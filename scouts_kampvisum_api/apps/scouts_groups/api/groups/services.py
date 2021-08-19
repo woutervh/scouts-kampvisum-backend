@@ -95,6 +95,14 @@ class ScoutsGroupService:
     """
     Provides CRUD operations for ScoutsGroup objects.
     """
+
+    def get_group(self, uuid_string):
+        """
+        Convenience method to allow REST calls with uuid strings
+        """
+        uuid = uuid.uuid(uuid_string)
+
+        return ScoutsGroup.objects.get(uuid=uuid)
     
     def group_create(self, 
                      group_admin_id,
@@ -192,6 +200,7 @@ class ScoutsGroupService:
         """
         Parses GroupAdmin group data and saves it as a ScoutsGroup object.
         """
+        
         group_admin_id = fields.get('group_admin_id', '')
         group_type = ScoutsGroupType.objects.get(type=fields.get(
             'type', GroupAdminApi.default_scouts_group_type))
@@ -262,6 +271,7 @@ class ScoutsGroupService:
         """
         Links default sections to a group.
         """
+
         groups = ScoutsGroup.objects.all()
         service = ScoutsDefaultSectionNameService()
         section_service = ScoutsSectionService()

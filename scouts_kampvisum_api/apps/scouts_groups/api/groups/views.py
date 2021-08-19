@@ -20,6 +20,8 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
     A viewset for viewing scout groups for the current user.
     """
     
+    service = ScoutsGroupService()
+    lookup_field = 'uuid'
     serializer_class = ScoutsGroupSerializer
     queryset = ScoutsGroup.objects.all()
     
@@ -49,7 +51,7 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         Retrieves authorized groups from GroupAdmin and stores them.
         """
         user = request.user
-        groups = ScoutsGroupService().import_groupadmin_groups(user)
+        groups = self.service.import_groupadmin_groups(user)
         page = self.paginate_queryset(groups)
         
         if page is not None:
@@ -80,23 +82,36 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
             serializer = ScoutsGroupSerializer(instances, many=True)
             return Response(serializer.data)
     
+    def _get_group(self, key, value):
+        filters = {key : value}
+        qs = ScoutsGroup.objects.filter(**filters)
+
+        if qs.count() == 1:
+            return qs[0]
+        
+        return None
+
     @action(
         detail=True, methods=['get'], permission_classes=[IsAuthenticated],
         url_path='sections')
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: ScoutsSectionSerializer},
     )
-    def get_sections(self, request, pk=None):
+    def get_sections(self, request, uuid=None):
         """
         Retrieves a list of sections for this ScoutsGroup.
         """
-        
+        logger.debug('Searching for sections for group with uuid %s', uuid)
+
         instance = self.get_object()
-        instances = instance.sections.all()
+        instances = instance.sections.filter(hidden=False)
+
+        logger.debug(
+            'Found %s instance(s) that are not hidden', len(instances))
 
         if len(instances) == 0:
-            logger.warn('No sections defined for group with id %s\
-                - Did you forget to call setup ?', pk)
+            logger.warn('No sections defined for group with uuid %s\
+                - Did you forget to call setup ?', instance.uuid)
 
         output_serializer = ScoutsSectionSerializer(
             instances, many=True)

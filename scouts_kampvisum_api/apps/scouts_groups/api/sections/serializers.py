@@ -37,8 +37,8 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
     Serializes a ScoutSection object
     """
     
-    group = ScoutsGroupSerializer
-    name = serializers.CharField(max_length=128)
+    group = ScoutsGroupSerializer()
+    name = ScoutsSectionNameSerializer()
     
     class Meta:
         model = ScoutsSection
