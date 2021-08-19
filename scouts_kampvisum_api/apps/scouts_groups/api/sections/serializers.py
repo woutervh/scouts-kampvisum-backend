@@ -1,8 +1,13 @@
+import logging
 from rest_framework import serializers
-from .models import ScoutsSectionName, ScoutsSection
+
+from .models import ScoutsSectionName, ScoutsDefaultSectionName, ScoutsSection
 from ..groups.serializers import ScoutsGroupTypeSerializer
 from ..groups.serializers import ScoutsGroupSerializer
-from ....groupadmin.api import MemberGender
+from apps.groupadmin.api import MemberGender
+
+
+logger = logging.getLogger(__name__)
 
 
 class ScoutsSectionNameSerializer(serializers.ModelSerializer):
@@ -28,7 +33,7 @@ class ScoutsDefaultSectionNameSerializer(serializers.ModelSerializer):
     name = ScoutsSectionNameSerializer
     
     class Meta:
-        model = ScoutsSectionName
+        model = ScoutsDefaultSectionName
         fields = '__all__'
 
 
@@ -39,6 +44,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
     
     group = ScoutsGroupSerializer()
     name = ScoutsSectionNameSerializer()
+    hidden = serializers.BooleanField()
     
     class Meta:
         model = ScoutsSection

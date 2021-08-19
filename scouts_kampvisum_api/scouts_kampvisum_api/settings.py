@@ -21,10 +21,19 @@ LOGGING_CONFIG = None
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s - %(levelname)-7s - %(name)-12s - %(message)s',
+        },
+        'simple': {
+            'format': '%(levelname)-8s - %(message)s',
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
             'level': 'DEBUG',
+            'formatter': 'verbose',
         },
         'file': {
             'class': 'logging.FileHandler',
@@ -33,22 +42,22 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['console'],
+        'handlers': [ 'console' ],
         'level': 'INFO',
     },
     'loggers': {
         'mozilla_django_oidc': {
-            'handlers': ['console'],
+            'handlers': [ 'console' ],
             'level': 'INFO',
-            'propagate': True,
+            'propagate': False,
         },
         'scouts-auth': {
-            'handlers': ['console', 'file'],
+            'handlers': [ 'console' ],
             'level': 'DEBUG',
             'propagate': False,
         },
         'apps': {
-            'handlers': ['console', 'file'],
+            'handlers': [ 'console' ],
             'level': 'DEBUG',
             'propagate': False,
         }

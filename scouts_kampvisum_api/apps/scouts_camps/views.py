@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status
@@ -7,7 +8,10 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from .models import ScoutsCamp
 from .services import ScoutsCampService
-from .serializers import ScoutsCampSerializer, ScoutsCampDeserializer
+from .serializers import ScoutsCampSerializer, ScoutsCampAPISerializer
+
+
+logger = logging.getLogger(__name__)
 
 
 class ScoutsCampViewSet(viewsets.GenericViewSet):
@@ -15,21 +19,27 @@ class ScoutsCampViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing camp instances.
     """
     
+    lookup_field = 'uuid'
     serializer_class = ScoutsCampSerializer
     queryset = ScoutsCamp.objects.all()
     
     @swagger_auto_schema(
-        request_body=ScoutsCampDeserializer,
+        request_body=ScoutsCampAPISerializer,
         responses={status.HTTP_201_CREATED: ScoutsCampSerializer},
     )
     def create(self, request):
-        input_serializer = ScoutsCampDeserializer(
-            data=request.data, context={'request': request}
+        data = request.data
+
+        logger.debug("Creating camp with name: '%s'", data.get('name'))
+        logger.debug("DATA: %s", data)
+
+        serializer = ScoutsCampAPISerializer(
+            data=data, context={'request': request}
         )
-        input_serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True)
 
         camp = ScoutsCampService().camp_create(
-            **input_serializer.validated_data
+            **serializer.validated_data
         )
 
         output_serializer = ScoutsCampSerializer(
@@ -48,13 +58,13 @@ class ScoutsCampViewSet(viewsets.GenericViewSet):
         return Response(serializer.data)
     
     @swagger_auto_schema(
-        request_body=ScoutsCampDeserializer,
+        request_body=ScoutsCampSerializer,
         responses={status.HTTP_200_OK: ScoutsCampSerializer},
     )
     def partial_update(self, request, pk=None):
         camp = self.get_object()
 
-        serializer = ScoutsCampDeserializer(
+        serializer = ScoutsCampSerializer(
             data=request.data,
             instance=camp,
             context={'request': request},

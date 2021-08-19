@@ -117,4 +117,14 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
             instances, many=True)
 
         return Response(output_serializer.data)
+    
+    @action(
+        detail=True, methods=['get'], permission_classes=[IsAuthenticated],
+        url_path='camps')
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: ScoutsSectionSerializer},
+    )
+    def get_camps(self, request, uuid=None):
+        """
+        """
 

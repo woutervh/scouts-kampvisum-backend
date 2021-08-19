@@ -1,7 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from ..base.models import BaseModel
+from apps.base.models import BaseModel
+from apps.scouts_groups.api.sections.models import ScoutsSection
 
 
 class ScoutsCamp(BaseModel):
@@ -9,11 +10,11 @@ class ScoutsCamp(BaseModel):
     A model for a scout camp.
     """ 
     
-    name = models.TextField()
-    
     # @TODO model period, exceptions, test-driven
-    start_date = models.DateField()
-    end_date = models.DateField()
+    name = models.TextField()
+    start_date = models.DateField(default=None)
+    end_date = models.DateField(default=None)
+    sections = models.ManyToManyField(ScoutsSection)
 
     def clean(self):
         if not self.start_date or not self.end_date:
