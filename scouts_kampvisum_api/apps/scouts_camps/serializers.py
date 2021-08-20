@@ -1,5 +1,5 @@
 import logging
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from rest_framework import serializers
 
 from .models import ScoutsCamp
@@ -68,12 +68,21 @@ class ScoutsCampAPISerializer(serializers.ModelSerializer):
         
         if not data.get('sections'):
             raise ValidationError(
-                "A ScoutsCamp must have at least 1 ScoutsSection attached")
+                "A ScoutsCamp must have at least 1 ScoutsSection attached"
+            )
         else:
-            for section in sections:
-                obj = ScoutsSection.objects.get(uuid=section)
+            for section_uuid in data.get('sections'):
+                try:
+                    ScoutsSection.objects.get(uuid=section_uuid)
+                except ObjectDoesNotExist:
+                    raise ValidationError(
+                        "Invalid UUID. No ScoutsSection with that UUID: " +
+                        str(section_uuid)
+                    )
+        
+        # if data.get('start_date') and data.get('start_date') < timezone.now():
+        #     raise ValidationError("The camp start date can't be in the past")
 
-                
         
         return data
 
