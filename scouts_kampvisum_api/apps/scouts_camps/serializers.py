@@ -66,9 +66,14 @@ class ScoutsCampAPISerializer(serializers.ModelSerializer):
             raise ValidationError(
                 "A ScoutsCamp must have a name")
         
-        if not data.get('sections') or len(data.get('sections')) == 0:
+        if not data.get('sections'):
             raise ValidationError(
                 "A ScoutsCamp must have at least 1 ScoutsSection attached")
+        else:
+            for section in sections:
+                obj = ScoutsSection.objects.get(uuid=section)
+
+                
         
         return data
 

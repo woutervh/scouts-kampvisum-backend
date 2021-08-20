@@ -59,6 +59,7 @@ class ScoutsSectionAPISerializer(serializers.ListSerializer):
     child = serializers.UUIDField()
 
     def validate(self, data):
+        logger.debug('SECTION DATA: %s', data)
         return data
 
     def save(self, data):

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APPS=("base" "groupadmin" "scouts_camp_visums" "scouts_groups" "scouts_camps")
+APPS=("inuits" "base" "groupadmin" "scouts_camp_visums" "scouts_groups" "scouts_camps")
 FIXTURES=("scouts_group_types.json" "scouts_section_names.json" "scouts_default_section_names.json" "scouts_camp_visum_categories.json" "scouts_camp_visum_sub_categories.json")
 
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }

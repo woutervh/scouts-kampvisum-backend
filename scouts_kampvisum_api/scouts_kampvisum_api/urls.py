@@ -24,7 +24,8 @@ schema_view = get_schema_view(
     openapi.Info(
         title='Scouts kampvisum API',
         default_version='v1',
-        description='This is the api documentation for the Scouts kampvisum API',
+        description='This is the api documentation for the \
+            Scouts kampvisum API',
     ),
     public=True,
     permission_classes=(permissions.AllowAny,)

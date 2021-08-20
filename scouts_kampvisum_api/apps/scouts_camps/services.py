@@ -16,11 +16,16 @@ class ScoutsCampService():
         #Required arguments:
         name = fields.get('name')
         sections = fields.get('sections')
+        # Optional arguments:
+        start_date = fields.get('start_date', None)
+        end_date = fields.get('end_date', None)
         
         camp = ScoutsCamp()
         camp.name = name
-        camp.start_date = fields.get('start_date', None)
-        camp.end_date = fields.get('end_date', None)
+        if start_date:
+            camp.start_date = start_date
+        if end_date:
+            camp.end_date = end_date
         
         camp.full_clean()
         camp.save()
