@@ -1,11 +1,13 @@
 import logging
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from .models import ScoutsCamp
 from apps.scouts_groups.api.sections.models import ScoutsSection
 from apps.scouts_groups.api.sections.serializers import (
-    ScoutsSectionSerializer
+    ScoutsSectionSerializer, ScoutsSectionAPISerializer
 )
+from inuits.serializers import OptionalDateField
 
 
 logger = logging.getLogger(__name__)
@@ -17,8 +19,8 @@ class ScoutsCampSerializer(serializers.ModelSerializer):
     """
     
     name = serializers.CharField()
-    start_date = serializers.DateField()
-    end_date = serializers.DateField()
+    start_date = OptionalDateField()
+    end_date = OptionalDateField()
     sections = ScoutsSectionSerializer(many=True)
     
     class Meta:
@@ -40,33 +42,33 @@ class ScoutsCampSerializer(serializers.ModelSerializer):
         return type
 
 
-class ScoutsCampAPISerializer(serializers.Serializer):
+class ScoutsCampAPISerializer(serializers.ModelSerializer):
     """
     Deserializes a JSON ScoutsCamp from the frontend (no serialization).
     """
     
     name = serializers.CharField()
-    start_date = serializers.DateField()
-    end_date = serializers.DateField()
+    #start_date = serializers.DateField(required=False)
+    #end_date = serializers.DateField(required=False)
+    start_date = OptionalDateField()
+    end_date = OptionalDateField()
     # List of ScoutsSection uuid's
-    sections = serializers.ListField(
-        child=serializers.UUIDField()
-    )
+    sections = ScoutsSectionAPISerializer()
 
     class Meta:
         model = ScoutsCamp
         fields = '__all__'
     
     def validate(self, data):
-        logger.debug('DATA: %s', data)
-        return data
-    
-    def create(self, validated_data):
-        logger.debug('VALIDATED DATA: %s', validated_data)
-        uuids = validated_data.get('sections')
-        #logger.debug('UUIDS: %s', uuids)
-        sections = ScoutsSection.objects.filter(uuid_in=uuids)
-        validated_data['sections'] = sections
+        logger.debug('SCOUTSCAMP API DATA: %s', data)
 
-        return validated_data
+        if not data.get('name'):
+            raise ValidationError(
+                "A ScoutsCamp must have a name")
+        
+        if not data.get('sections') or len(data.get('sections')) == 0:
+            raise ValidationError(
+                "A ScoutsCamp must have at least 1 ScoutsSection attached")
+        
+        return data
 

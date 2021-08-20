@@ -146,6 +146,7 @@ INSTALLED_APPS = [
     'safedelete',
     'storages',
     'sqlmiddleware',
+    'inuits',
     'apps.setup',
     'apps.base',
     'apps.groupadmin',

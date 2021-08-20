@@ -8,14 +8,19 @@ logger = logging.getLogger(__name__)
 
 class ScoutsCampService():
     
-    def camp_create(self, *, name, start_date, end_date, sections) -> ScoutsCamp:
+    def camp_create(self, *args, **fields) -> ScoutsCamp:
         """
         Saves a ScoutsCamp object to the DB.
         """
+
+        #Required arguments:
+        name = fields.get('name')
+        sections = fields.get('sections')
+        
         camp = ScoutsCamp()
         camp.name = name
-        camp.start_date = start_date
-        camp.end_date = end_date
+        camp.start_date = fields.get('start_date', None)
+        camp.end_date = fields.get('end_date', None)
         
         camp.full_clean()
         camp.save()

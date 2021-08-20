@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 
 from apps.base.models import BaseModel
 from apps.scouts_groups.api.sections.models import ScoutsSection
+from inuits.models import OptionalDateField
 
 
 class ScoutsCamp(BaseModel):
@@ -12,12 +13,19 @@ class ScoutsCamp(BaseModel):
     
     # @TODO model period, exceptions, test-driven
     name = models.TextField()
-    start_date = models.DateField(default=None)
-    end_date = models.DateField(default=None)
+    start_date = OptionalDateField()
+    end_date = OptionalDateField()
     sections = models.ManyToManyField(ScoutsSection)
 
     def clean(self):
-        if not self.start_date or not self.end_date:
-            raise ValidationError("Start and end dates need to be known")
+        if not self.name:
+            raise ValidationError(
+                "A ScoutsCamp must have a name")
+        # This can't be done, because there is no ScoutsCamp instance yet.
+        # Validate the presence of at least 1 ScoutsSection in uuid in the
+        # serializer's validate method.
+        #if not self.sections or len(self.sections) == 0:
+        #    raise ValidationError(
+        #        "A ScoutsCamp must have at least 1 ScoutsSection attached")
 
 

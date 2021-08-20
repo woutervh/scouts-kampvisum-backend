@@ -50,3 +50,19 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         model = ScoutsSection
         fields = '__all__'
 
+
+class ScoutsSectionAPISerializer(serializers.ListSerializer):
+    """
+    Deserializes a JSON ScoutsSection from the frontend (no serialization).
+    """
+    
+    child = serializers.UUIDField()
+
+    def validate(self, data):
+        return data
+
+    def save(self, data):
+        logger.debug('SECTION DATA: %s', data)
+        #ScoutsSection.objects.filter(uuid_in=uuids)
+
+

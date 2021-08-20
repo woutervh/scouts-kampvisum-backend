@@ -29,7 +29,10 @@ class InvalidWorkflowTransitionAPIException(APIException):
 
 
 def exception_handler(exc, context):
-    """Handle Django ValidationError as an accepted exception"""
+    """
+    Handle Django ValidationError as an accepted exception.
+    """
+
     if isinstance(exc, DjangoValidationError):
         try:
             detail = exc.message_dict
