@@ -35,7 +35,6 @@ class ScoutsCampViewSet(viewsets.GenericViewSet):
         data = request.data
 
         logger.debug("Creating camp with name: '%s'", data.get('name'))
-        logger.debug("DATA: %s", data)
 
         serializer = ScoutsCampAPISerializer(
             data=data, context={'request': request}
@@ -89,8 +88,10 @@ class ScoutsCampViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
-    def delete(self, request, pk):
-        camp = get_object_or_404(ScoutsCamp.objects, pk=pk)
+    def delete(self, request, uuid):
+        logger.debug("Deleting ScoutsCamp with uuid %s", uuid)
+        
+        camp = get_object_or_404(ScoutsCamp.objects, uuid=uuid)
         camp.delete()
         
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

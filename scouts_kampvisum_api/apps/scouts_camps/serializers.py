@@ -83,6 +83,5 @@ class ScoutsCampAPISerializer(serializers.ModelSerializer):
         # if data.get('start_date') and data.get('start_date') < timezone.now():
         #     raise ValidationError("The camp start date can't be in the past")
 
-        
         return data
 
