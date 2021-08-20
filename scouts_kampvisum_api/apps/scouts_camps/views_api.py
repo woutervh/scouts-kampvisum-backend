@@ -10,22 +10,22 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 from .models import ScoutsCamp
 from .services import ScoutsCampService
 from .serializers import ScoutsCampSerializer
-from .filters import ScoutsCampFilter
+from .filters import ScoutsCampAPIFilter
 
 
 logger = logging.getLogger(__name__)
 
 
-class ScoutsCampViewSet(viewsets.GenericViewSet):
+class ScoutsCampAPIViewSet(viewsets.GenericViewSet):
     """
     A viewset for viewing and editing camp instances.
     """
     
-    lookup_field = 'pk'
+    lookup_field = 'uuid'
     serializer_class = ScoutsCampSerializer
     queryset = ScoutsCamp.objects.all()
     filter_backends = [ filters.DjangoFilterBackend ]
-    filterset_class = ScoutsCampFilter
+    filterset_class = ScoutsCampAPIFilter
     
     @swagger_auto_schema(
         request_body=ScoutsCampSerializer,
@@ -51,8 +51,10 @@ class ScoutsCampViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
     
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsCampSerializer})
-    def retrieve(self, request, pk=None):
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: ScoutsCampSerializer}
+    )
+    def retrieve(self, request, uuid=None):
         camp = self.get_object()
         serializer = ScoutsCampSerializer(
             camp, context={'request': request}
@@ -64,7 +66,7 @@ class ScoutsCampViewSet(viewsets.GenericViewSet):
         request_body=ScoutsCampSerializer,
         responses={status.HTTP_200_OK: ScoutsCampSerializer},
     )
-    def partial_update(self, request, pk=None):
+    def partial_update(self, request, uuid=None):
         camp = self.get_object()
 
         serializer = ScoutsCampSerializer(
@@ -88,10 +90,10 @@ class ScoutsCampViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
-    def delete(self, request, pk):
-        logger.debug("Deleting ScoutsCamp with pk %s", pk)
-
-        camp = get_object_or_404(ScoutsCamp.objects, pk=pk)
+    def delete(self, request, uuid):
+        logger.debug("Deleting ScoutsCamp with uuid %s", uuid)
+        
+        camp = get_object_or_404(ScoutsCamp.objects, uuid=uuid)
         camp.delete()
         
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

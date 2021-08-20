@@ -22,6 +22,9 @@ class ScoutsCamp(CreatedByMixin, AuditTimestampMixin, BaseModel):
     end_date = OptionalDateField()
     sections = models.ManyToManyField(ScoutsSection)
 
+    class Meta:
+        ordering = [ 'start_date' ]
+
     def clean(self):
         if not self.name:
             raise ValidationError(

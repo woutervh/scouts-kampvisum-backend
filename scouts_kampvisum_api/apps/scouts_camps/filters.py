@@ -1,17 +1,62 @@
-import django_filters
+import logging, uuid
+from django_filters import rest_framework as filters
+from django.db.models import Q
 
 from .models import ScoutsCamp
 
 
-class ScoutsCampFilter(django_filters.FilterSet):
-    
-    term = django_filters.CharFilter(method='search_term_filter')
+logger = logging.getLogger(__name__)
+
+
+class ScoutsCampAPIFilter(filters.FilterSet):
+
+    filter_group = 'uuid'
 
     class Meta:
         model = ScoutsCamp
-        fields = []
+        fields = [  ]
+    
+    # def filter_group(self, queryset, name, group):
+    #     return queryset.filter(Q(sections__group__uuid=group))
+    
+    # def filter_year(self, queryset, name, year):
+    #     return queryset.filter(Q(start_date__year=year))
 
-    def search_term_filter(self, queryset, name, value):
-        # Annotate brand license so we can do an icontains on entire string
-        return ()
+    @property
+    def qs(self):
+        parent = super().qs
+        group = self.request.query_params.get('group', None)
+        year = self.request.query_params.get('year', None)
+
+        if group and self.filter_group == 'uuid':
+            group = uuid.UUID(group)
+
+        logger.debug('Filtering with group %s and year %s', group, year)
+
+        #return parent.filter(Q(sections__group__uuid=group), Q(start_date__year=year))
+        if year and group:
+            if self.filter_group == 'uuid':
+                return parent.filter(
+                    Q(start_date__year=year),
+                    Q(sections__group__uuid=group)).distinct()
+            else:
+                return parent.filter(
+                    Q(start_date__year=year),
+                    Q(sections__group__id=group)).distinct()
+        else:
+            if year:
+                return parent.filter(Q(start_date__year=year))
+            if group:
+                if self.filter_group == 'uuid':
+                    return parent.filter(Q(sections__group__uuid=group))
+                else:
+                    return parent.filter(Q(sections__group__id=group))
+        
+        return parent.all()
+
+
+
+class ScoutsCampFilter(ScoutsCampAPIFilter):
+
+    filter_group = 'pk'
 
