@@ -4,6 +4,8 @@ from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
 from rest_framework import generics, viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
@@ -11,7 +13,7 @@ from .models import ScoutsCamp
 from .services import ScoutsCampService
 from .serializers import ScoutsCampSerializer
 from .filters import ScoutsCampAPIFilter
-
+from apps.scouts_groups.api.groups.models import ScoutsGroup
 
 logger = logging.getLogger(__name__)
 
@@ -77,6 +79,8 @@ class ScoutsCampAPIViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
+        logger.debug("Updating ScoutsCamp with uuid %s", uuid)
+
         updated_camp = ScoutsCampService().camp_update(
             camp=camp, **serializer.validated_data
         )
@@ -109,4 +113,19 @@ class ScoutsCampAPIViewSet(viewsets.GenericViewSet):
         else:
             serializer = ScoutsCampSerializer(instances, many=True)
             return Response(serializer.data)
+    
+    @action(
+        detail=True, methods=['get'], permission_classes=[IsAuthenticated],
+        url_path='years')
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: ScoutsCampSerializer}
+    )
+    def get_available_years(self, request, uuid=None):
+        camps = ScoutsCamp.objects.filter(
+            sections__group__uuid=uuid).distinct()
+        years = list(set([ camp.start_date.year for camp in camps ]))
+
+        return Response(years)
+
+        
 
