@@ -27,16 +27,16 @@ EOF
 
 # Assume that the script is called from the root of the application directory 
 SCRIPT_DIR=$PWD
+DJANGO_MANAGE_DIR="scouts_kampvisum_api"
 # Check to see if it is called by a script in the root directory
 if [[ $2 ]]; then
 	SCRIPT_DIR=$(ps -o args= $PPID)
 	set -- $SCRIPT_DIR
 	SCRIPT_DIR=$(dirname $2)
 	SCRIPT_DIR=$(realpath $SCRIPT_DIR)
-fi
-DJANGO_MANAGE_DIR="scouts_kampvisum_api"
 
-cd "$SCRIPT_DIR/$DJANGO_MANAGE_DIR"
+	cd "$SCRIPT_DIR/$DJANGO_MANAGE_DIR"
+fi
 
 make_migration() {
 	echo "============================================================"
