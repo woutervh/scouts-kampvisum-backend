@@ -72,7 +72,7 @@ class ScoutsCampAPIViewSet(viewsets.GenericViewSet):
     )
     def partial_update(self, request, uuid=None):
         camp = self.get_object()
-
+        
         serializer = ScoutsCampAPISerializer(
             data=request.data,
             instance=camp,

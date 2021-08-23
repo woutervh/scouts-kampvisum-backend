@@ -12,5 +12,7 @@ class OptionalDateField(serializers.DateField):
 
     def __init__(self, *args, **kwargs):
         kwargs['required'] = False
+        kwargs['default'] = None
+        kwargs['allow_null'] = True
         super().__init__(*args, **kwargs)
 
