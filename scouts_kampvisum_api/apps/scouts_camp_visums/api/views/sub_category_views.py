@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
-from .models import ScoutsCampVisumSubCategory
-from .services import ScoutsCampVisumSubCategoryService
-from .serializers import ScoutsCampVisumSubCategorySerializer
+from ..models import ScoutsCampVisumSubCategory
+from ..services import ScoutsCampVisumSubCategoryService
+from ..serializers import ScoutsCampVisumSubCategorySerializer
 
 
 class ScoutsCampVisumSubCategoryViewSet(viewsets.GenericViewSet):

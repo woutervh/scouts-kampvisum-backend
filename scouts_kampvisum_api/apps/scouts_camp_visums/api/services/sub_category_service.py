@@ -1,5 +1,7 @@
-from .models import ScoutsCampVisumSubCategory
-from ..categories.models import ScoutsCampVisumCategory
+from ..models import (
+    ScoutsCampVisumCategory,
+    ScoutsCampVisumSubCategory
+)
 
 
 class ScoutsCampVisumSubCategoryService():

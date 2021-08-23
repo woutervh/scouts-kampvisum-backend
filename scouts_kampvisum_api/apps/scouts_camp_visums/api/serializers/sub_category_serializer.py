@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from .models import ScoutsCampVisumSubCategory
-from ..categories.serializers import ScoutsCampVisumCategorySerializer
+from ..models import ScoutsCampVisumSubCategory
+from ..serializers import ScoutsCampVisumCategorySerializer
 
 
 class ScoutsCampVisumSubCategorySerializer(serializers.ModelSerializer):

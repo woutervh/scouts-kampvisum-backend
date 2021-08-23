@@ -7,10 +7,12 @@ from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
-from .models import ScoutsCampVisumCategory
-from .services import ScoutsCampVisumCategoryService
-from .serializers import ScoutsCampVisumCategorySerializer
-from ..sub_categories.serializers import ScoutsCampVisumSubCategorySerializer
+from ..models import ScoutsCampVisumCategory
+from ..services import ScoutsCampVisumCategoryService
+from ..serializers import (
+    ScoutsCampVisumCategorySerializer,
+    ScoutsCampVisumSubCategorySerializer
+)
 
 
 class ScoutsCampVisumCategoryViewSet(viewsets.GenericViewSet):

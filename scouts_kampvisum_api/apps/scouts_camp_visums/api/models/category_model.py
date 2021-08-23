@@ -1,7 +1,7 @@
 from django.db import models
 
-from ....base.models import BaseModel
-from .managers import ScoutsCampVisumCategoryManager
+from apps.base.models import BaseModel
+from ..managers import ScoutsCampVisumCategoryManager
 
 
 class ScoutsCampVisumCategory(BaseModel):

@@ -1,6 +1,6 @@
 from django.db import models
 
-from ....base.models import BaseModel
+from apps.base.models import BaseModel
 
 
 class ScoutsCampVisumCheck(BaseModel):

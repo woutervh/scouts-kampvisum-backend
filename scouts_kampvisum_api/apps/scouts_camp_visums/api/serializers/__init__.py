@@ -1,0 +1,2 @@
+from .category_serializer import ScoutsCampVisumCategorySerializer
+from .sub_category_serializer import ScoutsCampVisumSubCategorySerializer
