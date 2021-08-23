@@ -168,14 +168,6 @@
 		}
 	},
 	{
-		"pk": 22,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "elfjes" ]
-		}
-	},
-	{
 		"pk": 23,
 		"model": "scouts_groups.ScoutsDefaultSectionName",
 		"fields": {
@@ -188,7 +180,7 @@
 		"model": "scouts_groups.ScoutsDefaultSectionName",
 		"fields": {
 			"type": [ "Test" ],
-			"name": [ "kabouters" ]
+			"name": [ "jonggivers" ]
 		}
 	},
 	{
@@ -196,7 +188,7 @@
 		"model": "scouts_groups.ScoutsDefaultSectionName",
 		"fields": {
 			"type": [ "Test" ],
-			"name": [ "wouters" ]
+			"name": [ "givers" ]
 		}
 	},
 	{
@@ -204,7 +196,7 @@
 		"model": "scouts_groups.ScoutsDefaultSectionName",
 		"fields": {
 			"type": [ "Test" ],
-			"name": [ "kawellen" ]
+			"name": [ "jins" ]
 		}
 	},
 	{
@@ -212,103 +204,7 @@
 		"model": "scouts_groups.ScoutsDefaultSectionName",
 		"fields": {
 			"type": [ "Test" ],
-			"name": [ "jongverkenners" ]
-		}
-	},
-	{
-		"pk": 28,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "jonggidsen" ]
-		}
-	},
-	{
-		"pk": 29,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "jonggivers" ]
-		}
-	},
-	{
-		"pk": 30,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "verkenners" ]
-		}
-	},
-	{
-		"pk": 31,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "gidsen" ]
-		}
-	},
-	{
-		"pk": 32,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "givers" ]
-		}
-	},
-	{
-		"pk": 33,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "jins" ]
-		}
-	},
-	{
-		"pk": 34,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
 			"name": [ "leiding" ]
-		}
-	},
-	{
-		"pk": 35,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "zeehondjes" ]
-		}
-	},
-	{
-		"pk": 36,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "zeewelpen" ]
-		}
-	},
-	{
-		"pk": 37,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "scheepsmakkers" ]
-		}
-	},
-	{
-		"pk": 38,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "zeeverkenners" ]
-		}
-	},
-	{
-		"pk": 39,
-		"model": "scouts_groups.ScoutsDefaultSectionName",
-		"fields": {
-			"type": [ "Test" ],
-			"name": [ "loodsen" ]
 		}
 	}
 ]
