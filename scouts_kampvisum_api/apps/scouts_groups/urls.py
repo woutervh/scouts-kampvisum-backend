@@ -1,7 +1,10 @@
 from rest_framework import routers
 
-from .api.sections.views import ScoutsSectionViewSet, ScoutsSectionNameViewSet
-from .api.groups.views import ScoutsGroupViewSet
+from .api.views import (
+    ScoutsSectionViewSet,
+    ScoutsSectionNameViewSet,
+    ScoutsGroupViewSet,
+)
 
 
 router = routers.SimpleRouter()

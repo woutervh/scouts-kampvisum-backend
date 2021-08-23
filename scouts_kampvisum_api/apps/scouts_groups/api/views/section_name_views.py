@@ -8,9 +8,9 @@ from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
-from .models import ScoutsSectionName, ScoutsSection
-from .services import ScoutsSectionNameService
-from .serializers import ScoutsSectionNameSerializer, ScoutsSectionSerializer
+from ..models import ScoutsSectionName
+from ..services import ScoutsSectionNameService
+from ..serializers import ScoutsSectionNameSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -136,29 +136,5 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
             return self.get_paginated_response(serializer.data)
         else:
             serializer = ScoutsSectionNameSerializer(instances, many=True)
-            return Response(serializer.data)
-
-
-class ScoutsSectionViewSet(viewsets.GenericViewSet):
-
-    serializer_class = ScoutsSectionSerializer
-    queryset = ScoutsSection.objects.all()
-
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: ScoutsSectionSerializer}
-    )
-    def list(self, request):
-        """
-        Retrieves a list of all existing ScoutsSection instances.
-        """
-        
-        instances = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(instances)
-
-        if page is not None:
-            serializer = ScoutsSectionSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = ScoutsSectionSerializer(instances, many=True)
             return Response(serializer.data)
 

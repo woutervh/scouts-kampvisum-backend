@@ -2,7 +2,7 @@ import logging
 from rest_framework import serializers
 
 from .models import ScoutsCamp
-from apps.scouts_groups.api.sections.serializers import (
+from apps.scouts_groups.api.serializers import (
     ScoutsSectionSerializer
 )
 from inuits.serializers import OptionalDateField

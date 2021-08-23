@@ -3,8 +3,8 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from rest_framework import serializers
 
 from .models import ScoutsCamp
-from apps.scouts_groups.api.sections.models import ScoutsSection
-from apps.scouts_groups.api.sections.serializers import (
+from apps.scouts_groups.api.models import ScoutsSection
+from apps.scouts_groups.api.serializers import (
     ScoutsSectionAPISerializer
 )
 from inuits.serializers import OptionalDateField
@@ -20,7 +20,7 @@ class ScoutsCampAPISerializer(serializers.ModelSerializer):
     
     name = serializers.CharField()
     start_date = OptionalDateField()
-    end_date = OptionalDateField()
+    end_date = OptionalDateField() 
     # List of ScoutsSection uuid's
     sections = ScoutsSectionAPISerializer()
 

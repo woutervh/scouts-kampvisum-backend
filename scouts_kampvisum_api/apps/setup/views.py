@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 
 from .models import Setup, SetupSerializer
-from apps.scouts_groups.api.groups.services import ScoutsGroupService
+from apps.scouts_groups.api.services import ScoutsGroupService
 
 
 logger = logging.getLogger(__name__)

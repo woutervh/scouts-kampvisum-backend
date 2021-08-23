@@ -1,6 +1,6 @@
 import django_filters
 
-from .models import ScoutsGroup
+from ..models import ScoutsGroup
 
 
 class ScoutsGroupFilter(django_filters.FilterSet):

@@ -3,8 +3,8 @@ from django.conf import settings
 
 from scouts_auth.models import User as ScoutsAuthUser
 from .api import GroupAdminApi as api
-from ..scouts_groups.api.groups.models import ScoutsGroup
-from ..scouts_groups.api.groups.serializers import ScoutsGroupSerializer
+from apps.scouts_groups.api.models import ScoutsGroup
+from apps.scouts_groups.api.serializers import ScoutsGroupSerializer
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 import uuid, logging
 from .models import ScoutsCamp
-from apps.scouts_groups.api.sections.models import ScoutsSection
+from apps.scouts_groups.api.models import ScoutsSection
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ class ScoutsCampService():
         
         camp.full_clean()
         camp.save()
-
+        
         sections = ScoutsSection.objects.filter(uuid__in=sections)
         for section in sections:
             camp.sections.add(section)

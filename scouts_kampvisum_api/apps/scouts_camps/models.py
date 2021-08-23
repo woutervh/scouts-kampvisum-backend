@@ -3,7 +3,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 from apps.base.models import BaseModel
-from apps.scouts_groups.api.sections.models import ScoutsSection
+from apps.scouts_groups.api.models import ScoutsSection
 from inuits.mixins import CreatedByMixin, AuditTimestampMixin
 from inuits.models import OptionalDateField
 

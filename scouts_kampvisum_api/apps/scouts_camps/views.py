@@ -13,7 +13,7 @@ from .models import ScoutsCamp
 from .services import ScoutsCampService
 from .serializers import ScoutsCampSerializer
 from .filters import ScoutsCampFilter
-from apps.scouts_groups.api.groups.models import ScoutsGroup
+from apps.scouts_groups.api.models import ScoutsGroup
 
 
 logger = logging.getLogger(__name__)

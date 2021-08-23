@@ -1,8 +1,7 @@
 import logging
 from django.db.models import Q
 
-from ..groups.models import ScoutsGroup
-from .models import ScoutsSection, ScoutsSectionName, ScoutsDefaultSectionName
+from ..models import ScoutsSectionName
 
 
 logger = logging.getLogger(__name__)
@@ -38,28 +37,3 @@ class ScoutsSectionNameService:
         
         return instance
 
-
-class ScoutsDefaultSectionNameService:
-    
-    def load_for_type(self, type):
-        return ScoutsDefaultSectionName.objects.filter(
-            Q(type=type) | Q(type__parent=type)
-        )
-
-
-class ScoutsSectionService:
-    
-    def create(self,
-            group: ScoutsGroup,
-            name: ScoutsSectionName,
-            hidden=False):
-        instance = ScoutsSection()
-
-        instance.group = group
-        instance.name = name
-        instance.hidden = hidden
-
-        instance.full_clean()
-        instance.save()
-
-        return instance

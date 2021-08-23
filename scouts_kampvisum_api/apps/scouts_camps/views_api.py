@@ -12,8 +12,9 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 from .models import ScoutsCamp
 from .services import ScoutsCampService
 from .serializers import ScoutsCampSerializer
+from .serializers_api import ScoutsCampAPISerializer
 from .filters import ScoutsCampAPIFilter
-from apps.scouts_groups.api.groups.models import ScoutsGroup
+from apps.scouts_groups.api.models import ScoutsGroup
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class ScoutsCampAPIViewSet(viewsets.GenericViewSet):
     filterset_class = ScoutsCampAPIFilter
     
     @swagger_auto_schema(
-        request_body=ScoutsCampSerializer,
+        request_body=ScoutsCampAPISerializer,
         responses={status.HTTP_201_CREATED: ScoutsCampSerializer},
     )
     def create(self, request):
@@ -38,7 +39,8 @@ class ScoutsCampAPIViewSet(viewsets.GenericViewSet):
 
         logger.debug("Creating camp with name: '%s'", data.get('name'))
 
-        serializer = ScoutsCampSerializer(
+        logger.info("SECTIONS: %s", data.get('sections'))
+        serializer = ScoutsCampAPISerializer(
             data=data, context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
