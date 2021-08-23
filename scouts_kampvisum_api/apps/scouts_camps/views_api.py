@@ -67,13 +67,13 @@ class ScoutsCampAPIViewSet(viewsets.GenericViewSet):
         return Response(serializer.data)
     
     @swagger_auto_schema(
-        request_body=ScoutsCampSerializer,
+        request_body=ScoutsCampAPISerializer,
         responses={status.HTTP_200_OK: ScoutsCampSerializer},
     )
     def partial_update(self, request, uuid=None):
         camp = self.get_object()
 
-        serializer = ScoutsCampSerializer(
+        serializer = ScoutsCampAPISerializer(
             data=request.data,
             instance=camp,
             context={'request': request},
