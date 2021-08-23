@@ -84,7 +84,7 @@ class ScoutsCampAPIViewSet(viewsets.GenericViewSet):
         logger.debug("Updating ScoutsCamp with uuid %s", uuid)
 
         updated_camp = ScoutsCampService().camp_update(
-            camp=camp, **serializer.validated_data
+            instance=camp, **serializer.validated_data
         )
 
         output_serializer = ScoutsCampSerializer(
