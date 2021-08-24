@@ -3,7 +3,7 @@
 # DON'T PUT ANY CODE BEFORE THESE VARIABLES, OTHERWISE THE VARIABLE IMPORT
 # IN OTHER SCRIPTS WON'T WORK
 APPS=("inuits" "base" "groupadmin" "scouts_camp_visums" "scouts_groups" "scouts_camps")
-FIXTURES=("scouts_group_types.json" "scouts_section_names.json" "scouts_default_section_names.json" "scouts_camp_visum_categories.json" "scouts_camp_visum_sub_categories.json")
+FIXTURES=("scouts_group_types.json" "scouts_section_names.json" "scouts_default_section_names.json" "scouts_camp_visum_categories.json" "scouts_camp_visum_sub_categories.json" "scouts_camp_visum_category_set_priorities.json")
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }
 # SAFE TO ADD CODE BELOW
@@ -25,17 +25,15 @@ cat << "EOF"
 ##############################################################################
 EOF
 
+DJANGO_MANAGE_DIR="scouts_kampvisum_api"
 # Assume that the script is called from the root of the application directory 
 SCRIPT_DIR=$PWD
-DJANGO_MANAGE_DIR="scouts_kampvisum_api"
 # Check to see if it is called by a script in the root directory
 if [[ $2 ]]; then
 	SCRIPT_DIR=$(ps -o args= $PPID)
 	set -- $SCRIPT_DIR
 	SCRIPT_DIR=$(dirname $2)
 	SCRIPT_DIR=$(realpath $SCRIPT_DIR)
-
-	cd "$SCRIPT_DIR/$DJANGO_MANAGE_DIR"
 fi
 
 make_migration() {

@@ -48,9 +48,11 @@ class ScoutsCampAPIFilter(filters.FilterSet):
                 return parent.filter(start_date__year=year)
             if group:
                 if self.filter_group == 'uuid':
-                    return parent.filter(sections__group__uuid=group)
+                    return parent.filter(
+                        sections__group__uuid=group).distinct()
                 else:
-                    return parent.filter(sections__group__id=group)
+                    return parent.filter(
+                        sections__group__id=group).distinct()
         
         return parent.all()
 
