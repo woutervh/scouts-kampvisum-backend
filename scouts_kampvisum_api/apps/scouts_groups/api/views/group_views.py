@@ -94,35 +94,35 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         
         return None
 
-    @action(
-        detail=True, methods=['post'], permission_classes=[IsAuthenticated],
-        url_path='sections')
-    @swagger_auto_schema(
-        request_body=ScoutsSectionCreationAPISerializer,
-        responses={status.HTTP_201_CREATED: ScoutsGroupSerializer},
-    )
-    def add_sections(self, request, uuid=None):
-        """
-        Adds ScoutsSection instances to a ScoutsGroup.
-        """
+    # @action(
+    #     detail=True, methods=['post'], permission_classes=[IsAuthenticated],
+    #     url_path='sections')
+    # @swagger_auto_schema(
+    #     request_body=ScoutsSectionCreationAPISerializer,
+    #     responses={status.HTTP_201_CREATED: ScoutsGroupSerializer},
+    # )
+    # def add_sections(self, request, uuid=None):
+    #     """
+    #     Adds ScoutsSection instances to a ScoutsGroup.
+    #     """
         
-        input_serializer = ScoutsSectionCreationAPISerializer(
-            data=request.data, context={'request': request}
-        )
-        input_serializer.is_valid(raise_exception=True)
+    #     input_serializer = ScoutsSectionCreationAPISerializer(
+    #         data=request.data, context={'request': request}
+    #     )
+    #     input_serializer.is_valid(raise_exception=True)
 
-        instance = self.get_object()
+    #     instance = self.get_object()
 
-        instance = ScoutsGroupService().add_sections(
-            instance,
-            **input_serializer.validated_data
-        )
+    #     instance = ScoutsGroupService().add_sections(
+    #         instance,
+    #         **input_serializer.validated_data
+    #     )
 
-        output_serializer = ScoutsGroupSerializer(
-            instance, context={'request': request}
-        )
+    #     output_serializer = ScoutsGroupSerializer(
+    #         instance, context={'request': request}
+    #     )
 
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @action(
         detail=True, methods=['get'], permission_classes=[IsAuthenticated],

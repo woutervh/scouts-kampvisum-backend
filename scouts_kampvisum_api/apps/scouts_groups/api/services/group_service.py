@@ -184,6 +184,9 @@ class ScoutsGroupService:
         
         group_admin_ids = list()
         groups = GroupAdminService().get_groups(user)
+
+        logger.debug('GROUP DATA FROM GA: %s', groups)
+        
         serializer = GroupAdminGroupSerializer(groups, many=True)
         
         for group in serializer.data:
