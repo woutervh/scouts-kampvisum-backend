@@ -125,9 +125,14 @@ class ScoutsCampAPIViewSet(viewsets.GenericViewSet):
     def get_available_years(self, request, uuid=None):
         camps = ScoutsCamp.objects.filter(
             sections__group__uuid=uuid).distinct()
-        years = list(set([ camp.start_date.year for camp in camps ]))
 
-        return Response(years)
+        if camps.count() != 0:
+            years = list(set([ camp.start_date.year 
+                for camp in camps 
+                if camp.start_date is not None ]))
+            return Response(years)
+        
+        return Response(list())
 
         
 
