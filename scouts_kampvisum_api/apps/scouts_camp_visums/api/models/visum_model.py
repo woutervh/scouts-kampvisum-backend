@@ -1,7 +1,8 @@
 from django.db import models
 
 from apps.base.models import BaseModel
-from apps.scouts_groups.api.groups.models import ScoutsGroup
+from apps.scouts_groups.api.models import ScoutsGroup
+
 
 class ScoutsCampVisum(BaseModel):
 

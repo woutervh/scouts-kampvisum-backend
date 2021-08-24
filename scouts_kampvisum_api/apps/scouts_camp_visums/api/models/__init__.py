@@ -1,3 +1,5 @@
 from .category_model import ScoutsCampVisumCategory
 from .sub_category_model import ScoutsCampVisumSubCategory
 from .check_model import ScoutsCampVisumCheck
+from .category_set import ScoutsCampVisumCategorySet
+from .priority_model import ScoutsCampVisumCategorySetPriority

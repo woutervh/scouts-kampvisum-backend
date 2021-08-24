@@ -7,7 +7,7 @@ from apps.scouts_groups.api.models import ScoutsSection
 from apps.scouts_groups.api.serializers import (
     ScoutsSectionAPISerializer
 )
-from inuits.serializers import OptionalDateField
+from inuits.serializers.fields import OptionalDateField
 
 
 logger = logging.getLogger(__name__)
