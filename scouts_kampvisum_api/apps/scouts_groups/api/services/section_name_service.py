@@ -8,14 +8,15 @@ logger = logging.getLogger(__name__)
 
 
 class ScoutsSectionNameService:
-    def name_create(self, *, name, gender) -> ScoutsSectionName:
+    def name_create(self, *, name, gender, age_group) -> ScoutsSectionName:
         """
-        Saves a ScoutsTroopName object to the DB.
+        Saves a ScoutsSectionName object to the DB.
         """
         
         instance = ScoutsSectionName(
-            name = name,
-            gender = gender
+            name=name,
+            gender=gender,
+            age_group=age_group
         )
         
         instance.full_clean()
@@ -31,6 +32,8 @@ class ScoutsSectionNameService:
         """
         
         instance.name = fields.get('name', instance.name)
+        instance.gender = fields.get('gender', instance.gender)
+        instance.age_group = fields.get('age_group', instance.age_group)
         
         instance.full_clean()
         instance.save()

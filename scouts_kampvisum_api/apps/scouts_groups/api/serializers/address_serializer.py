@@ -6,6 +6,7 @@ from apps.base.models import RecursiveField
 from apps.groupadmin.api import GroupAdminApi
 from ..models import ScoutsGroupType, ScoutsAddress, ScoutsGroup
 from ..serializers import ScoutsGroupSerializer
+from inuits.serializers.fields import OptionalCharField
 
 
 class ScoutsAddressSerializer(serializers.ModelSerializer):
@@ -27,7 +28,7 @@ class ScoutsAddressSerializer(serializers.ModelSerializer):
     email = serializers.CharField()
     latitude = models.CharField(default='')
     longitude = models.CharField(default='')
-    description = serializers.CharField()
+    description = OptionalCharField()
     
     class Meta:
         model = ScoutsAddress

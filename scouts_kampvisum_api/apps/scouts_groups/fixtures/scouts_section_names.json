@@ -4,7 +4,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "kapoenen",
-			"gender": "M"
+			"gender": "M",
+			"age_group": 10
 		}
 	},
 	{
@@ -12,7 +13,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "elfjes",
-			"gender": "F"
+			"gender": "F",
+			"age_group": 10
 		}
 	},
 	{
@@ -20,7 +22,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeehondjes",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 10
 		}
 	},
 	{
@@ -28,7 +31,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "welpen",
-			"gender": "M"
+			"gender": "M",
+			"age_group": 20
 		}
 	},
 	{
@@ -36,7 +40,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "kabouters",
-			"gender": "F"
+			"gender": "F",
+			"age_group": 20
 		}
 	},
 	{
@@ -44,7 +49,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeewelpen",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 20
 		}
 	},
 	{
@@ -52,7 +58,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "wouters",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 20
 		}
 	},
 	{
@@ -60,7 +67,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "kawellen",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 20
 		}
 	},
 	{
@@ -68,7 +76,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "jongverkenners",
-			"gender": "M"
+			"gender": "M",
+			"age_group": 30
 		}
 	},
 	{
@@ -76,7 +85,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "jonggidsen",
-			"gender": "F"
+			"gender": "F",
+			"age_group": 30
 		}
 	},
 	{
@@ -84,7 +94,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "scheepsmakkers",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 30
 		}
 	},
 	{
@@ -92,7 +103,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "jonggivers",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 30
 		}
 	},
 	{
@@ -100,7 +112,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "verkenners",
-			"gender": "M"
+			"gender": "M",
+			"age_group": 40
 		}
 	},
 	{
@@ -108,7 +121,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "gidsen",
-			"gender": "F"
+			"gender": "F",
+			"age_group": 40
 		}
 	},
 	{
@@ -116,7 +130,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeeverkenners",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 40
 		}
 	},
 	{
@@ -124,7 +139,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "givers",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 40
 		}
 	},
 	{
@@ -132,7 +148,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "jins",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 50
 		}
 	},
 	{
@@ -140,7 +157,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "loodsen",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 50
 		}
 	},
 	{
@@ -148,7 +166,8 @@
 		"model": "scouts_groups.ScoutsSectionName",
 		"fields": {
 			"name": "leiding",
-			"gender": "H"
+			"gender": "H",
+			"age_group": 100
 		}
 	}
 ]

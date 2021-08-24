@@ -19,6 +19,6 @@ class ScoutsSection(BaseModel):
         on_delete = models.DO_NOTHING)
     hidden = models.BooleanField(default=False)
     
-    def clean(self):
-        pass
+    class Meta:
+        ordering = [ 'name__age_group' ]
 

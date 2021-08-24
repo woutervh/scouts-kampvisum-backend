@@ -6,8 +6,10 @@ from ..models import ScoutsCampVisumCategory
 class ScoutsCampVisumSubCategory(BaseModel):
     
     category = models.ForeignKey(
-        ScoutsCampVisumCategory, on_delete=models.CASCADE,
-        related_name='sub_categories')
+        ScoutsCampVisumCategory,
+        related_name='sub_categories',
+        on_delete=models.CASCADE,
+    )
     name = models.CharField(
         max_length=128)
     

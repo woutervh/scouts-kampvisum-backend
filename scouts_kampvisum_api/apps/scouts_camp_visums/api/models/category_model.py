@@ -16,7 +16,4 @@ class ScoutsCampVisumCategory(BaseModel):
     
     def natural_key(self):
         return (self.name, )
-    
-    def clean(self):
-        pass
 

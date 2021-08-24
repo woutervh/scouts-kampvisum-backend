@@ -7,3 +7,4 @@ from apps.scouts_groups.api.models import ScoutsGroup
 class ScoutsCampVisum(BaseModel):
 
     group = models.ForeignKey(ScoutsGroup)
+

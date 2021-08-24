@@ -27,3 +27,13 @@ class ScoutsSectionService:
         instance.save()
 
         return instance
+    
+    def get(self, uuid=None):
+        if uuid is None:
+            return ScoutsSection.objects.all()
+        
+        if isinstance(uuid, list):
+            return ScoutsSection.objects.filter(uuid__in=uuid)
+        
+        return ScoutsSection.objects.get(uuid=uuid)
+

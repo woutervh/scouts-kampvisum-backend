@@ -43,7 +43,8 @@ class ScoutsGroupService:
                      group_type,
                      public_registration,
                      addresses,
-                     sub_groups,) -> ScoutsGroup:
+                    #  sub_groups,
+    ) -> ScoutsGroup:
         """
         Saves a ScoutsGroup object to the DB.
         """
@@ -62,7 +63,7 @@ class ScoutsGroupService:
                 email=email,
                 website=website,
                 info=info,
-                #sub_groups=sub_groups,
+                # sub_groups=sub_groups,
                 type=group_type,
                 public_registration=public_registration,
         )
@@ -77,7 +78,7 @@ class ScoutsGroupService:
     def group_update(self,
                      instance: ScoutsGroup,
                      addresses,
-                     sub_groups,
+                    #  sub_groups,
                      fields,) -> ScoutsGroup:
         """
         Updates a ScoutsGroup object with current values.
@@ -139,12 +140,12 @@ class ScoutsGroupService:
             
             scouts_group_addresses.append(scouts_address)
         
-        scouts_group_sub_groups = list()
-        sub_groups = fields.get('sub_groups', list())
-        for sub_group in sub_groups:
-            scouts_sub_group = self.import_groupadmin_group(sub_group)
+        # scouts_group_sub_groups = list()
+        # sub_groups = fields.get('sub_groups', list())
+        # for sub_group in sub_groups:
+        #     scouts_sub_group = self.import_groupadmin_group(sub_group)
             
-            scouts_group_sub_groups.append(scouts_sub_group)
+        #     scouts_group_sub_groups.append(scouts_sub_group)
         
         qs = ScoutsGroup.objects.filter(group_admin_id=group_admin_id)
         
@@ -152,7 +153,7 @@ class ScoutsGroupService:
             instance = self.group_update(
                 qs[0],
                 scouts_group_addresses,
-                scouts_group_sub_groups,
+                # scouts_group_sub_groups,
                 fields,
             )
         else:
@@ -171,7 +172,7 @@ class ScoutsGroupService:
                 group_type,
                 fields.get('public_registration', False),
                 scouts_group_addresses,
-                scouts_group_sub_groups
+                # scouts_group_sub_groups
             )
         
         return instance
@@ -223,4 +224,18 @@ class ScoutsGroupService:
                     creation_count += 1
         
         return creation_count
+    
+    def add_sections(self, instance:ScoutsGroup, sections):
+        """
+        Adds ScoutsSection instances to a ScoutsGroup.
+        """
+        sections = ScoutsSectionService().get(sections)
+
+        for section in sections:
+            instance.sections.add(section)
+        
+        instance.full_clean()
+        instance.save()
+
+        return instance
 

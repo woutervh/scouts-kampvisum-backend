@@ -1,9 +1,10 @@
 from django.db import models
 from safedelete.models import HARD_DELETE
 
-from apps.base.models import BaseModel
-from apps.groupadmin.api import MemberGender
 from ..managers import ScoutsSectionNameManager
+from apps.base.models import BaseModel
+from apps.groupadmin.api import MemberGender, AgeGroup
+from inuits.models import OptionalIntegerField
 
 # FIXTURE: scouts_section_names
 # Taken from https://nl.wikipedia.org/wiki/Tak_(scouting)
@@ -22,15 +23,21 @@ class ScoutsSectionName(BaseModel):
     name = models.CharField(
         max_length=128)
     gender = models.CharField(
-        max_length=12,
+        max_length=1,
         choices=MemberGender.choices,
-        default=MemberGender.MIXED
+        default=MemberGender.MIXED,
+    )
+    age_group = models.CharField(
+        max_length=3,
+        choices=AgeGroup.choices,
+        default=AgeGroup.AGE_GROUP_1
     )
 
     objects = ScoutsSectionNameManager()
 
     class Meta:
-        unique_together = (('name', 'gender'))
+        unique_together = (('name', 'gender', 'age_group'))
+        ordering = [ 'age_group' ]
 
     def natural_key(self):
         return (self.name, )

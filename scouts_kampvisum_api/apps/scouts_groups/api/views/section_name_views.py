@@ -1,4 +1,4 @@
-import logging
+import logging,uuid
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status
@@ -20,6 +20,7 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing scout section names.
     """
     
+    lookup_field = 'uuid'
     serializer_class = ScoutsSectionNameSerializer
     queryset = ScoutsSectionName.objects.all()
     
@@ -31,7 +32,6 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         """
         Creates a new ScoutSectionName.
         """
-        
         input_serializer = ScoutsSectionNameSerializer(
             data=request.data, context={'request': request}
         )
@@ -50,11 +50,10 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: ScoutsSectionNameSerializer}
     )
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, uuid=None):
         """
         Retrieves an existing ScoutSectionName object.
         """
-        
         instance = self.get_object()
         serializer = ScoutsSectionNameSerializer(
             instance, context={'request': request}
@@ -66,11 +65,10 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         request_body=ScoutsSectionNameSerializer,
         responses={status.HTTP_200_OK: ScoutsSectionNameSerializer},
     )
-    def partial_update(self, request, pk=None):
+    def partial_update(self, request, uuid=None):
         """
         Updates an existing ScoutsSectionName object.
         """
-        
         instance = self.get_object()
 
         serializer = ScoutsSectionNameSerializer(
@@ -90,35 +88,6 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
-
-    def _delete(self, key, value):
-        filters = {key : value}
-        qs = ScoutsSectionName.objects.filter(**filters)
-
-        if qs.count() == 1:
-            qs[0].delete()
-            return True
-        
-        return False
-    
-    @swagger_auto_schema(
-        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
-    )
-    def delete(self, request, pk):
-        """
-        Deletes a ScoutsSectionName instance by id, uuid or name
-        """
-        deleted = False
-        if isinstance(pk, (int)):
-            deleted = self._delete('id', pk)
-        
-        if not deleted and not self._delete('uuid', pk):
-            if not self._delete('name', pk):
-                logger.error(
-                    "No object found with id, uuid or name '%s'", pk)
-                return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-        
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
     
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: ScoutsSectionNameSerializer}
@@ -137,4 +106,22 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         else:
             serializer = ScoutsSectionNameSerializer(instances, many=True)
             return Response(serializer.data)
+    
+    @swagger_auto_schema(
+        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
+    )
+    def delete(self, request, uuid):
+        """
+        Deletes a ScoutsSectionName instance by uuid
+        """
+        instance = ScoutsSectionName.objects.get(uuid=uuid)
+
+        if not instance:
+            logger.error(
+                    "No ScoutsSectionName found with uuid '%s'", uuid)
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        
+        instance.delete()
+        
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 

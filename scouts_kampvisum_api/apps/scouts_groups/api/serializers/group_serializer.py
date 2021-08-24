@@ -21,7 +21,7 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
     email = serializers.CharField(default='')
     website = serializers.CharField(default='')
     info = serializers.CharField(default='')
-    sub_groups = RecursiveField(default=list(), many=True)
+    #sub_groups = RecursiveField(default=list(), many=True)
     type = ScoutsGroupTypeSerializer()
     public_registration = serializers.BooleanField(default=False)
     
@@ -48,7 +48,7 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         instance.website = validated_data.get('website', instance.website)
         instance.info = validated_data.get('info', instance.info)
-        instance.sub_groups = ScoutsGroupSerializer(many=True)
+        #instance.sub_groups = ScoutsGroupSerializer(many=True)
         instance.type = ScoutsGroupTypeSerializer()
         instance.public_registration = validated_data.get(
             'public_registration', instance.public_registration)
