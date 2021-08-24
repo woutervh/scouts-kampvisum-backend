@@ -22,13 +22,15 @@ class ScoutsGroupService:
     Provides CRUD operations for ScoutsGroup objects.
     """
 
+    address_service = ScoutsAddressService()
+    section_service = ScoutsSectionService()
+    default_section_name_service = ScoutsDefaultSectionNameService()
+
     def get_group(self, uuid_string):
         """
         Convenience method to allow REST calls with uuid strings
         """
-        uuid = uuid.uuid(uuid_string)
-
-        return ScoutsGroup.objects.get(uuid=uuid)
+        return ScoutsGroup.objects.get(uuid=uuid.UUID(uuid_string))
     
     def group_create(self, 
                      group_admin_id,
@@ -181,7 +183,7 @@ class ScoutsGroupService:
         """
         Imports groups from GroupAdmin, saves them and returns unique objects.
         """
-        
+        #@TODO compare and update if necessary
         group_admin_ids = list()
         groups = GroupAdminService().get_groups(user)
 
@@ -203,8 +205,6 @@ class ScoutsGroupService:
         """
 
         groups = ScoutsGroup.objects.all()
-        service = ScoutsDefaultSectionNameService()
-        section_service = ScoutsSectionService()
         creation_count = 0
 
         for group in groups:
@@ -213,29 +213,39 @@ class ScoutsGroupService:
 
             sections = group.sections.all()
 
-            logger.debug('SECTIONS: %s (%s)',
+            #@TODO update if necessary
+            logger.debug('SECTIONS: %s (%s instances)',
                 sections, sections.count())
             if sections.count() == 0:
-                names = service.load_for_type(group.type)
+                names = self.default_section_name_service.load_for_type(
+                    group.type)
 
-                logger.debug('NAMES: %s (%s)',
-                    names, len(names))
-
+                logger.debug('NAMES: %s (%s instances)', names, len(names))
                 for name in names:
                     logger.debug('NAME: %s', name)
-                    section = section_service.create(group, name.name, False)
+                    section = self.section_service.section_create_or_update(
+                        group, name.name, name.name.hidden)
                     creation_count += 1
         
         return creation_count
     
-    def add_sections(self, instance:ScoutsGroup, sections):
+    def add_section(self, instance:ScoutsGroup, **fields):
         """
         Adds ScoutsSection instances to a ScoutsGroup.
         """
-        sections = ScoutsSectionService().get(sections)
+        logger.debug('FIELDS: %s', fields)
+        sections = self.section_service.section_read(group=instance, **fields)
 
-        for section in sections:
-            instance.sections.add(section)
+        if sections is None or len(sections) == 0:
+            section = self.section_service.section_create_or_update(
+                group=instance,
+                 **fields)
+        else:
+            section = sections[0]
+
+        logger.debug("Section to add: %s", section)
+
+        instance.sections.add(section)
         
         instance.full_clean()
         instance.save()

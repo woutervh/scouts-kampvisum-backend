@@ -1,4 +1,5 @@
 import logging
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -94,49 +95,53 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         
         return None
 
-    # @action(
-    #     detail=True, methods=['post'], permission_classes=[IsAuthenticated],
-    #     url_path='sections')
-    # @swagger_auto_schema(
-    #     request_body=ScoutsSectionCreationAPISerializer,
-    #     responses={status.HTTP_201_CREATED: ScoutsGroupSerializer},
-    # )
-    # def add_sections(self, request, uuid=None):
-    #     """
-    #     Adds ScoutsSection instances to a ScoutsGroup by name and defaults.
-    #     """
-    #     input_serializer = ScoutsSectionCreationAPISerializer(
-    #         data=request.data, context={'request': request}
-    #     )
-    #     input_serializer.is_valid(raise_exception=True)
-
-    #     instance = self.get_object()
-
-    #     instance = ScoutsGroupService().add_sections(
-    #         instance,
-    #         **input_serializer.validated_data
-    #     )
-
-    #     output_serializer = ScoutsGroupSerializer(
-    #         instance, context={'request': request}
-    #     )
-
-    #     return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-
     @action(
         detail=True, methods=['get', 'post'], permission_classes=[IsAuthenticated],
         url_path='sections')
     @swagger_auto_schema(
+        request_body=ScoutsSectionCreationAPISerializer,
         responses={status.HTTP_200_OK: ScoutsSectionSerializer},
     )
-    def get_sections(self, request, uuid=None):
+    def sections(self, request, uuid=None):
         """
         Retrieves a list of sections for this ScoutsGroup.
         """
-        logger.debug('Searching for sections for group with uuid %s', uuid)
+        if request.method == 'POST':
+            return self._add_sections(request, uuid)
+        else:
+            return self._get_sections(request, uuid)
+    
+    def _add_sections(self, request, uuid=None):
+        """
+        Creates and add ScoutsSections to the given ScoutsGroup.
+        """
+        input_serializer = ScoutsSectionCreationAPISerializer(
+            data=request.data, context={'request': request}
+        )
+        input_serializer.is_valid(raise_exception=True)
+
+        logger.debug('REQUEST DATA: %s', request.data)
 
         instance = self.get_object()
-        instances = instance.sections.filter(hidden=False)
+        instance = ScoutsGroupService().add_section(
+            instance,
+            **input_serializer.validated_data
+        )
+
+        output_serializer = ScoutsGroupSerializer(
+            instance, context={'request': request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+    
+    def _get_sections(self, request, uuid=None):
+        """
+        Returns ScoutsSection instances associated with the given ScoutsGroup.
+        """
+        logger.debug('Searching for sections for group with uuid %s', uuid)
+        
+        instance = get_object_or_404(ScoutsGroup, uuid=uuid)
+        instances = instance.sections.filter(hidden=False).distinct()
 
         logger.debug(
             'Found %s instance(s) that are not hidden', len(instances))
@@ -145,8 +150,14 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
             logger.warn('No sections defined for group with uuid %s\
                 - Did you forget to call setup ?', instance.uuid)
 
-        output_serializer = ScoutsSectionSerializer(
-            instances, many=True)
+        page = self.paginate_queryset(instances)
+
+        if page is not None:
+            serializer = ScoutsSectionSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = ScoutsSectionSerializer(instances, many=True)
+            return Response(serializer.data)
 
         return Response(output_serializer.data)
     

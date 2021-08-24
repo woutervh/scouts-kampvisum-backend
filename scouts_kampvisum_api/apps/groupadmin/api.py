@@ -102,4 +102,7 @@ class AgeGroup(models.TextChoices):
     AGE_GROUP_6 = (
         '100', 'Leeftijdsgroep voor leiding, district, gouw, verbond'
     )
+    AGE_GROUP_UNKNOWN = (
+        '999', 'Onbekende leeftijdsgroep'
+    )
 

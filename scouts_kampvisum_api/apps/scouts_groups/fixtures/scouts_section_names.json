@@ -167,7 +167,8 @@
 		"fields": {
 			"name": "leiding",
 			"gender": "H",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	}
 ]

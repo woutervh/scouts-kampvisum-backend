@@ -28,10 +28,16 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
 
 class ScoutsSectionCreationAPISerializer(serializers.Serializer):
     """
-    Deserializes ScoutSection data into a ScoutsSectionObject
+    Deserializes ScoutSection JSON data into a ScoutsSectionObject
     """
     
-    name = ScoutsSectionNameSerializer()
+    name = serializers.JSONField()
+    
+    def validate(self, data):
+        if data['name'] is None:
+            raise serializers.ValidationError("Section name can't be null")
+
+        return data
 
 
 class ScoutsSectionAPISerializer(serializers.ListSerializer):
@@ -40,12 +46,4 @@ class ScoutsSectionAPISerializer(serializers.ListSerializer):
     """
     
     child = serializers.UUIDField()
-
-    def validate(self, data):
-        logger.debug('SECTION DATA: %s', data)
-        return data
-
-    def save(self, data):
-        logger.debug('SECTION DATA: %s', data)
-        #ScoutsSection.objects.filter(uuid_in=uuids)
 

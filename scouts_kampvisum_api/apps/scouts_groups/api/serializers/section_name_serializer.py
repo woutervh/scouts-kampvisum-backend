@@ -17,7 +17,7 @@ class ScoutsSectionNameSerializer(serializers.ModelSerializer):
     gender = serializers.ChoiceField(
         choices=MemberGender, default=MemberGender.MIXED)
     age_group = serializers.ChoiceField(
-        choices=AgeGroup, default=AgeGroup.AGE_GROUP_1)
+        choices=AgeGroup, default=AgeGroup.AGE_GROUP_UNKNOWN)
     
     class Meta:
         model = ScoutsSectionName

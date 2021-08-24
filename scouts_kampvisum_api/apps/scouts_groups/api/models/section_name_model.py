@@ -20,8 +20,7 @@ class ScoutsSectionName(BaseModel):
     # Setting to HARD_DELETE because a section name may be incorrect
     _safedelete_policy = HARD_DELETE
     
-    name = models.CharField(
-        max_length=128)
+    name = models.CharField(max_length=128)
     gender = models.CharField(
         max_length=1,
         choices=MemberGender.choices,
@@ -32,6 +31,7 @@ class ScoutsSectionName(BaseModel):
         choices=AgeGroup.choices,
         default=AgeGroup.AGE_GROUP_1
     )
+    hidden = models.BooleanField(default=False)
 
     objects = ScoutsSectionNameManager()
 
@@ -41,7 +41,4 @@ class ScoutsSectionName(BaseModel):
 
     def natural_key(self):
         return (self.name, )
-    
-    def clean(self):
-        pass
 
