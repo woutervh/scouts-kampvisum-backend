@@ -10,6 +10,7 @@ from ..services import ScoutsGroupService
 from ..serializers import (
     ScoutsGroupSerializer,
     ScoutsSectionSerializer,
+    ScoutsSectionCreationAPISerializer,
     ScoutsSectionAPISerializer,
 )
 
@@ -97,7 +98,7 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         detail=True, methods=['post'], permission_classes=[IsAuthenticated],
         url_path='sections')
     @swagger_auto_schema(
-        request_body=ScoutsSectionAPISerializer,
+        request_body=ScoutsSectionCreationAPISerializer,
         responses={status.HTTP_201_CREATED: ScoutsGroupSerializer},
     )
     def add_sections(self, request, uuid=None):
@@ -105,7 +106,7 @@ class ScoutsGroupViewSet(viewsets.GenericViewSet):
         Adds ScoutsSection instances to a ScoutsGroup.
         """
         
-        input_serializer = ScoutsSectionAPISerializer(
+        input_serializer = ScoutsSectionCreationAPISerializer(
             data=request.data, context={'request': request}
         )
         input_serializer.is_valid(raise_exception=True)

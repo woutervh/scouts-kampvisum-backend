@@ -5,3 +5,4 @@ from .group_serializer import ScoutsGroupSerializer
 from .address_serializer import ScoutsAddressSerializer
 from .section_serializer import ScoutsSectionSerializer
 from .section_serializer import ScoutsSectionAPISerializer
+from .section_serializer import ScoutsSectionCreationAPISerializer

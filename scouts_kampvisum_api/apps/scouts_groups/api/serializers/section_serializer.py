@@ -26,6 +26,14 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ScoutsSectionCreationAPISerializer(serializers.Serializer):
+    """
+    Deserializes ScoutSection data into a ScoutsSectionObject
+    """
+    
+    name = ScoutsSectionNameSerializer()
+
+
 class ScoutsSectionAPISerializer(serializers.ListSerializer):
     """
     Deserializes a JSON ScoutsSection from the frontend (no serialization).
@@ -40,5 +48,4 @@ class ScoutsSectionAPISerializer(serializers.ListSerializer):
     def save(self, data):
         logger.debug('SECTION DATA: %s', data)
         #ScoutsSection.objects.filter(uuid_in=uuids)
-
 
