@@ -41,10 +41,18 @@ class ScoutsCampService():
         """
         Updates an existing ScoutsCamp object in the DB.
         """
-        
+
+        #Required arguments:
         instance.name = fields.get('name', instance.name)
+        sections = fields.get('sections')
+
+        # Optional arguments:
         instance.start_date = fields.get('start_date', instance.start_date)
         instance.end_date = fields.get('end_date', instance.end_date)
+
+        sections = ScoutsSection.objects.filter(uuid__in=sections)
+        for section in sections:
+            instance.sections.add(section)
         
         instance.full_clean()
         instance.save()
