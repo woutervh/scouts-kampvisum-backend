@@ -51,6 +51,7 @@ class ScoutsCampService():
         instance.end_date = fields.get('end_date', instance.end_date)
 
         sections = ScoutsSection.objects.filter(uuid__in=sections)
+        instance.sections.clear()
         for section in sections:
             instance.sections.add(section)
         
