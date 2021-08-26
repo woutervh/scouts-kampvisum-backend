@@ -1,2 +1,0 @@
-from .group_type_manager import ScoutsGroupTypeManager
-from .section_name_manager import ScoutsSectionNameManager

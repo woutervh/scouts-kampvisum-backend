@@ -6,7 +6,6 @@ from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 
 from .models import Setup, SetupSerializer
-from apps.scouts_groups.api.services import ScoutsGroupService
 
 
 logger = logging.getLogger(__name__)
@@ -16,7 +15,7 @@ class SetupViewSet(viewsets.GenericViewSet):
     """
     A viewset for handling basic application setup.
     """
-    
+
     @action(
         detail=False, methods=['get'], permission_classes=[IsAuthenticated],
         url_path='setup')
@@ -32,7 +31,7 @@ class SetupViewSet(viewsets.GenericViewSet):
         serializer = SetupSerializer(instance, context={'request': request})
 
         return Response(serializer.data)
-    
+
     @action(
         detail=False, methods=['get'], permission_classes=[IsAuthenticated],
         url_path='setup/init')
@@ -45,13 +44,8 @@ class SetupViewSet(viewsets.GenericViewSet):
         """
         instance = Setup()
 
-        groups = ScoutsGroupService().import_groupadmin_groups(request.user)
-        section_count = ScoutsGroupService().link_default_sections()
-
-        instance.groups.creation_count = len(groups)
-        instance.sections.creation_count = section_count
+        instance.perform_init(request)
 
         serializer = SetupSerializer(instance, context={'request': request})
 
         return Response(serializer.data)
-

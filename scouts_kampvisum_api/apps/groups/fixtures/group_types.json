@@ -1,0 +1,159 @@
+[
+	{
+		"pk": 1,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Groep"
+		}
+	},
+	{
+		"pk": 2,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "District",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 3,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Gouw",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 4,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Zeescouts"
+		}
+	},
+	{
+		"pk": 5,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Akabe",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 6,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Akabetak",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 7,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Jeugdverblijf",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 8,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "OpenKamp",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 9,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Jin",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 10,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Jambe",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 11,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Technieken",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 12,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Givers",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 13,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Jamboree",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 14,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "HO",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 15,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "HONL",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 16,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Tijdschriften",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 17,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Test"
+		}
+	},
+	{
+		"pk": 18,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Verbond",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 19,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Ploeg",
+			"parent": [ "Groep"]
+		}
+	},
+	{
+		"pk": 20,
+		"model": "groups.GroupType",
+		"fields": {
+			"type": "Akazeetak",
+			"parent": [ "Zeescouts"]
+		}
+	}
+]

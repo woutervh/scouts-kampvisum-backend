@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 
@@ -15,8 +16,6 @@ class OptionalCharField(serializers.CharField):
         kwargs['default'] = serializers.empty
         kwargs['required'] = False
         kwargs['allow_blank'] = True
-        # This fixes the validation error when the key for a char field
-        # is set in JSON with a value of null.
         kwargs['allow_null'] = True
         super().__init__(*args, **kwargs)
 
@@ -34,9 +33,23 @@ class OptionalIntegerField(serializers.IntegerField):
     def __init__(self, *args, **kwargs):
         kwargs['default'] = serializers.empty
         kwargs['required'] = False
-        # This fixes the validation error when the key for an integer field
-        # is set in JSON with a value of null.
         kwargs['allow_null'] = True
+        super().__init__(*args, **kwargs)
+
+
+class RequiredIntegerField(serializers.IntegerField):
+    """
+    Initializes a serializers.IntegerField that is required.
+
+    This is equivalent to setting a serializer.IntegerField as such:
+    some_optional_integer_field = serializers.IntegerField(
+        required=True, allow_null=False
+    )
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs['required'] = True
+        kwargs['allow_null'] = False
         super().__init__(*args, **kwargs)
 
 
@@ -49,13 +62,31 @@ class OptionalChoiceField(serializers.ChoiceField):
         default=empty, required=False, allow_blank=True, allow_null=True
     )
     """
+
     def __init__(self, *args, **kwargs):
         kwargs['default'] = serializers.empty
         kwargs['required'] = True
         kwargs['allow_blank'] = True
-        # This fixes the validation error when the key for an integer field
-        # is set in JSON with a value of null.
         kwargs['allow_null'] = True
+        super().__init__(*args, **kwargs)
+
+
+class RequiredYearField(serializers.IntegerField):
+    """
+    Initializes a serializers.IntegerField that represents a required year.
+
+    This is equivalent to setting a serializer.IntegerField as such:
+    some_required_year_field = serializers.IntegerField(
+        min_value=2021, max_value=2121, required=True,allow_null=False
+    )
+    Note the assumption that the Scouts will be using a different app by 2121.
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs['min_value'] = 2021
+        kwargs['max_value'] = 2121
+        kwargs['required'] = True
+        kwargs['allow_null'] = False
         super().__init__(*args, **kwargs)
 
 
@@ -72,8 +103,6 @@ class OptionalDateField(serializers.DateField):
     def __init__(self, *args, **kwargs):
         kwargs['default'] = serializers.empty
         kwargs['required'] = False
-        # This fixes the validation error when the key for a date field
-        # is set in JSON with a value of null.
         kwargs['allow_null'] = True
         super().__init__(*args, **kwargs)
 
@@ -91,8 +120,5 @@ class OptionalDateTimeField(serializers.DateTimeField):
     def __init__(self, *args, **kwargs):
         kwargs['default'] = serializers.empty
         kwargs['required'] = False
-        # This fixes the validation error when the key for a date field
-        # is set in JSON with a value of null.
         kwargs['allow_null'] = True
         super().__init__(*args, **kwargs)
-

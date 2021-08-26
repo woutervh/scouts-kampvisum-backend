@@ -1,0 +1,210 @@
+[
+	{
+		"pk": 1,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "kapoenen" ]
+		}
+	},
+	{
+		"pk": 2,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "elfjes" ]
+		}
+	},
+	{
+		"pk": 3,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "welpen" ]
+		}
+	},
+	{
+		"pk": 4,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "kabouters" ]
+		}
+	},
+	{
+		"pk": 5,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "wouters" ]
+		}
+	},
+	{
+		"pk": 6,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "kawellen" ]
+		}
+	},
+	{
+		"pk": 7,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "jongverkenners" ]
+		}
+	},
+	{
+		"pk": 8,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "jonggidsen" ]
+		}
+	},
+	{
+		"pk": 9,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "jonggivers" ]
+		}
+	},
+	{
+		"pk": 10,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "verkenners" ]
+		}
+	},
+	{
+		"pk": 11,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "gidsen" ]
+		}
+	},
+	{
+		"pk": 12,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "givers" ]
+		}
+	},
+	{
+		"pk": 13,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "jins" ]
+		}
+	},
+	{
+		"pk": 14,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Groep" ],
+			"name": [ "leiding" ]
+		}
+	},
+	{
+		"pk": 15,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "zeehondjes" ]
+		}
+	},
+	{
+		"pk": 16,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "zeewelpen" ]
+		}
+	},
+	{
+		"pk": 17,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "scheepsmakkers" ]
+		}
+	},
+	{
+		"pk": 18,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "zeeverkenners" ]
+		}
+	},
+	{
+		"pk": 19,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "loodsen" ]
+		}
+	},
+	{
+		"pk": 20,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Zeescouts" ],
+			"name": [ "leiding" ]
+		}
+	},
+	{
+		"pk": 21,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Test" ],
+			"name": [ "kapoenen" ]
+		}
+	},
+	{
+		"pk": 23,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Test" ],
+			"name": [ "welpen" ]
+		}
+	},
+	{
+		"pk": 24,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Test" ],
+			"name": [ "jonggivers" ]
+		}
+	},
+	{
+		"pk": 25,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Test" ],
+			"name": [ "givers" ]
+		}
+	},
+	{
+		"pk": 26,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Test" ],
+			"name": [ "jins" ]
+		}
+	},
+	{
+		"pk": 27,
+		"model": "groups.DefaultSectionName",
+		"fields": {
+			"type": [ "Test" ],
+			"name": [ "leiding" ]
+		}
+	}
+]

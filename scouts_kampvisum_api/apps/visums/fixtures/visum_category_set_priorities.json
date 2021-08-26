@@ -1,0 +1,42 @@
+[
+	{
+		"pk": 1,
+		"model": "visums.CampVisumCategorySetPriority",
+		"fields": {
+			"owner": "Verbond",
+            "priority": 10
+		}
+	},
+    {
+		"pk": 2,
+		"model": "visums.CampVisumCategorySetPriority",
+		"fields": {
+			"owner": "Gouw",
+            "priority": 100
+		}
+	},
+    {
+		"pk": 3,
+		"model": "visums.CampVisumCategorySetPriority",
+		"fields": {
+			"owner": "District",
+            "priority": 1000
+		}
+	},
+    {
+		"pk": 4,
+		"model": "visums.CampVisumCategorySetPriority",
+		"fields": {
+			"owner": "Groep",
+            "priority": 2000
+		}
+	},
+    {
+		"pk": 5,
+		"model": "visums.CampVisumCategorySetPriority",
+		"fields": {
+			"owner": "Tak",
+            "priority": 3000
+		}
+	}
+]

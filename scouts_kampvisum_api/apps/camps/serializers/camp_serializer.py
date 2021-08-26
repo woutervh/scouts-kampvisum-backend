@@ -1,0 +1,40 @@
+import logging
+from rest_framework import serializers
+
+from ..models import Camp
+from apps.groups.api.serializers import (
+    SectionSerializer
+)
+from inuits.serializers.fields import OptionalDateField
+
+
+logger = logging.getLogger(__name__)
+
+
+class CampSerializer(serializers.ModelSerializer):
+    """
+    Serializes a Camp object.
+    """
+
+    name = serializers.CharField()
+    start_date = OptionalDateField()
+    end_date = OptionalDateField()
+    sections = SectionSerializer(many=True)
+
+    class Meta:
+        model = Camp
+        fields = '__all__'
+
+    def create(self, validated_data) -> Camp:
+        return Camp(**validated_data)
+
+    def update(self, instance, validated_data) -> Camp:
+        instance.name = validated_data.get(
+            'type', instance.type)
+        instance.start_date = validated_data.get(
+            'start_date', instance.start_date)
+        instance.end_date = validated_data.get(
+            'end_date', instance.end_date)
+        instance.sections = SectionSerializer(many=True)
+
+        return type

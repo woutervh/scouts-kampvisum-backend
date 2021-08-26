@@ -3,15 +3,15 @@ from django.conf import settings
 
 from scouts_auth.models import User as ScoutsAuthUser
 from .api import GroupAdminApi as api
-from apps.scouts_groups.api.models import ScoutsGroup
-from apps.scouts_groups.api.serializers import ScoutsGroupSerializer
+from apps.groups.api.models import Group
+from apps.groups.api.serializers import GroupSerializer
 
 logger = logging.getLogger(__name__)
 
 class GroupAdminService:
     
     def get_group(
-            self, href: str) -> ScoutsGroup:
+            self, href: str) -> Group:
         response = requests.get(href)
         
         response.raise_for_status()

@@ -1,0 +1,128 @@
+[
+	{
+		"pk": 1,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Datum",
+			"category": [ "Planning" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 2,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Activiteiten",
+			"category": [ "Planning" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 3,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Menu",
+			"category": [ "Planning" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 4,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Locatie(s) - kaartje",
+			"category": [ "Logistiek" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 5,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Locatie(s) - info",
+			"category": [ "Logistiek" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 6,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Vervoer",
+			"category": [ "Logistiek" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 7,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Materiaal",
+			"category": [ "Logistiek" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 8,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Ouders",
+			"category": [ "Communicatie & afspraken" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 9,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Afspraken",
+			"category": [ "Communicatie & afspraken" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 10,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Verzekeringen",
+			"category": [ "Veiligheid" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 11,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Zorgverlening",
+			"category": [ "Veiligheid" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 12,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Leiding",
+			"category": [ "Leden & leiding" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 13,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Leden",
+			"category": [ "Leden & leiding" ],
+			"is_default": true
+		}
+	},
+	{
+		"pk": 14,
+		"model": "visums.CampVisumSubCategory",
+		"fields": {
+			"name": "Begroting",
+			"category": [ "Budget" ],
+			"is_default": true
+		}
+	}
+]

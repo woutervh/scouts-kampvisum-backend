@@ -1,0 +1,62 @@
+[
+	{
+		"pk": 1,
+		"model": "visums.CampVisumCategory",
+		"fields": {
+			"name": "Planning",
+			"index": 0,
+			"description": "",
+			"is_default": true
+		}
+	},
+	{
+		"pk": 2,
+		"model": "visums.CampVisumCategory",
+		"fields": {
+			"name": "Logistiek",
+			"index": 1,
+			"description": "",
+			"is_default": true
+		}
+	},
+	{
+		"pk": 3,
+		"model": "visums.CampVisumCategory",
+		"fields": {
+			"name": "Communicatie & afspraken",
+			"index": 2,
+			"description": "",
+			"is_default": true
+		}
+	},
+	{
+		"pk": 4,
+		"model": "visums.CampVisumCategory",
+		"fields": {
+			"name": "Veiligheid",
+			"index": 3,
+			"description": "",
+			"is_default": true
+		}
+	},
+	{
+		"pk": 5,
+		"model": "visums.CampVisumCategory",
+		"fields": {
+			"name": "Leden & leiding",
+			"index": 4,
+			"description": "",
+			"is_default": true
+		}
+	},
+	{
+		"pk": 6,
+		"model": "visums.CampVisumCategory",
+		"fields": {
+			"name": "Budget",
+			"index": 5,
+			"description": "",
+			"is_default": true
+		}
+	}
+]

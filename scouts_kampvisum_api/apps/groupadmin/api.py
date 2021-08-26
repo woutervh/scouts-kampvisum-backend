@@ -1,4 +1,6 @@
-import requests, logging
+import requests
+import logging
+import datetime
 from django.db import models
 from django.conf import settings
 
@@ -10,26 +12,56 @@ class GroupAdminApi:
     """
     Constructs endpoints for various GroupAdmin API calls.
     """
-    
+
     default_scouts_group_type = 'Groep'
-    
+
     @staticmethod
     def get_request(endpoint: str, active_user):
-        #return requests.get("{0}".format(endpoint),
+        # return requests.get("{0}".format(endpoint),
         #    headers={"Authorization": "Bearer {0}".format(
         #        active_user.access_token)},
-        #)
+        # )
         return requests.get(endpoint)
-    
+
     @staticmethod
     def get_groups_endpoint():
         """
         Return all groups for which the user has rights.
-        
+
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#groepen-groepen-get
         """
-        
+
         return base_endpoint + '/groep'
+
+
+class ScoutsTemporalDetails:
+
+    @staticmethod
+    def get_start_of_scout_year(date):
+        """
+        Returns the start date of the scouts year for the given date.
+
+        A scouts year starts on the 1st of September and ends on the 31st of
+        August.
+        """
+        if date.month < 9:
+            return datetime.date(date.year - 1, 9, 1)
+
+        return datetime.date(date.year, 9, 1)
+
+    @staticmethod
+    def get_start_of_camp_year(date):
+        """
+        Returns the start of the scout year based on a limit date for camps.
+
+        A request for a scout year is assumed to mean the next calendar year
+        if the current date is later than this limit date.
+        The next camp year is assumed to start on the 1st of May.
+        """
+        if date.month < 5:
+            return datetime.date(date.year - 1, 9, 1)
+
+        return datetime.date(date.year, 9, 1)
 
 
 class MemberGender(models.TextChoices):
@@ -39,6 +71,7 @@ class MemberGender(models.TextChoices):
     MALE = 'M', 'Male'
     # To specify a scouts group that is gender-mixed
     MIXED = 'H', 'Mixed'
+
 
 class AgeGroup(models.TextChoices):
     # Kapoenen, zeehondjes
@@ -105,4 +138,3 @@ class AgeGroup(models.TextChoices):
     AGE_GROUP_UNKNOWN = (
         '999', 'Onbekende leeftijdsgroep'
     )
-

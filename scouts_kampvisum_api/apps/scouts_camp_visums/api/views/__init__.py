@@ -1,3 +1,0 @@
-from .category_views import ScoutsCampVisumCategoryViewSet
-from .sub_category_views import ScoutsCampVisumSubCategoryViewSet
-from .check_views import ScoutsCampVisumCheckViewSet

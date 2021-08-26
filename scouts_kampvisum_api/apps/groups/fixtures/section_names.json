@@ -1,0 +1,174 @@
+[
+	{
+		"pk": 1,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "kapoenen",
+			"gender": "M",
+			"age_group": 10
+		}
+	},
+	{
+		"pk": 2,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "elfjes",
+			"gender": "F",
+			"age_group": 10
+		}
+	},
+	{
+		"pk": 3,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "zeehondjes",
+			"gender": "H",
+			"age_group": 10
+		}
+	},
+	{
+		"pk": 4,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "welpen",
+			"gender": "M",
+			"age_group": 20
+		}
+	},
+	{
+		"pk": 5,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "kabouters",
+			"gender": "F",
+			"age_group": 20
+		}
+	},
+	{
+		"pk": 6,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "zeewelpen",
+			"gender": "H",
+			"age_group": 20
+		}
+	},
+	{
+		"pk": 7,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "wouters",
+			"gender": "H",
+			"age_group": 20
+		}
+	},
+	{
+		"pk": 8,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "kawellen",
+			"gender": "H",
+			"age_group": 20
+		}
+	},
+	{
+		"pk": 9,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "jongverkenners",
+			"gender": "M",
+			"age_group": 30
+		}
+	},
+	{
+		"pk": 10,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "jonggidsen",
+			"gender": "F",
+			"age_group": 30
+		}
+	},
+	{
+		"pk": 11,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "scheepsmakkers",
+			"gender": "H",
+			"age_group": 30
+		}
+	},
+	{
+		"pk": 12,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "jonggivers",
+			"gender": "H",
+			"age_group": 30
+		}
+	},
+	{
+		"pk": 13,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "verkenners",
+			"gender": "M",
+			"age_group": 40
+		}
+	},
+	{
+		"pk": 14,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "gidsen",
+			"gender": "F",
+			"age_group": 40
+		}
+	},
+	{
+		"pk": 15,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "zeeverkenners",
+			"gender": "H",
+			"age_group": 40
+		}
+	},
+	{
+		"pk": 16,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "givers",
+			"gender": "H",
+			"age_group": 40
+		}
+	},
+	{
+		"pk": 17,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "jins",
+			"gender": "H",
+			"age_group": 50
+		}
+	},
+	{
+		"pk": 18,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "loodsen",
+			"gender": "H",
+			"age_group": 50
+		}
+	},
+	{
+		"pk": 19,
+		"model": "groups.SectionName",
+		"fields": {
+			"name": "leiding",
+			"gender": "H",
+			"age_group": 100,
+			"hidden": true
+		}
+	}
+]

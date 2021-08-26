@@ -2,8 +2,23 @@
 
 # DON'T PUT ANY CODE BEFORE THESE VARIABLES, OTHERWISE THE VARIABLE IMPORT
 # IN OTHER SCRIPTS WON'T WORK
-APPS=("inuits" "base" "groupadmin" "scouts_camp_visums" "scouts_groups" "scouts_camps")
-FIXTURES=("scouts_group_types.json" "scouts_section_names.json" "scouts_default_section_names.json" "scouts_camp_visum_categories.json" "scouts_camp_visum_sub_categories.json" "scouts_camp_visum_category_set_priorities.json")
+APPS=(
+	"inuits"
+	"base"
+	"groupadmin"
+	"groups"
+	"camps"
+	"visums"
+)
+FIXTURES=(
+	"group_types.json"
+	"section_names.json"
+	"default_section_names.json"
+	"visum_categories.json"
+	"visum_sub_categories.json"
+	"visum_category_set_priorities.json"
+	"visum_check_types.json"
+)
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }
 # SAFE TO ADD CODE BELOW
