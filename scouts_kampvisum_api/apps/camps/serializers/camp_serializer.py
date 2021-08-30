@@ -2,9 +2,8 @@ import logging
 from rest_framework import serializers
 
 from ..models import Camp
-from apps.groups.api.serializers import (
-    SectionSerializer
-)
+from ..serializers import CampYearSerializer
+from apps.groups.api.serializers import SectionSerializer
 from inuits.serializers.fields import OptionalDateField
 
 
@@ -17,6 +16,7 @@ class CampSerializer(serializers.ModelSerializer):
     """
 
     name = serializers.CharField()
+    year = CampYearSerializer()
     start_date = OptionalDateField()
     end_date = OptionalDateField()
     sections = SectionSerializer(many=True)
@@ -31,10 +31,11 @@ class CampSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data) -> Camp:
         instance.name = validated_data.get(
             'type', instance.type)
+        instance.year = CampYearSerializer()
         instance.start_date = validated_data.get(
             'start_date', instance.start_date)
         instance.end_date = validated_data.get(
             'end_date', instance.end_date)
         instance.sections = SectionSerializer(many=True)
 
-        return type
+        return instance

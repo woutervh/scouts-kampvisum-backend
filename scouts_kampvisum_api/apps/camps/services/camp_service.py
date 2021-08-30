@@ -1,6 +1,8 @@
-import uuid
 import logging
+import datetime
+
 from ..models import Camp
+from ..services import CampYearService
 from apps.groups.api.models import Section
 
 
@@ -15,15 +17,16 @@ class CampService():
         """
 
         # Required arguments:
-        year = fields.get('year')
+        year = fields.get('year').get('year', datetime.date.today().year)
         name = fields.get('name')
         sections = fields.get('sections')
         # Optional arguments:
         start_date = fields.get('start_date', None)
         end_date = fields.get('end_date', None)
 
+        logger.debug("Creating camp with name '%s'", name)
         camp = Camp()
-        camp.year = year
+        camp.year = CampYearService().get_or_create_year(year)
         camp.name = name
         if start_date:
             camp.start_date = start_date
@@ -33,6 +36,7 @@ class CampService():
         camp.full_clean()
         camp.save()
 
+        logger.debug("Linking sections to camp '%s'", camp.name)
         sections = Section.objects.filter(uuid__in=sections)
         for section in sections:
             camp.sections.add(section)

@@ -43,4 +43,3 @@ def exception_handler(exc, context):
         exc = InvalidWorkflowTransitionAPIException(exc)
 
     return drf_exception_handler(exc, context)
-

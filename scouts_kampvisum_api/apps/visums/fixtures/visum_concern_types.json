@@ -26,5 +26,19 @@
 		"fields": {
 			"type": "ContactCheck"
 		}
+	},
+	{
+		"pk": 5,
+		"model": "visums.CampVisumConcernType",
+		"fields": {
+			"type": "FileUploadCheck"
+		}
+	},
+	{
+		"pk": 6,
+		"model": "visums.CampVisumConcernType",
+		"fields": {
+			"type": "InputCheck"
+		}
 	}
 ]

@@ -2,3 +2,4 @@ from .priority_serializer import CampVisumCategorySetPrioritySerializer
 from .category_serializer import CampVisumCategorySerializer
 from .sub_category_serializer import CampVisumSubCategorySerializer
 from .category_set_serializer import CampVisumCategorySetSerializer
+from .visum_serializer import CampVisumSerializer

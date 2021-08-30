@@ -4,14 +4,8 @@ import logging
 from ..models import (
     CampVisumCategorySet,
     CampVisumCategory,
-    CampVisumSubCategory,
-    CampVisumConcern,
-    CampVisumLinkedCategory,
-    CampVisumLinkedSubCategory,
-    CampVisumLinkedConcern,
     CampVisumCategorySetPriority,
 )
-from apps.camps.models import Camp
 from apps.camps.services import CampYearService
 from apps.groups.api.models import GroupType
 
@@ -21,12 +15,15 @@ logger = logging.getLogger(__name__)
 
 class CampVisumCategorySetService:
     """
-    Convenience service for creating default category sets.
+    Service for managing category sets.
     """
 
-    def setup(self, category_set: CampVisumCategorySet = None):
+    def get_default_set(self, type: GroupType) -> CampVisumCategorySet:
+        return CampVisumCategorySet.objects.get(is_default=True, type=type)
+
+    def setup_default(self, category_set: CampVisumCategorySet = None):
         """
-        Links default categories to a camp.
+        Sets up a default category set.
         """
 
         # Get highest priority for default set
@@ -55,39 +52,3 @@ class CampVisumCategorySetService:
 
                 category_set.full_clean()
                 category_set.save()
-
-        # for category in categories:
-        #     sub_categories = category.sub_categories
-        #     for sub_category in sub_categories:
-        # linked_sub_category = self.save_linked_sub_category(
-        #     CampVisumLinkedSubCategory(linked_category)
-        # )
-
-        # checks = sub_category.checks
-        # for check in checks:
-        #     linked_check = CampVisumLinkedConcern()
-        #     linked_sub_category.checks.add(linked_check)
-        # linked_category.sub_categories.add(linked_sub_category)
-
-    def save_linked_category(
-        self, category: CampVisumLinkedCategory
-    ) -> CampVisumLinkedCategory:
-        category.full_clean()
-        category.save()
-
-        return category
-
-    def save_linked_sub_category(
-        self, sub_category: CampVisumLinkedSubCategory
-    ) -> CampVisumLinkedSubCategory:
-
-        sub_category.full_clean()
-        sub_category.save()
-
-        return sub_category
-
-    def save_linked_check(self, check: CampVisumLinkedConcern) -> CampVisumLinkedConcern:
-        check.full_clean()
-        check.save()
-
-        return check

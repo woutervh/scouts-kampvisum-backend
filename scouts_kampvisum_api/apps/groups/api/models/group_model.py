@@ -1,8 +1,7 @@
 from django.db import models
-from django.utils import timezone
 
-from apps.base.models import BaseModel
 from ..models import GroupType
+from apps.base.models import BaseModel
 from inuits.models import OptionalCharField, OptionalDateTimeField
 
 
@@ -10,7 +9,7 @@ class Group(BaseModel):
     """
     A Group.
     """
-    
+
     group_admin_id = OptionalCharField(max_length=32, unique=True)
     number = OptionalCharField(max_length=32)
     name = OptionalCharField(max_length=32)
@@ -38,4 +37,3 @@ class Group(BaseModel):
 
     class Meta:
         ordering = ['group_admin_id', 'number']
-

@@ -1,4 +1,3 @@
-from django.db import models
 from django.utils import timezone
 from rest_framework import serializers
 
@@ -10,7 +9,7 @@ class GroupAdminLocationSerializer(serializers.Serializer):
     """
     Serializes a geolocation from GroupAdmin.
     """
-    
+
     latitude = serializers.CharField(default='')
     longitude = serializers.CharField(default='')
 
@@ -19,7 +18,7 @@ class GroupAdminAddressSerializer(serializers.Serializer):
     """
     Serializes an address from GroupAdmin.
     """
-    
+
     group_admin_uuid = serializers.CharField(source='id', default='')
     country = serializers.CharField(source='land', default='')
     postal_code = serializers.CharField(source='postcode', default='')
@@ -39,7 +38,7 @@ class GroupAdminGroupSerializer(serializers.Serializer):
     """
     Serializes a group from GroupAdmin.
     """
-    
+
     group_admin_id = serializers.CharField(source='id', default='')
     number = serializers.CharField(source='groepsnummer', default='')
     name = serializers.CharField(source='naam', default='')
@@ -60,4 +59,3 @@ class GroupAdminGroupSerializer(serializers.Serializer):
         source='soort', default=GroupAdminApi.default_scouts_group_type)
     public_registration = serializers.BooleanField(
         source='publiek-inschrijven', default=False)
-

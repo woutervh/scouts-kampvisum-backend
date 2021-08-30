@@ -1,8 +1,8 @@
 from django.db import models
 from django.conf import settings
-from django.utils import timezone
 
 # Mixins copied from werkwinkel project
+
 
 class CreatedByMixin(models.Model):
     created_by = models.ForeignKey(
@@ -18,14 +18,9 @@ class CreatedByMixin(models.Model):
         abstract = True
 
 
-from django.db import models
-
-
 class AuditTimestampMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
-
-

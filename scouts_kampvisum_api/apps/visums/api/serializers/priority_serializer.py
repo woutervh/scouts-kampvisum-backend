@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from ..models import CampVisumCategorySetPriority
-from inuits.serializers.fields import OptionalCharField, RequiredIntegerField
 
 
 class CampVisumCategorySetPrioritySerializer(serializers.ModelSerializer):

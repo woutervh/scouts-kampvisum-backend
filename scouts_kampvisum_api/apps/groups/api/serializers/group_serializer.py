@@ -1,8 +1,6 @@
-from django.db import models
 from django.utils import timezone
 from rest_framework import serializers
 
-from apps.base.models import RecursiveField
 from ..models import Group
 from ..serializers import GroupTypeSerializer
 
@@ -11,7 +9,7 @@ class GroupSerializer(serializers.ModelSerializer):
     """
     Serializes a ScoutGroup object.
     """
-    
+
     group_admin_id = serializers.CharField(default='')
     number = serializers.CharField(default='')
     name = serializers.CharField(default='')
@@ -24,14 +22,14 @@ class GroupSerializer(serializers.ModelSerializer):
     #sub_groups = RecursiveField(default=list(), many=True)
     type = GroupTypeSerializer()
     public_registration = serializers.BooleanField(default=False)
-    
+
     class Meta:
         model = Group
         fields = '__all__'
-    
+
     def create(self, validated_data) -> Group:
         return Group(**validated_data)
-    
+
     def update(self, instance: Group, validated_data) -> Group:
         instance.group_admin_id = validated_data.get(
             'group_admin_id', instance.group_admin_id)
@@ -52,6 +50,5 @@ class GroupSerializer(serializers.ModelSerializer):
         instance.type = GroupTypeSerializer()
         instance.public_registration = validated_data.get(
             'public_registration', instance.public_registration)
-        
-        return instance
 
+        return instance

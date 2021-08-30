@@ -1,11 +1,6 @@
 import logging
 
-from django.db import models
 from rest_framework import serializers
-
-from apps.camps.services import CampYearService
-from apps.groups.api.services import GroupService
-from apps.visums.api.services import CampVisumCategorySetService
 
 
 logger = logging.getLogger(__name__)
@@ -80,7 +75,7 @@ class Setup:
             SetupItem('category_sets',
                       endpoint='/api/category_sets/import',
                       module="CampVisumCategorySetService",
-                      function="setup",
+                      function="setup_default",
                       args=None),
         ]
 

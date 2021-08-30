@@ -1,6 +1,5 @@
 import logging
 from django.db import models
-from django.core.exceptions import ValidationError
 
 from ..models import CampYear
 from apps.base.models import BaseModel
@@ -27,12 +26,9 @@ class Camp(CreatedByMixin, AuditTimestampMixin, BaseModel):
     class Meta:
         ordering = ["start_date"]
 
-    def clean(self):
-        if not self.name:
-            raise ValidationError("A Camp must have a name")
-        # This can't be done, because there is no Camp instance yet.
-        # Validate the presence of at least 1 Section in uuid in the
-        # serializer's validate method.
-        # if not self.sections or len(self.sections) == 0:
-        #    raise ValidationError(
-        #        "A Camp must have at least 1 Section attached")
+    def get_group_type(self):
+        """
+        Convenience method for getting the group type from the sections
+        """
+        for section in self.sections.all():
+            return section.group.type

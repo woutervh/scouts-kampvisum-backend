@@ -1,10 +1,7 @@
-import logging,uuid
-from django.shortcuts import get_object_or_404
+import logging
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
@@ -15,15 +12,16 @@ from ..serializers import SectionNameSerializer
 
 logger = logging.getLogger(__name__)
 
+
 class SectionNameViewSet(viewsets.GenericViewSet):
     """
     A viewset for viewing and editing scout section names.
     """
-    
+
     lookup_field = 'uuid'
     serializer_class = SectionNameSerializer
     queryset = SectionName.objects.all()
-    
+
     @swagger_auto_schema(
         request_body=SectionNameSerializer,
         responses={status.HTTP_201_CREATED: SectionNameSerializer},
@@ -46,7 +44,7 @@ class SectionNameViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-    
+
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: SectionNameSerializer}
     )
@@ -60,7 +58,7 @@ class SectionNameViewSet(viewsets.GenericViewSet):
         )
 
         return Response(serializer.data)
-    
+
     @swagger_auto_schema(
         request_body=SectionNameSerializer,
         responses={status.HTTP_200_OK: SectionNameSerializer},
@@ -88,7 +86,7 @@ class SectionNameViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
-    
+
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: SectionNameSerializer}
     )
@@ -96,7 +94,7 @@ class SectionNameViewSet(viewsets.GenericViewSet):
         """
         Retrieves a list of all existing SectionName instances.
         """
-        
+
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
@@ -106,7 +104,7 @@ class SectionNameViewSet(viewsets.GenericViewSet):
         else:
             serializer = SectionNameSerializer(instances, many=True)
             return Response(serializer.data)
-    
+
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
@@ -118,10 +116,9 @@ class SectionNameViewSet(viewsets.GenericViewSet):
 
         if not instance:
             logger.error(
-                    "No SectionName found with uuid '%s'", uuid)
+                "No SectionName found with uuid '%s'", uuid)
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-        
-        instance.delete()
-        
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
+        instance.delete()
+
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)

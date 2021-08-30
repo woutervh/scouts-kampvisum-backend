@@ -1,0 +1,814 @@
+Messages
+========
+
+scouts_kampvisum_api/apps/base/exceptions.py
+  Line: 8
+    pylint: return-in-init / Explicit return in __init__ (col 4)
+    pylint: return-in-init / Explicit return in __init__ (col 4)
+  Line: 26
+    pylint: return-in-init / Explicit return in __init__ (col 4)
+    pylint: return-in-init / Explicit return in __init__ (col 4)
+
+scouts_kampvisum_api/apps/base/models.py
+  Line: 27
+    pylint: arguments-differ / Parameters differ from overridden 'to_representation' method (col 4)
+    pylint: arguments-differ / Parameters differ from overridden 'to_representation' method (col 4)
+  Line: 33
+    pylint: unused-argument / Unused argument 'args'
+    pylint: unused-argument / Unused argument 'kwargs'
+    pylint: unused-argument / Unused argument 'args'
+    pylint: unused-argument / Unused argument 'kwargs'
+    pylint: unused-argument / Unused argument 'sender' (col 21)
+    pylint: unused-argument / Unused argument 'sender' (col 21)
+  Line: 36
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/base/signals.py
+  Line: 5
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/camps/apps.py
+  Line: 7
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/camps/filters.py
+  Line: 27
+    pylint: too-many-branches / Too many branches (18/15) (col 4)
+  Line: 39
+    pylint: no-else-return / Unnecessary "else" after "return" (col 12)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 12)
+  Line: 51
+    pylint: no-else-return / Unnecessary "else" after "return" (col 16)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 16)
+
+scouts_kampvisum_api/apps/camps/managers/__init__.py
+  Line: 1
+    pyflakes: F401 / '.year_manager.CampYearManager' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/camps/models/__init__.py
+  Line: 1
+    pyflakes: F401 / '.year.CampYear' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.camp.Camp' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/camps/models/camp.py
+  Line: 5
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 6
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+  Line: 7
+    pylint: import-error / Unable to import 'inuits.mixins'
+    pylint: import-error / Unable to import 'inuits.mixins'
+  Line: 8
+    pylint: import-error / Unable to import 'inuits.models'
+    pylint: import-error / Unable to import 'inuits.models'
+
+scouts_kampvisum_api/apps/camps/models/year.py
+  Line: 5
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+
+scouts_kampvisum_api/apps/camps/serializers/__init__.py
+  Line: 1
+    pyflakes: F401 / '.year_serializer.CampYearSerializer' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.year_api_serializer.CampYearAPISerializer' imported but unused (col 1)
+  Line: 3
+    pyflakes: F401 / '.camp_serializer.CampSerializer' imported but unused (col 1)
+  Line: 4
+    pyflakes: F401 / '.camp_api_serializer.CampAPISerializer' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/camps/serializers/camp_api_serializer.py
+  Line: 7
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+  Line: 8
+    pylint: import-error / Unable to import 'apps.groups.api.serializers'
+    pylint: import-error / Unable to import 'apps.groups.api.serializers'
+  Line: 11
+    pylint: import-error / Unable to import 'apps.visums.api.serializers'
+    pylint: import-error / Unable to import 'apps.visums.api.serializers'
+  Line: 12
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+  Line: 46
+    pylint: arguments-differ / Parameters differ from overridden 'validate' method (col 4)
+    pylint: arguments-differ / Parameters differ from overridden 'validate' method (col 4)
+  Line: 57
+    pylint: no-else-raise / Unnecessary "else" after "raise" (col 8)
+    pylint: no-else-raise / Unnecessary "else" after "raise" (col 8)
+
+scouts_kampvisum_api/apps/camps/serializers/camp_serializer.py
+  Line: 6
+    pylint: import-error / Unable to import 'apps.groups.api.serializers'
+    pylint: import-error / Unable to import 'apps.groups.api.serializers'
+  Line: 7
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+
+scouts_kampvisum_api/apps/camps/serializers/year_api_serializer.py
+  Line: 4
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+  Line: 14
+    pylint: arguments-differ / Parameters differ from overridden 'validate' method (col 4)
+    pylint: arguments-differ / Parameters differ from overridden 'validate' method (col 4)
+
+scouts_kampvisum_api/apps/camps/serializers/year_serializer.py
+  Line: 4
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+
+scouts_kampvisum_api/apps/camps/services/__init__.py
+  Line: 1
+    pyflakes: F401 / '.year_service.CampYearService' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.camp_service.CampService' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/camps/services/camp_service.py
+  Line: 6
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+  Line: 7
+    pylint: import-error / Unable to import 'apps.visums.api.services'
+    pylint: import-error / Unable to import 'apps.visums.api.services'
+  Line: 15
+    pylint: unused-argument / Unused argument 'args'
+    pylint: unused-argument / Unused argument 'args'
+
+scouts_kampvisum_api/apps/camps/services/year_service.py
+  Line: 5
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+  Line: 35
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+  Line: 38
+    pylint: no-value-for-parameter / No value for argument 'year' in method call (col 19)
+    pylint: no-value-for-parameter / No value for argument 'year' in method call (col 19)
+    pylint: unexpected-keyword-arg / Unexpected keyword argument 'date' in method call (col 19)
+
+scouts_kampvisum_api/apps/camps/views.py
+  Line: 57
+    pylint: unused-argument / Unused argument 'pk' (col 32)
+    pylint: unused-argument / Unused argument 'pk' (col 32)
+  Line: 108
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+  Line: 124
+    pylint: consider-using-set-comprehension / Consider using a set comprehension (col 21)
+    pylint: consider-using-set-comprehension / Consider using a set comprehension (col 21)
+
+scouts_kampvisum_api/apps/camps/views_api.py
+  Line: 56
+    pylint: unused-argument / Unused argument 'uuid' (col 32)
+    pylint: unused-argument / Unused argument 'uuid' (col 32)
+  Line: 107
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+  Line: 125
+    pylint: consider-using-set-comprehension / Consider using a set comprehension (col 25)
+    pylint: consider-using-set-comprehension / Consider using a set comprehension (col 25)
+
+scouts_kampvisum_api/apps/groupadmin/api.py
+  Line: 19
+    pylint: unused-argument / Unused argument 'active_user' (col 35)
+    pylint: unused-argument / Unused argument 'active_user' (col 35)
+
+scouts_kampvisum_api/apps/groupadmin/services.py
+  Line: 5
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+
+scouts_kampvisum_api/apps/groupadmin/views.py
+  Line: 33
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+
+scouts_kampvisum_api/apps/groups/api/filters/group_filter.py
+  Line: 14
+    pylint: unused-argument / Unused argument 'queryset' (col 33)
+    pylint: unused-argument / Unused argument 'queryset' (col 33)
+    pylint: unused-argument / Unused argument 'queryset' (col 33)
+    pylint: unused-argument / Unused argument 'name' (col 43)
+    pylint: unused-argument / Unused argument 'name' (col 43)
+    pylint: unused-argument / Unused argument 'name' (col 43)
+    pylint: unused-argument / Unused argument 'value' (col 49)
+    pylint: unused-argument / Unused argument 'value' (col 49)
+    pylint: unused-argument / Unused argument 'value' (col 49)
+  Line: 17
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/groups/api/managers/__init__.py
+  Line: 1
+    pyflakes: F401 / '.group_type_manager.GroupTypeManager' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.section_name_manager.SectionNameManager' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/groups/api/managers/group_type_manager.py
+  Line: 11
+    pylint: redefined-builtin / Redefining built-in 'type' (col 33)
+    pylint: redefined-builtin / Redefining built-in 'type' (col 33)
+    pylint: redefined-builtin / Redefining built-in 'type' (col 33)
+  Line: 13
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/groups/api/managers/section_name_manager.py
+  Line: 13
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/groups/api/models/__init__.py
+  Line: 1
+    pyflakes: F401 / '.group_type_model.GroupType' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.section_name_model.SectionName' imported but unused (col 1)
+  Line: 3
+    pyflakes: F401 / '.default_section_name_model.DefaultSectionName' imported but unused (col 1)
+  Line: 4
+    pyflakes: F401 / '.group_model.Group' imported but unused (col 1)
+  Line: 5
+    pyflakes: F401 / '.address_model.Address' imported but unused (col 1)
+  Line: 6
+    pyflakes: F401 / '.section_model.Section' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/groups/api/models/address_model.py
+  Line: 3
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 5
+    pylint: import-error / Unable to import 'inuits.models'
+    pylint: import-error / Unable to import 'inuits.models'
+    pylint: import-error / Unable to import 'inuits.models'
+
+scouts_kampvisum_api/apps/groups/api/models/default_section_name_model.py
+  Line: 3
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+
+scouts_kampvisum_api/apps/groups/api/models/group_model.py
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 5
+    pylint: import-error / Unable to import 'inuits.models'
+    pylint: import-error / Unable to import 'inuits.models'
+    pylint: import-error / Unable to import 'inuits.models'
+
+scouts_kampvisum_api/apps/groups/api/models/group_type_model.py
+  Line: 3
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+
+scouts_kampvisum_api/apps/groups/api/models/section_model.py
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+
+scouts_kampvisum_api/apps/groups/api/models/section_name_model.py
+  Line: 5
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 6
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+
+scouts_kampvisum_api/apps/groups/api/serializers/__init__.py
+  Line: 1
+    pyflakes: F401 / '.group_type_serializer.GroupTypeSerializer' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.section_name_serializer.SectionNameSerializer' imported but unused (col 1)
+  Line: 3
+    pyflakes: F401 / '.default_section_name_serializer.DefaultSectionNameSerializer' imported but unused (col 1)
+  Line: 4
+    pyflakes: F401 / '.group_serializer.GroupSerializer' imported but unused (col 1)
+  Line: 5
+    pyflakes: F401 / '.address_serializer.AddressSerializer' imported but unused (col 1)
+  Line: 6
+    pyflakes: F401 / '.section_serializer.SectionSerializer' imported but unused (col 1)
+  Line: 7
+    pyflakes: F401 / '.section_serializer.SectionAPISerializer' imported but unused (col 1)
+  Line: 8
+    pyflakes: F401 / '.section_serializer.SectionCreationAPISerializer' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/groups/api/serializers/address_serializer.py
+  Line: 6
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+  Line: 17
+    pep8: N815 / variable 'postalCode' in class scope should not be mixedCase (col 6)
+    pep8: N815 / variable 'postalCode' in class scope should not be mixedCase (col 6)
+    pep8: N815 / variable 'postalCode' in class scope should not be mixedCase (col 6)
+    pep8: N815 / variable 'postalCode' in class scope should not be mixedCase (col 6)
+    pep8: N815 / variable 'postalCode' in class scope should not be mixedCase (col 6)
+  Line: 23
+    pep8: N815 / variable 'postalAddress' in class scope should not be mixedCase (col 6)
+    pep8: N815 / variable 'postalAddress' in class scope should not be mixedCase (col 6)
+    pep8: N815 / variable 'postalAddress' in class scope should not be mixedCase (col 6)
+    pep8: N815 / variable 'postalAddress' in class scope should not be mixedCase (col 6)
+    pep8: N815 / variable 'postalAddress' in class scope should not be mixedCase (col 6)
+
+scouts_kampvisum_api/apps/groups/api/serializers/default_section_name_serializer.py
+  Line: 25
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/groups/api/serializers/group_type_serializer.py
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 5
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+
+scouts_kampvisum_api/apps/groups/api/serializers/section_name_serializer.py
+  Line: 5
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+  Line: 25
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/groups/api/serializers/section_serializer.py
+  Line: 35
+    pylint: arguments-differ / Parameters differ from overridden 'validate' method (col 4)
+    pylint: arguments-differ / Parameters differ from overridden 'validate' method (col 4)
+    pylint: arguments-differ / Parameters differ from overridden 'validate' method (col 4)
+
+scouts_kampvisum_api/apps/groups/api/services/__init__.py
+  Line: 1
+    pyflakes: F401 / '.section_name_service.SectionNameService' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.default_section_name_service.DefaultSectionNameService' imported but unused (col 1)
+  Line: 3
+    pyflakes: F401 / '.address_service.AddressService' imported but unused (col 1)
+  Line: 4
+    pyflakes: F401 / '.section_service.SectionService' imported but unused (col 1)
+  Line: 5
+    pyflakes: F401 / '.group_service.GroupService' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/groups/api/services/address_service.py
+  Line: 1
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.camps.models -> scouts_kampvisum_api.apps.camps.models.camp)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.camps.serializers -> scouts_kampvisum_api.apps.camps.serializers.camp_api_serializer)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.camps.services -> scouts_kampvisum_api.apps.camps.services.camp_service)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.camps.serializers -> scouts_kampvisum_api.apps.camps.serializers.camp_serializer)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.models -> scouts_kampvisum_api.apps.groups.api.models.group_model)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.serializers -> scouts_kampvisum_api.apps.groups.api.serializers.section_serializer)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.services -> scouts_kampvisum_api.apps.groups.api.services.group_service)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.models -> scouts_kampvisum_api.apps.groups.api.models.address_model)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.models -> scouts_kampvisum_api.apps.groups.api.models.section_model)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.models -> scouts_kampvisum_api.apps.groups.api.models.default_section_name_model)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.services -> scouts_kampvisum_api.apps.groups.api.services.section_service)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.serializers -> scouts_kampvisum_api.apps.groups.api.serializers.default_section_name_serializer)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.serializers -> scouts_kampvisum_api.apps.groups.api.serializers.group_serializer)
+    pylint: cyclic-import / Cyclic import (scouts_kampvisum_api.apps.groups.api.serializers -> scouts_kampvisum_api.apps.groups.api.serializers.address_serializer)
+
+scouts_kampvisum_api/apps/groups/api/services/default_section_name_service.py
+  Line: 12
+    pylint: redefined-builtin / Redefining built-in 'type' (col 28)
+    pylint: redefined-builtin / Redefining built-in 'type' (col 28)
+    pylint: redefined-builtin / Redefining built-in 'type' (col 28)
+  Line: 21
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/groups/api/services/group_service.py
+  Line: 6
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+  Line: 7
+    pylint: import-error / Unable to import 'apps.groupadmin.services'
+    pylint: import-error / Unable to import 'apps.groupadmin.services'
+    pylint: import-error / Unable to import 'apps.groupadmin.services'
+  Line: 8
+    pylint: import-error / Unable to import 'apps.groupadmin.serializers'
+    pylint: import-error / Unable to import 'apps.groupadmin.serializers'
+    pylint: import-error / Unable to import 'apps.groupadmin.serializers'
+  Line: 36
+    pylint: too-many-arguments / Too many arguments (13/5) (col 4)
+    pylint: too-many-arguments / Too many arguments (13/5) (col 4)
+    pylint: too-many-arguments / Too many arguments (13/5) (col 4)
+
+scouts_kampvisum_api/apps/groups/api/services/section_name_service.py
+  Line: 4
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+    pylint: import-error / Unable to import 'apps.groupadmin.api'
+  Line: 26
+    pylint: unused-argument / Unused argument 'fields'
+    pylint: unused-argument / Unused argument 'fields'
+    pylint: unused-argument / Unused argument 'fields'
+
+scouts_kampvisum_api/apps/groups/api/services/section_service.py
+  Line: 20
+    pylint: inconsistent-return-statements / Either all return statements in a function should return an expression, or none of them should. (col 4)
+    pylint: inconsistent-return-statements / Either all return statements in a function should return an expression, or none of them should. (col 4)
+    pylint: inconsistent-return-statements / Either all return statements in a function should return an expression, or none of them should. (col 4)
+    pylint: too-many-branches / Too many branches (21/15) (col 4)
+  Line: 28
+    pylint: import-outside-toplevel / Import outside toplevel (services.GroupService) (col 12)
+    pylint: import-outside-toplevel / Import outside toplevel (services.GroupService) (col 12)
+    pylint: import-outside-toplevel / Import outside toplevel (services.GroupService) (col 12)
+  Line: 55
+    pylint: unused-argument / Unused argument 'fields'
+    pylint: unused-argument / Unused argument 'fields'
+    pylint: unused-argument / Unused argument 'fields'
+  Line: 70
+    pylint: unused-argument / Unused argument 'fields'
+    pylint: unused-argument / Unused argument 'fields'
+    pylint: unused-argument / Unused argument 'fields'
+  Line: 90
+    pylint: unused-argument / Unused argument 'args'
+    pylint: unused-argument / Unused argument 'args'
+    pylint: unused-argument / Unused argument 'args'
+    pylint: too-many-branches / Too many branches (21/15) (col 4)
+
+scouts_kampvisum_api/apps/groups/api/views/__init__.py
+  Line: 1
+    pyflakes: F401 / '.section_name_views.SectionNameViewSet' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.group_views.GroupViewSet' imported but unused (col 1)
+  Line: 3
+    pyflakes: F401 / '.section_views.SectionViewSet' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/groups/api/views/group_views.py
+  Line: 34
+    pylint: unused-argument / Unused argument 'pk' (col 32)
+    pylint: unused-argument / Unused argument 'pk' (col 32)
+    pylint: unused-argument / Unused argument 'pk' (col 32)
+  Line: 52
+    pylint: unused-argument / Unused argument 'pk' (col 37)
+    pylint: unused-argument / Unused argument 'pk' (col 37)
+    pylint: unused-argument / Unused argument 'pk' (col 37)
+  Line: 60
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+  Line: 81
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+  Line: 107
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+  Line: 112
+    pylint: unused-argument / Unused argument 'uuid' (col 37)
+    pylint: unused-argument / Unused argument 'uuid' (col 37)
+    pylint: unused-argument / Unused argument 'uuid' (col 37)
+  Line: 148
+    pylint: deprecated-method / Using deprecated method warn() (col 12)
+    pylint: deprecated-method / Using deprecated method warn() (col 12)
+    pylint: deprecated-method / Using deprecated method warn() (col 12)
+  Line: 153
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+
+scouts_kampvisum_api/apps/groups/api/views/section_name_views.py
+  Line: 51
+    pylint: unused-argument / Unused argument 'uuid' (col 32)
+    pylint: unused-argument / Unused argument 'uuid' (col 32)
+    pylint: unused-argument / Unused argument 'uuid' (col 32)
+  Line: 66
+    pylint: unused-argument / Unused argument 'uuid' (col 38)
+    pylint: unused-argument / Unused argument 'uuid' (col 38)
+    pylint: unused-argument / Unused argument 'uuid' (col 38)
+  Line: 101
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+
+scouts_kampvisum_api/apps/groups/api/views/section_views.py
+  Line: 29
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+
+scouts_kampvisum_api/apps/groups/apps.py
+  Line: 7
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/setup/apps.py
+  Line: 6
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/setup/models.py
+  Line: 22
+    pylint: too-many-arguments / Too many arguments (7/5) (col 4)
+    pylint: too-many-arguments / Too many arguments (7/5) (col 4)
+  Line: 35
+    pylint: redefined-builtin / Redefining built-in 'object' (col 25)
+    pylint: redefined-builtin / Redefining built-in 'object' (col 25)
+  Line: 39
+    pylint: redefined-builtin / Redefining built-in 'object' (col 12)
+    pylint: redefined-builtin / Redefining built-in 'object' (col 12)
+  Line: 42
+    pylint: unused-argument / Unused argument 'objects' (col 28)
+    pylint: unused-argument / Unused argument 'objects' (col 28)
+
+scouts_kampvisum_api/apps/visums/api/managers/__init__.py
+  Line: 1
+    pyflakes: F401 / '.category_manager.CampVisumCategoryManager' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.priority_manager.PriorityManager' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/visums/api/managers/category_manager.py
+  Line: 13
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/visums/api/managers/priority_manager.py
+  Line: 7
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/visums/api/models/__init__.py
+  Line: 1
+    pyflakes: F401 / '.category.CampVisumCategory' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.sub_category.CampVisumSubCategory' imported but unused (col 1)
+  Line: 3
+    pyflakes: F401 / '.concern_type.CampVisumConcernType' imported but unused (col 1)
+  Line: 4
+    pyflakes: F401 / '.concern.CampVisumConcern' imported but unused (col 1)
+  Line: 5
+    pyflakes: F401 / '.priority.CampVisumCategorySetPriority' imported but unused (col 1)
+  Line: 6
+    pyflakes: F401 / '.category_set.CampVisumCategorySet' imported but unused (col 1)
+  Line: 7
+    pyflakes: F401 / '.visum.CampVisum' imported but unused (col 1)
+  Line: 8
+    pyflakes: F401 / '.visum_category.CampVisumLinkedCategory' imported but unused (col 1)
+  Line: 9
+    pyflakes: F401 / '.visum_sub_category.CampVisumLinkedSubCategory' imported but unused (col 1)
+  Line: 10
+    pyflakes: F401 / '.visum_concern.CampVisumLinkedConcern' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/visums/api/models/category.py
+  Line: 3
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 4
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 5
+    pylint: import-error / Unable to import 'inuits.models'
+
+scouts_kampvisum_api/apps/visums/api/models/category_set.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 5
+    pylint: import-error / Unable to import 'apps.camps.models'
+  Line: 6
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+
+scouts_kampvisum_api/apps/visums/api/models/concern.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+
+scouts_kampvisum_api/apps/visums/api/models/concern_type.py
+  Line: 1
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 2
+    pylint: import-error / Unable to import 'inuits.models'
+
+scouts_kampvisum_api/apps/visums/api/models/priority.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 25
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/visums/api/models/sub_category.py
+  Line: 3
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 4
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 5
+    pylint: import-error / Unable to import 'inuits.models'
+
+scouts_kampvisum_api/apps/visums/api/models/visum.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 5
+    pylint: import-error / Unable to import 'apps.camps.models'
+
+scouts_kampvisum_api/apps/visums/api/models/visum_category.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 5
+    pylint: import-error / Unable to import 'apps.camps.models'
+
+scouts_kampvisum_api/apps/visums/api/models/visum_concern.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 5
+    pylint: import-error / Unable to import 'apps.camps.models'
+
+scouts_kampvisum_api/apps/visums/api/models/visum_sub_category.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: import-error / Unable to import 'apps.base.models'
+  Line: 5
+    pylint: import-error / Unable to import 'inuits.models'
+
+scouts_kampvisum_api/apps/visums/api/serializers/__init__.py
+  Line: 1
+    pyflakes: F401 / '.priority_serializer.CampVisumCategorySetPrioritySerializer' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.category_serializer.CampVisumCategorySerializer' imported but unused (col 1)
+  Line: 3
+    pyflakes: F401 / '.sub_category_serializer.CampVisumSubCategorySerializer' imported but unused (col 1)
+  Line: 4
+    pyflakes: F401 / '.category_set_serializer.CampVisumCategorySetSerializer' imported but unused (col 1)
+  Line: 5
+    pyflakes: F401 / '.visum_serializer.CampVisumSerializer' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/visums/api/serializers/category_serializer.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: import-error / Unable to import 'inuits.serializers.fields'
+
+scouts_kampvisum_api/apps/visums/api/serializers/category_set_serializer.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 8
+    pylint: import-error / Unable to import 'apps.groups.api.serializers'
+  Line: 9
+    pylint: import-error / Unable to import 'apps.camps.serializers'
+
+scouts_kampvisum_api/apps/visums/api/serializers/priority_serializer.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+
+scouts_kampvisum_api/apps/visums/api/serializers/sub_category_serializer.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 23
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/visums/api/serializers/visum_serializer.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 4
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+
+scouts_kampvisum_api/apps/visums/api/services/__init__.py
+  Line: 1
+    pyflakes: F401 / '.category_service.CampVisumCategoryService' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.sub_category_service.CampVisumSubCategoryService' imported but unused (col 1)
+  Line: 3
+    pyflakes: F401 / '.category_set_service.CampVisumCategorySetService' imported but unused (col 1)
+  Line: 4
+    pyflakes: F401 / '.visum_category_service.CampVisumLinkedCategoryService' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/visums/api/services/category_service.py
+  Line: 2
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+
+scouts_kampvisum_api/apps/visums/api/services/category_set_service.py
+  Line: 4
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 9
+    pylint: import-error / Unable to import 'apps.camps.services'
+  Line: 10
+    pylint: import-error / Unable to import 'apps.groups.api.models'
+  Line: 21
+    pylint: redefined-builtin / Redefining built-in 'type' (col 30)
+
+scouts_kampvisum_api/apps/visums/api/services/sub_category_service.py
+  Line: 1
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 43
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/visums/api/services/visum_category_service.py
+  Line: 3
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 6
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 7
+    pylint: import-error / Unable to import 'apps.camps.models'
+
+scouts_kampvisum_api/apps/visums/api/views/__init__.py
+  Line: 1
+    pyflakes: F401 / '.category_views.CampVisumCategoryViewSet' imported but unused (col 1)
+  Line: 2
+    pyflakes: F401 / '.sub_category_views.CampVisumSubCategoryViewSet' imported but unused (col 1)
+  Line: 3
+    pyflakes: F401 / '.check_views.CampVisumConcernViewSet' imported but unused (col 1)
+  Line: 4
+    pyflakes: F401 / '.category_set_views.CampVisumCategorySetViewSet' imported but unused (col 1)
+
+scouts_kampvisum_api/apps/visums/api/views/category_set_views.py
+  Line: 7
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+
+scouts_kampvisum_api/apps/visums/api/views/category_views.py
+  Line: 10
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 11
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 12
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 53
+    pylint: unused-argument / Unused argument 'pk' (col 32)
+  Line: 69
+    pylint: unused-argument / Unused argument 'pk' (col 38)
+  Line: 118
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+  Line: 132
+    pylint: unused-argument / Unused argument 'pk' (col 38)
+
+scouts_kampvisum_api/apps/visums/api/views/sub_category_views.py
+  Line: 8
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 9
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 10
+    pylint: relative-beyond-top-level / Attempted relative import beyond top-level package
+  Line: 50
+    pylint: unused-argument / Unused argument 'pk' (col 32)
+  Line: 66
+    pylint: unused-argument / Unused argument 'pk' (col 38)
+  Line: 115
+    pylint: no-else-return / Unnecessary "else" after "return" (col 8)
+  Line: 125
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/apps/visums/apps.py
+  Line: 7
+    pylint: trailing-newlines / Trailing newlines
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/inuits/models.py
+  Line: 1
+    pylint: multiple-imports / Multiple imports on one line (logging, warnings)
+  Line: 174
+    pylint: trailing-newlines / Trailing newlines
+
+scouts_kampvisum_api/inuits/serializers/__init__.py
+  Line: 1
+    pyflakes: F401 / '.fields.OptionalCharField' imported but unused (col 1)
+
+scouts_kampvisum_api/manage.py
+  Line: 10
+    pylint: import-outside-toplevel / Import outside toplevel (django.core.management.execute_from_command_line) (col 8)
+
+
+
+Check Information
+=================
+         Started: 2021-08-26 20:06:16.096704
+        Finished: 2021-08-26 20:06:31.303111
+      Time Taken: 15.21 seconds
+       Formatter: grouped
+        Profiles: default, no_doc_warnings, no_test_warnings, strictness_medium, strictness_high, strictness_veryhigh, no_member_warnings
+      Strictness: None
+  Libraries Used: django
+       Tools Run: dodgy, mccabe, pep8, profile-validator, pyflakes, pylint
+  Messages Found: 400
+

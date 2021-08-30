@@ -2,7 +2,7 @@ import logging
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
-from rest_framework import generics, viewsets, status
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -13,7 +13,6 @@ from .models import Camp
 from .services import CampService
 from .serializers import CampSerializer, CampAPISerializer
 from .filters import CampAPIFilter
-from apps.groups.api.models import Group
 
 logger = logging.getLogger(__name__)
 
@@ -36,9 +35,6 @@ class CampAPIViewSet(viewsets.GenericViewSet):
     def create(self, request):
         data = request.data
 
-        logger.debug("Creating camp with name: '%s'", data.get('name'))
-
-        logger.info("SECTIONS: %s", data.get('sections'))
         serializer = CampAPISerializer(
             data=data, context={'request': request}
         )

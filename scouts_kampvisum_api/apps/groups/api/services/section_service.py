@@ -1,5 +1,5 @@
-import logging, warnings
-from django.db.models import Q
+import logging
+import warnings
 from django.shortcuts import get_object_or_404
 
 from ..models import (
@@ -16,9 +16,9 @@ logger = logging.getLogger(__name__)
 class SectionService:
 
     section_name_service = SectionNameService()
-    
+
     def section_create_or_update(self,
-        group=None, name=None, hidden=False, **fields) -> Section:
+                                 group=None, name=None, hidden=False, **fields) -> Section:
         """
         Creates or updates a Section instance.
         """
@@ -42,7 +42,6 @@ class SectionService:
             warnings.warn("Attempted to create or update multiple objects")
             return None
 
-
         if count == 0:
             logger.debug("Creating Section with name '%s'", name)
             return self._section_create(group, name, hidden, **fields)
@@ -53,9 +52,8 @@ class SectionService:
             return self._section_update(
                 instance, group, name, hidden, **fields)
 
-
     def _section_create(self,
-        group=None, name=None, hidden=False, **fields) -> Section:
+                        group=None, name=None, hidden=False, **fields) -> Section:
         if name is None or not isinstance(name, SectionName):
             name = self.section_name_service.name_create(name=name)
         instance = Section()
@@ -68,12 +66,12 @@ class SectionService:
         instance.save()
 
         return instance
-    
+
     def _section_update(self,
-        instance: Section,
-        group: Group = None,
-        name: SectionName = None,
-        hidden=False, **fields) -> Section:
+                        instance: Section,
+                        group: Group = None,
+                        name: SectionName = None,
+                        hidden=False, **fields) -> Section:
         """
         Updates an existing Section instance.
         """
@@ -88,7 +86,7 @@ class SectionService:
         instance.save()
 
         return instance
-    
+
     def section_read(self, *args, **fields) -> Section:
         """
         Retrieves a Section by uuid or SectionName.
@@ -104,7 +102,7 @@ class SectionService:
 
         if uuid is None and name is None:
             return Section.objects.all()
-        
+
         if uuid is not None and not isinstance(uuid, dict):
             if isinstance(uuid, list):
                 return list(Section.objects.filter(
@@ -118,12 +116,11 @@ class SectionService:
                 return list(Section.objects.filter(
                     group=group,
                     name__name__in=name).values_list())
-            
+
             if isinstance(name, str):
                 return list(Section.objects.filter(
                     group=group, name__name=name))
-        
-        logger.debug('No Section instances found with the given args')
-        
-        return None
 
+        logger.debug('No Section instances found with the given args')
+
+        return None

@@ -24,8 +24,12 @@ class CampYearService:
         - If the month is earlier than July, the scout year starting in the
             previous calendar year is returned
         """
+        current = datetime.date.today()
         if date is None:
-            date = datetime.date.today()
+            date = current
+        # date is a year
+        if not isinstance(date, datetime.date):
+            date = datetime.date(date, current.month, current.day)
 
         camp_year = self._get_year(date=date)
         if camp_year is not None:

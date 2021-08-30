@@ -1,7 +1,7 @@
-import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from ..managers import CampYearManager
 from apps.base.models import BaseModel
 
 
@@ -19,10 +19,15 @@ class CampYear(BaseModel):
     start_date = models.DateField()
     end_date = models.DateField()
 
+    objects = CampYearManager()
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['year'], name='unique_year')
         ]
+
+    def natural_key(self):
+        return (self.year, )
 
     def __str__(self):
         return "CampYear {self.year}: {self.start_date} - {self.end_date}".format(self=self)

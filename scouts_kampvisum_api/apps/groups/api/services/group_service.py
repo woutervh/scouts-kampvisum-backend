@@ -224,7 +224,7 @@ class GroupService:
                 logger.debug('NAMES: %s (%s instances)', names, len(names))
                 for name in names:
                     logger.debug('NAME: %s', name)
-                    section = self.section_service.section_create_or_update(
+                    self.section_service.section_create_or_update(
                         group, name.name, name.name.hidden)
                     creation_count += 1
 

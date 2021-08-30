@@ -17,7 +17,7 @@ FIXTURES=(
 	"visum_categories.json"
 	"visum_sub_categories.json"
 	"visum_category_set_priorities.json"
-	"visum_check_types.json"
+	"visum_concern_types.json"
 )
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }

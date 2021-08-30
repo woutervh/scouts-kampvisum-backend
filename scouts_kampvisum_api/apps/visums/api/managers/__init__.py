@@ -1,2 +1,4 @@
 from .category_manager import CampVisumCategoryManager
 from .priority_manager import PriorityManager
+from .sub_category_manager import CampVisumSubCategoryManager
+from .concern_type_manager import CampVisumConcernTypeManager

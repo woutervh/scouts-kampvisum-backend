@@ -17,12 +17,6 @@ class CampAPIFilter(filters.FilterSet):
         model = Camp
         fields = []
 
-    # def filter_group(self, queryset, name, group):
-    #     return queryset.filter(Q(sections__group__uuid=group))
-
-    # def filter_year(self, queryset, name, year):
-    #     return queryset.filter(Q(start_date__year=year))
-
     @property
     def qs(self):
         parent = super().qs
@@ -44,16 +38,15 @@ class CampAPIFilter(filters.FilterSet):
                 return parent.filter(
                     Q(start_date__year=year),
                     Q(sections__group__id=group)).distinct()
-        else:
-            if year:
-                return parent.filter(start_date__year=year)
-            if group:
-                if self.filter_group == 'uuid':
-                    return parent.filter(
-                        sections__group__uuid=group).distinct()
-                else:
-                    return parent.filter(
-                        sections__group__id=group).distinct()
+        if year:
+            return parent.filter(start_date__year=year)
+        if group:
+            if self.filter_group == 'uuid':
+                return parent.filter(
+                    sections__group__uuid=group).distinct()
+            else:
+                return parent.filter(
+                    sections__group__id=group).distinct()
 
         return parent.all()
 

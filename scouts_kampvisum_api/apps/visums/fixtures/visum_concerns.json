@@ -1,0 +1,189 @@
+[
+    {
+        "pk": 1,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "datum_leden",
+            "sub_category": [
+                "Datum"
+            ],
+            "type": "DateCheck"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "datum_leiding",
+            "sub_category": [
+                "Datum"
+            ],
+            "type": "DateCheck"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "camp_planning",
+            "sub_category": [
+                "Activiteiten"
+            ],
+            "type": "SimpleCheck"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "rain_planning",
+            "sub_category": [
+                "Activiteiten"
+            ],
+            "type": "SimpleCheck"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "heat_planning",
+            "sub_category": [
+                "Activiteiten"
+            ],
+            "type": "SimpleCheck"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "totemisation_planning",
+            "sub_category": [
+                "Activiteiten"
+            ],
+            "type": "SimpleCheck"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "night_activity_planning",
+            "sub_category": [
+                "Activiteiten"
+            ],
+            "type": "SimpleCheck"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "general_planning",
+            "sub_category": [
+                "Activiteiten"
+            ],
+            "type": "FileUploadCheck"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "other_planning",
+            "sub_category": [
+                "Activiteiten"
+            ],
+            "type": "FileUploadCheck"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "balanced_diet_menu",
+            "sub_category": [
+                "Menu"
+            ],
+            "type": "SimpleCheck"
+        }
+    },
+    {
+        "pk": 11,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "vegetarian_menu",
+            "sub_category": [
+                "Menu"
+            ],
+            "type": "SimpleCheck"
+        }
+    },
+    {
+        "pk": 12,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "upload_menu",
+            "sub_category": [
+                "Menu"
+            ],
+            "type": "FileUploadCheck"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "name_location",
+            "sub_category": [
+                "Locatie(s) - kaartje"
+            ],
+            "type": "InputCheck"
+        }
+    },
+    {
+        "pk": 14,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "upload_menu",
+            "sub_category": [
+                "Locatie(s) - kaartje"
+            ],
+            "type": "FileUploadCheck"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "upload_menu",
+            "sub_category": [
+                "Locatie(s) - kaartje"
+            ],
+            "type": "FileUploadCheck"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "upload_menu",
+            "sub_category": [
+                "Locatie(s) - kaartje"
+            ],
+            "type": "FileUploadCheck"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "visums.CampVisumConcern",
+        "fields": {
+            "name": "upload_menu",
+            "sub_category": [
+                "Locatie(s) - kaartje"
+            ],
+            "type": "FileUploadCheck"
+        }
+    },
+]

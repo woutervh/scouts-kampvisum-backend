@@ -1,5 +1,4 @@
 import logging
-from django.utils import timezone
 
 from ..models import Group, Address
 
@@ -8,29 +7,29 @@ logger = logging.getLogger(__name__)
 
 
 class AddressService:
-    
+
     def address_update_or_create(self,
                                  group: Group,
                                  fields):
         qs = Address.objects.filter(
-        group_admin_uuid=fields.get('group_admin_uuid', ''))
-        
+            group_admin_uuid=fields.get('group_admin_uuid', ''))
+
         if qs.count() == 1:
             self.address_update(qs[0], group, fields)
         else:
             self.address_create(group, fields)
-    
+
     def address_create(self,
-            group: Group,
-            fields) -> Address:
+                       group: Group,
+                       fields) -> Address:
         """
         Saves a new Address.
         """
-        
+
         logger.info("Creating address for group '%s'", group.name)
-        
+
         instance = Address()
-        
+
         instance.group_admin_uuid = fields.get(
             'group_admin_uuid', '')
         instance.country = fields.get('country', '')
@@ -46,22 +45,22 @@ class AddressService:
         instance.longitude = fields.get('longitude', '')
         instance.description = fields.get('description', '')
         instance.group = group
-        
+
         instance.full_clean()
         instance.save()
-        
+
         return instance
-    
+
     def address_update(self,
-            instance: Address,
-            group: Group,
-            fields) -> Address:
+                       instance: Address,
+                       group: Group,
+                       fields) -> Address:
         """
         Updates an existing Address.
         """
-        
+
         logger.info("Updating address for group '%s'", group.name)
-        
+
         instance.group_admin_uuid = fields.get(
             'group_admin_uuid', instance.group_admin_uuid)
         instance.country = fields.get('country', instance.country)
@@ -77,9 +76,8 @@ class AddressService:
         instance.longitude = fields.get('longitude', instance.longitude)
         instance.description = fields.get('description', instance.description)
         instance.group = group
-        
+
         instance.full_clean()
         instance.save()
-        
-        return instance
 
+        return instance

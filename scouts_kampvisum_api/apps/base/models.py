@@ -8,14 +8,14 @@ from safedelete.models import SOFT_DELETE
 
 
 class BaseModel(SafeDeleteModel):
-    
+
     _safedelete_policy = SOFT_DELETE
-    
+
     id = models.AutoField(
         primary_key=True, editable=False)
     uuid = models.UUIDField(
         primary_key=False, editable=False, default=uuid.uuid4, unique=True)
-    
+
     class Meta:
         abstract = True
 
@@ -24,8 +24,10 @@ class RecursiveField(serializers.Serializer):
     """
     Utility class that allows a deserialization of self-referencing classes.
     """
-    def to_representation(self, value):
-        serializer = self.parent.parent.__class__(value, context=self.context)
+
+    def to_representation(self, instance):
+        serializer = self.parent.parent.__class__(
+            instance, context=self.context)
         return serializer.data
 
 
@@ -33,4 +35,3 @@ class RecursiveField(serializers.Serializer):
 def set_uuid_on_save(sender, instance, *args, **kwargs):
     if instance.pk is None:
         instance.uuid = uuid.uuid4()
-

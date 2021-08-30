@@ -12,7 +12,6 @@ from ..serializers import (
     GroupSerializer,
     SectionSerializer,
     SectionCreationAPISerializer,
-    SectionAPISerializer,
 )
 
 
@@ -157,8 +156,6 @@ class GroupViewSet(viewsets.GenericViewSet):
         else:
             serializer = SectionSerializer(instances, many=True)
             return Response(serializer.data)
-
-        return Response(output_serializer.data)
 
     @action(
         detail=True, methods=['get'], permission_classes=[IsAuthenticated],
