@@ -32,5 +32,6 @@ fi
 
 # https://docs.djangoproject.com/en/dev/ref/django-admin/#syntax-coloring
 export DJANGO_COLORS="dark;error=red,bold"
-
+echo "$SCRIPT_DIR"
+export PYTHONPATH="$SCRIPT_DIR"
 python manage.py runserver

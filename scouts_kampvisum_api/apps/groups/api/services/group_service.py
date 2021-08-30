@@ -126,7 +126,7 @@ class GroupService:
 
         return fields
 
-    def import_groupadmin_group(self, fields):
+    def import_ga_group(self, fields):
         """
         Parses GroupAdmin group data and saves it as a Group object.
         """
@@ -194,7 +194,7 @@ class GroupService:
 
         for group in serializer.data:
             group_admin_ids.append(group.get('group_admin_id'))
-            self.import_groupadmin_group(group)
+            self.import_ga_group(group)
 
         return Group.objects.filter(
             group_admin_id__in=list(set(group_admin_ids))).order_by(

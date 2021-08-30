@@ -1,4 +1,4 @@
-import logging
+import logging, importlib
 
 from rest_framework import serializers
 
@@ -12,6 +12,7 @@ class SetupItem:
     ok = False
     endpoint = ''
     # Action to perform
+    namespace = None
     module = None
     function = None
     args = None
@@ -20,11 +21,12 @@ class SetupItem:
     objects = ()
 
     def __init__(self,
-                 name, ok=False, endpoint='', module=None,
+                 name, ok=False, endpoint='', namespace=None, module=None,
                  function=None, args=None) -> None:
         self.name = name
         self.ok = ok
         self.endpoint = endpoint
+        self.namespace = namespace
         self.module = module
         self.function = function
         self.args = args
@@ -43,10 +45,13 @@ class SetupItem:
         return len(self.objects)
 
     def check(self):
+        logger.debug("from %s import %s", self.namespace, self.module)
+        mod = importlib.import_module(self.namespace)
+        the_class = getattr(mod, self.module)()
         if self.args is not None:
-            getattr(globals()[self.module](), self.function)(*self.args)
+            getattr(the_class, self.function)(*self.args)
         else:
-            getattr(globals()[self.module](), self.function)()
+            getattr(the_class, self.function)()
 
 
 class Setup:
@@ -60,23 +65,27 @@ class Setup:
 
         self.items = [
             SetupItem('years',
-                      module="CampYearService",
-                      function="setup_camp_years",
-                      args=None),
+                    namespace="apps.camps.services",
+                    module="CampYearService",
+                    function="setup_camp_years",
+                    args=None),
             SetupItem('groups',
-                      endpoint='/api/groups/import',
-                      module="GroupService",
-                      function="import_ga_groups",
-                      args=[request.user]),
+                    endpoint='/api/groups/import',
+                    namespace="apps.groups.api.services",
+                    module="GroupService",
+                    function="import_ga_groups",
+                    args=[request.user]),
             SetupItem('sections',
-                      module="GroupService",
-                      function="link_default_sections",
-                      args=None),
+                    namespace="apps.groups.api.services",
+                    module="GroupService",
+                    function="link_default_sections",
+                    args=None),
             SetupItem('category_sets',
-                      endpoint='/api/category_sets/import',
-                      module="CampVisumCategorySetService",
-                      function="setup_default",
-                      args=None),
+                    endpoint='/api/category_sets/import',
+                    namespace="apps.visums.api.services",
+                    module="CampVisumCategorySetService",
+                    function="setup_default",
+                    args=None),
         ]
 
         for item in self.items:

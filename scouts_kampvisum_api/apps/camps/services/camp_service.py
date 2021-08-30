@@ -1,5 +1,6 @@
 import logging
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 from ..models import Camp
 from ..services import CampYearService
@@ -17,7 +18,7 @@ class CampService():
         """
 
         # Required arguments:
-        year = fields.get('year').get('year', datetime.date.today().year)
+        year = fields.get('year', datetime.date.today().year)
         name = fields.get('name')
         sections = fields.get('sections')
         # Optional arguments:
@@ -36,9 +37,14 @@ class CampService():
         camp.full_clean()
         camp.save()
 
-        logger.debug("Linking sections to camp '%s'", camp.name)
-        sections = Section.objects.filter(uuid__in=sections)
-        for section in sections:
+        logger.debug("Linking %d section(s) to camp '%s'",
+            len(sections), camp.name)
+        section_objects = Section.objects.filter(uuid__in=sections)
+
+        if section_objects.count() == 0:
+            raise ObjectDoesNotExist(
+                "No sections found for uuid(s): %s", sections)
+        for section in section_objects:
             camp.sections.add(section)
         camp.save()
 

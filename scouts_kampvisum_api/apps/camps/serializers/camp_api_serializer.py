@@ -6,6 +6,7 @@ from ..models import Camp
 from ..serializers import CampYearAPISerializer
 from apps.groups.api.models import Section
 from apps.groups.api.serializers import SectionAPISerializer
+from inuits.mixins import FlattenMixin
 from inuits.serializers.fields import OptionalDateField
 
 
@@ -22,22 +23,23 @@ logger = logging.getLogger(__name__)
 # CampVisumSerializer = sys.modules[__package__ + '.CampVisumSerializer']
 
 
-class CampAPISerializer(serializers.ModelSerializer):
+class CampAPISerializer(FlattenMixin, serializers.ModelSerializer):
     """
     Deserializes a JSON Camp from the frontend (no serialization).
     """
 
-    name = serializers.CharField()
-    year = CampYearAPISerializer()
-    start_date = OptionalDateField()
-    end_date = OptionalDateField()
-    # List of Section uuid's
-    sections = SectionAPISerializer()
-    # category_set = sets.CampVisumCategorySetSerializer()
+    # name = serializers.CharField()
+    # year = CampYearAPISerializer()
+    # start_date = OptionalDateField()
+    # end_date = OptionalDateField()
+    # # List of Section uuid's
+    # sections = SectionAPISerializer()
+    # # category_set = sets.CampVisumCategorySetSerializer()
 
     class Meta:
         model = Camp
-        fields = '__all__'
+        fields = ('name', 'year', 'start_date', 'end_date', 'sections')
+        flatten = [('year', CampYearAPISerializer)]
 
     def validate(self, data):
         logger.debug('Camp API DATA: %s', data)

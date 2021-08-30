@@ -19,6 +19,7 @@ class CampVisumCategorySetService:
     """
 
     def get_default_set(self, type: GroupType) -> CampVisumCategorySet:
+        logger.debug("Looking for default category sets for type '%s'", type)
         return CampVisumCategorySet.objects.get(is_default=True, type=type)
 
     def setup_default(self, category_set: CampVisumCategorySet = None):

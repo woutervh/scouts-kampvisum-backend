@@ -13,7 +13,7 @@ class CampVisumConcernType(BaseModel):
 
     class Meta:
         ordering = ["type"]
-        constraints = models.constraints[
+        constraints = [
             models.UniqueConstraint(
                 fields=['type'], name='unique_type')
         ]

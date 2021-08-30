@@ -36,12 +36,14 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
     def create(self, request):
         data = request.data
 
+        logger.debug("DATA: %s", data)
         serializer = CampVisumSerializer(
             data=data, context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
-
-        camp = CampVisumService().camp_create(
+        logger.debug("VALIDATED DATA: %s", serializer.validated_data)
+        
+        camp = CampVisumService().visum_create(
             **serializer.validated_data
         )
 
