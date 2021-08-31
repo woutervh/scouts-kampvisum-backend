@@ -24,10 +24,10 @@ class CampVisumCategorySetSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CampVisumCategorySetAPISerializer(
-        FlattenMixin, serializers.ModelSerializer):
+class CampVisumCategorySetAPISerializer(serializers.ModelSerializer):
+
+    categories = CampVisumCategoryAPISerializer(many=True)
 
     class Meta:
         model = CampVisumCategorySet
         fields = ['categories']
-        flatten = [('categories', CampVisumCategoryAPISerializer)]
