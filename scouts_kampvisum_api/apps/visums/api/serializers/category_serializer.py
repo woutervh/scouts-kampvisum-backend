@@ -13,3 +13,10 @@ class CampVisumCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = CampVisumCategory()
         fields = '__all__'
+
+
+class CampVisumCategoryAPISerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CampVisumCategory()
+        fields = ['name', 'uuid']

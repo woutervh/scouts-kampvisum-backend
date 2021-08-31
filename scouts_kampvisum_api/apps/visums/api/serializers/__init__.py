@@ -1,5 +1,7 @@
 from .priority_serializer import CampVisumCategorySetPrioritySerializer
 from .category_serializer import CampVisumCategorySerializer
+from .category_serializer import CampVisumCategoryAPISerializer
 from .sub_category_serializer import CampVisumSubCategorySerializer
 from .category_set_serializer import CampVisumCategorySetSerializer
+from .category_set_serializer import CampVisumCategorySetAPISerializer
 from .visum_serializer import CampVisumSerializer
