@@ -38,7 +38,7 @@ class CampService():
         camp.save()
 
         logger.debug("Linking %d section(s) to camp '%s'",
-            len(sections), camp.name)
+                     len(sections), camp.name)
         section_objects = Section.objects.filter(uuid__in=sections)
 
         if section_objects.count() == 0:
@@ -50,11 +50,11 @@ class CampService():
 
         return camp
 
-    def camp_update(self, *, instance: Camp, **fields) -> Camp:
+    def camp_update(self, instance: Camp, **fields) -> Camp:
         """
         Updates an existing Camp object in the DB.
         """
-
+        logger.debug("Camp update fields: %s", fields)
         # Required arguments:
         instance.name = fields.get('name', instance.name)
         sections = fields.get('sections')
