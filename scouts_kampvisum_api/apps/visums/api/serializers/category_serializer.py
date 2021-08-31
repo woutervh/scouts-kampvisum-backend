@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from ..models import CampVisumCategory
+from ..serializers import CampVisumSubCategoryAPISerializer
 from inuits.serializers.fields import OptionalCharField, RequiredIntegerField
 
 
@@ -18,10 +19,11 @@ class CampVisumCategorySerializer(serializers.ModelSerializer):
 class CampVisumCategoryAPISerializer(serializers.ModelSerializer):
 
     status = serializers.SerializerMethodField()
+    sub_categories = CampVisumSubCategoryAPISerializer(many=True)
 
     class Meta:
         model = CampVisumCategory()
-        fields = ['name', 'uuid', 'status']
+        fields = ['name', 'uuid', 'status', 'sub_categories']
 
     def get_status(self, obj):
         return False
