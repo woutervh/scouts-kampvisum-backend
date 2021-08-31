@@ -22,8 +22,8 @@ class SectionService:
         """
         Creates or updates a Section instance.
         """
-        logger.debug(
-            "GROUP, NAME, HIDDEN: %s %s %s", group, name, hidden)
+        logger.debug("GROUP ('%s'), NAME ('%s'), HIDDEN: %s",
+                     group.name, name.name, hidden)
         if not isinstance(group, Group):
             from ..services import GroupService
             group = GroupService().get_group(group)

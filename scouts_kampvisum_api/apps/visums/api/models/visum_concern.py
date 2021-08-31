@@ -15,5 +15,4 @@ class CampVisumLinkedConcern(BaseModel):
         on_delete=models.CASCADE
     )
     origin = models.ForeignKey(CampVisumConcern, on_delete=models.CASCADE)
-    type = models.ForeignKey(CampVisumConcernType, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)

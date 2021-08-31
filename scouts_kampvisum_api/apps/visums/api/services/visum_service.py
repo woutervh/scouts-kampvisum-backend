@@ -15,6 +15,7 @@ class CampVisumService():
 
         camp_data = fields.get('camp')
         camp_name = camp_data.get('name')
+
         logger.debug("Creating camp with name '%s'", camp_name)
         camp = CampService().camp_create(**camp_data)
 
