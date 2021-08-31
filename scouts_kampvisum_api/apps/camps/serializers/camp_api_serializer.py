@@ -5,7 +5,9 @@ from rest_framework import serializers
 from ..models import Camp
 from ..serializers import CampYearAPISerializer
 from apps.groups.api.models import Section
-from apps.groups.api.serializers import SectionAPISerializer
+from apps.groups.api.serializers import (
+    SectionAPISerializer, SectionListSerializer
+)
 from inuits.mixins import FlattenMixin
 from inuits.serializers.fields import OptionalDateField
 
@@ -34,7 +36,7 @@ class CampAPISerializer(FlattenMixin, serializers.ModelSerializer):
     # start_date = OptionalDateField()
     # end_date = OptionalDateField()
     # # List of Section uuid's
-    # sections = SectionAPISerializer()
+    sections = SectionListSerializer(many=True)
     # # category_set = sets.CampVisumCategorySetSerializer()
 
     class Meta:

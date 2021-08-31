@@ -5,7 +5,9 @@ from ..models import Section
 from ..serializers import (
     GroupSerializer,
     SectionNameSerializer,
+    SectionNameAPISerializer,
 )
+from inuits.mixins import FlattenMixin
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +25,17 @@ class SectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
         fields = '__all__'
+
+
+class SectionListSerializer(FlattenMixin, serializers.ModelSerializer):
+    """
+    Serializes a ScoutsSection object for use in list views.
+    """
+
+    class Meta:
+        model = Section
+        fields = ['name', 'uuid']
+        flatten = [('name', SectionNameAPISerializer)]
 
 
 class SectionCreationAPISerializer(serializers.Serializer):
