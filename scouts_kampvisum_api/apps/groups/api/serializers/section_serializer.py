@@ -6,6 +6,7 @@ from ..serializers import (
     GroupSerializer,
     SectionNameSerializer,
     SectionNameAPISerializer,
+    CampVisumSectionNameAPISerializer
 )
 from inuits.mixins import FlattenMixin
 
@@ -27,20 +28,20 @@ class SectionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SectionListSerializer(FlattenMixin, serializers.ModelSerializer):
+class CampVisumSectionAPISerializer(FlattenMixin, serializers.ModelSerializer):
     """
-    Serializes a ScoutsSection object for use in list views.
+    Serializes a ScoutsSection object for use in camp visum views.
     """
 
     class Meta:
         model = Section
-        fields = ['name', 'uuid']
-        flatten = [('name', SectionNameAPISerializer)]
+        fields = []
+        flatten = [('name', CampVisumSectionNameAPISerializer)]
 
 
 class SectionCreationAPISerializer(serializers.Serializer):
     """
-    Deserializes ScoutSection JSON data into a SectionObject
+    Deserializes ScoutSection JSON data into a SectionObject.
     """
 
     name = serializers.JSONField()

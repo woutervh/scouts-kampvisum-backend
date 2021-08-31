@@ -32,3 +32,13 @@ class SectionNameAPISerializer(serializers.ModelSerializer):
     class Meta:
         model = SectionName
         fields = ['name']
+
+
+class CampVisumSectionNameAPISerializer(serializers.ModelSerializer):
+    """
+    Serializes a ScoutsSectionName object for camp visum overviews.
+    """
+
+    class Meta:
+        model = SectionName
+        fields = ['name']

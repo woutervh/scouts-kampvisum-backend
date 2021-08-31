@@ -68,7 +68,7 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
-    def delete(self, request, uuid):
+    def destroy(self, request, uuid):
         logger.debug("Deleting CampVisum with uuid %s", uuid)
 
         instance = get_object_or_404(CampVisum.objects, uuid=uuid)
