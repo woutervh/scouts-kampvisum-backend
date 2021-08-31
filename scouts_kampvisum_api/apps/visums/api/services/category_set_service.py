@@ -22,7 +22,12 @@ class CampVisumCategorySetService:
     def get_default_set(self, type: GroupType) -> CampVisumCategorySet:
         logger.debug(
             "Looking for default category sets for type '%s'", type.type)
-        return CampVisumCategorySet.objects.get(is_default=True, type=type)
+        qs = CampVisumCategorySet.objects.filter(is_default=True, type=type)
+
+        if qs.count() > 0:
+            return qs[0]
+
+        return None
 
     def has_default_set(self, type: GroupType):
         category_set = self.get_default_set(type)
