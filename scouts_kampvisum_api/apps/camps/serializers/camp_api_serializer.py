@@ -41,7 +41,7 @@ class CampAPISerializer(FlattenMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Camp
-        fields = ('name', 'year', 'start_date', 'end_date', 'sections')
+        fields = ('name', 'start_date', 'end_date', 'sections')
         flatten = [('year', CampYearAPISerializer)]
 
     def validate(self, data):
