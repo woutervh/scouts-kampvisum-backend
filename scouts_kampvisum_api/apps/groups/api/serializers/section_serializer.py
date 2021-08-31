@@ -1,4 +1,5 @@
 import logging
+from typing import List
 from rest_framework import serializers
 
 from ..models import Section
@@ -32,11 +33,10 @@ class CampVisumSectionAPISerializer(FlattenMixin, serializers.ModelSerializer):
     """
     Serializes a ScoutsSection object for use in camp visum views.
     """
-
     class Meta:
         model = Section
-        fields = []
-        flatten = [('name', CampVisumSectionNameAPISerializer)]
+        fields = ['uuid']
+        flatten = [('name', SectionNameAPISerializer)]
 
 
 class SectionCreationAPISerializer(serializers.Serializer):

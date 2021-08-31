@@ -31,13 +31,7 @@ class CampAPISerializer(FlattenMixin, serializers.ModelSerializer):
     Deserializes a JSON Camp from the frontend (no serialization).
     """
 
-    # name = serializers.CharField()
-    # year = CampYearAPISerializer()
-    # start_date = OptionalDateField()
-    # end_date = OptionalDateField()
-    # # List of Section uuid's
     sections = CampVisumSectionAPISerializer(many=True)
-    # # category_set = sets.CampVisumCategorySetSerializer()
 
     class Meta:
         model = Camp

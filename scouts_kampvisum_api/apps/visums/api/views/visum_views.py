@@ -11,7 +11,7 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from ..models import CampVisum
 from ..serializers import CampVisumSerializer
-from ..filters import CampVisumFilter, CampVisumAPIFilter
+from ..filters import CampVisumAPIFilter
 from ..services import CampVisumService
 
 
@@ -52,6 +52,44 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: CampVisumSerializer}
+    )
+    def retrieve(self, request, uuid=None):
+        instance = self.get_object()
+        serializer = CampVisumSerializer(
+            instance, context={'request': request}
+        )
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        request_body=CampVisumSerializer,
+        responses={status.HTTP_200_OK: CampVisumSerializer},
+    )
+    def partial_update(self, request, uuid=None):
+        instance = self.get_object()
+
+        serializer = CampVisumSerializer(
+            data=request.data,
+            instance=instance,
+            context={'request': request},
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        logger.debug("Updating CampVisum with uuid %s", uuid)
+
+        updated_instance = CampVisumService().visum_update(
+            instance=instance, **serializer.validated_data
+        )
+
+        output_serializer = CampVisumSerializer(
+            updated_instance, context={'request': request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def list(self, request):
