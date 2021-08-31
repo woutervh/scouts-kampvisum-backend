@@ -17,6 +17,11 @@ class CampVisumCategorySerializer(serializers.ModelSerializer):
 
 class CampVisumCategoryAPISerializer(serializers.ModelSerializer):
 
+    status = serializers.SerializerMethodField()
+
     class Meta:
         model = CampVisumCategory()
-        fields = ['name', 'uuid']
+        fields = ['name', 'uuid', 'status']
+
+    def get_status(self, obj):
+        return False
