@@ -42,7 +42,7 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
         logger.debug("VALIDATED DATA: %s", serializer.validated_data)
-        
+
         camp = CampVisumService().visum_create(
             **serializer.validated_data
         )
@@ -64,3 +64,14 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         else:
             serializer = CampVisumSerializer(instances, many=True)
             return Response(serializer.data)
+
+    @swagger_auto_schema(
+        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
+    )
+    def delete(self, request, uuid):
+        logger.debug("Deleting CampVisum with uuid %s", uuid)
+
+        instance = get_object_or_404(CampVisum.objects, uuid=uuid)
+        instance.delete()
+
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
