@@ -22,7 +22,7 @@ class CampViewSet(viewsets.GenericViewSet):
     """
     A viewset for viewing and editing camp instances.
     """
-
+    
     lookup_field = 'pk'
     serializer_class = CampSerializer
     queryset = Camp.objects.all()

@@ -12,6 +12,7 @@ from inuits.serializers.fields import OptionalDateField
 
 logger = logging.getLogger(__name__)
 
+
 # @see https://stackoverflow.com/a/33413886
 # try:
 #     from apps.visums.api.serializers import CampVisumSerializer

@@ -11,7 +11,7 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from ..models import CampVisum
 from ..serializers import CampVisumSerializer
-from ..filters import CampVisumFilter
+from ..filters import CampVisumFilter, CampVisumAPIFilter
 from ..services import CampVisumService
 
 
@@ -27,7 +27,7 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
     serializer_class = CampVisumSerializer
     queryset = CampVisum.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
-    filterset_class = CampVisumFilter
+    filterset_class = CampVisumAPIFilter
 
     @swagger_auto_schema(
         request_body=CampVisumSerializer,
