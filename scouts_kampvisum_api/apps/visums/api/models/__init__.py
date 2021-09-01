@@ -8,3 +8,4 @@ from .visum import CampVisum
 from .visum_category import LinkedCategory
 from .visum_sub_category import LinkedSubCategory
 from .visum_concern import LinkedConcern
+from .visum_category_set import LinkedCategorySet
