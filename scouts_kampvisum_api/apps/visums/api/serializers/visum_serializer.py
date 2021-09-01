@@ -1,7 +1,11 @@
 from rest_framework import serializers
 
 from ..models import CampVisum
-from ..serializers import CategorySetSerializer
+
+from ..serializers import (
+    CategorySetAPISerializer,
+)
+
 from apps.camps.serializers import CampAPISerializer
 from inuits.mixins import FlattenMixin
 
@@ -13,5 +17,8 @@ class CampVisumSerializer(FlattenMixin, serializers.ModelSerializer):
 
     class Meta:
         model = CampVisum
-        fields = []
-        flatten = [('camp', CampAPISerializer)]
+        fields = ["uuid"]
+        flatten = [
+            ("camp", CampAPISerializer),
+            ("category_set", CategorySetAPISerializer),
+        ]

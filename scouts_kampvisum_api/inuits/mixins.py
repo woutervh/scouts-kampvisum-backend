@@ -49,9 +49,9 @@ class FlattenMixin(object):
         representation = super().to_representation(obj)
         logger.debug("REPRESENTATION: %s", representation)
 
-        if hasattr(self.Meta, 'flatten'):
+        if hasattr(self.Meta, "flatten"):
             for field, serializer_class in self.Meta.flatten:
-                serializer = serializer_class(context = self.context)
+                serializer = serializer_class(context=self.context)
                 objrep = serializer.to_representation(getattr(obj, field))
 
                 for key in objrep:
@@ -64,14 +64,14 @@ class FlattenMixin(object):
                         representation[field + "__" + key] = objrep[key]
                     else:
                         representation[key] = objrep[key]
-        
+
         return representation
-    
+
     def to_internal_value(self, data):
 
         # remove flattened nested keys
         nested_fields = {}
-        if hasattr(self.Meta, 'flatten'):
+        if hasattr(self.Meta, "flatten"):
             for field, serializer_class in self.Meta.flatten:
                 serializer = serializer_class(context=self.context)
                 serializer_fields = serializer.Meta.fields
@@ -80,10 +80,10 @@ class FlattenMixin(object):
                     if key in data:
                         serializer_internal[key] = data.pop(key)
                 nested_fields[field] = serializer_internal
-        
+
         internal_values = super().to_internal_value(data)
         for key in nested_fields:
             internal_values[key] = nested_fields[key]
         logger.debug("INTERNAL VALUES: %s", internal_values)
-        
+
         return internal_values

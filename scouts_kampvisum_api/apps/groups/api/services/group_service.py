@@ -209,21 +209,21 @@ class GroupService:
         creation_count = 0
 
         for group in groups:
-            logger.debug('GROUP: %s (%s)',
+            logger.debug('Linking sections to GROUP: %s (%s)',
                          group, group.name)
 
             sections = group.sections.all()
 
             # @TODO update if necessary
-            logger.debug('SECTIONS: %s (%s instances)',
-                         sections, sections.count())
+            logger.debug("Found %d SECTIONS to link to group '%s'",
+                         sections.count(), group.name)
             if sections.count() == 0:
                 names = self.default_section_name_service.load_for_type(
                     group.type)
 
-                logger.debug('NAMES: %s (%s instances)', names, len(names))
+                logger.debug("Found %d default section NAMES", len(names))
                 for name in names:
-                    logger.debug('NAME: %s', name)
+                    logger.debug("Linking section NAME: %s", name.name)
                     self.section_service.section_create_or_update(
                         group, name.name, name.name.hidden)
                     creation_count += 1

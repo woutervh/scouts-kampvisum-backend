@@ -26,10 +26,9 @@ class CampAPIFilter(filters.FilterSet):
         if group and self.filter_group == 'uuid':
             group = uuid.UUID(group)
 
-        logger.debug('Filtering with group %s and year %s', group, year)
-
-        # return parent.filter(Q(sections__group__uuid=group), Q(start_date__year=year))
         if year and group:
+            logger.debug('Filtering Camp instances with group %s and year %s',
+                         group, year)
             if self.filter_group == 'uuid':
                 return parent.filter(
                     Q(start_date__year=year),
@@ -39,8 +38,10 @@ class CampAPIFilter(filters.FilterSet):
                     Q(start_date__year=year),
                     Q(sections__group__id=group)).distinct()
         if year:
+            logger.debug('Filtering Camp instances with year %s', year)
             return parent.filter(start_date__year=year)
         if group:
+            logger.debug('Filtering Camp instances with group %s', group)
             if self.filter_group == 'uuid':
                 return parent.filter(
                     sections__group__uuid=group).distinct()
@@ -48,6 +49,7 @@ class CampAPIFilter(filters.FilterSet):
                 return parent.filter(
                     sections__group__id=group).distinct()
 
+        logger.debug('Filters for Camp not set, returning all instances')
         return parent.all()
 
 

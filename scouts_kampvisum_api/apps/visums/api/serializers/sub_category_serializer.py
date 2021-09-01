@@ -5,19 +5,22 @@ from ..serializers import CategorySerializer
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
-    
+
     category = CategorySerializer()
     name = serializers.CharField(max_length=128)
-    
+
     class Meta:
         model = SubCategory()
-        fields = '__all__'
-    
-#    def create(self, validated_data) -> SubCategory:
-#        """Deserializes a stream into a SubCategory object."""
-#        return SubCategory(**validated_data)
-#    
-#    def update(self, instance, validated_data):
-#        """Serializes a SubCategory object into a stream."""
-#        instance.category = 
+        fields = "__all__"
 
+
+class CampVisumSubCategoryAPISerializer(serializers.ModelSerializer):
+
+    status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SubCategory()
+        fields = ["name", "uuid", "status"]
+
+    def get_status(self, obj):
+        return False

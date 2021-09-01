@@ -1,4 +1,5 @@
-import logging, importlib
+import logging
+import importlib
 
 from rest_framework import serializers
 
@@ -65,27 +66,35 @@ class Setup:
 
         self.items = [
             SetupItem('years',
-                    namespace="apps.camps.services",
-                    module="CampYearService",
-                    function="setup_camp_years",
-                    args=None),
+                      namespace="apps.camps.services",
+                      module="CampYearService",
+                      function="setup_camp_years",
+                      args=None),
             SetupItem('groups',
-                    endpoint='/api/groups/import',
-                    namespace="apps.groups.api.services",
-                    module="GroupService",
-                    function="import_ga_groups",
-                    args=[request.user]),
+                      endpoint='/api/groups/import',
+                      namespace="apps.groups.api.services",
+                      module="GroupService",
+                      function="import_ga_groups",
+                      args=[request.user]),
             SetupItem('sections',
-                    namespace="apps.groups.api.services",
-                    module="GroupService",
-                    function="link_default_sections",
-                    args=None),
+                      namespace="apps.groups.api.services",
+                      module="GroupService",
+                      function="link_default_sections",
+                      args=None),
             SetupItem('category_sets',
+<<<<<<< HEAD
                     endpoint='/api/category_sets/import',
                     namespace="apps.visums.api.services",
                     module="CategorySetService",
                     function="setup_default",
                     args=None),
+=======
+                      endpoint='/api/category_sets/import',
+                      namespace="apps.visums.api.services",
+                      module="CampVisumCategorySetService",
+                      function="setup_default_sets",
+                      args=None),
+>>>>>>> 84b3060edff6d426426b870a7dd3a2f6f1874391
         ]
 
         for item in self.items:

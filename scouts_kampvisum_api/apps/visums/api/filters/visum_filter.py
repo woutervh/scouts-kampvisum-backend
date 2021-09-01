@@ -26,10 +26,9 @@ class CampVisumAPIFilter(filters.FilterSet):
         if group and self.filter_group == 'uuid':
             group = uuid.UUID(group)
 
-        logger.debug('Filtering with group %s and year %s', group, year)
-
-        # return parent.filter(Q(sections__group__uuid=group), Q(start_date__year=year))
         if year and group:
+            logger.debug('Filtering CampVisum instances with group %s \
+                and year %s', group, year)
             if self.filter_group == 'uuid':
                 return parent.filter(
                     Q(camp__start_date__year=year),
@@ -39,8 +38,10 @@ class CampVisumAPIFilter(filters.FilterSet):
                     Q(camp__start_date__year=year),
                     Q(camp__sections__group__id=group)).distinct()
         if year:
+            logger.debug('Filtering CampVisum instances with year %s', year)
             return parent.filter(camp__start_date__year=year)
         if group:
+            logger.debug('Filtering CampVisum instances with group %s', group)
             if self.filter_group == 'uuid':
                 return parent.filter(
                     camp__sections__group__uuid=group).distinct()
@@ -48,7 +49,9 @@ class CampVisumAPIFilter(filters.FilterSet):
                 return parent.filter(
                     camp__sections__group__id=group).distinct()
 
+        logger.debug('Filters for CampVisum not set, returning all instances')
         return parent.all()
+
 
 class CampVisumFilter(filters.FilterSet):
 

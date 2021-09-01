@@ -8,6 +8,13 @@ from apps.camps.models import Camp
 class CampVisum(BaseModel):
 
     camp = models.ForeignKey(
-        Camp, related_name="visum", on_delete=models.CASCADE)
+        Camp, on_delete=models.CASCADE)
     category_set = models.ForeignKey(
+<<<<<<< HEAD
         CategorySet, on_delete=models.CASCADE)
+=======
+        CampVisumCategorySet, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["camp__sections__age_group"]
+>>>>>>> 84b3060edff6d426426b870a7dd3a2f6f1874391

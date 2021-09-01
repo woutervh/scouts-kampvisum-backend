@@ -4,9 +4,11 @@ from ..models import CategorySet
 from ..serializers import (
     CategorySetPrioritySerializer,
     CategorySerializer,
+    CategoryAPISerializer,
 )
 from apps.groups.api.serializers import GroupTypeSerializer
 from apps.camps.serializers import CampYearSerializer
+from inuits.mixins import FlattenMixin
 
 
 class CategorySetSerializer(serializers.ModelSerializer):
@@ -19,4 +21,13 @@ class CategorySetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CategorySet
-        fields = '__all__'
+        fields = "__all__"
+
+
+class CampVisumCategorySetAPISerializer(serializers.ModelSerializer):
+
+    categories = CategoryAPISerializer(many=True)
+
+    class Meta:
+        model = CategorySet
+        fields = ["categories"]
