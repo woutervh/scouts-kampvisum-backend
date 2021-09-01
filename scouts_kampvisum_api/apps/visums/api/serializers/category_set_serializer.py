@@ -8,7 +8,6 @@ from ..serializers import (
 )
 from apps.groups.api.serializers import GroupTypeSerializer
 from apps.camps.serializers import CampYearSerializer
-from inuits.mixins import FlattenMixin
 
 
 class CategorySetSerializer(serializers.ModelSerializer):
@@ -24,7 +23,7 @@ class CategorySetSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CampVisumCategorySetAPISerializer(serializers.ModelSerializer):
+class CategorySetAPISerializer(serializers.ModelSerializer):
 
     categories = CategoryAPISerializer(many=True)
 

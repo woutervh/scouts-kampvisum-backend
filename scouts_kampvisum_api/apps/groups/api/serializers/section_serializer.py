@@ -1,5 +1,4 @@
 import logging
-from typing import List
 from rest_framework import serializers
 
 from ..models import Section
@@ -28,7 +27,7 @@ class SectionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CampVisumSectionAPISerializer(FlattenMixin, serializers.ModelSerializer):
+class SectionAPISerializer(FlattenMixin, serializers.ModelSerializer):
     """
     Serializes a ScoutsSection object for use in camp visum views.
     """
@@ -51,14 +50,3 @@ class SectionCreationAPISerializer(serializers.Serializer):
             raise serializers.ValidationError("Section name can't be null")
 
         return data
-
-
-class SectionAPISerializer(FlattenMixin, serializers.ListSerializer):
-    """
-    Deserializes a JSON Section from the frontend (no serialization).
-    """
-
-    class Meta:
-        model = Section
-        fields = ["uuid"]
-        flatten = [("name", SectionNameAPISerializer)]

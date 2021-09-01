@@ -7,24 +7,12 @@ from ..serializers import CampYearAPISerializer
 from apps.groups.api.models import Section
 from apps.groups.api.serializers import (
     SectionAPISerializer,
-    CampVisumSectionAPISerializer,
+    SectionAPISerializer,
 )
 from inuits.mixins import FlattenMixin
-from inuits.serializers.fields import OptionalDateField
 
 
 logger = logging.getLogger(__name__)
-
-
-# @see https://stackoverflow.com/a/33413886
-# try:
-#     from apps.visums.api.serializers import CampVisumSerializer
-# except ImportError:
-#     import sys
-#     logger.debug('sys: %s', sys.modules)
-#     package = 'apps.visums.api.serializers'
-#     CampVisumSerializer = sys.modules[package + '.CampVisumSerializer']
-# CampVisumSerializer = sys.modules[__package__ + '.CampVisumSerializer']
 
 
 class CampAPISerializer(FlattenMixin, serializers.ModelSerializer):

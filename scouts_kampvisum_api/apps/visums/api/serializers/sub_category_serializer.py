@@ -1,12 +1,10 @@
 from rest_framework import serializers
 
 from ..models import SubCategory
-from ..serializers import CategorySerializer
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
 
-    category = CategorySerializer()
     name = serializers.CharField(max_length=128)
 
     class Meta:
@@ -14,7 +12,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CampVisumSubCategoryAPISerializer(serializers.ModelSerializer):
+class SubCategoryAPISerializer(serializers.ModelSerializer):
 
     status = serializers.SerializerMethodField()
 

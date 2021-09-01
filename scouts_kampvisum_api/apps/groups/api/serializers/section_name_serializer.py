@@ -14,14 +14,14 @@ class SectionNameSerializer(serializers.ModelSerializer):
     """
 
     name = serializers.CharField(max_length=128)
-    gender = serializers.ChoiceField(
-        choices=MemberGender, default=MemberGender.MIXED)
+    gender = serializers.ChoiceField(choices=MemberGender, default=MemberGender.MIXED)
     age_group = serializers.ChoiceField(
-        choices=AgeGroup, default=AgeGroup.AGE_GROUP_UNKNOWN)
+        choices=AgeGroup, default=AgeGroup.AGE_GROUP_UNKNOWN
+    )
 
     class Meta:
         model = SectionName
-        fields = '__all__'
+        fields = "__all__"
 
 
 class SectionNameAPISerializer(serializers.ModelSerializer):
@@ -31,14 +31,4 @@ class SectionNameAPISerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SectionName
-        fields = ['name']
-
-
-class CampVisumSectionNameAPISerializer(serializers.ModelSerializer):
-    """
-    Serializes a ScoutsSectionName object for camp visum overviews.
-    """
-
-    class Meta:
-        model = SectionName
-        fields = ['name']
+        fields = ["name"]

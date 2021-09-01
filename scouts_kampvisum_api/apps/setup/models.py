@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 class SetupItem:
 
-    name = ''
+    name = ""
     ok = False
-    endpoint = ''
+    endpoint = ""
     # Action to perform
     namespace = None
     module = None
@@ -21,9 +21,16 @@ class SetupItem:
     creation_count = 0
     objects = ()
 
-    def __init__(self,
-                 name, ok=False, endpoint='', namespace=None, module=None,
-                 function=None, args=None) -> None:
+    def __init__(
+        self,
+        name,
+        ok=False,
+        endpoint="",
+        namespace=None,
+        module=None,
+        function=None,
+        args=None,
+    ) -> None:
         self.name = name
         self.ok = ok
         self.endpoint = endpoint
@@ -58,43 +65,43 @@ class SetupItem:
 class Setup:
 
     global_status = False
-    endpoint = '/api/setup/init'
+    endpoint = "/api/setup/init"
     items = []
 
     def perform_init(self, request):
         status = True
 
         self.items = [
-            SetupItem('years',
-                      namespace="apps.camps.services",
-                      module="CampYearService",
-                      function="setup_camp_years",
-                      args=None),
-            SetupItem('groups',
-                      endpoint='/api/groups/import',
-                      namespace="apps.groups.api.services",
-                      module="GroupService",
-                      function="import_ga_groups",
-                      args=[request.user]),
-            SetupItem('sections',
-                      namespace="apps.groups.api.services",
-                      module="GroupService",
-                      function="link_default_sections",
-                      args=None),
-            SetupItem('category_sets',
-<<<<<<< HEAD
-                    endpoint='/api/category_sets/import',
-                    namespace="apps.visums.api.services",
-                    module="CategorySetService",
-                    function="setup_default",
-                    args=None),
-=======
-                      endpoint='/api/category_sets/import',
-                      namespace="apps.visums.api.services",
-                      module="CampVisumCategorySetService",
-                      function="setup_default_sets",
-                      args=None),
->>>>>>> 84b3060edff6d426426b870a7dd3a2f6f1874391
+            SetupItem(
+                "years",
+                namespace="apps.camps.services",
+                module="CampYearService",
+                function="setup_camp_years",
+                args=None,
+            ),
+            SetupItem(
+                "groups",
+                endpoint="/api/groups/import",
+                namespace="apps.groups.api.services",
+                module="GroupService",
+                function="import_ga_groups",
+                args=[request.user],
+            ),
+            SetupItem(
+                "sections",
+                namespace="apps.groups.api.services",
+                module="GroupService",
+                function="link_default_sections",
+                args=None,
+            ),
+            SetupItem(
+                "category_sets",
+                endpoint="/api/category_sets/import",
+                namespace="apps.visums.api.services",
+                module="CategorySetService",
+                function="setup_default_sets",
+                args=None,
+            ),
         ]
 
         for item in self.items:
@@ -118,7 +125,7 @@ class SetupItemSerializer(serializers.Serializer):
     name = serializers.CharField()
     ok = serializers.BooleanField(default=False)
     creation_count = serializers.IntegerField(default=0)
-    endpoint = serializers.CharField(default='')
+    endpoint = serializers.CharField(default="")
 
 
 class SetupSerializer(serializers.Serializer):
@@ -127,5 +134,5 @@ class SetupSerializer(serializers.Serializer):
     """
 
     global_status = serializers.BooleanField(default=False)
-    endpoint = serializers.CharField(default='')
+    endpoint = serializers.CharField(default="")
     items = SetupItemSerializer(many=True)

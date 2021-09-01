@@ -16,7 +16,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CampVisumCategoryAPISerializer(serializers.ModelSerializer):
+class CategoryAPISerializer(serializers.ModelSerializer):
 
     status = serializers.SerializerMethodField()
     sub_categories = SubCategoryAPISerializer(many=True)
