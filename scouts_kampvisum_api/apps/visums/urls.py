@@ -1,9 +1,9 @@
 from rest_framework import routers
 
 from .api.views import (
-    CampVisumCategoryViewSet,
-    CampVisumSubCategoryViewSet,
-    CampVisumCategorySetViewSet,
+    CategoryViewSet,
+    SubCategoryViewSet,
+    CategorySetViewSet,
     CampVisumAPIViewSet
 )
 
@@ -11,11 +11,11 @@ from .api.views import (
 router = routers.SimpleRouter()
 
 router.register(
-    r'categories', CampVisumCategoryViewSet, 'categories')
+    r'categories', CategoryViewSet, 'categories')
 router.register(
-    r'sub_categories', CampVisumSubCategoryViewSet, 'sub_categories')
+    r'sub_categories', SubCategoryViewSet, 'sub_categories')
 router.register(
-    r'category_sets', CampVisumCategorySetViewSet, 'category_sets')
+    r'category_sets', CategorySetViewSet, 'category_sets')
 router.register(
     r'visums', CampVisumAPIViewSet, 'visums')
 

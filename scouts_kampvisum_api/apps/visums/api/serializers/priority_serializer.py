@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
-from ..models import CampVisumCategorySetPriority
+from ..models import CategorySetPriority
 
 
-class CampVisumCategorySetPrioritySerializer(serializers.ModelSerializer):
+class CategorySetPrioritySerializer(serializers.ModelSerializer):
 
     owner = serializers.CharField(max_length=32, default='Verbond')
     priority = serializers.IntegerField(default=100)
 
     class Meta:
-        model = CampVisumCategorySetPriority
+        model = CategorySetPriority
         fields = '__all__'

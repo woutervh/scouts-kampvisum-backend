@@ -1,7 +1,7 @@
 [
 	{
 		"pk": 1,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Datum",
 			"category": [ "Planning" ],
@@ -10,7 +10,7 @@
 	},
 	{
 		"pk": 2,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Activiteiten",
 			"category": [ "Planning" ],
@@ -19,7 +19,7 @@
 	},
 	{
 		"pk": 3,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Menu",
 			"category": [ "Planning" ],
@@ -28,7 +28,7 @@
 	},
 	{
 		"pk": 4,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Locatie(s) - kaartje",
 			"category": [ "Logistiek" ],
@@ -37,7 +37,7 @@
 	},
 	{
 		"pk": 5,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Locatie(s) - info",
 			"category": [ "Logistiek" ],
@@ -46,7 +46,7 @@
 	},
 	{
 		"pk": 6,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Vervoer",
 			"category": [ "Logistiek" ],
@@ -55,7 +55,7 @@
 	},
 	{
 		"pk": 7,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Materiaal",
 			"category": [ "Logistiek" ],
@@ -64,7 +64,7 @@
 	},
 	{
 		"pk": 8,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Ouders",
 			"category": [ "Communicatie & afspraken" ],
@@ -73,7 +73,7 @@
 	},
 	{
 		"pk": 9,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Afspraken",
 			"category": [ "Communicatie & afspraken" ],
@@ -82,7 +82,7 @@
 	},
 	{
 		"pk": 10,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Verzekeringen",
 			"category": [ "Veiligheid" ],
@@ -91,7 +91,7 @@
 	},
 	{
 		"pk": 11,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Zorgverlening",
 			"category": [ "Veiligheid" ],
@@ -100,7 +100,7 @@
 	},
 	{
 		"pk": 12,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Leiding",
 			"category": [ "Leden & leiding" ],
@@ -109,7 +109,7 @@
 	},
 	{
 		"pk": 13,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Leden",
 			"category": [ "Leden & leiding" ],
@@ -118,7 +118,7 @@
 	},
 	{
 		"pk": 14,
-		"model": "visums.CampVisumSubCategory",
+		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Begroting",
 			"category": [ "Budget" ],

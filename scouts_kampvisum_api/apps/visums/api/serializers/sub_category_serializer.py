@@ -1,23 +1,23 @@
 from rest_framework import serializers
 
-from ..models import CampVisumSubCategory
-from ..serializers import CampVisumCategorySerializer
+from ..models import SubCategory
+from ..serializers import CategorySerializer
 
 
-class CampVisumSubCategorySerializer(serializers.ModelSerializer):
+class SubCategorySerializer(serializers.ModelSerializer):
     
-    category = CampVisumCategorySerializer()
+    category = CategorySerializer()
     name = serializers.CharField(max_length=128)
     
     class Meta:
-        model = CampVisumSubCategory()
+        model = SubCategory()
         fields = '__all__'
     
-#    def create(self, validated_data) -> CampVisumSubCategory:
-#        """Deserializes a stream into a CampVisumSubCategory object."""
-#        return CampVisumSubCategory(**validated_data)
+#    def create(self, validated_data) -> SubCategory:
+#        """Deserializes a stream into a SubCategory object."""
+#        return SubCategory(**validated_data)
 #    
 #    def update(self, instance, validated_data):
-#        """Serializes a CampVisumSubCategory object into a stream."""
+#        """Serializes a SubCategory object into a stream."""
 #        instance.category = 
 

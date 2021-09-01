@@ -1,22 +1,22 @@
 from rest_framework import serializers
 
-from ..models import CampVisumCategorySet
+from ..models import CategorySet
 from ..serializers import (
-    CampVisumCategorySetPrioritySerializer,
-    CampVisumCategorySerializer,
+    CategorySetPrioritySerializer,
+    CategorySerializer,
 )
 from apps.groups.api.serializers import GroupTypeSerializer
 from apps.camps.serializers import CampYearSerializer
 
 
-class CampVisumCategorySetSerializer(serializers.ModelSerializer):
+class CategorySetSerializer(serializers.ModelSerializer):
 
-    priority = CampVisumCategorySetPrioritySerializer()
+    priority = CategorySetPrioritySerializer()
     type = GroupTypeSerializer()
-    categories = CampVisumCategorySerializer(many=True)
+    categories = CategorySerializer(many=True)
     camp_year = CampYearSerializer()
     is_default = serializers.BooleanField(default=False)
 
     class Meta:
-        model = CampVisumCategorySet
+        model = CategorySet
         fields = '__all__'

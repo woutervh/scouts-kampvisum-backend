@@ -1,29 +1,29 @@
 import logging
 
 from ..models import (
-    CampVisumLinkedCategory,
+    LinkedCategory,
 )
-from ..services import CampVisumCategoryService, CampVisumCategorySetService
+from ..services import CategoryService, CategorySetService
 from apps.camps.models import Camp
 
 
 logger = logging.getLogger(__name__)
 
 
-class CampVisumLinkedCategoryService():
+class LinkedCategoryService():
 
     def link_category_set(self, camp: Camp):
         logger.debug("Linking categories to camp '%s'", camp.name)
 
-        category_service = CampVisumCategoryService()
-        category_set = CampVisumCategorySetService().get_default_set(
+        category_service = CategoryService()
+        category_set = CategorySetService().get_default_set(
             camp.get_group_type()
         )
 
         for category in category_set.categories.all():
             logger.debug("Linked category: '%s'", category.name)
 
-            linked_category = CampVisumLinkedCategory()
+            linked_category = LinkedCategory()
 
             linked_category.camp = camp
             linked_category.origin = category
@@ -33,7 +33,7 @@ class CampVisumLinkedCategoryService():
             linked_category.save()
 
             # for sub_category in category:
-            #     linked_sub_category = CampVisumLinkedSubCategory()
+            #     linked_sub_category = LinkedSubCategory()
 
             #     linked_sub_category
         

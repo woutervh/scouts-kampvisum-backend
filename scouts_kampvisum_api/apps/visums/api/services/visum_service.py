@@ -1,7 +1,7 @@
 import logging
 
 from ..models import CampVisum
-from ..services import CampVisumLinkedCategoryService
+from ..services import LinkedCategoryService
 from apps.camps.services import CampService
 
 
@@ -19,7 +19,7 @@ class CampVisumService():
         camp = CampService().camp_create(**camp_data)
 
         logger.debug("Linking category set to camp '%s'", camp_name)
-        category_set = CampVisumLinkedCategoryService().link_category_set(camp)
+        category_set = LinkedCategoryService().link_category_set(camp)
 
         visum = CampVisum()
 

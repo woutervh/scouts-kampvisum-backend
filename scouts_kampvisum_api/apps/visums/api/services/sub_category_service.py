@@ -2,26 +2,26 @@ import logging
 import copy
 
 from ..models import (
-    CampVisumCategory,
-    CampVisumSubCategory
+    Category,
+    SubCategory
 )
-from ..services import CampVisumConcernService
+from ..services import ConcernService
 
 
 logger = logging.getLogger(__name__)
 
 
-class CampVisumSubCategoryService():
+class SubCategoryService():
 
     def create(
             self, *,
             name: str,
-            category: CampVisumCategory) -> CampVisumSubCategory:
+            category: Category) -> SubCategory:
         """
-        Saves a CampVisumSubCategory object to the DB.
+        Saves a SubCategory object to the DB.
         """
 
-        instance = CampVisumSubCategory(
+        instance = SubCategory(
             category=category,
             name=name,
         )
@@ -34,10 +34,10 @@ class CampVisumSubCategoryService():
     def update(
             self,
             *,
-            instance: CampVisumSubCategory,
-            **fields) -> CampVisumSubCategory:
+            instance: SubCategory,
+            **fields) -> SubCategory:
         """
-        Updates an existing CampVisumSubCategory object in the DB.
+        Updates an existing SubCategory object in the DB.
         """
 
         instance.category = fields.get('category', instance.category)
@@ -49,8 +49,8 @@ class CampVisumSubCategoryService():
         return instance
 
     def deepcopy(self,
-                 instance: CampVisumSubCategory) -> CampVisumSubCategory:
-        concern_service = CampVisumConcernService()
+                 instance: SubCategory) -> SubCategory:
+        concern_service = ConcernService()
         instance_copy = copy.deepcopy(instance)
 
         instance_copy.full_clean()

@@ -1,15 +1,15 @@
 from rest_framework import serializers
 
-from ..models import CampVisumCategory
+from ..models import Category
 from inuits.serializers.fields import OptionalCharField, RequiredIntegerField
 
 
-class CampVisumCategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
 
     name = serializers.CharField(max_length=128)
     index = RequiredIntegerField()
     description = OptionalCharField()
 
     class Meta:
-        model = CampVisumCategory()
+        model = Category()
         fields = '__all__'

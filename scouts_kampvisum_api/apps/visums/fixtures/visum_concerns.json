@@ -1,7 +1,7 @@
 [
     {
         "pk": 1,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "datum_leden",
             "sub_category": [
@@ -12,7 +12,7 @@
     },
     {
         "pk": 2,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "datum_leiding",
             "sub_category": [
@@ -23,7 +23,7 @@
     },
     {
         "pk": 3,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "camp_planning",
             "sub_category": [
@@ -34,7 +34,7 @@
     },
     {
         "pk": 4,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "rain_planning",
             "sub_category": [
@@ -45,7 +45,7 @@
     },
     {
         "pk": 5,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "heat_planning",
             "sub_category": [
@@ -56,7 +56,7 @@
     },
     {
         "pk": 6,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "totemisation_planning",
             "sub_category": [
@@ -67,7 +67,7 @@
     },
     {
         "pk": 7,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "night_activity_planning",
             "sub_category": [
@@ -78,7 +78,7 @@
     },
     {
         "pk": 8,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "general_planning",
             "sub_category": [
@@ -89,7 +89,7 @@
     },
     {
         "pk": 9,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "other_planning",
             "sub_category": [
@@ -100,7 +100,7 @@
     },
     {
         "pk": 10,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "balanced_diet_menu",
             "sub_category": [
@@ -111,7 +111,7 @@
     },
     {
         "pk": 11,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "vegetarian_menu",
             "sub_category": [
@@ -122,7 +122,7 @@
     },
     {
         "pk": 12,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "upload_menu",
             "sub_category": [
@@ -133,7 +133,7 @@
     },
     {
         "pk": 13,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "name_location",
             "sub_category": [
@@ -144,7 +144,7 @@
     },
     {
         "pk": 14,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "upload_menu",
             "sub_category": [
@@ -155,7 +155,7 @@
     },
     {
         "pk": 13,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "upload_menu",
             "sub_category": [
@@ -166,7 +166,7 @@
     },
     {
         "pk": 13,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "upload_menu",
             "sub_category": [
@@ -177,7 +177,7 @@
     },
     {
         "pk": 13,
-        "model": "visums.CampVisumConcern",
+        "model": "visums.Concern",
         "fields": {
             "name": "upload_menu",
             "sub_category": [

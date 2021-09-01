@@ -1,42 +1,42 @@
 [
 	{
 		"pk": 1,
-		"model": "visums.CampVisumConcernType",
+		"model": "visums.ConcernType",
 		"fields": {
 			"type": "SimpleCheck"
 		}
 	},
 	{
 		"pk": 2,
-		"model": "visums.CampVisumConcernType",
+		"model": "visums.ConcernType",
 		"fields": {
 			"type": "DateCheck"
 		}
 	},
 	{
 		"pk": 3,
-		"model": "visums.CampVisumConcernType",
+		"model": "visums.ConcernType",
 		"fields": {
 			"type": "LocationCheck"
 		}
 	},
 	{
 		"pk": 4,
-		"model": "visums.CampVisumConcernType",
+		"model": "visums.ConcernType",
 		"fields": {
 			"type": "ContactCheck"
 		}
 	},
 	{
 		"pk": 5,
-		"model": "visums.CampVisumConcernType",
+		"model": "visums.ConcernType",
 		"fields": {
 			"type": "FileUploadCheck"
 		}
 	},
 	{
 		"pk": 6,
-		"model": "visums.CampVisumConcernType",
+		"model": "visums.ConcernType",
 		"fields": {
 			"type": "InputCheck"
 		}

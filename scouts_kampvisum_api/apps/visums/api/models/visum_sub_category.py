@@ -1,20 +1,20 @@
 from django.db import models
 
-from ..models import CampVisumSubCategory, CampVisumLinkedCategory
+from ..models import SubCategory, LinkedCategory
 from apps.base.models import BaseModel
 from inuits.models import OptionalTextField
 
 
-class CampVisumLinkedSubCategory(BaseModel):
+class LinkedSubCategory(BaseModel):
 
     category = models.ForeignKey(
-        CampVisumLinkedCategory, on_delete=models.CASCADE)
+        LinkedCategory, on_delete=models.CASCADE)
     # Reference
     origin = models.ForeignKey(
-        CampVisumSubCategory, on_delete=models.SET_NULL, null=True)
+        SubCategory, on_delete=models.SET_NULL, null=True)
     # Deep copy
     sub_category = models.ForeignKey(
-        CampVisumSubCategory,
+        SubCategory,
         related_name="linked_sub_categories",
         on_delete=models.CASCADE)
 

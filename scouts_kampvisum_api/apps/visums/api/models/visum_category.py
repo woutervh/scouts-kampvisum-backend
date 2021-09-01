@@ -1,11 +1,11 @@
 from django.db import models
 
-from ..models import CampVisumCategory
+from ..models import Category
 from apps.base.models import BaseModel
 from apps.camps.models import Camp
 
 
-class CampVisumLinkedCategory(BaseModel):
+class LinkedCategory(BaseModel):
 
     camp = models.ForeignKey(
         Camp,
@@ -13,9 +13,9 @@ class CampVisumLinkedCategory(BaseModel):
         on_delete=models.CASCADE)
     # Reference
     origin = models.ForeignKey(
-        CampVisumCategory, on_delete=models.SET_NULL, null=True)
+        Category, on_delete=models.SET_NULL, null=True)
     # Deep copy
     category = models.ForeignKey(
-        CampVisumCategory,
+        Category,
         related_name="linked_categories",
         on_delete=models.CASCADE)

@@ -22,7 +22,7 @@ class BaseModel(SafeDeleteModel):
 
 class RecursiveField(serializers.Serializer):
     """
-    Utility class that allows a deserialization of self-referencing classes.
+    Utility class that allows serialization of self-referencing classes.
     """
 
     def to_representation(self, instance):

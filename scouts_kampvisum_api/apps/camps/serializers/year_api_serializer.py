@@ -9,16 +9,13 @@ logger = logging.getLogger(__name__)
 
 
 class CampYearAPISerializer(serializers.Serializer):
-
-    year = RequiredYearField()
-
     class Meta:
         model = CampYear
-        fields = '__all__'
+        fields = ["year"]
 
     def validate(self, data):
         logger.debug("VALIDATING DATA: %s", data)
-        if data['year'] is None:
+        if data["year"] is None:
             raise serializers.ValidationError("Year can't be null")
 
         return data

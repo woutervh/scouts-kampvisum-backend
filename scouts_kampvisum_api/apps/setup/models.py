@@ -83,7 +83,7 @@ class Setup:
             SetupItem('category_sets',
                     endpoint='/api/category_sets/import',
                     namespace="apps.visums.api.services",
-                    module="CampVisumCategorySetService",
+                    module="CategorySetService",
                     function="setup_default",
                     args=None),
         ]

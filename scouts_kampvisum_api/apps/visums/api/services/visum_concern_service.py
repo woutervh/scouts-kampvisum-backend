@@ -1,4 +1,4 @@
 
 
-class CampVisumLinkedConcernService():
+class LinkedConcernService():
     pass

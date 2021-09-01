@@ -4,16 +4,16 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 
-from ..serializers import CampVisumCategorySetSerializer
+from ..serializers import CategorySetSerializer
 
 
-class CampVisumCategorySetViewSet(viewsets.GenericViewSet):
+class CategorySetViewSet(viewsets.GenericViewSet):
 
     @action(
         detail=False, methods=['get'], permission_classes=[IsAuthenticated],
         url_path='import')
     @swagger_auto_schema(
-        responses={status.HTTP_200_OK: CampVisumCategorySetSerializer},
+        responses={status.HTTP_200_OK: CategorySetSerializer},
     )
     def sub_categories(self, request):
         pass

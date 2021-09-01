@@ -6,7 +6,7 @@ from apps.camps.models import CampYear
 from apps.groups.api.models import GroupType
 
 
-class CategorySet(BaseModel):
+class LinkedCategorySet(BaseModel):
     """
     A list of categories for a certain group type with a certain priority.
     """

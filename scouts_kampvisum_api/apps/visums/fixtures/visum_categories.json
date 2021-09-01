@@ -1,7 +1,7 @@
 [
 	{
 		"pk": 1,
-		"model": "visums.CampVisumCategory",
+		"model": "visums.Category",
 		"fields": {
 			"name": "Planning",
 			"index": 0,
@@ -11,7 +11,7 @@
 	},
 	{
 		"pk": 2,
-		"model": "visums.CampVisumCategory",
+		"model": "visums.Category",
 		"fields": {
 			"name": "Logistiek",
 			"index": 1,
@@ -21,7 +21,7 @@
 	},
 	{
 		"pk": 3,
-		"model": "visums.CampVisumCategory",
+		"model": "visums.Category",
 		"fields": {
 			"name": "Communicatie & afspraken",
 			"index": 2,
@@ -31,7 +31,7 @@
 	},
 	{
 		"pk": 4,
-		"model": "visums.CampVisumCategory",
+		"model": "visums.Category",
 		"fields": {
 			"name": "Veiligheid",
 			"index": 3,
@@ -41,7 +41,7 @@
 	},
 	{
 		"pk": 5,
-		"model": "visums.CampVisumCategory",
+		"model": "visums.Category",
 		"fields": {
 			"name": "Leden & leiding",
 			"index": 4,
@@ -51,7 +51,7 @@
 	},
 	{
 		"pk": 6,
-		"model": "visums.CampVisumCategory",
+		"model": "visums.Category",
 		"fields": {
 			"name": "Budget",
 			"index": 5,

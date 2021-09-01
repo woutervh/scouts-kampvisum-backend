@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='CampVisumCategory',
+            name='Category',
             fields=[
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='CampVisumCategorySet',
+            name='CategorySet',
             fields=[
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='CampVisumCategorySetPriority',
+            name='CategorySetPriority',
             fields=[
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='CampVisumConcern',
+            name='Concern',
             fields=[
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
@@ -80,7 +80,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='CampVisumConcernType',
+            name='ConcernType',
             fields=[
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
@@ -92,101 +92,101 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='CampVisumLinkedCategory',
+            name='LinkedCategory',
             fields=[
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
                 ('camp', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='camps.camp')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='linked_categories', to='visums.campvisumcategory')),
-                ('origin', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='visums.campvisumcategory')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='linked_categories', to='visums.Category')),
+                ('origin', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='visums.Category')),
             ],
             options={
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
-            name='CampVisumSubCategory',
+            name='SubCategory',
             fields=[
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
                 ('name', inuits.models.RequiredCharField(max_length=128)),
                 ('is_default', models.BooleanField(default=False)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sub_categories', to='visums.campvisumcategory')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sub_categories', to='visums.Category')),
             ],
             options={
                 'ordering': ['name'],
             },
         ),
         migrations.CreateModel(
-            name='CampVisumLinkedSubCategory',
+            name='LinkedSubCategory',
             fields=[
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.campvisumlinkedcategory')),
-                ('origin', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='visums.campvisumsubcategory')),
-                ('sub_category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='linked_sub_categories', to='visums.campvisumsubcategory')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.LinkedCategory')),
+                ('origin', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='visums.SubCategory')),
+                ('sub_category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='linked_sub_categories', to='visums.SubCategory')),
             ],
             options={
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
-            name='CampVisumLinkedConcern',
+            name='LinkedConcern',
             fields=[
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
                 ('status', models.BooleanField(default=False)),
-                ('origin', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.campvisumconcern')),
-                ('sub_category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='concerns', to='visums.campvisumlinkedsubcategory')),
-                ('type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.campvisumconcerntype')),
+                ('origin', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.Concern')),
+                ('sub_category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='concerns', to='visums.LinkedSubCategory')),
+                ('type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.ConcernType')),
             ],
             options={
                 'abstract': False,
             },
         ),
         migrations.AddConstraint(
-            model_name='campvisumconcerntype',
+            model_name='ConcernType',
             constraint=models.UniqueConstraint(fields=('type',), name='unique_type'),
         ),
         migrations.AddField(
-            model_name='campvisumconcern',
+            model_name='Concern',
             name='sub_category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='concerns', to='visums.campvisumsubcategory'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='concerns', to='visums.SubCategory'),
         ),
         migrations.AddField(
-            model_name='campvisumconcern',
+            model_name='Concern',
             name='type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.campvisumconcerntype'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.ConcernType'),
         ),
         migrations.AddConstraint(
-            model_name='campvisumcategorysetpriority',
+            model_name='CategorySetpriority',
             constraint=models.UniqueConstraint(fields=('owner',), name='unique_owner'),
         ),
         migrations.AddConstraint(
-            model_name='campvisumcategorysetpriority',
+            model_name='CategorySetpriority',
             constraint=models.UniqueConstraint(fields=('priority',), name='unique_priority'),
         ),
         migrations.AddField(
-            model_name='campvisumcategoryset',
+            model_name='CategorySet',
             name='camp_year',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='camps.campyear'),
         ),
         migrations.AddField(
-            model_name='campvisumcategoryset',
+            model_name='CategorySet',
             name='categories',
-            field=models.ManyToManyField(to='visums.CampVisumCategory'),
+            field=models.ManyToManyField(to='visums.Category'),
         ),
         migrations.AddField(
-            model_name='campvisumcategoryset',
+            model_name='CategorySet',
             name='priority',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='visums.campvisumcategorysetpriority'),
+            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='visums.CategorySetpriority'),
         ),
         migrations.AddField(
-            model_name='campvisumcategoryset',
+            model_name='CategorySet',
             name='type',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='groups.grouptype'),
         ),
@@ -198,18 +198,18 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='campvisum',
             name='category_set',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.campvisumcategoryset'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='visums.CategorySet'),
         ),
         migrations.AlterUniqueTogether(
-            name='campvisumsubcategory',
+            name='SubCategory',
             unique_together={('category', 'name')},
         ),
         migrations.AddConstraint(
-            model_name='campvisumconcern',
+            model_name='Concern',
             constraint=models.UniqueConstraint(fields=('name',), name='unique_name'),
         ),
         migrations.AlterUniqueTogether(
-            name='campvisumconcern',
+            name='Concern',
             unique_together={('name', 'sub_category')},
         ),
     ]

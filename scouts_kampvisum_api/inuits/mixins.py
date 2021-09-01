@@ -59,7 +59,11 @@ class FlattenMixin(object):
                     #     raise ValidationError(
                     #         "A field with name '" + key + "' already exists")
                     # representation[field + "__" + key] = objrep[key]
-                    representation[key] = objrep[key]
+                    # representation[key] = objrep[key]
+                    if key in representation:
+                        representation[field + "__" + key] = objrep[key]
+                    else:
+                        representation[key] = objrep[key]
         
         return representation
     

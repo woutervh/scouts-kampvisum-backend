@@ -1,22 +1,22 @@
 from django.db import models
 
-from ..models import CampVisumCategory
-from ..managers import CampVisumCategoryManager
+from ..models import Category
+from ..managers import CategoryManager
 from apps.base.models import BaseModel
 from inuits.models import RequiredCharField
 
 
-class CampVisumSubCategory(BaseModel):
+class SubCategory(BaseModel):
 
     category = models.ForeignKey(
-        CampVisumCategory,
+        Category,
         related_name="sub_categories",
         on_delete=models.CASCADE,
     )
     name = RequiredCharField(max_length=128)
     is_default = models.BooleanField(default=False)
 
-    objects = CampVisumCategoryManager()
+    objects = CategoryManager()
 
     class Meta:
         ordering = ["name"]

@@ -1,9 +1,9 @@
 from django.db import models
 
 
-class CampVisumConcernTypeManager(models.Manager):
+class ConcernTypeManager(models.Manager):
     """
-    Loads CampVisumConcernType instances by their name, not their id.
+    Loads ConcernType instances by their name, not their id.
 
     This is useful for defining fixtures.
     """

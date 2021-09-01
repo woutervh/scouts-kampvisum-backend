@@ -3,7 +3,7 @@ from django.db import models
 from ..managers import PriorityManager
 from apps.base.models import BaseModel
 
-class CampVisumCategorySetPriority(BaseModel):
+class CategorySetPriority(BaseModel):
 
     owner = models.CharField(
         max_length=32, unique=True, default='Verbond')
