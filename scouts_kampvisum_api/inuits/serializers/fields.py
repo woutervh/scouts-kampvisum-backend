@@ -12,10 +12,10 @@ class OptionalCharField(serializers.CharField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs['default'] = serializers.empty
-        kwargs['required'] = False
-        kwargs['allow_blank'] = True
-        kwargs['allow_null'] = True
+        kwargs["default"] = serializers.empty
+        kwargs["required"] = False
+        kwargs["allow_blank"] = True
+        kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)
 
 
@@ -30,9 +30,9 @@ class OptionalIntegerField(serializers.IntegerField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs['default'] = serializers.empty
-        kwargs['required'] = False
-        kwargs['allow_null'] = True
+        kwargs["default"] = serializers.empty
+        kwargs["required"] = False
+        kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)
 
 
@@ -47,8 +47,8 @@ class RequiredIntegerField(serializers.IntegerField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs['required'] = True
-        kwargs['allow_null'] = False
+        kwargs["required"] = True
+        kwargs["allow_null"] = False
         super().__init__(*args, **kwargs)
 
 
@@ -63,10 +63,10 @@ class OptionalChoiceField(serializers.ChoiceField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs['default'] = serializers.empty
-        kwargs['required'] = True
-        kwargs['allow_blank'] = True
-        kwargs['allow_null'] = True
+        kwargs["default"] = serializers.empty
+        kwargs["required"] = True
+        kwargs["allow_blank"] = True
+        kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)
 
 
@@ -82,10 +82,10 @@ class RequiredYearField(serializers.IntegerField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs['min_value'] = 2021
-        kwargs['max_value'] = 2121
-        kwargs['required'] = True
-        kwargs['allow_null'] = False
+        kwargs["min_value"] = 2021
+        kwargs["max_value"] = 2121
+        kwargs["required"] = True
+        kwargs["allow_null"] = False
         super().__init__(*args, **kwargs)
 
 
@@ -100,9 +100,9 @@ class OptionalDateField(serializers.DateField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs['default'] = serializers.empty
-        kwargs['required'] = False
-        kwargs['allow_null'] = True
+        kwargs["default"] = serializers.empty
+        kwargs["required"] = False
+        kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)
 
 
@@ -117,7 +117,7 @@ class OptionalDateTimeField(serializers.DateTimeField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs['default'] = serializers.empty
-        kwargs['required'] = False
-        kwargs['allow_null'] = True
+        kwargs["default"] = serializers.empty
+        kwargs["required"] = False
+        kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)

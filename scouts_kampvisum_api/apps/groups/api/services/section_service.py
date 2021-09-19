@@ -17,15 +17,18 @@ class SectionService:
 
     section_name_service = SectionNameService()
 
-    def section_create_or_update(self,
-                                 group=None, name=None, hidden=False, **fields) -> Section:
+    def section_create_or_update(
+        self, group=None, name=None, hidden=False, **fields
+    ) -> Section:
         """
         Creates or updates a Section instance.
         """
-        logger.debug("GROUP ('%s'), NAME ('%s'), HIDDEN: %s",
-                     group.name, name.name, hidden)
+        logger.debug(
+            "GROUP ('%s'), NAME ('%s'), HIDDEN: %s", group.name, name.name, hidden
+        )
         if not isinstance(group, Group):
             from ..services import GroupService
+
             group = GroupService().get_group(group)
 
         name_instance = None
@@ -47,13 +50,10 @@ class SectionService:
             return self._section_create(group, name, hidden, **fields)
         if count == 1:
             instance = qs[0]
-            logger.debug(
-                "Updating Section with name '%s'", instance.name.name)
-            return self._section_update(
-                instance, group, name, hidden, **fields)
+            logger.debug("Updating Section with name '%s'", instance.name.name)
+            return self._section_update(instance, group, name, hidden, **fields)
 
-    def _section_create(self,
-                        group=None, name=None, hidden=False, **fields) -> Section:
+    def _section_create(self, group=None, name=None, hidden=False, **fields) -> Section:
         if name is None or not isinstance(name, SectionName):
             name = self.section_name_service.name_create(name=name)
         instance = Section()
@@ -67,16 +67,18 @@ class SectionService:
 
         return instance
 
-    def _section_update(self,
-                        instance: Section,
-                        group: Group = None,
-                        name: SectionName = None,
-                        hidden=False, **fields) -> Section:
+    def _section_update(
+        self,
+        instance: Section,
+        group: Group = None,
+        name: SectionName = None,
+        hidden=False,
+        **fields
+    ) -> Section:
         """
         Updates an existing Section instance.
         """
-        logger.debug(
-            "Updating Section with name '%s'", instance.name.name)
+        logger.debug("Updating Section with name '%s'", instance.name.name)
 
         instance.group = group
         instance.name = name
@@ -94,9 +96,9 @@ class SectionService:
         If uuid or name are lists, then lists will be returned.
         If uuid is None, then the group argument must be presented.
         """
-        group = fields.get('group', None)
-        uuid = fields.get('uuid', None)
-        name = fields.get('name', None)
+        group = fields.get("group", None)
+        uuid = fields.get("uuid", None)
+        name = fields.get("name", None)
 
         logger.debug("SECTION FIELDS: %s", fields)
 
@@ -105,22 +107,22 @@ class SectionService:
 
         if uuid is not None and not isinstance(uuid, dict):
             if isinstance(uuid, list):
-                return list(Section.objects.filter(
-                    uuid__in=uuid).values_list())
+                return list(Section.objects.filter(uuid__in=uuid).values_list())
 
             if isinstance(uuid, uuid.UUID):
                 return get_object_or_404(Section, uuid=uuid)
 
         if name is not None and not isinstance(name, dict):
             if isinstance(name, list):
-                return list(Section.objects.filter(
-                    group=group,
-                    name__name__in=name).values_list())
+                return list(
+                    Section.objects.filter(
+                        group=group, name__name__in=name
+                    ).values_list()
+                )
 
             if isinstance(name, str):
-                return list(Section.objects.filter(
-                    group=group, name__name=name))
+                return list(Section.objects.filter(group=group, name__name=name))
 
-        logger.debug('No Section instances found with the given args')
+        logger.debug("No Section instances found with the given args")
 
         return None

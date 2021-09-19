@@ -1,22 +1,15 @@
 import logging
 import copy
 
-from ..models import (
-    Category,
-    SubCategory
-)
+from ..models import Category, SubCategory
 from ..services import ConcernService
 
 
 logger = logging.getLogger(__name__)
 
 
-class SubCategoryService():
-
-    def create(
-            self, *,
-            name: str,
-            category: Category) -> SubCategory:
+class SubCategoryService:
+    def create(self, *, name: str, category: Category) -> SubCategory:
         """
         Saves a SubCategory object to the DB.
         """
@@ -31,25 +24,20 @@ class SubCategoryService():
 
         return instance
 
-    def update(
-            self,
-            *,
-            instance: SubCategory,
-            **fields) -> SubCategory:
+    def update(self, *, instance: SubCategory, **fields) -> SubCategory:
         """
         Updates an existing SubCategory object in the DB.
         """
 
-        instance.category = fields.get('category', instance.category)
-        instance.name = fields.get('name', instance.name)
+        instance.category = fields.get("category", instance.category)
+        instance.name = fields.get("name", instance.name)
 
         instance.full_clean()
         instance.save()
 
         return instance
 
-    def deepcopy(self,
-                 instance: SubCategory) -> SubCategory:
+    def deepcopy(self, instance: SubCategory) -> SubCategory:
         concern_service = ConcernService()
         instance_copy = copy.deepcopy(instance)
 

@@ -9,10 +9,7 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from ..models import Category
 from ..services import CategoryService
-from ..serializers import (
-    CategorySerializer,
-    SubCategorySerializer
-)
+from ..serializers import CategorySerializer, SubCategorySerializer
 
 
 class CategoryViewSet(viewsets.GenericViewSet):
@@ -33,32 +30,24 @@ class CategoryViewSet(viewsets.GenericViewSet):
         """
 
         input_serializer = CategorySerializer(
-            data=request.data, context={'request': request}
+            data=request.data, context={"request": request}
         )
         input_serializer.is_valid(raise_exception=True)
 
-        instance = CategoryService().camp_create(
-            **input_serializer.validated_data
-        )
+        instance = CategoryService().camp_create(**input_serializer.validated_data)
 
-        output_serializer = CategorySerializer(
-            instance, context={'request': request}
-        )
+        output_serializer = CategorySerializer(instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: CategorySerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: CategorySerializer})
     def retrieve(self, request, pk=None):
         """
         Gets and returns a Category instance from the db.
         """
 
         instance = self.get_object()
-        serializer = CategorySerializer(
-            instance, context={'request': request}
-        )
+        serializer = CategorySerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -76,8 +65,8 @@ class CategoryViewSet(viewsets.GenericViewSet):
         serializer = CategorySerializer(
             data=request.data,
             instance=instance,
-            context={'request': request},
-            partial=True
+            context={"request": request},
+            partial=True,
         )
         serializer.is_valid(raise_exception=True)
 
@@ -86,7 +75,7 @@ class CategoryViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = CategorySerializer(
-            updated_instance, context={'request': request}
+            updated_instance, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
@@ -104,9 +93,7 @@ class CategoryViewSet(viewsets.GenericViewSet):
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: CategorySerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: CategorySerializer})
     def list(self, request):
         """
         Gets all Category instances (filtered).
@@ -119,13 +106,15 @@ class CategoryViewSet(viewsets.GenericViewSet):
             serializer = CategorySerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = CategorySerializer(
-                instances, many=True)
+            serializer = CategorySerializer(instances, many=True)
             return Response(serializer.data)
 
     @action(
-        detail=True, methods=['get'], permission_classes=[IsAuthenticated],
-        url_path='sub-categories')
+        detail=True,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+        url_path="sub-categories",
+    )
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: SubCategorySerializer},
     )
@@ -135,9 +124,8 @@ class CategoryViewSet(viewsets.GenericViewSet):
         """
 
         instance = self.get_object()
-        instances = instance.sub_categories.all().order_by('name')
+        instances = instance.sub_categories.all().order_by("name")
 
-        output_serializer = SubCategorySerializer(
-            instances, many=True)
+        output_serializer = SubCategorySerializer(instances, many=True)
 
         return Response(output_serializer.data)

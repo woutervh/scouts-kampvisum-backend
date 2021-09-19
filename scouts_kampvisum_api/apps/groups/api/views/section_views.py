@@ -12,27 +12,21 @@ logger = logging.getLogger(__name__)
 
 class SectionViewSet(viewsets.GenericViewSet):
 
-    lookup_field = 'uuid'
+    lookup_field = "uuid"
     serializer_class = SectionSerializer
     queryset = Section.objects.all()
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: SectionSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: SectionSerializer})
     def retrieve(self, request, uuid=None):
         """
         Retrieves an existing ScoutSectionName object.
         """
         instance = self.get_object()
-        serializer = SectionSerializer(
-            instance, context={'request': request}
-        )
+        serializer = SectionSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: SectionSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: SectionSerializer})
     def list(self, request):
         """
         Retrieves a list of all existing Section instances.

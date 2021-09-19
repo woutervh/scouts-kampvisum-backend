@@ -28,12 +28,12 @@ class Group(BaseModel):
     # )
     type = models.ForeignKey(
         GroupType,
-        related_name='group_type',
+        related_name="group_type",
         null=True,
         blank=False,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     public_registration = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['group_admin_id', 'number']
+        ordering = ["group_admin_id", "number"]

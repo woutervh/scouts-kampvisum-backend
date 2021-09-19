@@ -12,16 +12,11 @@ class DefaultSectionName(BaseModel):
     type is 'Groep'.
     """
 
-    type = models.ForeignKey(
-        GroupType,
-        null=True,
-        on_delete=models.CASCADE)
-    name = models.ForeignKey(
-        SectionName,
-        on_delete=models.DO_NOTHING)
+    type = models.ForeignKey(GroupType, null=True, on_delete=models.CASCADE)
+    name = models.ForeignKey(SectionName, on_delete=models.DO_NOTHING)
 
     class Meta:
-        unique_together = (('type', 'name'))
+        unique_together = ("type", "name")
 
     def clean(self):
         pass

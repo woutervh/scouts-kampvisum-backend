@@ -5,4 +5,5 @@ from .category_serializer import CategorySerializer
 from .category_serializer import CategoryAPISerializer
 from .category_set_serializer import CategorySetSerializer
 from .category_set_serializer import CategorySetAPISerializer
+from .visum_category_set_serializer import LinkedCategorySetAPISerializer
 from .visum_serializer import CampVisumSerializer

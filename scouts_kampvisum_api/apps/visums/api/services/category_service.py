@@ -7,10 +7,8 @@ from ..models import Category
 logger = logging.getLogger(__name__)
 
 
-class CategoryService():
-
-    def create(
-            self, *, name: str) -> Category:
+class CategoryService:
+    def create(self, *, name: str) -> Category:
         """
         Saves a Category object to the DB.
         """
@@ -24,16 +22,12 @@ class CategoryService():
 
         return instance
 
-    def update(
-            self,
-            *,
-            instance: Category,
-            **fields) -> Category:
+    def update(self, *, instance: Category, **fields) -> Category:
         """
         Updates an existing Category object in the DB.
         """
 
-        instance.name = fields.get('name', instance.name)
+        instance.name = fields.get("name", instance.name)
 
         instance.full_clean()
         instance.save()

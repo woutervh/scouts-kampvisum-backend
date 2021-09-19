@@ -12,10 +12,10 @@ class Address(BaseModel):
 
     group = models.ForeignKey(
         Group,
-        related_name='addresses',
+        related_name="addresses",
         null=True,
         blank=False,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     group_admin_uuid = OptionalCharField(max_length=64, unique=True)
     country = OptionalCharField(max_length=2)

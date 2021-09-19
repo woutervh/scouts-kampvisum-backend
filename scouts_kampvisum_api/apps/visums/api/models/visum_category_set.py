@@ -1,9 +1,7 @@
 from django.db import models
 
-from ..models import Category, CategorySet
+from ..models import CategorySet
 from apps.base.models import BaseModel
-from apps.camps.models import CampYear
-from apps.groups.api.models import GroupType
 
 
 class LinkedCategorySet(BaseModel):

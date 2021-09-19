@@ -5,10 +5,12 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 class InvalidWorkflowTransitionException(Exception):
-    def __init__(self,
-                 from_status: str,
-                 to_status: str,
-                 extra: str = "Can't transition between statuses"):
+    def __init__(
+        self,
+        from_status: str,
+        to_status: str,
+        extra: str = "Can't transition between statuses",
+    ):
         message = "Invalid workflow transition from status %s to status %s" % (
             from_status,
             to_status,
@@ -20,8 +22,8 @@ class InvalidWorkflowTransitionException(Exception):
 
 class InvalidWorkflowTransitionAPIException(APIException):
     status_code = 400
-    default_detail = 'Invalid workflow transition'
-    default_code = 'bad_request'
+    default_detail = "Invalid workflow transition"
+    default_code = "bad_request"
 
     def __init__(self, exception: InvalidWorkflowTransitionException):
         detail = str(exception)

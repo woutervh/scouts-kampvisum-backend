@@ -3,202 +3,932 @@
         "pk": 1,
         "model": "visums.Concern",
         "fields": {
-            "name": "datum_leden",
+            "name": "planning_date_members",
             "sub_category": [
                 "Datum"
             ],
-            "type": "DateCheck"
+            "type": [
+                "DateCheck"
+            ],
+            "explanation": "Start- en einddatum voor het ledenkamp"
         }
     },
     {
         "pk": 2,
         "model": "visums.Concern",
         "fields": {
-            "name": "datum_leiding",
+            "name": "planning_date_leaders",
             "sub_category": [
                 "Datum"
             ],
-            "type": "DateCheck"
+            "type": [
+                "DateCheck"
+            ],
+            "explanation": "Start- en einddatum voor het leidingskamp"
         }
     },
     {
         "pk": 3,
         "model": "visums.Concern",
         "fields": {
-            "name": "camp_planning",
+            "name": "planning_activities_camp",
             "sub_category": [
                 "Activiteiten"
             ],
-            "type": "SimpleCheck"
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Voor- en nakamp geregeld ?"
         }
     },
     {
         "pk": 4,
         "model": "visums.Concern",
         "fields": {
-            "name": "rain_planning",
+            "name": "planning_activities_rain",
             "sub_category": [
                 "Activiteiten"
             ],
-            "type": "SimpleCheck"
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Regenplanning opgesteld ?"
         }
     },
     {
         "pk": 5,
         "model": "visums.Concern",
         "fields": {
-            "name": "heat_planning",
+            "name": "planning_activities_heat",
             "sub_category": [
                 "Activiteiten"
             ],
-            "type": "SimpleCheck"
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Hitteplanning opgemaakt ?"
         }
     },
     {
         "pk": 6,
         "model": "visums.Concern",
         "fields": {
-            "name": "totemisation_planning",
+            "name": "planning_activities_totemisation",
             "sub_category": [
                 "Activiteiten"
             ],
-            "type": "SimpleCheck"
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Totemisatie gepland ?"
         }
     },
     {
         "pk": 7,
         "model": "visums.Concern",
         "fields": {
-            "name": "night_activity_planning",
+            "name": "planning_activities_night_activity",
             "sub_category": [
                 "Activiteiten"
             ],
-            "type": "SimpleCheck"
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Nachtspel planning ok ?"
         }
     },
     {
         "pk": 8,
         "model": "visums.Concern",
         "fields": {
-            "name": "general_planning",
+            "name": "planning_activities_upload_general_planning",
             "sub_category": [
                 "Activiteiten"
             ],
-            "type": "FileUploadCheck"
+            "type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier de algemene kampplanning op"
         }
     },
     {
         "pk": 9,
         "model": "visums.Concern",
         "fields": {
-            "name": "other_planning",
+            "name": "planning_activities_upload_other_planning",
             "sub_category": [
                 "Activiteiten"
             ],
-            "type": "FileUploadCheck"
+            "type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad het regenplan, hitteplan en afspraken rond totemisatie en nachtspel op"
         }
     },
     {
         "pk": 10,
         "model": "visums.Concern",
         "fields": {
-            "name": "balanced_diet_menu",
+            "name": "planning_menu_balanced_diet",
             "sub_category": [
                 "Menu"
             ],
-            "type": "SimpleCheck"
+            "type": [
+                "SimpleCheck"
+            ]
         }
     },
     {
         "pk": 11,
         "model": "visums.Concern",
         "fields": {
-            "name": "vegetarian_menu",
+            "name": "planning_menu_vegetarian_diet",
             "sub_category": [
                 "Menu"
             ],
-            "type": "SimpleCheck"
+            "type": [
+                "SimpleCheck"
+            ]
         }
     },
     {
         "pk": 12,
         "model": "visums.Concern",
         "fields": {
-            "name": "upload_menu",
+            "name": "planning_menu_upload",
             "sub_category": [
                 "Menu"
             ],
-            "type": "FileUploadCheck"
+            "type": [
+                "FileUploadCheck"
+            ]
         }
     },
     {
         "pk": 13,
         "model": "visums.Concern",
         "fields": {
-            "name": "name_location",
+            "name": "logistics_location_name",
             "sub_category": [
                 "Locatie(s) - kaartje"
             ],
-            "type": "InputCheck"
+            "type": [
+                "InputCheck"
+            ]
         }
     },
     {
         "pk": 14,
         "model": "visums.Concern",
         "fields": {
-            "name": "upload_menu",
+            "name": "logistics_location_contact",
             "sub_category": [
                 "Locatie(s) - kaartje"
             ],
-            "type": "FileUploadCheck"
+            "type": [
+                "ContactCheck"
+            ]
         }
     },
     {
-<<<<<<< HEAD
-        "pk": 13,
-        "model": "visums.Concern",
-=======
         "pk": 15,
-        "model": "visums.CampVisumConcern",
->>>>>>> 84b3060edff6d426426b870a7dd3a2f6f1874391
+        "model": "visums.Concern",
         "fields": {
-            "name": "upload_menu",
+            "name": "logistics_location_contact_cell",
             "sub_category": [
                 "Locatie(s) - kaartje"
             ],
-            "type": "FileUploadCheck"
+            "type": [
+                "ContactCheck"
+            ]
         }
     },
     {
-<<<<<<< HEAD
-        "pk": 13,
-        "model": "visums.Concern",
-=======
         "pk": 16,
-        "model": "visums.CampVisumConcern",
->>>>>>> 84b3060edff6d426426b870a7dd3a2f6f1874391
+        "model": "visums.Concern",
         "fields": {
-            "name": "upload_menu",
+            "name": "logistics_location_location",
             "sub_category": [
                 "Locatie(s) - kaartje"
             ],
-            "type": "FileUploadCheck"
+            "type": [
+                "LocationCheck"
+            ],
+            "explanation": "Aanduiding kampplaats op kaart"
         }
     },
     {
-<<<<<<< HEAD
-        "pk": 13,
-        "model": "visums.Concern",
-=======
         "pk": 17,
-        "model": "visums.CampVisumConcern",
->>>>>>> 84b3060edff6d426426b870a7dd3a2f6f1874391
+        "model": "visums.Concern",
         "fields": {
-            "name": "upload_menu",
+            "name": "logistics_location_contract",
             "sub_category": [
                 "Locatie(s) - kaartje"
             ],
-            "type": "FileUploadCheck"
+            "type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je contract op"
         }
     },
+    {
+        "pk": 18,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_info_water",
+            "sub_category": [
+                "Locatie(s) - info"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Water dat niet uit de kraan of aangekochte flessen komt (bronwater, regenputten, ...) moet gecontroleerd worden. De eigenaar moet hier zelf een attest voor aanvragen. Het is ook zeer belangrijk om na te gaan waarvoor de waterslangen nog gebruikt worden. Als een boer bijvoorbeeld door het jaar zijn sproeistoffen door deze slangen jaagt, spreekt het voor zich dat die niet voor drinkwater geschikt zijn, behalve indien deze chemisch ontsmet zijn. Vermijd ook stilstaand water (bv. wanneer de waterslang de hele dag in de zon ligt)."
+        }
+    },
+    {
+        "pk": 19,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_info_toilets",
+            "sub_category": [
+                "Locatie(s) - info"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "In Vlaanderen en Wallonië bestaat er geen overkoepelende reglementering rond het graven van HUDO’s, maar verschillende gemeentebesturen en/of eigenaars van kampeerweides verbieden het wel. Als je een HUDO graaft, tracht dit dan zo ecologisch mogelijk te doen. Belangrijk is dat je de HUDO minstens op een afstand van 70 meter van beken en andere watertjes uitgraaft. Voorzie een vuilniszak voor maandverband e.a. In de Oostkantons mogen er geen putten gegraven worden voor HUDO’s. Dat wil zeggen dat je verplicht bent om op een kampeerweide gebruik te maken van chemische toiletten. Check vooraf bij de verhuurder van de kampeerweide of hij chemische toiletten voorziet, zoniet zal je er zelf voor moeten zorgen. Ook GFT-putten (groente-, fruit- en tuinafval) zijn verboden. Gebruik daarvoor de gereglementeerde afvalzakken of de composthoop van de kampuitbater. www.opkamp.be > regelgeving > hudo"
+        }
+    },
+    {
+        "pk": 20,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_info_fire",
+            "sub_category": [
+                "Locatie(s) - info"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "In Vlaanderen mag je geen vuur maken op minder dan 25 meter van huizen, bossen, heide, boomgaarden, hagen, graan en stro. Voor een kampvuur kan je wel een uitzondering krijgen, maar dan moet je minstens 35 dagen voor je kamp een machtiging aanvragen bij het Agentschap voor Natuur en Bos. De Waalse regelgeving voorziet geen machtiging als je korter bij het bos een vuur wil maken. Informeer je ook steeds over de reglementering van je kampgemeente; deze kan strenger zijn dan de 25-meterregel (wat vaak het geval is in de Oostkantons). Ook rook verspreiden over de openbare weg is verboden."
+        }
+    },
+    {
+        "pk": 21,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_info_electricity",
+            "sub_category": [
+                "Locatie(s) - info"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Electriciteit"
+        }
+    },
+    {
+        "pk": 22,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_info_store",
+            "sub_category": [
+                "Locatie(s) - info"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Winkel in de buurt"
+        }
+    },
+    {
+        "pk": 23,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_transport_members",
+            "sub_category": [
+                "Vervoer"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Transportplanning voor leden"
+        }
+    },
+    {
+        "pk": 24,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_transport_leaders",
+            "sub_category": [
+                "Vervoer"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Transportplanning voor leiding"
+        }
+    },
+    {
+        "pk": 25,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_transport_materials",
+            "sub_category": [
+                "Vervoer"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Transportplanning voor materialen"
+        }
+    },
+    {
+        "pk": 26,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_transport_upload",
+            "sub_category": [
+                "Vervoer"
+            ],
+            "type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je vervoersplanning op"
+        }
+    },
+    {
+        "pk": 27,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_materials_checked",
+            "sub_category": [
+                "Materiaal"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Materiaal nagekeken ?"
+        }
+    },
+    {
+        "pk": 28,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "logistics_materials_upload",
+            "sub_category": [
+                "Materiaal"
+            ],
+            "type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je materiaallijst op"
+        }
+    },
+    {
+        "pk": 29,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_parents_ombudsman",
+            "sub_category": [
+                "Ouders"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Duidelijk aanspreekpunt voor de ouders"
+        }
+    },
+    {
+        "pk": 30,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_parents_ombudsman_contact",
+            "sub_category": [
+                "Ouders"
+            ],
+            "type": [
+                "ContactCheck"
+            ],
+            "explanation": "Naam aanspreekpunt"
+        }
+    },
+    {
+        "pk": 31,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_parents_informed",
+            "sub_category": [
+                "Ouders"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Ouders zijn voldoende geïnformeerd"
+        }
+    },
+    {
+        "pk": 32,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_parents_brochure",
+            "sub_category": [
+                "Ouders"
+            ],
+            "type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier de brochure voor ouders op"
+        }
+    },
+    {
+        "pk": 33,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_agreements_rules",
+            "sub_category": [
+                "Afspraken"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Algemene kampregels"
+        }
+    },
+    {
+        "pk": 34,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_agreements_smoking",
+            "sub_category": [
+                "Afspraken"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Afspraken: roken"
+        }
+    },
+    {
+        "pk": 35,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_agreements_sexuality",
+            "sub_category": [
+                "Afspraken"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Afspraken: sex en relaties"
+        }
+    },
+    {
+        "pk": 36,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_agreements_alcohol",
+            "sub_category": [
+                "Afspraken"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Afspraken: alcohol- en BOB-regeling"
+        }
+    },
+    {
+        "pk": 37,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_agreements_parents",
+            "sub_category": [
+                "Afspraken"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Zijn ouders op de hoogte van de afspraken ?"
+        }
+    },
+    {
+        "pk": 38,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "communication_agreements_upload",
+            "sub_category": [
+                "Afspraken"
+            ],
+            "type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je afspraken op"
+        }
+    },
+    {
+        "pk": 39,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_insurance_upload",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "InformationCheck"
+            ]
+        }
+    },
+    {
+        "pk": 40,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_insurance_members",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Alle leden en leiding verzekerd"
+        }
+    },
+    {
+        "pk": 41,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_insurance_non_members",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Alle niet-leden (fouriers, bezoekers) verzekerd"
+        }
+    },
+    {
+        "pk": 42,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_insurance_cars",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Alle voertuigen verzekerd"
+        }
+    },
+    {
+        "pk": 43,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_insurance_materials",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Alle materiaal verzekerd"
+        }
+    },
+    {
+        "pk": 44,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_insurance_upload",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je verzekeringsdocumenten op"
+        }
+    },
+    {
+        "pk": 45,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_healthcare_gp",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Huisarts in de buurt"
+        }
+    },
+    {
+        "pk": 46,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_healthcare_gp_location",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "LocationCheck"
+            ],
+            "explanation": "Locatie huisarts"
+        }
+    },
+    {
+        "pk": 47,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_healthcare_pharmacy",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Apotheek in de buurt"
+        }
+    },
+    {
+        "pk": 48,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_healthcare_pharmacy_location",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "LocationCheck"
+            ],
+            "explanation": "Locatie apotheek"
+        }
+    },
+    {
+        "pk": 49,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_healthcare_hospital",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Ziekenhuis in de buurt"
+        }
+    },
+    {
+        "pk": 50,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_healthcare_hospital_location",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "LocationCheck"
+            ],
+            "explanation": "Locatie ziekenhuis"
+        }
+    },
+    {
+        "pk": 51,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_healthcare_hospital_ehbo",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "EHBO-koffer volledig samengesteld",
+            "url": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer"
+        }
+    },
+    {
+        "pk": 52,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "safety_healthcare_hospital_emergency_contact",
+            "sub_category": [
+                "Verzekeringen"
+            ],
+            "type": [
+                "FileInputCheck"
+            ],
+            "explanation": "Lijst met noodnummers"
+        }
+    },
+    {
+        "pk": 53,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_leaders_main",
+            "sub_category": [
+                "Leiding"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "21-jarige verantwoordelijke"
+        }
+    },
+    {
+        "pk": 54,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_leaders_responsible",
+            "sub_category": [
+                "Leiding"
+            ],
+            "type": [
+                "ContactCheck"
+            ],
+            "explanation": "Contactgegevens kampverantwoordelijke"
+        }
+    },
+    {
+        "pk": 55,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_leaders_responsible_2",
+            "sub_category": [
+                "Leiding"
+            ],
+            "type": [
+                "ContactCheck"
+            ],
+            "explanation": "Contactgegevens 2de kampverantwoordelijke"
+        }
+    },
+    {
+        "pk": 56,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_leaders_home_contact",
+            "sub_category": [
+                "Leiding"
+            ],
+            "type": [
+                "ContactCheck"
+            ],
+            "explanation": "Contactgegevens thuisverantwoordelijke"
+        }
+    },
+    {
+        "pk": 57,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_leaders_cooks",
+            "sub_category": [
+                "Leiding"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Voldoende fouriers"
+        }
+    },
+    {
+        "pk": 58,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_leaders_leader_count",
+            "sub_category": [
+                "Leiding"
+            ],
+            "type": [
+                "InputCheck"
+            ],
+            "explanation": "Totaal aantal leiding"
+        }
+    },
+    {
+        "pk": 59,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_members_medical_info",
+            "sub_category": [
+                "Leden"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Individuele steekkaarten ok"
+        }
+    },
+    {
+        "pk": 60,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_members_id",
+            "sub_category": [
+                "Leden"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Copy identiteitskaarten"
+        }
+    },
+    {
+        "pk": 61,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_members_payment",
+            "sub_category": [
+                "Leden"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Leden betaald"
+        }
+    },
+    {
+        "pk": 62,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_members_registered",
+            "sub_category": [
+                "Leden"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Leden ingeschreven"
+        }
+    },
+    {
+        "pk": 63,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "participants_members_count",
+            "sub_category": [
+                "Leden"
+            ],
+            "type": [
+                "InputCheck"
+            ],
+            "explanation": "Totaal aantal leden"
+        }
+    },
+    {
+        "pk": 64,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "budget_budget_balanced",
+            "sub_category": [
+                "Begroting"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Evenwichtig begroting"
+        }
+    },
+    {
+        "pk": 65,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "budget_budget_leaders",
+            "sub_category": [
+                "Begroting"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Afspraken betaling leiding"
+        }
+    },
+    {
+        "pk": 66,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "budget_budget_members",
+            "sub_category": [
+                "Begroting"
+            ],
+            "type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Kampgeld leden ontvangen"
+        }
+    },
+    {
+        "pk": 67,
+        "model": "visums.Concern",
+        "fields": {
+            "name": "budget_budget_upload",
+            "sub_category": [
+                "Begroting"
+            ],
+            "type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier de digitale begroting op"
+        }
+    }
 ]

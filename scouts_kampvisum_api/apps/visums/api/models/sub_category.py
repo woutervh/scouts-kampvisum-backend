@@ -2,11 +2,11 @@ from django.db import models
 
 from ..models import Category
 from ..managers import CategoryManager
-from apps.base.models import BaseModel
+from apps.base.models import BaseModel, Linkable, Explainable
 from inuits.models import RequiredCharField
 
 
-class SubCategory(BaseModel):
+class SubCategory(Linkable, Explainable, BaseModel):
 
     category = models.ForeignKey(
         Category,

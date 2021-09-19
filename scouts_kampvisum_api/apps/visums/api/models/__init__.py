@@ -4,8 +4,8 @@ from .concern_type import ConcernType
 from .concern import Concern
 from .priority import CategorySetPriority
 from .category_set import CategorySet
-from .visum import CampVisum
 from .visum_category import LinkedCategory
 from .visum_sub_category import LinkedSubCategory
 from .visum_concern import LinkedConcern
 from .visum_category_set import LinkedCategorySet
+from .visum import CampVisum

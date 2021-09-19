@@ -10,15 +10,12 @@ from apps.camps.models import Camp
 logger = logging.getLogger(__name__)
 
 
-class LinkedCategoryService():
-
+class LinkedCategoryService:
     def link_category_set(self, camp: Camp):
         logger.debug("Linking categories to camp '%s'", camp.name)
 
         category_service = CategoryService()
-        category_set = CategorySetService().get_default_set(
-            camp.get_group_type()
-        )
+        category_set = CategorySetService().get_default_set(camp.get_group_type())
 
         for category in category_set.categories.all():
             logger.debug("Linked category: '%s'", category.name)
@@ -36,5 +33,5 @@ class LinkedCategoryService():
             #     linked_sub_category = LinkedSubCategory()
 
             #     linked_sub_category
-        
+
         return category_set

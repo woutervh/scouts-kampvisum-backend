@@ -5,4 +5,5 @@ from .category_set_service import CategorySetService
 from .visum_concern_service import LinkedConcernService
 from .visum_sub_category_service import LinkedSubCategoryService
 from .visum_category_service import LinkedCategoryService
+from .visum_category_set_service import LinkedCategorySetService
 from .visum_service import CampVisumService

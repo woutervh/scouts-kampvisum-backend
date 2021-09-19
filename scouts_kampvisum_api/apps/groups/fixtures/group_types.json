@@ -11,7 +11,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "District",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -19,7 +21,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Gouw",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -34,7 +38,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Akabe",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -42,7 +48,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Akabetak",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -50,7 +58,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Jeugdverblijf",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -58,7 +68,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "OpenKamp",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -66,7 +78,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Jin",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -74,7 +88,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Jambe",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -82,7 +98,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Technieken",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -90,7 +108,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Givers",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -98,7 +118,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Jamboree",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -106,7 +128,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "HO",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -114,7 +138,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "HONL",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -122,7 +148,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Tijdschriften",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -137,7 +165,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Verbond",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -145,7 +175,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Ploeg",
-			"parent": [ "Groep"]
+			"parent": [
+				"Groep"
+			]
 		}
 	},
 	{
@@ -153,7 +185,9 @@
 		"model": "groups.GroupType",
 		"fields": {
 			"type": "Akazeetak",
-			"parent": [ "Zeescouts"]
+			"parent": [
+				"Zeescouts"
+			]
 		}
 	}
 ]

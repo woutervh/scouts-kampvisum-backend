@@ -13,10 +13,10 @@ class ConcernType(BaseModel):
 
     class Meta:
         ordering = ["type"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=['type'], name='unique_type')
-        ]
+        constraints = [models.UniqueConstraint(fields=["type"], name="unique_type")]
+
+    def __init__(self, type):
+        self.type = type
 
     def natural_key(self):
         return (self.type,)

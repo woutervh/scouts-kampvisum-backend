@@ -1,8 +1,7 @@
 from django.db import models
 
-from ..models import Concern, ConcernType, LinkedSubCategory
+from ..models import Concern, LinkedSubCategory
 from apps.base.models import BaseModel
-from apps.camps.models import Camp
 
 
 class LinkedConcern(BaseModel):
@@ -11,4 +10,3 @@ class LinkedConcern(BaseModel):
         LinkedSubCategory, related_name="concerns", on_delete=models.CASCADE
     )
     origin = models.ForeignKey(Concern, on_delete=models.CASCADE)
-    type = models.ForeignKey(ConcernType, on_delete=models.CASCADE)

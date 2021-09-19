@@ -1,4 +1,2 @@
-
-
-class LinkedConcernService():
+class LinkedConcernService:
     pass

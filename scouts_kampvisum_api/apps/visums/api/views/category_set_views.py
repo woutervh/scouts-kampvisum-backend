@@ -1,4 +1,3 @@
-
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -8,10 +7,12 @@ from ..serializers import CategorySetSerializer
 
 
 class CategorySetViewSet(viewsets.GenericViewSet):
-
     @action(
-        detail=False, methods=['get'], permission_classes=[IsAuthenticated],
-        url_path='import')
+        detail=False,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+        url_path="import",
+    )
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: CategorySetSerializer},
     )

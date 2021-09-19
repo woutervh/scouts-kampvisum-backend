@@ -28,17 +28,15 @@ class SectionName(BaseModel):
         default=MemberGender.MIXED,
     )
     age_group = models.CharField(
-        max_length=3,
-        choices=AgeGroup.choices,
-        default=AgeGroup.AGE_GROUP_1
+        max_length=3, choices=AgeGroup.choices, default=AgeGroup.AGE_GROUP_1
     )
     hidden = models.BooleanField(default=False)
 
     objects = SectionNameManager()
 
     class Meta:
-        unique_together = (('name', 'gender', 'age_group'))
-        ordering = ['age_group']
+        unique_together = ("name", "gender", "age_group")
+        ordering = ["age_group"]
 
     def natural_key(self):
-        return (self.name, )
+        return (self.name,)

@@ -14,51 +14,43 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
     """
     A viewset for viewing and editing SubCategory instances.
     """
-    
+
     serializer_class = SubCategorySerializer
     queryset = SubCategory.objects.all()
-    
+
     @swagger_auto_schema(
         request_body=SubCategorySerializer,
-        responses={
-            status.HTTP_201_CREATED: SubCategorySerializer
-        },
+        responses={status.HTTP_201_CREATED: SubCategorySerializer},
     )
     def create(self, request):
         """
         Creates a new SubCategory instance.
         """
-        
+
         input_serializer = SubCategorySerializer(
-            data=request.data, context={'request': request}
+            data=request.data, context={"request": request}
         )
         input_serializer.is_valid(raise_exception=True)
 
-        instance = SubCategoryService().camp_create(
-            **input_serializer.validated_data
-        )
+        instance = SubCategoryService().camp_create(**input_serializer.validated_data)
 
         output_serializer = SubCategorySerializer(
-            instance, context={'request': request}
+            instance, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-    
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: SubCategorySerializer}
-    )
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: SubCategorySerializer})
     def retrieve(self, request, pk=None):
         """
         Gets and returns a SubCategory instance from the db.
         """
-        
+
         instance = self.get_object()
-        serializer = SubCategorySerializer(
-            instance, context={'request': request}
-        )
+        serializer = SubCategorySerializer(instance, context={"request": request})
 
         return Response(serializer.data)
-    
+
     @swagger_auto_schema(
         request_body=SubCategorySerializer,
         responses={status.HTTP_200_OK: SubCategorySerializer},
@@ -67,14 +59,14 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         """
         Updates a SubCategory instance.
         """
-        
+
         instance = self.get_object()
 
         serializer = SubCategorySerializer(
             data=request.data,
             instance=instance,
-            context={'request': request},
-            partial=True
+            context={"request": request},
+            partial=True,
         )
         serializer.is_valid(raise_exception=True)
 
@@ -83,11 +75,11 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = SubCategorySerializer(
-            updated_instance, context={'request': request}
+            updated_instance, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
-    
+
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
@@ -95,31 +87,24 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         """
         Deletes a SubCategory instance.
         """
-        
+
         instance = get_object_or_404(SubCategory.objects, pk=pk)
         instance.delete()
-        
+
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-    
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: SubCategorySerializer}
-    )
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: SubCategorySerializer})
     def list(self, request):
         """
         Gets all SubCategory instances (filtered).
         """
-        
+
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = SubCategorySerializer(
-                page, many=True
-            )
+            serializer = SubCategorySerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = SubCategorySerializer(
-                instances, many=True
-            )
+            serializer = SubCategorySerializer(instances, many=True)
             return Response(serializer.data)
-

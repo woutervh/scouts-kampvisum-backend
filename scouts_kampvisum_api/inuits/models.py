@@ -15,15 +15,21 @@ class OptionalCharField(models.CharField):
         blank=True,
     )
     If a default value is passed, it is discarded.
+    If max_length is not specified, it is set to 128.
 
     @see https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.Field.null
     """
+
     def __init__(self, *args, **kwargs):
-        if 'default' in kwargs:
-            kwargs.pop('default', None)
-            warnings.warn("A default value was passed and was discarded\
-                Use models.CharField if this field needs a default.")
-        kwargs['blank'] = True
+        if "default" in kwargs:
+            kwargs.pop("default", None)
+            warnings.warn(
+                "A default value was passed and was discarded\
+                Use models.CharField if this field needs a default."
+            )
+        if "max_length" not in kwargs:
+            kwargs["max_length"] = 128
+        kwargs["blank"] = True
         super().__init__(*args, **kwargs)
 
 
@@ -38,8 +44,9 @@ class RequiredCharField(models.CharField):
 
     @see https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.Field.null
     """
+
     def __init__(self, *args, **kwargs):
-        kwargs['blank'] = False
+        kwargs["blank"] = False
         super().__init__(*args, **kwargs)
 
 
@@ -54,9 +61,10 @@ class UniqueRequiredCharField(models.CharField):
 
     @see https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.Field.null
     """
+
     def __init__(self, *args, **kwargs):
-        kwargs['blank'] = False
-        kwargs['unique'] = True
+        kwargs["blank"] = False
+        kwargs["unique"] = True
         super().__init__(*args, **kwargs)
 
 
@@ -72,12 +80,18 @@ class OptionalTextField(models.TextField):
 
     @see https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.Field.null
     """
+
     def __init__(self, *args, **kwargs):
-        if 'default' in kwargs:
-            kwargs.pop('default', None)
-            warnings.warn("A default value was passed and was discarded\
-                Use models.TextField if this field needs a default.")
-        kwargs['blank'] = True
+        if "default" in kwargs:
+            default_value = kwargs.pop("default", None)
+            if default_value is not None and len(default_value.strip()) > 0:
+                warnings.warn(
+                    "A default value ("
+                    + default_value
+                    + ") was passed and was discarded. Use models.TextField if this field needs a default."
+                )
+        kwargs["blank"] = True
+        kwargs["default"] = ""
         super().__init__(*args, **kwargs)
 
 
@@ -92,13 +106,16 @@ class OptionalIntegerField(models.IntegerField):
     )
     If a default value is passed, it is discarded.
     """
+
     def __init__(self, *args, **kwargs):
-        if 'default' in kwargs:
-            kwargs.pop('default', None)
-            warnings.warn("A default value was passed and was discarded\
-                Use models.IntegerField if this field needs a default.")
-        kwargs['blank'] = True
-        kwargs['null'] = True
+        if "default" in kwargs:
+            kwargs.pop("default", None)
+            warnings.warn(
+                "A default value was passed and was discarded\
+                Use models.IntegerField if this field needs a default."
+            )
+        kwargs["blank"] = True
+        kwargs["null"] = True
         super().__init__(*args, **kwargs)
 
 
@@ -113,11 +130,12 @@ class RequiredIntegerField(models.IntegerField):
     )
     If a default value is not passed, then a ValidationError is raised.
     """
+
     def __init__(self, *args, **kwargs):
-        if 'default' not in kwargs:
+        if "default" not in kwargs:
             raise ValidationError("A RequiredIntegerField needs a default")
-        kwargs['blank'] = False
-        kwargs['null'] = False
+        kwargs["blank"] = False
+        kwargs["null"] = False
         super().__init__(*args, **kwargs)
 
 
@@ -134,15 +152,18 @@ class OptionalDateField(models.DateField):
     )
     If a default value is passed, it is discarded.
     """
+
     def __init__(self, *args, **kwargs):
-        if 'default' in kwargs:
-            kwargs.pop('default', None)
-            warnings.warn("A default value was passed and was discarded\
-                Use models.DateField if this field needs a default.")
-        kwargs['auto_now'] = False
-        kwargs['auto_now_add'] = False
-        kwargs['blank'] = True
-        kwargs['null'] = True
+        if "default" in kwargs:
+            kwargs.pop("default", None)
+            warnings.warn(
+                "A default value was passed and was discarded\
+                Use models.DateField if this field needs a default."
+            )
+        kwargs["auto_now"] = False
+        kwargs["auto_now_add"] = False
+        kwargs["blank"] = True
+        kwargs["null"] = True
 
         super().__init__(*args, **kwargs)
 
@@ -160,15 +181,17 @@ class OptionalDateTimeField(models.DateTimeField):
     )
     If a default value is passed, it is discarded.
     """
+
     def __init__(self, *args, **kwargs):
-        if 'default' in kwargs:
-            kwargs.pop('default', None)
-            warnings.warn("A default value was passed and was discarded\
-                Use models.DateField if this field needs a default.")
-        kwargs['auto_now'] = False
-        kwargs['auto_now_add'] = False
-        kwargs['blank'] = True
-        kwargs['null'] = True
+        if "default" in kwargs:
+            kwargs.pop("default", None)
+            warnings.warn(
+                "A default value was passed and was discarded\
+                Use models.DateField if this field needs a default."
+            )
+        kwargs["auto_now"] = False
+        kwargs["auto_now_add"] = False
+        kwargs["blank"] = True
+        kwargs["null"] = True
 
         super().__init__(*args, **kwargs)
-

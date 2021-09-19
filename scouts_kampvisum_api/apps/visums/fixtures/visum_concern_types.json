@@ -40,5 +40,12 @@
 		"fields": {
 			"type": "InputCheck"
 		}
+	},
+	{
+		"pk": 7,
+		"model": "visums.ConcernType",
+		"fields": {
+			"type": "InformationCheck"
+		}
 	}
 ]
