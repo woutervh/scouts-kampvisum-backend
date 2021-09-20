@@ -50,16 +50,20 @@ class SetupItem:
             self.objects.push(object)
 
     def count_objects(self, objects):
-        return len(self.objects)
+        if self.creation_count is None:
+            self.creation_count = len(self.objects)
+
+        return self.creation_count
 
     def check(self):
+        """Runs the setup action"""
         logger.debug("from %s import %s", self.namespace, self.module)
         mod = importlib.import_module(self.namespace)
         the_class = getattr(mod, self.module)()
         if self.args is not None:
-            getattr(the_class, self.function)(*self.args)
+            self.creation_count = len(getattr(the_class, self.function)(*self.args))
         else:
-            getattr(the_class, self.function)()
+            self.creation_count = len(getattr(the_class, self.function)())
 
 
 class Setup:

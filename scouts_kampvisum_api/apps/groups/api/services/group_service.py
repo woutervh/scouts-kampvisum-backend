@@ -198,9 +198,11 @@ class GroupService:
             group_admin_ids.append(group.get("group_admin_id"))
             self.import_ga_group(group)
 
-        return Group.objects.filter(
-            group_admin_id__in=list(set(group_admin_ids))
-        ).order_by("group_admin_id")
+        return list(
+            Group.objects.filter(
+                group_admin_id__in=list(set(group_admin_ids))
+            ).order_by("group_admin_id")
+        )
 
     def link_default_sections(self):
         """
@@ -208,7 +210,7 @@ class GroupService:
         """
 
         groups = Group.objects.all()
-        creation_count = 0
+        created_sections = list()
 
         for group in groups:
             logger.debug("Linking sections to GROUP: %s (%s)", group, group.name)
@@ -225,12 +227,13 @@ class GroupService:
                 logger.debug("Found %d default section NAMES", len(names))
                 for name in names:
                     logger.debug("Linking section NAME: %s", name.name)
-                    self.section_service.section_create_or_update(
-                        group, name.name, name.name.hidden
+                    created_sections.append(
+                        self.section_service.section_create_or_update(
+                            group, name.name, name.name.hidden
+                        )
                     )
-                    creation_count += 1
 
-        return creation_count
+        return created_sections
 
     def add_section(self, instance: Group, **fields):
         """

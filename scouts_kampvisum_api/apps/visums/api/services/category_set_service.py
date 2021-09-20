@@ -54,6 +54,8 @@ class CategorySetService:
         category_set.full_clean()
         category_set.save()
 
+        return category_set
+
     def setup_default_sets(self):
         """
         Sets up a default category set.
@@ -71,10 +73,11 @@ class CategorySetService:
         for type in types:
             if not self.has_default_set(type):
                 logger.debug("No existing category set found for type '%s'", type.type)
-                self.setup_default_set(type, year, categories, priority)
+                return [self.setup_default_set(type, year, categories, priority)]
             else:
                 logger.debug(
-                    "Not setting up category set for type '%s',\
-                         it already exists",
+                    "Not setting up category set for type '%s', it already exists",
                     type.type,
                 )
+
+        return []

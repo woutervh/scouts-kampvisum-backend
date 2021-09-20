@@ -83,6 +83,8 @@ class CampYearService:
     def setup_camp_years(self):
         """
         Checks to see if a camp year for the current calendar year exist.
+
+        Intended for setting up the app, not as an api call.
         """
         current = datetime.date.today()
 
@@ -90,8 +92,8 @@ class CampYearService:
 
         if not year:
             logger.debug("Creating CampYear for calendar year %s", current.year)
-            return self._create_year(current.year)
+            return [self._create_year(current.year)]
 
         logger.debug("CampYear for date (%s) already exists: %s", current, year)
 
-        return year
+        return [year]
