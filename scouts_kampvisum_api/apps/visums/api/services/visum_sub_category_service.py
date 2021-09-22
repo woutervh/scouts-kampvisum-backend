@@ -1,35 +1,31 @@
 import logging
 
-from ..models import (
-    LinkedCategory,
-)
-from ..services import CategoryService, CategorySetService
-from apps.camps.models import Camp
+from ..models import LinkedCategory, LinkedSubCategory
+from ..services import SubCategoryService, LinkedConcernService
 
 
 logger = logging.getLogger(__name__)
 
 
 class LinkedSubCategoryService:
-    def link_category_set(self, camp: Camp):
-        logger.debug("Linking categories to camp '%s'", camp.name)
+    def link_category(self, category: LinkedCategory):
+        logger.debug("Linking sub categories to category '%s'", category.category.name)
 
-        category_service = CategoryService()
-        category_set = CategorySetService().get_default_set(camp.get_group_type())
+        sub_category_service = SubCategoryService()
+        linked_concern_service = LinkedConcernService()
 
-        for category in category_set.categories.all():
-            logger.debug("Linked category: '%s'", category.name)
+        for sub_category in category.category.sub_categories.all():
+            logger.debug("Linking sub category: '%s'", sub_category.name)
 
-            linked_category = LinkedCategory()
+            linked_sub_category = LinkedSubCategory()
 
-            linked_category.camp = camp
-            linked_category.origin = category
-            linked_category.category = category_service.deepcopy(category)
+            linked_sub_category.category = category
+            linked_sub_category.origin = sub_category
+            linked_sub_category.sub_category = sub_category_service.deepcopy(
+                sub_category
+            )
 
-            linked_category.full_clean()
-            linked_category.save()
+            linked_sub_category.full_clean()
+            linked_sub_category.save()
 
-            # for sub_category in category:
-            #     linked_sub_category = LinkedSubCategory()
-
-            #     linked_sub_category
+            linked_concern_service.link_sub_category(linked_sub_category)

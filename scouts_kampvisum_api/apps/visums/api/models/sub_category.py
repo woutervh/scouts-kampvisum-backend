@@ -20,7 +20,6 @@ class SubCategory(Linkable, Explainable, BaseModel):
 
     class Meta:
         ordering = ["name"]
-        unique_together = ("category", "name")
 
     def natural_key(self):
         return (self.name,)

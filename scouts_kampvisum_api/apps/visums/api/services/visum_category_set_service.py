@@ -13,10 +13,10 @@ class LinkedCategorySetService:
     Service for managing category sets.
     """
 
-    def category_set_create(self, camp: Camp):
-        logger.debug("Linking category set")
-        category_set = LinkedCategoryService().link_category_set(camp)
+    def category_set_create(self, camp: Camp) -> LinkedCategorySet:
+        logger.debug("Linking category set to camp %s", camp.name)
 
+        category_set = LinkedCategoryService().link_category_set(camp)
         linked_category_set = LinkedCategorySet()
 
         linked_category_set.origin = category_set

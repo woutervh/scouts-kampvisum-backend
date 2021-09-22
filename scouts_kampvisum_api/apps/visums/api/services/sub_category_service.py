@@ -1,9 +1,8 @@
 import logging
-import copy
 
 from ..models import Category, SubCategory
 from ..services import ConcernService
-
+from inuits import copy_basemodel
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +38,8 @@ class SubCategoryService:
 
     def deepcopy(self, instance: SubCategory) -> SubCategory:
         concern_service = ConcernService()
-        instance_copy = copy.deepcopy(instance)
+        instance_copy = copy_basemodel(instance)
+        instance_copy.is_default = False
 
         instance_copy.full_clean()
         instance_copy.save()

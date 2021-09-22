@@ -10,7 +10,8 @@
             "type": [
                 "DateCheck"
             ],
-            "explanation": "Start- en einddatum voor het ledenkamp"
+            "explanation": "Start- en einddatum voor het ledenkamp",
+            "is_default": true
         }
     },
     {
@@ -24,7 +25,8 @@
             "type": [
                 "DateCheck"
             ],
-            "explanation": "Start- en einddatum voor het leidingskamp"
+            "explanation": "Start- en einddatum voor het leidingskamp",
+            "is_default": true
         }
     },
     {
@@ -38,7 +40,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Voor- en nakamp geregeld ?"
+            "explanation": "Voor- en nakamp geregeld ?",
+            "is_default": true
         }
     },
     {
@@ -52,7 +55,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Regenplanning opgesteld ?"
+            "explanation": "Regenplanning opgesteld ?",
+            "is_default": true
         }
     },
     {
@@ -66,7 +70,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Hitteplanning opgemaakt ?"
+            "explanation": "Hitteplanning opgemaakt ?",
+            "is_default": true
         }
     },
     {
@@ -80,7 +85,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Totemisatie gepland ?"
+            "explanation": "Totemisatie gepland ?",
+            "is_default": true
         }
     },
     {
@@ -94,7 +100,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Nachtspel planning ok ?"
+            "explanation": "Nachtspel planning ok ?",
+            "is_default": true
         }
     },
     {
@@ -108,7 +115,8 @@
             "type": [
                 "FileUploadCheck"
             ],
-            "explanation": "Laad hier de algemene kampplanning op"
+            "explanation": "Laad hier de algemene kampplanning op",
+            "is_default": true
         }
     },
     {
@@ -122,7 +130,8 @@
             "type": [
                 "FileUploadCheck"
             ],
-            "explanation": "Laad het regenplan, hitteplan en afspraken rond totemisatie en nachtspel op"
+            "explanation": "Laad het regenplan, hitteplan en afspraken rond totemisatie en nachtspel op",
+            "is_default": true
         }
     },
     {
@@ -135,7 +144,8 @@
             ],
             "type": [
                 "SimpleCheck"
-            ]
+            ],
+            "is_default": true
         }
     },
     {
@@ -148,7 +158,8 @@
             ],
             "type": [
                 "SimpleCheck"
-            ]
+            ],
+            "is_default": true
         }
     },
     {
@@ -161,7 +172,8 @@
             ],
             "type": [
                 "FileUploadCheck"
-            ]
+            ],
+            "is_default": true
         }
     },
     {
@@ -174,7 +186,8 @@
             ],
             "type": [
                 "InputCheck"
-            ]
+            ],
+            "is_default": true
         }
     },
     {
@@ -187,7 +200,8 @@
             ],
             "type": [
                 "ContactCheck"
-            ]
+            ],
+            "is_default": true
         }
     },
     {
@@ -200,7 +214,8 @@
             ],
             "type": [
                 "ContactCheck"
-            ]
+            ],
+            "is_default": true
         }
     },
     {
@@ -214,7 +229,8 @@
             "type": [
                 "LocationCheck"
             ],
-            "explanation": "Aanduiding kampplaats op kaart"
+            "explanation": "Aanduiding kampplaats op kaart",
+            "is_default": true
         }
     },
     {
@@ -228,7 +244,8 @@
             "type": [
                 "FileUploadCheck"
             ],
-            "explanation": "Laad hier je contract op"
+            "explanation": "Laad hier je contract op",
+            "is_default": true
         }
     },
     {
@@ -242,7 +259,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Water dat niet uit de kraan of aangekochte flessen komt (bronwater, regenputten, ...) moet gecontroleerd worden. De eigenaar moet hier zelf een attest voor aanvragen. Het is ook zeer belangrijk om na te gaan waarvoor de waterslangen nog gebruikt worden. Als een boer bijvoorbeeld door het jaar zijn sproeistoffen door deze slangen jaagt, spreekt het voor zich dat die niet voor drinkwater geschikt zijn, behalve indien deze chemisch ontsmet zijn. Vermijd ook stilstaand water (bv. wanneer de waterslang de hele dag in de zon ligt)."
+            "explanation": "Water dat niet uit de kraan of aangekochte flessen komt (bronwater, regenputten, ...) moet gecontroleerd worden. De eigenaar moet hier zelf een attest voor aanvragen. Het is ook zeer belangrijk om na te gaan waarvoor de waterslangen nog gebruikt worden. Als een boer bijvoorbeeld door het jaar zijn sproeistoffen door deze slangen jaagt, spreekt het voor zich dat die niet voor drinkwater geschikt zijn, behalve indien deze chemisch ontsmet zijn. Vermijd ook stilstaand water (bv. wanneer de waterslang de hele dag in de zon ligt).",
+            "is_default": true
         }
     },
     {
@@ -256,7 +274,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "In Vlaanderen en Wallonië bestaat er geen overkoepelende reglementering rond het graven van HUDO’s, maar verschillende gemeentebesturen en/of eigenaars van kampeerweides verbieden het wel. Als je een HUDO graaft, tracht dit dan zo ecologisch mogelijk te doen. Belangrijk is dat je de HUDO minstens op een afstand van 70 meter van beken en andere watertjes uitgraaft. Voorzie een vuilniszak voor maandverband e.a. In de Oostkantons mogen er geen putten gegraven worden voor HUDO’s. Dat wil zeggen dat je verplicht bent om op een kampeerweide gebruik te maken van chemische toiletten. Check vooraf bij de verhuurder van de kampeerweide of hij chemische toiletten voorziet, zoniet zal je er zelf voor moeten zorgen. Ook GFT-putten (groente-, fruit- en tuinafval) zijn verboden. Gebruik daarvoor de gereglementeerde afvalzakken of de composthoop van de kampuitbater. www.opkamp.be > regelgeving > hudo"
+            "explanation": "In Vlaanderen en Wallonië bestaat er geen overkoepelende reglementering rond het graven van HUDO’s, maar verschillende gemeentebesturen en/of eigenaars van kampeerweides verbieden het wel. Als je een HUDO graaft, tracht dit dan zo ecologisch mogelijk te doen. Belangrijk is dat je de HUDO minstens op een afstand van 70 meter van beken en andere watertjes uitgraaft. Voorzie een vuilniszak voor maandverband e.a. In de Oostkantons mogen er geen putten gegraven worden voor HUDO’s. Dat wil zeggen dat je verplicht bent om op een kampeerweide gebruik te maken van chemische toiletten. Check vooraf bij de verhuurder van de kampeerweide of hij chemische toiletten voorziet, zoniet zal je er zelf voor moeten zorgen. Ook GFT-putten (groente-, fruit- en tuinafval) zijn verboden. Gebruik daarvoor de gereglementeerde afvalzakken of de composthoop van de kampuitbater. www.opkamp.be > regelgeving > hudo",
+            "is_default": true
         }
     },
     {
@@ -270,7 +289,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "In Vlaanderen mag je geen vuur maken op minder dan 25 meter van huizen, bossen, heide, boomgaarden, hagen, graan en stro. Voor een kampvuur kan je wel een uitzondering krijgen, maar dan moet je minstens 35 dagen voor je kamp een machtiging aanvragen bij het Agentschap voor Natuur en Bos. De Waalse regelgeving voorziet geen machtiging als je korter bij het bos een vuur wil maken. Informeer je ook steeds over de reglementering van je kampgemeente; deze kan strenger zijn dan de 25-meterregel (wat vaak het geval is in de Oostkantons). Ook rook verspreiden over de openbare weg is verboden."
+            "explanation": "In Vlaanderen mag je geen vuur maken op minder dan 25 meter van huizen, bossen, heide, boomgaarden, hagen, graan en stro. Voor een kampvuur kan je wel een uitzondering krijgen, maar dan moet je minstens 35 dagen voor je kamp een machtiging aanvragen bij het Agentschap voor Natuur en Bos. De Waalse regelgeving voorziet geen machtiging als je korter bij het bos een vuur wil maken. Informeer je ook steeds over de reglementering van je kampgemeente; deze kan strenger zijn dan de 25-meterregel (wat vaak het geval is in de Oostkantons). Ook rook verspreiden over de openbare weg is verboden.",
+            "is_default": true
         }
     },
     {
@@ -284,7 +304,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Electriciteit"
+            "explanation": "Electriciteit",
+            "is_default": true
         }
     },
     {
@@ -298,7 +319,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Winkel in de buurt"
+            "explanation": "Winkel in de buurt",
+            "is_default": true
         }
     },
     {
@@ -312,7 +334,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Transportplanning voor leden"
+            "explanation": "Transportplanning voor leden",
+            "is_default": true
         }
     },
     {
@@ -326,7 +349,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Transportplanning voor leiding"
+            "explanation": "Transportplanning voor leiding",
+            "is_default": true
         }
     },
     {
@@ -340,7 +364,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Transportplanning voor materialen"
+            "explanation": "Transportplanning voor materialen",
+            "is_default": true
         }
     },
     {
@@ -354,7 +379,8 @@
             "type": [
                 "FileUploadCheck"
             ],
-            "explanation": "Laad hier je vervoersplanning op"
+            "explanation": "Laad hier je vervoersplanning op",
+            "is_default": true
         }
     },
     {
@@ -368,7 +394,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Materiaal nagekeken ?"
+            "explanation": "Materiaal nagekeken ?",
+            "is_default": true
         }
     },
     {
@@ -382,7 +409,8 @@
             "type": [
                 "FileUploadCheck"
             ],
-            "explanation": "Laad hier je materiaallijst op"
+            "explanation": "Laad hier je materiaallijst op",
+            "is_default": true
         }
     },
     {
@@ -396,7 +424,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Duidelijk aanspreekpunt voor de ouders"
+            "explanation": "Duidelijk aanspreekpunt voor de ouders",
+            "is_default": true
         }
     },
     {
@@ -410,7 +439,8 @@
             "type": [
                 "ContactCheck"
             ],
-            "explanation": "Naam aanspreekpunt"
+            "explanation": "Naam aanspreekpunt",
+            "is_default": true
         }
     },
     {
@@ -424,7 +454,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Ouders zijn voldoende geïnformeerd"
+            "explanation": "Ouders zijn voldoende geïnformeerd",
+            "is_default": true
         }
     },
     {
@@ -438,7 +469,8 @@
             "type": [
                 "FileUploadCheck"
             ],
-            "explanation": "Laad hier de brochure voor ouders op"
+            "explanation": "Laad hier de brochure voor ouders op",
+            "is_default": true
         }
     },
     {
@@ -452,7 +484,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Algemene kampregels"
+            "explanation": "Algemene kampregels",
+            "is_default": true
         }
     },
     {
@@ -466,7 +499,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Afspraken: roken"
+            "explanation": "Afspraken: roken",
+            "is_default": true
         }
     },
     {
@@ -480,7 +514,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Afspraken: sex en relaties"
+            "explanation": "Afspraken: sex en relaties",
+            "is_default": true
         }
     },
     {
@@ -494,7 +529,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Afspraken: alcohol- en BOB-regeling"
+            "explanation": "Afspraken: alcohol- en BOB-regeling",
+            "is_default": true
         }
     },
     {
@@ -508,7 +544,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Zijn ouders op de hoogte van de afspraken ?"
+            "explanation": "Zijn ouders op de hoogte van de afspraken ?",
+            "is_default": true
         }
     },
     {
@@ -522,7 +559,8 @@
             "type": [
                 "FileUploadCheck"
             ],
-            "explanation": "Laad hier je afspraken op"
+            "explanation": "Laad hier je afspraken op",
+            "is_default": true
         }
     },
     {
@@ -535,7 +573,8 @@
             ],
             "type": [
                 "InformationCheck"
-            ]
+            ],
+            "is_default": true
         }
     },
     {
@@ -549,7 +588,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Alle leden en leiding verzekerd"
+            "explanation": "Alle leden en leiding verzekerd",
+            "is_default": true
         }
     },
     {
@@ -563,7 +603,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Alle niet-leden (fouriers, bezoekers) verzekerd"
+            "explanation": "Alle niet-leden (fouriers, bezoekers) verzekerd",
+            "is_default": true
         }
     },
     {
@@ -577,7 +618,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Alle voertuigen verzekerd"
+            "explanation": "Alle voertuigen verzekerd",
+            "is_default": true
         }
     },
     {
@@ -591,7 +633,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Alle materiaal verzekerd"
+            "explanation": "Alle materiaal verzekerd",
+            "is_default": true
         }
     },
     {
@@ -605,7 +648,8 @@
             "type": [
                 "FileUploadCheck"
             ],
-            "explanation": "Laad hier je verzekeringsdocumenten op"
+            "explanation": "Laad hier je verzekeringsdocumenten op",
+            "is_default": true
         }
     },
     {
@@ -619,7 +663,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Huisarts in de buurt"
+            "explanation": "Huisarts in de buurt",
+            "is_default": true
         }
     },
     {
@@ -633,7 +678,8 @@
             "type": [
                 "LocationCheck"
             ],
-            "explanation": "Locatie huisarts"
+            "explanation": "Locatie huisarts",
+            "is_default": true
         }
     },
     {
@@ -647,7 +693,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Apotheek in de buurt"
+            "explanation": "Apotheek in de buurt",
+            "is_default": true
         }
     },
     {
@@ -661,7 +708,8 @@
             "type": [
                 "LocationCheck"
             ],
-            "explanation": "Locatie apotheek"
+            "explanation": "Locatie apotheek",
+            "is_default": true
         }
     },
     {
@@ -675,7 +723,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Ziekenhuis in de buurt"
+            "explanation": "Ziekenhuis in de buurt",
+            "is_default": true
         }
     },
     {
@@ -689,7 +738,8 @@
             "type": [
                 "LocationCheck"
             ],
-            "explanation": "Locatie ziekenhuis"
+            "explanation": "Locatie ziekenhuis",
+            "is_default": true
         }
     },
     {
@@ -704,7 +754,8 @@
                 "SimpleCheck"
             ],
             "explanation": "EHBO-koffer volledig samengesteld",
-            "url": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer"
+            "url": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer",
+            "is_default": true
         }
     },
     {
@@ -718,7 +769,8 @@
             "type": [
                 "FileInputCheck"
             ],
-            "explanation": "Lijst met noodnummers"
+            "explanation": "Lijst met noodnummers",
+            "is_default": true
         }
     },
     {
@@ -732,7 +784,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "21-jarige verantwoordelijke"
+            "explanation": "21-jarige verantwoordelijke",
+            "is_default": true
         }
     },
     {
@@ -746,7 +799,8 @@
             "type": [
                 "ContactCheck"
             ],
-            "explanation": "Contactgegevens kampverantwoordelijke"
+            "explanation": "Contactgegevens kampverantwoordelijke",
+            "is_default": true
         }
     },
     {
@@ -760,7 +814,8 @@
             "type": [
                 "ContactCheck"
             ],
-            "explanation": "Contactgegevens 2de kampverantwoordelijke"
+            "explanation": "Contactgegevens 2de kampverantwoordelijke",
+            "is_default": true
         }
     },
     {
@@ -774,7 +829,8 @@
             "type": [
                 "ContactCheck"
             ],
-            "explanation": "Contactgegevens thuisverantwoordelijke"
+            "explanation": "Contactgegevens thuisverantwoordelijke",
+            "is_default": true
         }
     },
     {
@@ -788,7 +844,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Voldoende fouriers"
+            "explanation": "Voldoende fouriers",
+            "is_default": true
         }
     },
     {
@@ -802,7 +859,8 @@
             "type": [
                 "InputCheck"
             ],
-            "explanation": "Totaal aantal leiding"
+            "explanation": "Totaal aantal leiding",
+            "is_default": true
         }
     },
     {
@@ -816,7 +874,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Individuele steekkaarten ok"
+            "explanation": "Individuele steekkaarten ok",
+            "is_default": true
         }
     },
     {
@@ -830,7 +889,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Copy identiteitskaarten"
+            "explanation": "Copy identiteitskaarten",
+            "is_default": true
         }
     },
     {
@@ -844,7 +904,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Leden betaald"
+            "explanation": "Leden betaald",
+            "is_default": true
         }
     },
     {
@@ -858,7 +919,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Leden ingeschreven"
+            "explanation": "Leden ingeschreven",
+            "is_default": true
         }
     },
     {
@@ -872,7 +934,8 @@
             "type": [
                 "InputCheck"
             ],
-            "explanation": "Totaal aantal leden"
+            "explanation": "Totaal aantal leden",
+            "is_default": true
         }
     },
     {
@@ -886,7 +949,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Evenwichtig begroting"
+            "explanation": "Evenwichtig begroting",
+            "is_default": true
         }
     },
     {
@@ -900,7 +964,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Afspraken betaling leiding"
+            "explanation": "Afspraken betaling leiding",
+            "is_default": true
         }
     },
     {
@@ -914,7 +979,8 @@
             "type": [
                 "SimpleCheck"
             ],
-            "explanation": "Kampgeld leden ontvangen"
+            "explanation": "Kampgeld leden ontvangen",
+            "is_default": true
         }
     },
     {
@@ -928,7 +994,8 @@
             "type": [
                 "FileUploadCheck"
             ],
-            "explanation": "Laad hier de digitale begroting op"
+            "explanation": "Laad hier de digitale begroting op",
+            "is_default": true
         }
     }
 ]

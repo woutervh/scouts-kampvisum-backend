@@ -7,6 +7,7 @@ from apps.camps.models import Camp
 
 class LinkedCategory(BaseModel):
 
+    # Parent camp
     camp = models.ForeignKey(Camp, related_name="categories", on_delete=models.CASCADE)
     # Reference
     origin = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
