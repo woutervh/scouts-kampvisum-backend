@@ -1,27 +1,19 @@
 import logging
-import copy
 
-from ..models import (
-    CampVisumCategory,
-    CampVisumSubCategory
-)
-from ..services import CampVisumConcernService
-
+from ..models import Category, SubCategory
+from ..services import ConcernService
+from inuits import copy_basemodel
 
 logger = logging.getLogger(__name__)
 
 
-class CampVisumSubCategoryService():
-
-    def create(
-            self, *,
-            name: str,
-            category: CampVisumCategory) -> CampVisumSubCategory:
+class SubCategoryService:
+    def create(self, *, name: str, category: Category) -> SubCategory:
         """
-        Saves a CampVisumSubCategory object to the DB.
+        Saves a SubCategory object to the DB.
         """
 
-        instance = CampVisumSubCategory(
+        instance = SubCategory(
             category=category,
             name=name,
         )
@@ -31,27 +23,23 @@ class CampVisumSubCategoryService():
 
         return instance
 
-    def update(
-            self,
-            *,
-            instance: CampVisumSubCategory,
-            **fields) -> CampVisumSubCategory:
+    def update(self, *, instance: SubCategory, **fields) -> SubCategory:
         """
-        Updates an existing CampVisumSubCategory object in the DB.
+        Updates an existing SubCategory object in the DB.
         """
 
-        instance.category = fields.get('category', instance.category)
-        instance.name = fields.get('name', instance.name)
+        instance.category = fields.get("category", instance.category)
+        instance.name = fields.get("name", instance.name)
 
         instance.full_clean()
         instance.save()
 
         return instance
 
-    def deepcopy(self,
-                 instance: CampVisumSubCategory) -> CampVisumSubCategory:
-        concern_service = CampVisumConcernService()
-        instance_copy = copy.deepcopy(instance)
+    def deepcopy(self, instance: SubCategory) -> SubCategory:
+        concern_service = ConcernService()
+        instance_copy = copy_basemodel(instance)
+        instance_copy.is_default = False
 
         instance_copy.full_clean()
         instance_copy.save()

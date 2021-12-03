@@ -17,9 +17,7 @@ class GroupAdminGroupViewSet(viewsets.GenericViewSet):
 
     serializer_class = GroupAdminGroupSerializer
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: GroupAdminGroupSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: GroupAdminGroupSerializer})
     def list(self, request):
         """
         Lists authorized groups from GroupAdmin.

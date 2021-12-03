@@ -5,29 +5,74 @@ from django.dispatch import receiver
 from rest_framework import serializers
 from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE
+from inuits import is_non_empty
+from inuits.models import OptionalTextField
 
 
 class BaseModel(SafeDeleteModel):
 
     _safedelete_policy = SOFT_DELETE
 
-    id = models.AutoField(
-        primary_key=True, editable=False)
+    id = models.AutoField(primary_key=True, editable=False)
     uuid = models.UUIDField(
-        primary_key=False, editable=False, default=uuid.uuid4, unique=True)
+        primary_key=False, editable=False, default=uuid.uuid4, unique=True
+    )
 
     class Meta:
         abstract = True
 
 
+class Translatable(models.Model):
+
+    label = OptionalTextField()
+
+    class Meta:
+        abstract = True
+
+    def has_label(self) -> bool:
+        return is_non_empty(self.label)
+
+
+class Linkable(models.Model):
+
+    url = OptionalTextField()
+
+    class Meta:
+        abstract = True
+
+    def has_url(self) -> bool:
+        return is_non_empty(self.url)
+
+
+class Commentable(models.Model):
+
+    comment = OptionalTextField()
+
+    class Meta:
+        abstract = True
+
+    def has_comment(self) -> bool:
+        return is_non_empty(self.comment)
+
+
+class Explainable(models.Model):
+
+    explanation = OptionalTextField()
+
+    class Meta:
+        abstract = True
+
+    def has_explanation(self) -> bool:
+        return is_non_empty(self.explanation)
+
+
 class RecursiveField(serializers.Serializer):
     """
-    Utility class that allows a deserialization of self-referencing classes.
+    Utility class that allows serialization of self-referencing classes.
     """
 
     def to_representation(self, instance):
-        serializer = self.parent.parent.__class__(
-            instance, context=self.context)
+        serializer = self.parent.parent.__class__(instance, context=self.context)
         return serializer.data
 
 

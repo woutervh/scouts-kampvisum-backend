@@ -23,7 +23,7 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing camp instances.
     """
 
-    lookup_field = 'uuid'
+    lookup_field = "uuid"
     serializer_class = CampVisumSerializer
     queryset = CampVisum.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
@@ -37,30 +37,20 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         data = request.data
 
         logger.debug("DATA: %s", data)
-        serializer = CampVisumSerializer(
-            data=data, context={'request': request}
-        )
+        serializer = CampVisumSerializer(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         logger.debug("VALIDATED DATA: %s", serializer.validated_data)
 
-        camp = CampVisumService().visum_create(
-            **serializer.validated_data
-        )
+        camp = CampVisumService().visum_create(**serializer.validated_data)
 
-        output_serializer = CampVisumSerializer(
-            camp, context={'request': request}
-        )
+        output_serializer = CampVisumSerializer(camp, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: CampVisumSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def retrieve(self, request, uuid=None):
         instance = self.get_object()
-        serializer = CampVisumSerializer(
-            instance, context={'request': request}
-        )
+        serializer = CampVisumSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -74,8 +64,8 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         serializer = CampVisumSerializer(
             data=request.data,
             instance=instance,
-            context={'request': request},
-            partial=True
+            context={"request": request},
+            partial=True,
         )
         serializer.is_valid(raise_exception=True)
 
@@ -86,7 +76,7 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = CampVisumSerializer(
-            updated_instance, context={'request': request}
+            updated_instance, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)

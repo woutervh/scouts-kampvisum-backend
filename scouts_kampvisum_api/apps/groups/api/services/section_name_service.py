@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class SectionNameService:
-
     def name_get(self, name) -> SectionName:
         """
         Retrieves a SectionName instance based on the name.
@@ -23,35 +22,32 @@ class SectionNameService:
 
         return list(qs)
 
-    def name_create(self,
-                    name,
-                    gender=MemberGender.MIXED,
-                    age_group=AgeGroup.AGE_GROUP_UNKNOWN, **fields) -> SectionName:
+    def name_create(
+        self,
+        name,
+        gender=MemberGender.MIXED,
+        age_group=AgeGroup.AGE_GROUP_UNKNOWN,
+        **fields
+    ) -> SectionName:
         """
         Saves a SectionName object to the DB.
         """
 
-        instance = SectionName(
-            name=name,
-            gender=gender,
-            age_group=age_group
-        )
+        instance = SectionName(name=name, gender=gender, age_group=age_group)
 
         instance.full_clean()
         instance.save()
 
         return instance
 
-    def name_update(
-            self, *,
-            instance: SectionName, **fields) -> SectionName:
+    def name_update(self, *, instance: SectionName, **fields) -> SectionName:
         """
         Updates an existing SectionName object in the DB.
         """
 
-        instance.name = fields.get('name', instance.name)
-        instance.gender = fields.get('gender', instance.gender)
-        instance.age_group = fields.get('age_group', instance.age_group)
+        instance.name = fields.get("name", instance.name)
+        instance.gender = fields.get("gender", instance.gender)
+        instance.age_group = fields.get("age_group", instance.age_group)
 
         instance.full_clean()
         instance.save()

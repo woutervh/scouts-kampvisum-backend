@@ -9,8 +9,8 @@ from .api.views import (
 
 router = routers.SimpleRouter()
 
-router.register(r'groups', GroupViewSet, 'groups')
-router.register(r'sections', SectionViewSet, 'sections')
-router.register(r'section_names', SectionNameViewSet, 'section_names')
+router.register(r"groups", GroupViewSet, "groups")
+router.register(r"sections", SectionViewSet, "sections")
+router.register(r"section_names", SectionNameViewSet, "section_names")
 
 urlpatterns = router.urls

@@ -24,31 +24,28 @@ class GroupViewSet(viewsets.GenericViewSet):
     """
 
     service = GroupService()
-    lookup_field = 'uuid'
+    lookup_field = "uuid"
     serializer_class = GroupSerializer
     queryset = Group.objects.all()
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: GroupSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: GroupSerializer})
     def retrieve(self, request, pk=None):
         """
         Retrieves an existing ScoutGroup object.
         """
 
         instance = self.get_object()
-        serializer = GroupSerializer(
-            instance, context={'request': request}
-        )
+        serializer = GroupSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
     @action(
-        detail=False, methods=['get'], permission_classes=[IsAuthenticated],
-        url_path='import')
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: GroupSerializer}
+        detail=False,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+        url_path="import",
     )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: GroupSerializer})
     def import_groups(self, request, pk=None):
         """
         Retrieves authorized groups from GroupAdmin and stores them.
@@ -64,9 +61,7 @@ class GroupViewSet(viewsets.GenericViewSet):
             serializer = GroupSerializer(groups, many=True)
             return Response(serializer.data)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: GroupSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: GroupSerializer})
     def list(self, request):
         """
         Retrieves a list of all existing Group instances.
@@ -95,8 +90,11 @@ class GroupViewSet(viewsets.GenericViewSet):
         return None
 
     @action(
-        detail=True, methods=['get', 'post'], permission_classes=[IsAuthenticated],
-        url_path='sections')
+        detail=True,
+        methods=["get", "post"],
+        permission_classes=[IsAuthenticated],
+        url_path="sections",
+    )
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: SectionSerializer},
     )
@@ -104,7 +102,7 @@ class GroupViewSet(viewsets.GenericViewSet):
         """
         Retrieves a list of sections for this Group.
         """
-        if request.method == 'POST':
+        if request.method == "POST":
             return self._add_sections(request, uuid)
         else:
             return self._get_sections(request, uuid)
@@ -114,21 +112,18 @@ class GroupViewSet(viewsets.GenericViewSet):
         Creates and add Sections to the given Group.
         """
         input_serializer = SectionCreationAPISerializer(
-            data=request.data, context={'request': request}
+            data=request.data, context={"request": request}
         )
         input_serializer.is_valid(raise_exception=True)
 
-        logger.debug('REQUEST DATA: %s', request.data)
+        logger.debug("REQUEST DATA: %s", request.data)
 
         instance = self.get_object()
         instance = GroupService().add_section(
-            instance,
-            **input_serializer.validated_data
+            instance, **input_serializer.validated_data
         )
 
-        output_serializer = GroupSerializer(
-            instance, context={'request': request}
-        )
+        output_serializer = GroupSerializer(instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -136,17 +131,19 @@ class GroupViewSet(viewsets.GenericViewSet):
         """
         Returns Section instances associated with the given Group.
         """
-        logger.debug('Searching for sections for group with uuid %s', uuid)
+        logger.debug("Searching for sections for group with uuid %s", uuid)
 
         instance = get_object_or_404(Group, uuid=uuid)
         instances = instance.sections.filter(hidden=False).distinct()
 
-        logger.debug(
-            'Found %s instance(s) that are not hidden', len(instances))
+        logger.debug("Found %s instance(s) that are not hidden", len(instances))
 
         if len(instances) == 0:
-            logger.warn('No sections defined for group with uuid %s\
-                - Did you forget to call setup ?', instance.uuid)
+            logger.warn(
+                "No sections defined for group with uuid %s\
+                - Did you forget to call setup ?",
+                instance.uuid,
+            )
 
         page = self.paginate_queryset(instances)
 
@@ -158,11 +155,13 @@ class GroupViewSet(viewsets.GenericViewSet):
             return Response(serializer.data)
 
     @action(
-        detail=True, methods=['get'], permission_classes=[IsAuthenticated],
-        url_path='camps')
+        detail=True,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+        url_path="camps",
+    )
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: SectionSerializer},
     )
     def get_camps(self, request, uuid=None):
-        """
-        """
+        """ """

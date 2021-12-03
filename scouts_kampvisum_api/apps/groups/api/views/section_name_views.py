@@ -18,7 +18,7 @@ class SectionNameViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing scout section names.
     """
 
-    lookup_field = 'uuid'
+    lookup_field = "uuid"
     serializer_class = SectionNameSerializer
     queryset = SectionName.objects.all()
 
@@ -31,31 +31,25 @@ class SectionNameViewSet(viewsets.GenericViewSet):
         Creates a new ScoutSectionName.
         """
         input_serializer = SectionNameSerializer(
-            data=request.data, context={'request': request}
+            data=request.data, context={"request": request}
         )
         input_serializer.is_valid(raise_exception=True)
 
-        instance = SectionNameService().name_create(
-            **input_serializer.validated_data
-        )
+        instance = SectionNameService().name_create(**input_serializer.validated_data)
 
         output_serializer = SectionNameSerializer(
-            instance, context={'request': request}
+            instance, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: SectionNameSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: SectionNameSerializer})
     def retrieve(self, request, uuid=None):
         """
         Retrieves an existing ScoutSectionName object.
         """
         instance = self.get_object()
-        serializer = SectionNameSerializer(
-            instance, context={'request': request}
-        )
+        serializer = SectionNameSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -72,8 +66,8 @@ class SectionNameViewSet(viewsets.GenericViewSet):
         serializer = SectionNameSerializer(
             data=request.data,
             instance=instance,
-            context={'request': request},
-            partial=True
+            context={"request": request},
+            partial=True,
         )
         serializer.is_valid(raise_exception=True)
 
@@ -82,14 +76,12 @@ class SectionNameViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = SectionNameSerializer(
-            updated_instance, context={'request': request}
+            updated_instance, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: SectionNameSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: SectionNameSerializer})
     def list(self, request):
         """
         Retrieves a list of all existing SectionName instances.
@@ -115,8 +107,7 @@ class SectionNameViewSet(viewsets.GenericViewSet):
         instance = SectionName.objects.get(uuid=uuid)
 
         if not instance:
-            logger.error(
-                "No SectionName found with uuid '%s'", uuid)
+            logger.error("No SectionName found with uuid '%s'", uuid)
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
         instance.delete()

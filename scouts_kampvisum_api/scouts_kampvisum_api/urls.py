@@ -22,27 +22,30 @@ from drf_yasg2.views import get_schema_view
 # Open api schema
 schema_view = get_schema_view(
     openapi.Info(
-        title='Scouts kampvisum API',
-        default_version='v1',
-        description='This is the api documentation for the \
-            Scouts kampvisum API',
+        title="Scouts kampvisum API",
+        default_version="v1",
+        description="This is the api documentation for the \
+            Scouts kampvisum API",
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,)
+    permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
-    path('api/', include('scouts_auth.urls')),
-    path('api/', include('apps.setup.urls')),
-    path('api/', include('apps.groupadmin.urls')),
-    path('api/', include('apps.visums.urls')),
-    path('api/', include('apps.camps.urls')),
-    path('api/', include('apps.groups.urls')),
-    path('api/docs/',
-         schema_view.with_ui('swagger', cache_timeout=0),
-         name='schema-swagger-ui'),
-    path('swagger/',
-         schema_view.with_ui('swagger', cache_timeout=0),
-         name='schema-swagger-ui'),
+    path("api/", include("scouts_auth.urls")),
+    path("api/", include("apps.setup.urls")),
+    path("api/", include("apps.groupadmin.urls")),
+    path("api/", include("apps.visums.urls")),
+    path("api/", include("apps.camps.urls")),
+    path("api/", include("apps.groups.urls")),
+    path(
+        "api/docs/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
 ]
-

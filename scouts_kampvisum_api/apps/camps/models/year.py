@@ -22,12 +22,12 @@ class CampYear(BaseModel):
     objects = CampYearManager()
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['year'], name='unique_year')
-        ]
+        constraints = [models.UniqueConstraint(fields=["year"], name="unique_year")]
 
     def natural_key(self):
-        return (self.year, )
+        return (self.year,)
 
     def __str__(self):
-        return "CampYear {self.year}: {self.start_date} - {self.end_date}".format(self=self)
+        return "CampYear {self.year}: {self.start_date} - {self.end_date}".format(
+            self=self
+        )

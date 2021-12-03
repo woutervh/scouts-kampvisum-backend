@@ -22,7 +22,7 @@ class CampAPIViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing camp instances.
     """
 
-    lookup_field = 'uuid'
+    lookup_field = "uuid"
     serializer_class = CampSerializer
     queryset = Camp.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
@@ -35,29 +35,19 @@ class CampAPIViewSet(viewsets.GenericViewSet):
     def create(self, request):
         data = request.data
 
-        serializer = CampAPISerializer(
-            data=data, context={'request': request}
-        )
+        serializer = CampAPISerializer(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
-        camp = CampService().camp_create(
-            **serializer.validated_data
-        )
+        camp = CampService().camp_create(**serializer.validated_data)
 
-        output_serializer = CampSerializer(
-            camp, context={'request': request}
-        )
+        output_serializer = CampSerializer(camp, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: CampSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: CampAPISerializer})
     def retrieve(self, request, uuid=None):
-        camp = self.get_object()
-        serializer = CampSerializer(
-            camp, context={'request': request}
-        )
+        instance = self.get_object()
+        serializer = CampAPISerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -69,10 +59,7 @@ class CampAPIViewSet(viewsets.GenericViewSet):
         camp = self.get_object()
 
         serializer = CampAPISerializer(
-            data=request.data,
-            instance=camp,
-            context={'request': request},
-            partial=True
+            data=request.data, instance=camp, context={"request": request}, partial=True
         )
         serializer.is_valid(raise_exception=True)
 
@@ -82,9 +69,7 @@ class CampAPIViewSet(viewsets.GenericViewSet):
             instance=camp, **serializer.validated_data
         )
 
-        output_serializer = CampSerializer(
-            updated_camp, context={'request': request}
-        )
+        output_serializer = CampSerializer(updated_camp, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -99,32 +84,38 @@ class CampAPIViewSet(viewsets.GenericViewSet):
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: CampAPISerializer})
     def list(self, request):
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = CampSerializer(page, many=True)
+            serializer = CampAPISerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = CampSerializer(instances, many=True)
+            serializer = CampAPISerializer(instances, many=True)
             return Response(serializer.data)
 
     @action(
-        detail=True, methods=['get'], permission_classes=[IsAuthenticated],
-        url_path='years')
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: CampSerializer}
+        detail=True,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+        url_path="years",
     )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
     def get_available_years(self, request, uuid=None):
-        camps = Camp.objects.filter(
-            sections__group__uuid=uuid).distinct()
+        camps = Camp.objects.filter(sections__group__uuid=uuid).distinct()
 
         if camps.count() != 0:
-            years = list(set([camp.start_date.year
-                              for camp in camps
-                              if camp.start_date is not None]))
+            years = list(
+                set(
+                    [
+                        camp.start_date.year
+                        for camp in camps
+                        if camp.start_date is not None
+                    ]
+                )
+            )
             return Response(years)
 
         return Response(list())

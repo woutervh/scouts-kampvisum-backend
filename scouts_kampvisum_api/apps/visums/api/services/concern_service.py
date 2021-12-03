@@ -1,18 +1,16 @@
 import logging
-import copy
 
-from ..models import CampVisumConcern
+from ..models import Concern
+from inuits import copy_basemodel
 
 
 logger = logging.getLogger(__name__)
 
 
-class CampVisumConcernService():
-
-    def deepcopy(self,
-                 instance: CampVisumConcern) -> CampVisumConcern:
-        concern_service = CampVisumConcernService()
-        instance_copy = copy.deepcopy(instance)
+class ConcernService:
+    def deepcopy(self, instance: Concern) -> Concern:
+        instance_copy = copy_basemodel(instance)
+        instance_copy.is_default = False
 
         instance_copy.full_clean()
         instance_copy.save()

@@ -1,18 +1,21 @@
 from django.db import models
 
-from ..models import (
-    CampVisumConcern, CampVisumConcernType, CampVisumLinkedSubCategory
-)
+from ..models import Concern, LinkedSubCategory
 from apps.base.models import BaseModel
-from apps.camps.models import Camp
 
 
-class CampVisumLinkedConcern(BaseModel):
+class LinkedConcern(BaseModel):
 
+    # Parent sub-category
     sub_category = models.ForeignKey(
-        CampVisumLinkedSubCategory,
-        related_name="concerns",
-        on_delete=models.CASCADE
+        LinkedSubCategory, related_name="concerns", on_delete=models.CASCADE
     )
-    origin = models.ForeignKey(CampVisumConcern, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
+    # Reference
+    origin = models.ForeignKey(Concern, on_delete=models.CASCADE)
+    # Deep copy
+    concern = models.ForeignKey(
+        Concern, related_name="linked_concern", on_delete=models.CASCADE
+    )
+
+    def get_status(self) -> bool:
+        pass

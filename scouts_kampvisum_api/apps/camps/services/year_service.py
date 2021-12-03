@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class CampYearService:
-
     def get_or_create_year(self, date=None):
         """
         Returns a CampYear instance.
@@ -39,10 +38,8 @@ class CampYearService:
 
     def _get_year(self, date):
         camp_date = ScoutsTemporalDetails.get_start_of_camp_year(date)
-        logger.debug("Start date of camp year for date %s: %s",
-                     date, camp_date)
-        qs = CampYear.objects.filter(
-            start_date__lte=camp_date, end_date__gte=date)
+        logger.debug("Start date of camp year for date %s: %s", date, camp_date)
+        qs = CampYear.objects.filter(start_date__lte=camp_date, end_date__gte=date)
         if qs.count() == 1:
             logger.debug("Found a year: %s", qs[0])
             return qs[0]
@@ -86,17 +83,17 @@ class CampYearService:
     def setup_camp_years(self):
         """
         Checks to see if a camp year for the current calendar year exist.
+
+        Intended for setting up the app, not as an api call.
         """
         current = datetime.date.today()
 
         year = self._get_year(current)
 
         if not year:
-            logger.debug(
-                "Creating CampYear for calendar year %s", current.year)
-            return self._create_year(current.year)
+            logger.debug("Creating CampYear for calendar year %s", current.year)
+            return [self._create_year(current.year)]
 
-        logger.debug(
-            "CampYear for date (%s) already exists: %s", current, year)
+        logger.debug("CampYear for date (%s) already exists: %s", current, year)
 
-        return year
+        return [year]

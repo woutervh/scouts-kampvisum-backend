@@ -2,9 +2,9 @@ import logging
 
 
 from ..models import (
-    CampVisumCategorySet,
-    CampVisumCategory,
-    CampVisumCategorySetPriority,
+    CategorySet,
+    Category,
+    CategorySetPriority,
 )
 from apps.camps.models import CampYear
 from apps.camps.services import CampYearService
@@ -14,15 +14,14 @@ from apps.groups.api.models import GroupType
 logger = logging.getLogger(__name__)
 
 
-class CampVisumCategorySetService:
+class CategorySetService:
     """
     Service for managing category sets.
     """
 
-    def get_default_set(self, type: GroupType) -> CampVisumCategorySet:
-        logger.debug(
-            "Looking for default category sets for type '%s'", type.type)
-        qs = CampVisumCategorySet.objects.filter(is_default=True, type=type)
+    def get_default_set(self, type: GroupType) -> CategorySet:
+        logger.debug("Looking for default category sets for type '%s'", type.type)
+        qs = CategorySet.objects.filter(is_default=True, type=type)
 
         if qs.count() > 0:
             return qs[0]
@@ -37,13 +36,11 @@ class CampVisumCategorySetService:
 
         return False
 
-    def setup_default_set(self,
-                          type: GroupType,
-                          year: CampYear,
-                          categories,
-                          priority: CampVisumCategorySetPriority) -> CampVisumCategorySet:
+    def setup_default_set(
+        self, type: GroupType, year: CampYear, categories, priority: CategorySetPriority
+    ) -> CategorySet:
         # Setup default category set
-        category_set = CampVisumCategorySet()
+        category_set = CategorySet()
         category_set.priority = priority
         category_set.type = type
         category_set.camp_year = year
@@ -57,27 +54,30 @@ class CampVisumCategorySetService:
         category_set.full_clean()
         category_set.save()
 
+        return category_set
+
     def setup_default_sets(self):
         """
         Sets up a default category set.
         """
-
+        # Get highest priority for default set
+        priority = CategorySetPriority.objects.earliest("priority")
         # Types
         types = GroupType.objects.filter(parent=None)
         # Get current CampYear
         year = CampYearService().get_or_create_year()
         # Default categories
-        categories = CampVisumCategory.objects.filter(is_default=True)
-        # Get highest priority for default set
-        priority = CampVisumCategorySetPriority.objects.earliest('priority')
+        categories = Category.objects.filter(is_default=True)
 
         # Setup default category set for all group types
         for type in types:
             if not self.has_default_set(type):
-                logger.debug(
-                    "No existing category set found for type '%s'", type.type)
-                self.setup_default_set(type, year, categories, priority)
+                logger.debug("No existing category set found for type '%s'", type.type)
+                return [self.setup_default_set(type, year, categories, priority)]
             else:
                 logger.debug(
-                    "Not setting up category set for type '%s',\
-                         it already exists", type.type)
+                    "Not setting up category set for type '%s', it already exists",
+                    type.type,
+                )
+
+        return []

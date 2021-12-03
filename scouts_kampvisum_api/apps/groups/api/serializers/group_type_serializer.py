@@ -12,18 +12,19 @@ class GroupTypeSerializer(serializers.ModelSerializer):
     """
 
     type = models.CharField(
-        max_length=64, default=GroupAdminApi.default_scouts_group_type)
+        max_length=64, default=GroupAdminApi.default_scouts_group_type
+    )
     parent = RecursiveField()
 
     class Meta:
         model = GroupType
-        fields = '__all__'
+        fields = "__all__"
 
     def create(self, validated_data) -> GroupType:
         return GroupType(**validated_data)
 
     def update(self, instance, validated_data) -> GroupType:
-        instance.type = validated_data.get('type', instance.type)
-        instance.parent = validated_data.get('parent', instance.parent)
+        instance.type = validated_data.get("type", instance.type)
+        instance.parent = validated_data.get("parent", instance.parent)
 
         return type

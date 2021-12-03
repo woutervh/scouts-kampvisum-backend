@@ -49,7 +49,7 @@ class FlattenMixin(object):
         representation = super().to_representation(obj)
         logger.debug("REPRESENTATION: %s", representation)
 
-        if hasattr(self.Meta, 'flatten'):
+        if hasattr(self.Meta, "flatten"):
             for field, serializer_class in self.Meta.flatten:
                 serializer = serializer_class(context=self.context)
                 objrep = serializer.to_representation(getattr(obj, field))
@@ -60,7 +60,9 @@ class FlattenMixin(object):
                     #         "A field with name '" + key + "' already exists")
                     # representation[field + "__" + key] = objrep[key]
                     # representation[key] = objrep[key]
-                    if not key in representation:
+                    if key in representation:
+                        representation[field + "__" + key] = objrep[key]
+                    else:
                         representation[key] = objrep[key]
 
         return representation
@@ -69,7 +71,7 @@ class FlattenMixin(object):
 
         # remove flattened nested keys
         nested_fields = {}
-        if hasattr(self.Meta, 'flatten'):
+        if hasattr(self.Meta, "flatten"):
             for field, serializer_class in self.Meta.flatten:
                 serializer = serializer_class(context=self.context)
                 serializer_fields = serializer.Meta.fields

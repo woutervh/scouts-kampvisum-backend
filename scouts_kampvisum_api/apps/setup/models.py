@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 class SetupItem:
 
-    name = ''
+    name = ""
     ok = False
-    endpoint = ''
+    endpoint = ""
     # Action to perform
     namespace = None
     module = None
@@ -21,9 +21,16 @@ class SetupItem:
     creation_count = 0
     objects = ()
 
-    def __init__(self,
-                 name, ok=False, endpoint='', namespace=None, module=None,
-                 function=None, args=None) -> None:
+    def __init__(
+        self,
+        name,
+        ok=False,
+        endpoint="",
+        namespace=None,
+        module=None,
+        function=None,
+        args=None,
+    ) -> None:
         self.name = name
         self.ok = ok
         self.endpoint = endpoint
@@ -43,50 +50,62 @@ class SetupItem:
             self.objects.push(object)
 
     def count_objects(self, objects):
-        return len(self.objects)
+        if self.creation_count is None:
+            self.creation_count = len(self.objects)
+
+        return self.creation_count
 
     def check(self):
+        """Runs the setup action"""
         logger.debug("from %s import %s", self.namespace, self.module)
         mod = importlib.import_module(self.namespace)
         the_class = getattr(mod, self.module)()
         if self.args is not None:
-            getattr(the_class, self.function)(*self.args)
+            self.creation_count = len(getattr(the_class, self.function)(*self.args))
         else:
-            getattr(the_class, self.function)()
+            self.creation_count = len(getattr(the_class, self.function)())
 
 
 class Setup:
 
     global_status = False
-    endpoint = '/api/setup/init'
+    endpoint = "/api/setup/init"
     items = []
 
     def perform_init(self, request):
         status = True
 
         self.items = [
-            SetupItem('years',
-                      namespace="apps.camps.services",
-                      module="CampYearService",
-                      function="setup_camp_years",
-                      args=None),
-            SetupItem('groups',
-                      endpoint='/api/groups/import',
-                      namespace="apps.groups.api.services",
-                      module="GroupService",
-                      function="import_ga_groups",
-                      args=[request.user]),
-            SetupItem('sections',
-                      namespace="apps.groups.api.services",
-                      module="GroupService",
-                      function="link_default_sections",
-                      args=None),
-            SetupItem('category_sets',
-                      endpoint='/api/category_sets/import',
-                      namespace="apps.visums.api.services",
-                      module="CampVisumCategorySetService",
-                      function="setup_default_sets",
-                      args=None),
+            SetupItem(
+                "years",
+                namespace="apps.camps.services",
+                module="CampYearService",
+                function="setup_camp_years",
+                args=None,
+            ),
+            SetupItem(
+                "groups",
+                endpoint="/api/groups/import",
+                namespace="apps.groups.api.services",
+                module="GroupService",
+                function="import_ga_groups",
+                args=[request.user],
+            ),
+            SetupItem(
+                "sections",
+                namespace="apps.groups.api.services",
+                module="GroupService",
+                function="link_default_sections",
+                args=None,
+            ),
+            SetupItem(
+                "category_sets",
+                endpoint="/api/category_sets/import",
+                namespace="apps.visums.api.services",
+                module="CategorySetService",
+                function="setup_default_sets",
+                args=None,
+            ),
         ]
 
         for item in self.items:
@@ -110,7 +129,7 @@ class SetupItemSerializer(serializers.Serializer):
     name = serializers.CharField()
     ok = serializers.BooleanField(default=False)
     creation_count = serializers.IntegerField(default=0)
-    endpoint = serializers.CharField(default='')
+    endpoint = serializers.CharField(default="")
 
 
 class SetupSerializer(serializers.Serializer):
@@ -119,5 +138,5 @@ class SetupSerializer(serializers.Serializer):
     """
 
     global_status = serializers.BooleanField(default=False)
-    endpoint = serializers.CharField(default='')
+    endpoint = serializers.CharField(default="")
     items = SetupItemSerializer(many=True)

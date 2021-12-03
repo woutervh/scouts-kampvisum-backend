@@ -15,11 +15,10 @@ class DefaultSectionNameSerializer(serializers.ModelSerializer):
     """
     Serializes a ScoutDefaultSectionName object
     """
-    
+
     group_type = GroupTypeSerializer
     name = SectionNameSerializer
-    
+
     class Meta:
         model = DefaultSectionName
-        fields = '__all__'
-
+        fields = "__all__"

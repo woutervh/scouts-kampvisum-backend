@@ -537,7 +537,7 @@ scouts_kampvisum_api/apps/setup/models.py
 
 scouts_kampvisum_api/apps/visums/api/managers/__init__.py
   Line: 1
-    pyflakes: F401 / '.category_manager.CampVisumCategoryManager' imported but unused (col 1)
+    pyflakes: F401 / '.category_manager.CategoryManager' imported but unused (col 1)
   Line: 2
     pyflakes: F401 / '.priority_manager.PriorityManager' imported but unused (col 1)
 
@@ -551,25 +551,25 @@ scouts_kampvisum_api/apps/visums/api/managers/priority_manager.py
 
 scouts_kampvisum_api/apps/visums/api/models/__init__.py
   Line: 1
-    pyflakes: F401 / '.category.CampVisumCategory' imported but unused (col 1)
+    pyflakes: F401 / '.category.Category' imported but unused (col 1)
   Line: 2
-    pyflakes: F401 / '.sub_category.CampVisumSubCategory' imported but unused (col 1)
+    pyflakes: F401 / '.sub_category.SubCategory' imported but unused (col 1)
   Line: 3
-    pyflakes: F401 / '.concern_type.CampVisumConcernType' imported but unused (col 1)
+    pyflakes: F401 / '.concern_type.ConcernType' imported but unused (col 1)
   Line: 4
-    pyflakes: F401 / '.concern.CampVisumConcern' imported but unused (col 1)
+    pyflakes: F401 / '.concern.Concern' imported but unused (col 1)
   Line: 5
-    pyflakes: F401 / '.priority.CampVisumCategorySetPriority' imported but unused (col 1)
+    pyflakes: F401 / '.priority.CategorySetPriority' imported but unused (col 1)
   Line: 6
-    pyflakes: F401 / '.category_set.CampVisumCategorySet' imported but unused (col 1)
+    pyflakes: F401 / '.category_set.CategorySet' imported but unused (col 1)
   Line: 7
     pyflakes: F401 / '.visum.CampVisum' imported but unused (col 1)
   Line: 8
-    pyflakes: F401 / '.visum_category.CampVisumLinkedCategory' imported but unused (col 1)
+    pyflakes: F401 / '.visum_category.LinkedCategory' imported but unused (col 1)
   Line: 9
-    pyflakes: F401 / '.visum_sub_category.CampVisumLinkedSubCategory' imported but unused (col 1)
+    pyflakes: F401 / '.visum_sub_category.LinkedSubCategory' imported but unused (col 1)
   Line: 10
-    pyflakes: F401 / '.visum_concern.CampVisumLinkedConcern' imported but unused (col 1)
+    pyflakes: F401 / '.visum_concern.LinkedConcern' imported but unused (col 1)
 
 scouts_kampvisum_api/apps/visums/api/models/category.py
   Line: 3
@@ -651,13 +651,13 @@ scouts_kampvisum_api/apps/visums/api/models/visum_sub_category.py
 
 scouts_kampvisum_api/apps/visums/api/serializers/__init__.py
   Line: 1
-    pyflakes: F401 / '.priority_serializer.CampVisumCategorySetPrioritySerializer' imported but unused (col 1)
+    pyflakes: F401 / '.priority_serializer.CategorySetPrioritySerializer' imported but unused (col 1)
   Line: 2
-    pyflakes: F401 / '.category_serializer.CampVisumCategorySerializer' imported but unused (col 1)
+    pyflakes: F401 / '.category_serializer.CategorySerializer' imported but unused (col 1)
   Line: 3
-    pyflakes: F401 / '.sub_category_serializer.CampVisumSubCategorySerializer' imported but unused (col 1)
+    pyflakes: F401 / '.sub_category_serializer.SubCategorySerializer' imported but unused (col 1)
   Line: 4
-    pyflakes: F401 / '.category_set_serializer.CampVisumCategorySetSerializer' imported but unused (col 1)
+    pyflakes: F401 / '.category_set_serializer.CategorySetSerializer' imported but unused (col 1)
   Line: 5
     pyflakes: F401 / '.visum_serializer.CampVisumSerializer' imported but unused (col 1)
 
@@ -697,13 +697,13 @@ scouts_kampvisum_api/apps/visums/api/serializers/visum_serializer.py
 
 scouts_kampvisum_api/apps/visums/api/services/__init__.py
   Line: 1
-    pyflakes: F401 / '.category_service.CampVisumCategoryService' imported but unused (col 1)
+    pyflakes: F401 / '.category_service.CategoryService' imported but unused (col 1)
   Line: 2
-    pyflakes: F401 / '.sub_category_service.CampVisumSubCategoryService' imported but unused (col 1)
+    pyflakes: F401 / '.sub_category_service.SubCategoryService' imported but unused (col 1)
   Line: 3
-    pyflakes: F401 / '.category_set_service.CampVisumCategorySetService' imported but unused (col 1)
+    pyflakes: F401 / '.category_set_service.CategorySetService' imported but unused (col 1)
   Line: 4
-    pyflakes: F401 / '.visum_category_service.CampVisumLinkedCategoryService' imported but unused (col 1)
+    pyflakes: F401 / '.visum_category_service.LinkedCategoryService' imported but unused (col 1)
 
 scouts_kampvisum_api/apps/visums/api/services/category_service.py
   Line: 2
@@ -735,13 +735,13 @@ scouts_kampvisum_api/apps/visums/api/services/visum_category_service.py
 
 scouts_kampvisum_api/apps/visums/api/views/__init__.py
   Line: 1
-    pyflakes: F401 / '.category_views.CampVisumCategoryViewSet' imported but unused (col 1)
+    pyflakes: F401 / '.category_views.CategoryViewSet' imported but unused (col 1)
   Line: 2
-    pyflakes: F401 / '.sub_category_views.CampVisumSubCategoryViewSet' imported but unused (col 1)
+    pyflakes: F401 / '.sub_category_views.SubCategoryViewSet' imported but unused (col 1)
   Line: 3
-    pyflakes: F401 / '.check_views.CampVisumConcernViewSet' imported but unused (col 1)
+    pyflakes: F401 / '.check_views.ConcernViewSet' imported but unused (col 1)
   Line: 4
-    pyflakes: F401 / '.category_set_views.CampVisumCategorySetViewSet' imported but unused (col 1)
+    pyflakes: F401 / '.category_set_views.CategorySetViewSet' imported but unused (col 1)
 
 scouts_kampvisum_api/apps/visums/api/views/category_set_views.py
   Line: 7

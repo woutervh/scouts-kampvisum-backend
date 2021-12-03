@@ -10,20 +10,19 @@ from apps.groups.api.models import Section
 logger = logging.getLogger(__name__)
 
 
-class CampService():
-
+class CampService:
     def camp_create(self, *args, **fields) -> Camp:
         """
         Saves a Camp object to the DB.
         """
 
         # Required arguments:
-        year = fields.get('year', datetime.date.today().year)
-        name = fields.get('name')
-        sections = fields.get('sections')
+        year = fields.get("year", datetime.date.today().year)
+        name = fields.get("name")
+        sections = fields.get("sections")
         # Optional arguments:
-        start_date = fields.get('start_date', None)
-        end_date = fields.get('end_date', None)
+        start_date = fields.get("start_date", None)
+        end_date = fields.get("end_date", None)
 
         logger.debug("Creating camp with name '%s'", name)
         camp = Camp()
@@ -37,13 +36,11 @@ class CampService():
         camp.full_clean()
         camp.save()
 
-        logger.debug("Linking %d section(s) to camp '%s'",
-                     len(sections), camp.name)
+        logger.debug("Linking %d section(s) to camp '%s'", len(sections), camp.name)
         section_objects = Section.objects.filter(uuid__in=sections)
 
         if section_objects.count() == 0:
-            raise ObjectDoesNotExist(
-                "No sections found for uuid(s): %s", sections)
+            raise ObjectDoesNotExist("No sections found for uuid(s): %s", sections)
         for section in section_objects:
             camp.sections.add(section)
         camp.save()
@@ -56,12 +53,12 @@ class CampService():
         """
         logger.debug("Camp update fields: %s", fields)
         # Required arguments:
-        instance.name = fields.get('name', instance.name)
-        sections = fields.get('sections')
+        instance.name = fields.get("name", instance.name)
+        sections = fields.get("sections")
 
         # Optional arguments:
-        instance.start_date = fields.get('start_date', instance.start_date)
-        instance.end_date = fields.get('end_date', instance.end_date)
+        instance.start_date = fields.get("start_date", instance.start_date)
+        instance.end_date = fields.get("end_date", instance.end_date)
 
         sections = Section.objects.filter(uuid__in=sections)
         instance.sections.clear()

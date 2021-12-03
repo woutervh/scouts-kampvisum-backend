@@ -68,6 +68,8 @@ DEBUG = env.bool("DEBUG", default=False)
 
 # https://stackoverflow.com/questions/53014435/why-is-logging-in-my-django-settings-py-ignored
 LOGGING_CONFIG = None
+LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
+LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -93,7 +95,7 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": "INFO",
+        "level": LOGGING_LEVEL_ROOT,
     },
     "loggers": {
         "mozilla_django_oidc": {
@@ -129,8 +131,6 @@ def correct_url(issuer, url):
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 BASE_URL = env.str("BASE_URL", default="/")
 

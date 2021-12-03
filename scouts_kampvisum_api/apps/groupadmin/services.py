@@ -8,9 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class GroupAdminService:
-
-    def get_group(
-            self, href: str) -> Group:
+    def get_group(self, href: str) -> Group:
         response = requests.get(href)
 
         response.raise_for_status()
