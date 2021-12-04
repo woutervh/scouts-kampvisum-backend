@@ -1,10 +1,11 @@
-import logging
-import datetime
+import logging, datetime
+
 from django.core.exceptions import ObjectDoesNotExist
 
-from ..models import Camp
-from ..services import CampYearService
-from apps.groups.api.models import Section
+from apps.camps.models import Camp
+from apps.camps.services import CampYearService
+
+from apps.groups.models import ScoutsSection
 
 
 logger = logging.getLogger(__name__)
@@ -37,7 +38,7 @@ class CampService:
         camp.save()
 
         logger.debug("Linking %d section(s) to camp '%s'", len(sections), camp.name)
-        section_objects = Section.objects.filter(uuid__in=sections)
+        section_objects = ScoutsSection.objects.filter(uuid__in=sections)
 
         if section_objects.count() == 0:
             raise ObjectDoesNotExist("No sections found for uuid(s): %s", sections)
@@ -60,7 +61,7 @@ class CampService:
         instance.start_date = fields.get("start_date", instance.start_date)
         instance.end_date = fields.get("end_date", instance.end_date)
 
-        sections = Section.objects.filter(uuid__in=sections)
+        sections = ScoutsSection.objects.filter(uuid__in=sections)
         instance.sections.clear()
         for section in sections:
             instance.sections.add(section)

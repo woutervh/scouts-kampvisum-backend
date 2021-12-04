@@ -1,6 +1,6 @@
 from rest_framework import routers
 
-from .api.views import (
+from apps.visums.views import (
     CategoryViewSet,
     SubCategoryViewSet,
     CategorySetViewSet,

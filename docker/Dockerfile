@@ -9,6 +9,7 @@ ENV PYTHONFAULTHANDLER=1 \
 RUN adduser --no-create-home --disabled-password --home /app --shell /bin/bash app
 WORKDIR /app
 
+COPY .env* ./
 COPY docker/entrypoint*.sh /
 COPY scouts_kampvisum_api/manage.py ./
 COPY scouts_kampvisum_api/apps ./apps

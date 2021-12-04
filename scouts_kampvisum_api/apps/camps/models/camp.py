@@ -1,17 +1,17 @@
 import logging
 from django.db import models
 
-from ..models import CampYear
-from apps.base.models import BaseModel
-from apps.groups.api.models import Section
-from inuits.mixins import CreatedByMixin, AuditTimestampMixin
-from inuits.models import OptionalDateField
+from apps.camps.models import CampYear
+from apps.groups.models import ScoutsSection
+
+from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.fields import OptionalDateField
 
 
 logger = logging.getLogger(__name__)
 
 
-class Camp(CreatedByMixin, AuditTimestampMixin, BaseModel):
+class Camp(AuditedBaseModel):
     """
     A model for a scouts camp.
     """
@@ -21,7 +21,7 @@ class Camp(CreatedByMixin, AuditTimestampMixin, BaseModel):
     name = models.TextField()
     start_date = OptionalDateField()
     end_date = OptionalDateField()
-    sections = models.ManyToManyField(Section)
+    sections = models.ManyToManyField(ScoutsSection)
 
     class Meta:
         ordering = ["start_date"]

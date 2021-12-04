@@ -1,17 +1,18 @@
 import logging
 from rest_framework import serializers
 
-from ..models import Camp
-from ..serializers import CampYearSerializer
-from apps.groups.api.serializers import SectionSerializer
-from inuits.mixins import FlattenMixin
-from inuits.serializers.fields import OptionalDateField
+from apps.camps.models import Camp
+from apps.camps.serializers import CampYearSerializer
+
+from apps.groups.serializers import ScoutsSectionSerializer
+
+from scouts_auth.inuits.mixins import FlattenSerializerMixin
 
 
 logger = logging.getLogger(__name__)
 
 
-class CampSerializer(FlattenMixin, serializers.ModelSerializer):
+class CampSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
     """
     Serializes a Camp object.
     """
@@ -35,6 +36,6 @@ class CampSerializer(FlattenMixin, serializers.ModelSerializer):
         instance.year = CampYearSerializer(null=True)
         instance.start_date = validated_data.get("start_date", instance.start_date)
         instance.end_date = validated_data.get("end_date", instance.end_date)
-        instance.sections = SectionSerializer(many=True)
+        instance.sections = ScoutsSectionSerializer(many=True)
 
         return instance

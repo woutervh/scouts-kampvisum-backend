@@ -1,16 +1,16 @@
 from rest_framework import routers
 
-from .api.views import (
-    SectionViewSet,
-    SectionNameViewSet,
-    GroupViewSet,
+from apps.groups.views import (
+    ScoutsSectionViewSet,
+    ScoutsSectionNameViewSet,
+    ScoutsGroupViewSet,
 )
 
 
 router = routers.SimpleRouter()
 
-router.register(r"groups", GroupViewSet, "groups")
-router.register(r"sections", SectionViewSet, "sections")
-router.register(r"section_names", SectionNameViewSet, "section_names")
+router.register(r"groups", ScoutsGroupViewSet, "groups")
+router.register(r"sections", ScoutsSectionViewSet, "sections")
+router.register(r"section_names", ScoutsSectionNameViewSet, "section_names")
 
 urlpatterns = router.urls

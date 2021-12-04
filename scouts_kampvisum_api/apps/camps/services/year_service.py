@@ -1,8 +1,9 @@
 import logging
 import datetime
 
-from ..models import CampYear
-from apps.groupadmin.api import ScoutsTemporalDetails
+from apps.camps.models import CampYear
+
+from scouts_auth.groupadmin.scouts import ScoutsTemporalDetails
 
 
 logger = logging.getLogger(__name__)

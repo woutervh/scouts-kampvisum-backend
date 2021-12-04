@@ -1,11 +1,12 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from ..managers import CampYearManager
-from apps.base.models import BaseModel
+from apps.camps.managers import CampYearManager
+
+from scouts_auth.inuits.models import AuditedBaseModel
 
 
-class CampYear(BaseModel):
+class CampYear(AuditedBaseModel):
     """
     Represents a scouts year.
 
@@ -15,11 +16,11 @@ class CampYear(BaseModel):
     e.g. the displayed year for a CampYear that starts on 01/09/2021 is 2022
     """
 
+    objects = CampYearManager()
+
     year = models.IntegerField(_("year"))
     start_date = models.DateField()
     end_date = models.DateField()
-
-    objects = CampYearManager()
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["year"], name="unique_year")]

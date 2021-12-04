@@ -1,0 +1,1 @@
+from .scouts_group_filter import ScoutsGroupFilter

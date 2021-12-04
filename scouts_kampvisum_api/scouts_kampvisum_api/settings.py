@@ -16,6 +16,11 @@ from environs import Env
 # Get a pre-config logger
 logger = logging.getLogger(__name__)
 
+# ############################################################################ #
+#                                                                              #
+# ENVIRONMENT                                                                  #
+#                                                                              #
+# ############################################################################ #
 # Environment loading
 env = Env()
 env.read_env()
@@ -25,9 +30,9 @@ env.read_env()
 # Set it to 'development' or 'production' and define the appropriate variables
 # in .env.development and .env.production
 # Default: development
-environments = [".env.dev.local", ".env.dev", ".env.production"]
+environments = [".env.development.local", ".env.development", ".env.production"]
 
-environment_conf = env.str("ENVIRONMENT", default=None)
+environment_conf = env.str("ENVIRONMENT", default="development")
 environment_loaded = False
 
 if environment_conf:
@@ -58,14 +63,28 @@ if environment_conf:
                 pass
 
 
+# ############################################################################ #
+#                                                                              #
+# DJANGO                                                                       #
+#                                                                              #
+# ############################################################################ #
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_URL = env.str("BASE_URL", default="/")
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 
+# ############################################################################ #
+#                                                                              #
+# LOGGING                                                                      #
+#                                                                              #
+# ############################################################################ #
 # https://stackoverflow.com/questions/53014435/why-is-logging-in-my-django-settings-py-ignored
 LOGGING_CONFIG = None
 LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
@@ -129,13 +148,11 @@ def correct_url(issuer, url):
     return url
 
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
-BASE_URL = env.str("BASE_URL", default="/")
-
-
-# Application definition
+# ############################################################################ #
+#                                                                              #
+# APPLICATIONS, MIDDLEWARE AND TEMPLATES                                       #
+#                                                                              #
+# ############################################################################ #
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -147,10 +164,7 @@ INSTALLED_APPS = [
     "safedelete",
     "storages",
     "sqlmiddleware",
-    "inuits",
     "apps.setup",
-    "apps.base",
-    "apps.groupadmin",
     "apps.visums",
     "apps.groups",
     "apps.camps",
@@ -159,13 +173,6 @@ INSTALLED_APPS = [
     "drf_yasg2",
 ]
 
-MIGRATION_MODULES = {
-    "apps.base": "migrations",
-    "apps.groupadmin": "migrations",
-    "apps.scouts_camp_visums": "migrations",
-    "apps.scouts_groups": "migrations",
-    "apps.scouts_camps": "migrations",
-}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -179,7 +186,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "scouts_kampvisum_api.urls"
 
 TEMPLATES = [
     {
@@ -197,11 +203,22 @@ TEMPLATES = [
     },
 ]
 
+# ############################################################################ #
+#                                                                              #
+# BASIC APPLICATION                                                            #
+#                                                                              #
+# ############################################################################ #
+ROOT_URLCONF = "scouts_kampvisum_api.urls"
 WSGI_APPLICATION = "scouts_kampvisum_api.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+# ############################################################################ #
+#                                                                              #
+# DATABASE                                                                     #
+#                                                                              #
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases                #
+#                                                                              #
+# ############################################################################ #
 DATABASES = {
     "default": {
         "ENGINE": env.str("DBENGINE"),
@@ -212,8 +229,16 @@ DATABASES = {
         "PORT": env.str("DBPORT"),
     }
 }
+# DEFAULT PRIMARY KEY FIELD TYPE
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 
+# ############################################################################ #
+#                                                                              #
+# BASIC SECURITY                                                               #
+#                                                                              #
+# ############################################################################ #
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 django_pw_validation = "django.contrib.auth.password_validation."
@@ -233,64 +258,55 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
+# ############################################################################ #
+#                                                                              #
+# INTERNATIONALIZATION                                                         #
+#                                                                              #
+# https://docs.djangoproject.com/en/2.2/topics/i18n/                           #
+#                                                                              #
+# ############################################################################ #
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
-# STATIC FILES (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-STATIC_URL = "static/"
-STATIC_ROOT = env.str("STATIC_ROOT")
-
-
-# DEFAULT PRIMARY KEY FIELD TYPE
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-
-# REST FRAMEWORK
+# ############################################################################ #
+#                                                                              #
+# DJANGO REST FRAMEWORK                                                        #
+#                                                                              #
+# ############################################################################ #
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "scouts_auth.oidc.InuitsOIDCAuthentication",
+        "scouts_auth.auth.oidc.InuitsOIDCAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_PAGINATION_CLASS": "scouts_kampvisum_api.pagination.PageNumberPagination",
-    "EXCEPTION_HANDLER": "apps.base.exceptions.exception_handler",
+    "EXCEPTION_HANDLER": "scouts_auth.inuits.drf_exceptions.exception_handler",
 }
 
 
-# EMAIL
-# We are going to use anymail which maps multiple providers like sendinblue
-# with default django mailing
-# For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
-EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
-
-ANYMAIL = {
-    "SENDINBLUE_API_KEY": "<API key here, get it from env file>",
-}
-
-
-# CORS
+# ############################################################################ #
+#                                                                              #
+# CORS                                                                         #
+#                                                                              #
+# ############################################################################ #
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 
 
-# OIDC
-# @SEE https://mozilla-django-oidc.readthedocs.io/en/stable/
-# PDF: https://mozilla-django-oidc.readthedocs.io/_/downloads/en/stable/pdf/
-AUTH_USER_MODEL = "scouts_auth.User"
-
+# ############################################################################ #
+#                                                                              #
+# OIDC                                                                         #
+#                                                                              #
+# ############################################################################ #
+AUTH_USER_MODEL = "scouts_auth.ScoutsUser"
+AUTHORIZATION_ROLES_CONFIG_PACKAGE = "initial_data"
+AUTHORIZATION_ROLES_CONFIG_YAML = "roles.yaml"
 AUTHENTICATION_BACKENDS = {
-    "scouts_auth.oidc.InuitsOIDCAuthenticationBackend",
+    "scouts_auth.groupadmin.services.ScoutsOIDCAuthenticationBackend",
 }
 OIDC_OP_ISSUER = env.str("OIDC_OP_ISSUER")
 # URL of your OpenID Connect provider authorization endpoint
@@ -403,7 +419,7 @@ OIDC_MAX_STATES = env.int("OIDC_MAX_STATES", default=50)
 #    'OIDC_AUTH_REQUEST_EXTRA_PARAMS', default = [])
 # Sets the algorithm the IdP uses to sign ID tokens.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_RP_SIGN_ALGO
-OIDC_RP_SIGN_ALGO = env.str("OIDC_RP_SIGN_ALGO", default="HS256")
+OIDC_RP_SIGN_ALGO = env.str("OIDC_RP_SIGN_ALGO", default="RS256")
 # Sets the key the IdP uses to sign ID tokens in the case of an RSA sign
 # algorithm. Should be the signing key in PEM or DER format.
 # REQUIRED IF OIDC_OP_JWKS_ENDPOINT IS NOT SET
@@ -450,7 +466,9 @@ OIDC_ALLOW_UNSECURED_JWT = env.bool("OIDC_ALLOW_UNSECURED_JWT", default=False)
 # to your AUTHENTICATION_BACKENDS, the DRF class should be smart enough to
 # figure that out. Alternatively, you can manually set the OIDC backend to use:
 # https://mozilla-django-oidc.readthedocs.io/en/stable/drf.html
-OIDC_DRF_AUTH_BACKEND = "scouts_auth.oidc.InuitsOIDCAuthenticationBackend"
+OIDC_DRF_AUTH_BACKEND = (
+    "scouts_auth.groupadmin.services.ScoutsOIDCAuthenticationBackend"
+)
 # Depending on your OpenID Connect provider (OP) you might need to change the
 # default signing algorithm from HS256 to RS256 by settings the
 # OIDC_RP_SIGN_ALGO value accordingly.
@@ -464,10 +482,101 @@ OIDC_DRF_AUTH_BACKEND = "scouts_auth.oidc.InuitsOIDCAuthenticationBackend"
 # https://mozilla-django-oidc.readthedocs.io/en/stable/installation.html
 OIDC_OP_JWKS_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOINT"))
 
-GROUP_ADMIN_BASE_ENDPOINT = env.str("GROUP_ADMIN_BASE_ENDPOINT")
 
-logger.debug("OIDC_OP_ISSUER: " + OIDC_OP_ISSUER)
-logger.debug("OIDC_OP_JWKS_ENDPOINT: " + OIDC_OP_JWKS_ENDPOINT)
-logger.debug("OIDC_OP_TOKEN_ENDPOINT: " + OIDC_OP_TOKEN_ENDPOINT)
-logger.debug("OIDC_OP_USER_ENDPOINT: " + OIDC_OP_USER_ENDPOINT)
-logger.debug("OIDC_RP_CLIENT_ID: " + OIDC_RP_CLIENT_ID)
+# ############################################################################ #
+#                                                                              #
+# SCOUTS                                                                       #
+#                                                                              #
+# ############################################################################ #
+GROUP_ADMIN_BASE_URL = env.str("GROUP_ADMIN_BASE_URL")
+KNOWN_ADMIN_GROUPS = env.list("KNOWN_ADMIN_GROUPS")
+KNOWN_TEST_GROUPS = env.list("KNOWN_TEST_GROUPS")
+KNOWN_ROLES = env.list("KNOWN_ROLES")
+SECTION_LEADER_IDENTIFIER = env.str("SECTION_LEADER_IDENTIFIER")
+GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/"
+GROUP_ADMIN_PROFILE_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid/profiel"
+GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/zoeken"
+GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid"
+GROUP_ADMIN_MEMBER_LIST_ENDPOINT = GROUP_ADMIN_BASE_URL + "/ledenlijst"
+GROUP_ADMIN_GROUP_ENDPOINT = GROUP_ADMIN_BASE_URL + "/groep"
+GROUP_ADMIN_FUNCTIONS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/functie"
+
+
+# ############################################################################ #
+#                                                                              #
+# STORAGE                                                                      #
+#                                                                              #
+# ############################################################################ #
+
+
+# BASE FOLDERS
+STATIC_URL = "static/"  # STATIC FILES (CSS, JavaScript, Images)
+STATIC_ROOT = env.str("STATIC_ROOT")
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+# FILE STORAGE
+DEFAULT_FILE_STORAGE = env.str("DEFAULT_FILE_STORAGE")
+FILE_UPLOAD_ALLOWED_EXTENSIONS = env.list("FILE_UPLOAD_ALLOWED_EXTENSIONS")
+OVERWRITE_EXISTING_FILE = env.bool("OVERWRITE_EXISTING_FILE")
+
+
+# S3
+USE_S3_STORAGE = env.bool("USE_S3_STORAGE", False) == True
+if USE_S3_STORAGE:
+    AWS_ACCESS_KEY_ID = env.str("S3_ACCESS_KEY")
+    AWS_SECRET_ACCESS_KEY = env.str("S3_ACCESS_SECRET")
+    AWS_STORAGE_BUCKET_NAME = env.str("S3_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = env.str("S3_ENDPOINT_URL")
+    AWS_DEFAULT_ACL = "public-read"
+    AWS_S3_FILE_OVERWRITE = OVERWRITE_EXISTING_FILE
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
+
+
+# ############################################################################ #
+#                                                                              #
+# EMAIL                                                                        #
+#                                                                              #
+# ############################################################################ #
+
+
+# EMAIL RESOURCES: TEMPLATES ETC.
+RESOURCES_PATH = env.str("RESOURCES_PATH")
+RESOURCES_MAIL_TEMPLATE_PATH = RESOURCES_PATH + env.str("RESOURCES_MAIL_TEMPLATE_PATH")
+RESOURCES_MAIL_TEMPLATE_START = RESOURCES_MAIL_TEMPLATE_PATH + env.str(
+    "RESOURCES_MAIL_TEMPLATE_START"
+)
+RESOURCES_MAIL_TEMPLATE_END = RESOURCES_MAIL_TEMPLATE_PATH + env.str(
+    "RESOURCES_MAIL_TEMPLATE_END"
+)
+
+
+# EMAIL PROVIDERS: DJANGO OR SENDINBLUE
+def setup_mail():
+    global EMAIL_BACKEND
+    global ANYMAIL
+
+    if USE_SEND_IN_BLUE:
+        EMAIL_BACKEND = env.str("SEND_IN_BLUE_BACKEND")
+        ANYMAIL["SENDINBLUE_API_KEY"] = env.str("SEND_IN_BLUE_API_KEY")
+
+
+# DJANGO MAIL SETTINGS
+EMAIL_BACKEND = env.str("EMAIL_BACKEND")
+EMAIL_URL = env.str("EMAIL_URL")
+EMAIL_SENDER = env.str("EMAIL_SENDER")
+EMAIL_RECIPIENTS = env.str("EMAIL_RECIPIENTS")
+EMAIL_HOST = env.str("EMAIL_HOST")
+EMAIL_PORT = env.str("EMAIL_PORT")
+
+
+# SEND_IN_BLUE EMAIL SETTINGS
+USE_SEND_IN_BLUE = env.bool("USE_SEND_IN_BLUE", False)
+
+
+# SCOUTS VERZEKERINGEN EMAIL SETTINGS
+TMP_FOLDER = RESOURCES_PATH + "temp"
+ANYMAIL = {}
+
+setup_mail()

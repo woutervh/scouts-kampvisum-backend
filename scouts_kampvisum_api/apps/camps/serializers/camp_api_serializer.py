@@ -2,25 +2,24 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from rest_framework import serializers
 
-from ..models import Camp
-from ..serializers import CampYearAPISerializer
-from apps.groups.api.models import Section
-from apps.groups.api.serializers import (
-    SectionAPISerializer,
-    SectionAPISerializer,
-)
-from inuits.mixins import FlattenMixin
+from apps.camps.models import Camp
+from apps.camps.serializers import CampYearAPISerializer
+
+from apps.groups.models import ScoutsSection
+from apps.groups.serializers import ScoutsSectionAPISerializer
+
+from scouts_auth.inuits.mixins import FlattenSerializerMixin
 
 
 logger = logging.getLogger(__name__)
 
 
-class CampAPISerializer(FlattenMixin, serializers.ModelSerializer):
+class CampAPISerializer(FlattenSerializerMixin, serializers.ModelSerializer):
     """
     Serializes a Camp instance from and to the frontend.
     """
 
-    sections = SectionAPISerializer(many=True)
+    sections = ScoutsSectionAPISerializer(many=True)
 
     class Meta:
         model = Camp
@@ -41,7 +40,7 @@ class CampAPISerializer(FlattenMixin, serializers.ModelSerializer):
         else:
             for section_uuid in data.get("sections"):
                 try:
-                    Section.objects.get(uuid=section_uuid)
+                    ScoutsSection.objects.get(uuid=section_uuid)
                 except ObjectDoesNotExist:
                     raise ValidationError(
                         "Invalid UUID. No Section with that UUID: " + str(section_uuid)

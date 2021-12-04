@@ -1,9 +1,9 @@
-import logging
-import uuid
+import logging, uuid
+
 from django_filters import rest_framework as filters
 from django.db.models import Q
 
-from .models import Camp
+from apps.camps.models import Camp
 
 
 logger = logging.getLogger(__name__)
