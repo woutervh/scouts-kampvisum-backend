@@ -19,11 +19,15 @@ from scouts_auth.inuits.models import Gender
 
 class ScoutsUser(User):
 
+    use_in_migrations = True
+
     #
     # Fields from the groupadmin member record
     #
     group_admin_id: str = models.CharField(max_length=48, db_column="ga_id", blank=True)
-    gender: Gender = models.CharField(max_length=16, choices=Gender.choices, default=Gender.UNKNOWN)
+    gender: Gender = models.CharField(
+        max_length=16, choices=Gender.choices, default=Gender.UNKNOWN
+    )
     phone_number: str = models.CharField(max_length=48, blank=True)
     membership_number: str = models.CharField(max_length=48, blank=True)
     customer_number: str = models.CharField(max_length=48, blank=True)
@@ -70,7 +74,10 @@ class ScoutsUser(User):
         return [function.code for function in self.functions]
 
     def get_group_functions(self) -> List[Tuple]:
-        return [(function.group.group_admin_id, function.code) for function in self.functions]
+        return [
+            (function.group.group_admin_id, function.code)
+            for function in self.functions
+        ]
 
     def get_group_names(self) -> List[str]:
         return [group.group_admin_id for group in self.scouts_groups]
@@ -85,7 +92,9 @@ class ScoutsUser(User):
         return False
 
     def get_section_leader_groups(self) -> List[AbstractScoutsGroup]:
-        return [group for group in self.scouts_groups if self.has_role_section_leader(group)]
+        return [
+            group for group in self.scouts_groups if self.has_role_section_leader(group)
+        ]
 
     def has_role_group_leader(self, group: AbstractScoutsGroup) -> bool:
         """
@@ -98,7 +107,9 @@ class ScoutsUser(User):
         return False
 
     def get_group_leader_groups(self) -> List[AbstractScoutsGroup]:
-        return [group for group in self.scouts_groups if self.has_role_group_leader(group)]
+        return [
+            group for group in self.scouts_groups if self.has_role_group_leader(group)
+        ]
 
     def has_role_district_commissioner(self) -> bool:
         """
@@ -113,7 +124,10 @@ class ScoutsUser(User):
         """
         Determines if the user as an administrative worker based on membership of an administrative group
         """
-        if any(name in self.get_group_names() for name in SettingsHelper.get_administrator_groups()):
+        if any(
+            name in self.get_group_names()
+            for name in SettingsHelper.get_administrator_groups()
+        ):
             self.is_administrator = True
         return self.is_administrator
 
@@ -185,13 +199,18 @@ class ScoutsUser(User):
             "addresses",
             " || ".join(address.to_descriptive_string() for address in self.addresses),
             "functions",
-            " || ".join(function.to_descriptive_string() for function in self.functions),
+            " || ".join(
+                function.to_descriptive_string() for function in self.functions
+            ),
             "PERMISSIONS",
             ", ".join(permission for permission in self.get_all_permissions()),
             "AUTH GROUPS",
             ", ".join(group.name for group in self.groups.all()),
             "SCOUTS GROUPS",
-            ", ".join((group.name + "(" + group.group_admin_id + ")") for group in self.scouts_groups),
+            ", ".join(
+                (group.name + "(" + group.group_admin_id + ")")
+                for group in self.scouts_groups
+            ),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
             "DISTRICT COMMISSIONER ?",
@@ -199,5 +218,7 @@ class ScoutsUser(User):
             "GROUP LEADER",
             ", ".join(group.group_admin_id for group in self.get_group_leader_groups()),
             "SECTION LEADER",
-            ", ".join(group.group_admin_id for group in self.get_section_leader_groups()),
+            ", ".join(
+                group.group_admin_id for group in self.get_section_leader_groups()
+            ),
         )

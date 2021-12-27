@@ -3,9 +3,9 @@
 # DON'T PUT ANY CODE BEFORE THESE VARIABLES, OTHERWISE THE VARIABLE IMPORT
 # IN OTHER SCRIPTS WON'T WORK
 APPS=(
-	"inuits"
-	"base"
-	"groupadmin"
+	"admin"
+	"auth"
+	"scouts_auth"
 	"groups"
 	"camps"
 	"visums"
