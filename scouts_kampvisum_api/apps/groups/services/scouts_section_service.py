@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404
 
 from apps.groups.models import (
     ScoutsSectionName,
-    ScoutsGroup,
     ScoutsSection,
 )
 from apps.groups.services import ScoutsSectionNameService

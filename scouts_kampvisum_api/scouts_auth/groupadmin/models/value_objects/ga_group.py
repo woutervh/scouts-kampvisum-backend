@@ -1,32 +1,41 @@
 from typing import List
 from datetime import date
 
+from django.db import models
+
 from scouts_auth.groupadmin.models.value_objects import (
     AbstractScoutsAddress,
     AbstractScoutsContact,
     AbstractScoutsLink,
     AbstractScoutsGroupSpecificField,
 )
+from scouts_auth.inuits.models import AbstractNonModel
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalEmailField, OptionalDateField
 
 
-class AbstractScoutsGroup:
+class AbstractScoutsGroup(AbstractNonModel):
     """Models the scouts groups a user has rights to."""
 
-    group_admin_id: str
-    number: str
-    name: str
-    date_of_foundation: date
-    bank_account: str
-    email: str
-    website: str
-    info: str
-    type: str
-    only_leaders: bool
-    show_members_improved: bool
-    addresses: List[AbstractScoutsAddress]
-    contacts: List[AbstractScoutsContact]
-    group_specific_fields: List[AbstractScoutsGroupSpecificField]
-    links: List[AbstractScoutsLink]
+    group_admin_id = OptionalCharField()
+    number = OptionalCharField()
+    name = OptionalCharField()
+    date_of_foundation = OptionalDateField()
+    bank_account = OptionalCharField()
+    email = OptionalEmailField()
+    website = OptionalCharField()
+    info = OptionalCharField()
+    type = OptionalCharField()
+    only_leaders = models.BooleanField(default=False)
+    show_members_improved = models.BooleanField(default=False)
+
+    # Declare as foreign keys in concrete subclasses
+    # addresses: List[AbstractScoutsAddress]
+    # contacts: List[AbstractScoutsContact]
+    # group_specific_fields: List[AbstractScoutsGroupSpecificField]
+    # links: List[AbstractScoutsLink]
+
+    class Meta:
+        abstract = True
 
     def __init__(
         self,
@@ -61,6 +70,12 @@ class AbstractScoutsGroup:
         self.contacts = contacts if contacts else []
         self.group_specific_fields = group_specific_fields if group_specific_fields else []
         self.links = links if links else []
+
+        # super().__init__([], {})
+
+    @property
+    def full_name(self):
+        return "{} {}".format(self.name, self.group_admin_id)
 
     def __str__(self):
         return "group_admin_id({}), number({}), name({}), addresses({}), date_of_foundation({}), only_leaders({}), show_member_improved({}), bank_account({}), email({}), website({}), info({}), type({}), contacts({}), group_specific_fields ({}), links({})".format(

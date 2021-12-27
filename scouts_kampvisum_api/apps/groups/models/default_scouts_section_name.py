@@ -17,6 +17,8 @@ class DefaultScoutsSectionName(AbstractBaseModel):
     name = models.ForeignKey(ScoutsSectionName, on_delete=models.DO_NOTHING)
 
     class Meta:
+        # Set managed to False unless
+        managed = False
         unique_together = ("type", "name")
 
     def clean(self):

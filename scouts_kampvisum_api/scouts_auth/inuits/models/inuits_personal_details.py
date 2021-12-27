@@ -1,12 +1,16 @@
-from django.db import models
+from scouts_auth.inuits.models import AbstractNonModel, Gender
+from scouts_auth.inuits.models.fields import (
+    OptionalCharField,
+    DefaultCharField,
+    RequiredCharField,
+    OptionalEmailField,
+    OptionalDateField,
+)
 
-from scouts_auth.inuits.models import Gender
-from scouts_auth.inuits.models.fields import OptionalCharField, DefaultCharField, OptionalEmailField, OptionalDateField
 
-
-class InuitsPersonalDetails(models.Model):
-    first_name = models.CharField(max_length=15)
-    last_name = models.CharField(max_length=25)
+class InuitsPersonalDetails(AbstractNonModel):
+    first_name = RequiredCharField(max_length=15)
+    last_name = RequiredCharField(max_length=25)
     phone_number = OptionalCharField(max_length=24)
     cell_number = OptionalCharField(max_length=24)
     email = OptionalEmailField()
@@ -15,3 +19,6 @@ class InuitsPersonalDetails(models.Model):
 
     class Meta:
         abstract = True
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

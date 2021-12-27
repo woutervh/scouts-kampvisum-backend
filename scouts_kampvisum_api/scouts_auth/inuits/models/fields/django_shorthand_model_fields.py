@@ -23,9 +23,9 @@ class OptionalCharField(models.CharField):
 
     def __init__(self, *args, **kwargs):
         if "default" in kwargs:
-            kwargs.pop("default", None)
-            warning = "A default value was passed to {} and was discarded. Use DefaultCharField if this field needs a default.".format(
-                self.__class__.__name__
+            default_value = kwargs.pop("default", None)
+            warning = "A default value '{}' was passed to {} and was discarded. Use DefaultCharField if this field needs a default.".format(
+                default_value, self.__class__.__name__
             )
             warnings.warn(warning)
         if "max_length" not in kwargs:
@@ -106,8 +106,8 @@ class OptionalTextField(models.TextField):
         if "default" in kwargs:
             default_value = kwargs.pop("default", None)
             if default_value is not None and len(default_value.strip()) > 0:
-                warning = "A default value was passed to {} and was discarded. Use models.TextField if this field needs a default.".format(
-                    self.__class__.__name__
+                warning = "A default value '{}' was passed to {} and was discarded. Use models.TextField if this field needs a default.".format(
+                    default_value, self.__class__.__name__
                 )
                 warnings.warn(warning)
         kwargs["blank"] = True
@@ -128,13 +128,29 @@ class OptionalIntegerField(models.IntegerField):
 
     def __init__(self, *args, **kwargs):
         if "default" in kwargs:
-            kwargs.pop("default", None)
-            warning = "A default value was passed to {} and was discarded. Use models.IntegerField if this field needs a default.".format(
-                self.__class__.__name__
+            default_value = kwargs.pop("default", None)
+            warning = "A default value '{}' was passed to {} and was discarded. Use models.IntegerField if this field needs a default.".format(
+                default_value, self.__class__.__name__
             )
             warnings.warn(warning)
         kwargs["blank"] = True
         kwargs["null"] = True
+        super().__init__(*args, **kwargs)
+
+
+class DefaultIntegerField(models.IntegerField):
+    """
+    Initializes a models.IntegerField as optional with a default.
+
+    This is equivalent to setting a models.IntegerField as such:
+    some_optional_integer_field = models.IntegerField(
+        blank=True,
+        default=<some_default_value>,
+    )
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs["blank"] = True
         super().__init__(*args, **kwargs)
 
 
@@ -175,8 +191,8 @@ class OptionalEmailField(OptionalCharField):
         if "default" in kwargs:
             default_value = kwargs.pop("default", None)
             if default_value is not None and len(default_value.strip()) > 0:
-                warning = "A default value was passed to {} and was discarded. Use models.EmailField if this field needs a default.".format(
-                    self.__class__.__name__
+                warning = "A default value '{}' was passed to {} and was discarded. Use models.EmailField if this field needs a default.".format(
+                    default_value, self.__class__.__name__
                 )
                 warnings.warn(warning)
         kwargs["blank"] = True
@@ -199,9 +215,9 @@ class OptionalDateField(DatetypeAwareDateField):
 
     def __init__(self, *args, **kwargs):
         if "default" in kwargs:
-            kwargs.pop("default", None)
-            warning = "A default value was passed to {} and was discarded. Use models.DateField if this field needs a default.".format(
-                self.__class__.__name__
+            default_value = kwargs.pop("default", None)
+            warning = "A default value '{}' was passed to {} and was discarded. Use models.DateField if this field needs a default.".format(
+                default_value, self.__class__.__name__
             )
             warnings.warn(warning)
         kwargs["auto_now"] = False
@@ -228,9 +244,9 @@ class OptionalDateTimeField(models.DateTimeField):
 
     def __init__(self, *args, **kwargs):
         if "default" in kwargs:
-            kwargs.pop("default", None)
-            warning = "A default value was passed to {} and was discarded. Use models.DateTimeField if this field needs a default.".format(
-                self.__class__.__name__
+            default_value = kwargs.pop("default", None)
+            warning = "A default value '{}' was passed to {} and was discarded. Use models.DateTimeField if this field needs a default.".format(
+                default_value, self.__class__.__name__
             )
             warnings.warn(warning)
         kwargs["auto_now"] = False
@@ -297,7 +313,7 @@ class ListField(models.CharField):
 
 class OptionalForeignKey(models.ForeignKey):
     """
-    Initializes a models.ForeignKEy as optional.
+    Initializes a models.ForeignKey as optional.
 
     This is equivalent to setting a models.ForeignKey as such:
     some_optional_foreign_key = models.ForeignKey(

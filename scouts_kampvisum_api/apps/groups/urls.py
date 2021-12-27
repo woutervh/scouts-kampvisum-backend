@@ -1,15 +1,14 @@
+from django.urls import path
 from rest_framework import routers
 
-from apps.groups.views import (
+from scouts_auth.groupadmin.views import (
     ScoutsSectionViewSet,
     ScoutsSectionNameViewSet,
-    ScoutsGroupViewSet,
 )
 
 
 router = routers.SimpleRouter()
 
-router.register(r"groups", ScoutsGroupViewSet, "groups")
 router.register(r"sections", ScoutsSectionViewSet, "sections")
 router.register(r"section_names", ScoutsSectionNameViewSet, "section_names")
 

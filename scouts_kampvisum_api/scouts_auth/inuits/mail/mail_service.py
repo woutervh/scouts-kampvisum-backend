@@ -2,7 +2,7 @@ import os, logging
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from anymail.message import AnymailMessage
 
 from scouts_auth.inuits.mail import Email
@@ -51,7 +51,7 @@ class EmailService:
 
         return from_email, to, cc, bcc, reply_to
 
-    def _add_attachments(self, message, attachment_paths: list = None, attachments: list = None):
+    def _add_attachments(self, message: EmailMessage, attachment_paths: list = None, attachments: list = None):
         attachment_paths_len = len(attachment_paths)
         if attachment_paths and attachment_paths_len > 0:
             logger.debug("Adding %d attachments to email", attachment_paths_len)
@@ -69,6 +69,7 @@ class EmailService:
         return self.send_email(
             subject=mail.subject,
             body=mail.body,
+            html_body=mail.html_body,
             from_email=mail.from_email,
             to=mail.to,
             cc=mail.cc,
@@ -77,12 +78,14 @@ class EmailService:
             attachment_paths=mail.attachment_paths,
             template_id=mail.template_id,
             attachments=mail.attachments,
+            is_html=mail.is_html,
         )
 
     def send_email(
         self,
         subject: str = "",
         body: str = "",
+        html_body: str = None,
         from_email: str = None,
         to: list = None,
         cc: list = None,
@@ -90,15 +93,23 @@ class EmailService:
         reply_to: str = None,
         attachment_paths: list = None,
         attachments: list = None,
-        template_id=None,
+        template_id: str = None,
+        is_html: bool = False,
     ):
         """Decides wether to send email through the django backend or SendInBlue."""
         logger.debug("Sending mail through backend %s", self.backend)
 
-        logger.debug("TO: %s", to)
+        if is_html and (not body or len(body.strip()) == 0):
+            logger.warn("Requested to send an html email with an empty text body")
+            # body = "Please open this mail in a client that supports html email."
+            body = html_body
+
+        from_email, to, cc, bcc, reply_to = self.validate_email_arguments(from_email, to, cc, bcc, reply_to)
+
         if self.backend == "anymail.backends.sendinblue.EmailBackend":
             return self.send_send_in_blue_email(
                 body=body,
+                html_body=html_body,
                 subject=subject,
                 from_email=from_email,
                 to=to,
@@ -108,10 +119,12 @@ class EmailService:
                 attachment_paths=attachment_paths,
                 attachments=attachments,
                 template_id=template_id,
+                is_html=is_html,
             )
         else:
             return self.send_django_email(
                 body=body,
+                html_body=html_body,
                 subject=subject,
                 from_email=from_email,
                 to=to,
@@ -120,12 +133,14 @@ class EmailService:
                 reply_to=reply_to,
                 attachment_paths=attachment_paths,
                 attachments=attachments,
+                is_html=is_html,
             )
 
     def send_django_email(
         self,
         subject: str = "",
         body: str = "",
+        html_body: str = "",
         from_email: str = None,
         to: list = None,
         cc: list = None,
@@ -133,10 +148,9 @@ class EmailService:
         reply_to: str = None,
         attachment_paths: list = None,
         attachments: list = None,
+        is_html: bool = False,
     ):
-        from_email, to, cc, bcc, reply_to = self.validate_email_arguments(from_email, to, cc, bcc, reply_to)
-
-        message = EmailMessage(
+        message = EmailMultiAlternatives(
             subject=subject,
             body=body,
             from_email=from_email,
@@ -145,6 +159,9 @@ class EmailService:
             bcc=bcc,
             reply_to=reply_to,
         )
+        if is_html:
+            message.attach_alternative(html_body, "text/html")
+
         self._add_attachments(message=message, attachment_paths=attachment_paths, attachments=attachments)
 
         try:
@@ -166,6 +183,7 @@ class EmailService:
         self,
         subject: str = "",
         body: str = "",
+        html_body: str = "",
         from_email: str = None,
         to: list = None,
         cc: list = None,
@@ -173,10 +191,9 @@ class EmailService:
         reply_to: str = None,
         attachment_paths: list = None,
         attachments: list = None,
-        template_id=None,
+        template_id: str = None,
+        is_html: bool = False,
     ):
-        from_email, to, cc, bcc, reply_to = self.validate_email_arguments(from_email, to, cc, bcc, reply_to)
-
         message = AnymailMessage(
             subject=subject,
             body=body,
@@ -184,6 +201,9 @@ class EmailService:
             to=to,
             tags=["Schadeclaim"],  # Anymail extra in constructor
         )
+        # if is_html:
+        #     message.extra_headers["Content-Type"] = "text/html; charset=UTF8"
+
         self._add_attachments(message=message, attachment_paths=attachment_paths, attachments=attachments)
 
         # if template_id:

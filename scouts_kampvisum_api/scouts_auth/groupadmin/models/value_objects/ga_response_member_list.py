@@ -1,15 +1,19 @@
 from typing import List
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsValue, AbstractScoutsLink, AbstractScoutsResponse
+from scouts_auth.inuits.models import AbstractNonModel
 
 
-class AbstractAbstractScoutsMemberListMember:
+class AbstractScoutsMemberListMember(AbstractNonModel):
     """Partial member data captured in a member list from a call to /ledenlijst."""
 
     group_admin_id: str
     index: int
     values: List[AbstractScoutsValue]
     links: List[AbstractScoutsLink]
+
+    class Meta:
+        abstract = True
 
     def __init__(
         self,
@@ -23,6 +27,8 @@ class AbstractAbstractScoutsMemberListMember:
         self.values = values if values else []
         self.links = links if links else []
 
+        super().__init__([], {})
+
     def __str__(self):
         return "group_admin_id({}), index({}), values({}), links({})".format(
             self.group_admin_id,
@@ -32,10 +38,13 @@ class AbstractAbstractScoutsMemberListMember:
         )
 
 
-class AbstractAbstractScoutsMemberListResponse(AbstractScoutsResponse):
+class AbstractScoutsMemberListResponse(AbstractScoutsResponse):
     """Class to capture data returned from a call to /ledenlijst."""
 
-    members: List[AbstractAbstractScoutsMemberListMember]
+    members: List[AbstractScoutsMemberListMember]
+
+    class Meta:
+        abstract = True
 
     def __init__(
         self,

@@ -1,53 +1,39 @@
 import logging
 
-from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 
 logger = logging.getLogger(__name__)
 
 
-class ChoiceSerializerField:
-    instance = None
-
-    CHOICE_FIELD = "ChoiceField"
-    MULTIPLE_CHOICE_FIELD = "MultipleChoiceField"
-
+class ChoiceSerializerField(serializers.ChoiceField):
     def __init__(self, *args, **kwargs):
-        choices = kwargs.pop("choices", None)
-        source = kwargs.pop("source", None)
-        many = kwargs.pop("many", False)
-
-        if not choices:
-            raise ValidationError("ChoiceSerializerField needs to have the choices field set")
-        kwargs["choices"] = choices
-
-        if source:
-            kwargs["source"] = source
-
-        parent = ChoiceSerializerField.CHOICE_FIELD
-        if many:
-            parent = ChoiceSerializerField.MULTIPLE_CHOICE_FIELD
-
-        self.instance = getattr(serializers, parent)(*args, **kwargs)
+        choices = kwargs.get("choices")
+        default = kwargs.get("default", None)
+        # logger.debug(
+        #     "Choice serializer field for %s and %s",
+        #     choices,
+        #     "default(" + default + ")" if default else "no default value",
+        # )
+        super().__init__(*args, **kwargs)
 
     def bind(self, field_name, parent):
-        logger.debug("FIELD NAME: %s", field_name)
-        return self.instance.bind(field_name, parent)
+        # logger.debug("FIELD NAME: %s", field_name)
+        return super().bind(field_name, parent)
 
     def get_value(self, dictionary):
-        logger.debug("DICT: %s", dictionary)
-        value = self.instance.get_value(dictionary)
-        logger.debug("VALUE: %s", value)
+        # logger.debug("DICT: %s", dictionary)
+        value = super().get_value(dictionary)
         return value
 
     def to_internal_value(self, data):
-        logger.debug("DATA: %s", data)
-        return self.instance.to_internal_value(data)
+        # logger.debug("DATA: %s", data)
+        return super().to_internal_value(data)
 
     def to_representation(self, value):
-        logger.debug("REPR: %s", value)
-        return self.instance.to_representation(value)
+        # logger.debug("REPR: %s", value)
+        return super().to_representation(value)
 
     def validate(self, value):
-        return self.instance.validate(value)
+        # logger.debug("CHOICE VALIDATE VALUE: %s", value)
+        return super().validate(value)

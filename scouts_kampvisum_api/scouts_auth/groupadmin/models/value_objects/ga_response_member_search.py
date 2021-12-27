@@ -3,10 +3,10 @@ from datetime import date
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsResponse, AbstractScoutsLink
 
-from scouts_auth.inuits.models import Gender
+from scouts_auth.inuits.models import AbstractNonModel, Gender
 
 
-class AbstractAbstractScoutsMemberSearchMember:
+class AbstractScoutsMemberSearchMember(AbstractNonModel):
 
     group_admin_id: str
     first_name: str
@@ -16,6 +16,9 @@ class AbstractAbstractScoutsMemberSearchMember:
     phone_number: str
     gender: Gender
     links: List[AbstractScoutsLink]
+
+    class Meta:
+        abstract = True
 
     def __init__(
         self,
@@ -35,25 +38,26 @@ class AbstractAbstractScoutsMemberSearchMember:
         self.phone_number = phone_number
         self.links = links if links else []
 
-    def get_gender(self):
-        return self.gender
-
     def __str__(self):
-        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone_number({}), links({})".format(
+        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone_number({}), gender ({}), links({})".format(
             self.group_admin_id,
             self.first_name,
             self.last_name,
             self.birth_date,
             self.email,
             self.phone_number,
+            str(self.gender),
             ", ".join(str(link) for link in self.links),
         )
 
 
-class AbstractAbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
+class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
     """Class to capture data returned from a call to /ledenlijst."""
 
-    members: List[AbstractAbstractScoutsMemberSearchMember]
+    members: List[AbstractScoutsMemberSearchMember]
+
+    class Meta:
+        abstract = True
 
     def __init__(
         self,
@@ -62,7 +66,7 @@ class AbstractAbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
         offset: int = 0,
         filter_criterium: str = "",
         criteria: dict = None,
-        members: List[AbstractAbstractScoutsMemberSearchMember] = None,
+        members: List[AbstractScoutsMemberSearchMember] = None,
         links: List[AbstractScoutsLink] = None,
     ):
         self.members = members if members else []

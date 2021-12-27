@@ -10,19 +10,19 @@ from .ga_function import AbstractScoutsFunction
 from .ga_allowed_calls import ScoutsAllowedCalls
 from .ga_response import AbstractScoutsResponse
 from .ga_response_member_search import (
-    AbstractAbstractScoutsMemberSearchMember,
-    AbstractAbstractScoutsMemberSearchResponse,
+    AbstractScoutsMemberSearchMember,
+    AbstractScoutsMemberSearchResponse,
 )
 from .ga_member import (
-    AbstractAbstractScoutsMemberPersonalData,
-    AbstractAbstractScoutsMemberGroupAdminData,
-    AbstractAbstractScoutsMemberScoutsData,
+    AbstractScoutsMemberPersonalData,
+    AbstractScoutsMemberGroupAdminData,
+    AbstractScoutsMemberScoutsData,
     AbstractScoutsMember,
 )
 from .ga_response_group_list import AbstractScoutsGroupListResponse
 from .ga_response_function_list import AbstractScoutsFunctionListResponse
 from .ga_response_member_list import (
-    AbstractAbstractScoutsMemberListMember,
-    AbstractAbstractScoutsMemberListResponse,
+    AbstractScoutsMemberListMember,
+    AbstractScoutsMemberListResponse,
 )
 from .ga_medical_flash_card import AbstractScoutsMedicalFlashCard

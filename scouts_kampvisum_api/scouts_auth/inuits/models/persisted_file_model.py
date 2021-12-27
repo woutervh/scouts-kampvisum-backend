@@ -16,3 +16,6 @@ class PersistedFile(AuditedBaseModel):
         blank=True,
     )
     content_type = models.CharField(max_length=100)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

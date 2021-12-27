@@ -56,8 +56,15 @@ class ScoutsUser(User):
     is_administrator = False
     is_district_commissioner = False
 
-    def __str__(self):
-        return "group_admin_id({}), ".format(self.group_admin_id) + super().__str__()
+    is_fully_loaded = False
+
+    @property
+    def fully_loaded(self) -> bool:
+        return self.is_fully_loaded
+
+    @fully_loaded.setter
+    def fully_loaded(self, is_fully_loaded: bool):
+        self.is_fully_loaded = is_fully_loaded
 
     def get_function_codes(self) -> List[str]:
         return [function.code for function in self.functions]

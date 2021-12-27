@@ -8,6 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 class DatetypeAwareDateSerializerField(serializers.DateField):
+    serialize = True
+
     def to_internal_value(self, value):
         if value and isinstance(value, datetime):
             logger.warn(

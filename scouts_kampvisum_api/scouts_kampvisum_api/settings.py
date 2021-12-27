@@ -106,11 +106,11 @@ LOGGING = {
             "level": "DEBUG",
             "formatter": "verbose",
         },
-        "file": {
-            "class": "logging.FileHandler",
-            "level": "DEBUG",
-            "filename": "scouts-kampvisum.debug.log",
-        },
+        # "file": {
+        #     "class": "logging.FileHandler",
+        #     "level": "DEBUG",
+        #     "filename": "scouts-kampvisum.debug.log",
+        # },
     },
     "root": {
         "handlers": ["console"],
@@ -154,6 +154,7 @@ def correct_url(issuer, url):
 #                                                                              #
 # ############################################################################ #
 INSTALLED_APPS = [
+    "apps.signals",
     "django.contrib.admin",
     "django.contrib.auth",
     "scouts_auth",
@@ -285,7 +286,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_PAGINATION_CLASS": "scouts_kampvisum_api.pagination.PageNumberPagination",
-    "EXCEPTION_HANDLER": "scouts_auth.inuits.drf_exceptions.exception_handler",
+    "EXCEPTION_HANDLER": "scouts_auth.inuits.exceptions.drf_exceptions.exception_handler",
 }
 
 
@@ -426,15 +427,7 @@ OIDC_RP_SIGN_ALGO = env.str("OIDC_RP_SIGN_ALGO", default="RS256")
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_RP_IDP_SIGN_KEY
 # OIDC_RP_IDP_SIGN_KEY = env.bool('OIDC_RP_IDP_SIGN_KEY', default = None)
 # Path to redirect to on successful login. If you don’t specify this,
-# the default Django value will be used.
-# LOGIN_REDIRECT_URL = env.str(
-#    'LOGIN_REDIRECT_URL', default = BASE_URL)
-# Path to redirect to on an unsuccessful login attempt.
-# https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#LOGIN_REDIRECT_URL_FAILURE
-# LOGIN_REDIRECT_URL_FAILURE = env.str(
-#    'LOGIN_REDIRECT_URL_FAILURE', default = '/')
-# After the logout view has logged the user out, it redirects to this url path.
-# https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#LOGOUT_REDIRECT_URL
+# the default Django value will be used.scouts_authn/stable/settings.html#LOGOUT_REDIRECT_URL
 # LOGOUT_REDIRECT_URL = env.bool('LOGOUT_REDIRECT_URL', default = None)
 # Function path that returns a URL to redirect the user to after
 # auth.logout() is called.

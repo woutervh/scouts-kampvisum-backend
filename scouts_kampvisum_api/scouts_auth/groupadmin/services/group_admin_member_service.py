@@ -4,7 +4,7 @@ from datetime import date, datetime, timedelta
 
 from django.conf import settings
 
-from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractAbstractScoutsMemberSearchResponse
+from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsMemberSearchResponse
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -19,7 +19,7 @@ class GroupAdminMemberService(GroupAdmin):
         group_group_admin_id: str = None,
         include_inactive: bool = False,
     ) -> List[AbstractScoutsMember]:
-        response: AbstractAbstractScoutsMemberSearchResponse = self.search_member(active_user, term)
+        response: AbstractScoutsMemberSearchResponse = self.search_member(active_user, term)
 
         logger.debug("GA returned a list of %d member(s) for search term %s", len(response.members), term)
 
@@ -55,7 +55,7 @@ class GroupAdminMemberService(GroupAdmin):
     def search_member_filtered_by_group(
         self,
         active_user: settings.AUTH_USER_MODEL,
-        response: AbstractAbstractScoutsMemberSearchResponse,
+        response: AbstractScoutsMemberSearchResponse,
         group_group_admin_id: str,
         include_inactive: bool = False,
     ) -> List[AbstractScoutsMember]:
@@ -73,7 +73,7 @@ class GroupAdminMemberService(GroupAdmin):
     def search_member_filtered_by_activity(
         self,
         active_user: settings.AUTH_USER_MODEL,
-        response: AbstractAbstractScoutsMemberSearchResponse,
+        response: AbstractScoutsMemberSearchResponse,
         include_inactive: bool = False,
     ) -> List[AbstractScoutsMember]:
         results = []

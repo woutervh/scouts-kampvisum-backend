@@ -3,10 +3,11 @@ from rest_framework import serializers
 
 from apps.groups.models import ScoutsSection
 from apps.groups.serializers import (
-    ScoutsGroupSerializer,
     ScoutsSectionNameSerializer,
     ScoutsSectionNameAPISerializer,
 )
+
+from scouts_auth.groupadmin.serializers.fields import AbstractScoutsGroupSerializerField
 from scouts_auth.inuits.mixins import FlattenSerializerMixin
 
 
@@ -18,7 +19,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
     Serializes a ScoutSection object
     """
 
-    group = ScoutsGroupSerializer()
+    group = AbstractScoutsGroupSerializerField(source="group_admin_id")
     name = ScoutsSectionNameSerializer()
     hidden = serializers.BooleanField()
 

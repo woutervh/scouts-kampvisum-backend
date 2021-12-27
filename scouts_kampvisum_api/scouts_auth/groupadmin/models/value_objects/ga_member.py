@@ -1,6 +1,8 @@
 from typing import List
 from datetime import date
 
+from django.db import models
+
 from scouts_auth.groupadmin.models.value_objects import (
     AbstractScoutsAddress,
     AbstractScoutsContact,
@@ -8,58 +10,74 @@ from scouts_auth.groupadmin.models.value_objects import (
     AbstractScoutsLink,
     AbstractScoutsGroup,
     AbstractScoutsGroupSpecificField,
-    AbstractAbstractScoutsMemberSearchMember,
+    AbstractScoutsMemberSearchMember,
 )
 
-from scouts_auth.inuits.models import Gender, GenderHelper
+from scouts_auth.inuits.models import AbstractNonModel, Gender, GenderHelper
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField
 
 
-class AbstractAbstractScoutsMemberPersonalData:
+class AbstractScoutsMemberPersonalData(AbstractNonModel):
 
-    gender: Gender
-    phone_number: str
+    phone_number = OptionalCharField()
+    gender: Gender = models.CharField(choices=Gender, default=Gender.UNKNOWN, max_length="1")
+
+    class Meta:
+        abstract = True
 
     def __init__(self, gender: Gender = None, phone_number: str = ""):
         self.gender = gender if gender and isinstance(gender, Gender) else GenderHelper.parse_gender(gender)
         self.phone_number = phone_number
 
+        # super().__init__([], {})
+
     def __str__(self):
         return "gender({}), phone_number({})".format(self.gender, self.phone_number)
 
 
-class AbstractAbstractScoutsMemberGroupAdminData:
+class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
 
-    first_name: str
-    last_name: str
-    birth_date: date
+    first_name = OptionalCharField()
+    last_name = OptionalCharField()
+    birth_date = OptionalDateField()
+
+    class Meta:
+        abstract = True
 
     def __init__(self, first_name: str = "", last_name: str = "", birth_date: date = None):
         self.first_name = first_name
         self.last_name = last_name
         self.birth_date = birth_date
 
+        # super().__init__([], {})
+
     def __str__(self):
         return "first_name({}), last_name({}), birth_date({})".format(self.first_name, self.last_name, self.birth_date)
 
 
-class AbstractAbstractScoutsMemberScoutsData:
+class AbstractScoutsMemberScoutsData(AbstractNonModel):
 
-    membership_number: str
-    customer_number: str
+    membership_number = OptionalCharField()
+    customer_number = OptionalCharField()
+
+    class Meta:
+        abstract = True
 
     def __init__(self, membership_number: str = "", customer_number: str = ""):
         self.membership_number = membership_number
         self.customer_number = customer_number
 
+        # super().__init__([], {})
+
     def __str__(self):
         return "membership_number({}), customer_number({})".format(self.customer_number, self.membership_number)
 
 
-class AbstractScoutsMember:
+class AbstractScoutsMember(AbstractNonModel):
 
-    personal_data: AbstractAbstractScoutsMemberPersonalData
-    group_admin_data: AbstractAbstractScoutsMemberGroupAdminData
-    scouts_data: AbstractAbstractScoutsMemberScoutsData
+    personal_data: AbstractScoutsMemberPersonalData
+    group_admin_data: AbstractScoutsMemberGroupAdminData
+    scouts_data: AbstractScoutsMemberScoutsData
     email: str
     username: str
     group_admin_id: str
@@ -70,11 +88,14 @@ class AbstractScoutsMember:
     group_specific_fields: List[AbstractScoutsGroupSpecificField]
     links: List[AbstractScoutsLink]
 
+    class Meta:
+        abstract = True
+
     def __init__(
         self,
-        personal_data: AbstractAbstractScoutsMemberPersonalData = None,
-        group_admin_data: AbstractAbstractScoutsMemberGroupAdminData = None,
-        scouts_data: AbstractAbstractScoutsMemberScoutsData = None,
+        personal_data: AbstractScoutsMemberPersonalData = None,
+        group_admin_data: AbstractScoutsMemberGroupAdminData = None,
+        scouts_data: AbstractScoutsMemberScoutsData = None,
         email: str = "",
         username: str = "",
         group_admin_id: str = "",
@@ -97,6 +118,8 @@ class AbstractScoutsMember:
         self.scouts_groups = scouts_groups if scouts_groups else []
         self.group_specific_fields = group_specific_fields if group_specific_fields else []
         self.links = links if links else []
+
+        # super().__init__([], {})
 
     def get_function_codes(self) -> List[str]:
         return [function.code for function in self.functions]
@@ -129,6 +152,11 @@ class AbstractScoutsMember:
     def customer_number(self):
         return self.scouts_data.customer_number
 
+    @property
+    def address(self):
+        if len(self.addresses) > 0:
+            return self.addresses[0]
+
     def __str__(self):
         return (
             self.personal_data.__str__()
@@ -149,8 +177,8 @@ class AbstractScoutsMember:
             ", ".join(str(link) for link in self.links),
         )
 
-    def to_search_member(self) -> AbstractAbstractScoutsMemberSearchMember:
-        member = AbstractAbstractScoutsMemberSearchMember(
+    def to_search_member(self) -> AbstractScoutsMemberSearchMember:
+        member = AbstractScoutsMemberSearchMember(
             group_admin_id=self.group_admin_id,
             first_name=self.group_admin_data.first_name,
             last_name=self.group_admin_data.last_name,
@@ -160,6 +188,6 @@ class AbstractScoutsMember:
             links=self.links,
         )
 
-        member.gender = self.get_gender()
+        member.gender = self.gender
 
         return member

@@ -7,6 +7,7 @@ from .django_shorthand_model_fields import (
     UniqueRequiredCharField,
     OptionalTextField,
     OptionalIntegerField,
+    DefaultIntegerField,
     RequiredIntegerField,
     OptionalEmailField,
     OptionalDateField,
@@ -14,3 +15,4 @@ from .django_shorthand_model_fields import (
     ListField,
     OptionalForeignKey,
 )
+from .simple_choice_field import SimpleChoiceField

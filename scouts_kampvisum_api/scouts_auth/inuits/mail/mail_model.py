@@ -27,6 +27,7 @@ class Email:
 
     subject: str = ""
     body: str = ""
+    html_body: str = ""
     from_email: str = None
     to: list = None
     cc: list = None
@@ -35,12 +36,14 @@ class Email:
     attachment_paths: list = None
     attachments: list = None
     template_id: str = None
+    is_html: bool = False
 
     # https://stackoverflow.com/questions/4535667/python-list-should-be-empty-on-class-instance-initialisation-but-its-not-why
     def __init__(
         self,
         subject: str = "",
         body: str = "",
+        html_body: str = "",
         from_email: str = None,
         to: list = None,
         cc: list = None,
@@ -48,10 +51,12 @@ class Email:
         reply_to: str = None,
         attachment_paths: list = None,
         attachments: list = None,
-        template_id=None,
+        template_id: str = None,
+        is_html: bool = False,
     ):
         self.subject = subject
         self.body = body
+        self.html_body = html_body
         self.from_email = from_email
         self.to = self._parse_arguments(to)
         self.cc = self._parse_arguments(cc)
@@ -60,6 +65,7 @@ class Email:
         self.attachment_paths = self._parse_arguments(attachment_paths)
         self.attachments = self._parse_arguments(attachments)
         self.template_id = template_id
+        self.is_html = is_html
 
     def _parse_arguments(self, arguments) -> list:
         if not arguments:

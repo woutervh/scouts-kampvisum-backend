@@ -11,9 +11,9 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsFunctionListResponse,
     AbstractScoutsGroup,
     AbstractScoutsGroupListResponse,
-    AbstractAbstractScoutsMemberSearchResponse,
+    AbstractScoutsMemberSearchResponse,
     AbstractScoutsMember,
-    AbstractAbstractScoutsMemberListResponse,
+    AbstractScoutsMemberListResponse,
 )
 from scouts_auth.groupadmin.serializers import (
     ScoutsAllowedCallsSerializer,
@@ -21,9 +21,10 @@ from scouts_auth.groupadmin.serializers import (
     AbstractScoutsFunctionListResponseSerializer,
     AbstractScoutsGroupSerializer,
     AbstractScoutsGroupListResponseSerializer,
-    AbstractAbstractScoutsMemberSearchResponseSerializer,
-    AbstractAbstractScoutsMemberListResponseSerializer,
+    AbstractScoutsMemberSearchResponseSerializer,
+    AbstractScoutsMemberListResponseSerializer,
     AbstractScoutsMemberSerializer,
+    AbstractScoutsMemberFrontendSerializer,
 )
 
 from scouts_auth.groupadmin.utils import SettingsHelper
@@ -174,6 +175,10 @@ class GroupAdmin:
         return json_data
 
     def get_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> AbstractScoutsGroup:
+        if group_group_admin_id is None:
+            logger.warn("GA: can't fetch a group without a group admin id")
+            return None
+
         json_data = self.get_group_raw(active_user, group_group_admin_id)
 
         serializer = AbstractScoutsGroupSerializer(data=json_data)
@@ -182,6 +187,14 @@ class GroupAdmin:
         group: AbstractScoutsGroup = serializer.save()
 
         return group
+
+    def get_group_serialized(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> dict:
+        if group_group_admin_id is None:
+            return None
+
+        return AbstractScoutsGroupSerializer(
+            self.get_group(active_user=active_user, group_group_admin_id=group_group_admin_id)
+        ).data
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep{group_group_admin_id_fragment_start}
     def get_functions_raw(
@@ -292,6 +305,16 @@ class GroupAdmin:
 
         return member
 
+    def get_member_info_serialized(
+        self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
+    ) -> AbstractScoutsMember:
+        if group_admin_id is None:
+            return None
+
+        return AbstractScoutsMemberFrontendSerializer(
+            self.get_member_info(active_user=active_user, group_admin_id=group_admin_id)
+        ).data
+
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}/steekkaart
     def get_member_medical_flash_card(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> str:
         """
@@ -325,13 +348,13 @@ class GroupAdmin:
 
     def get_member_list(
         self, active_user: settings.AUTH_USER_MODEL, offset: int = 0
-    ) -> AbstractAbstractScoutsMemberListResponse:
+    ) -> AbstractScoutsMemberListResponse:
         json_data = self.get_member_list_raw(active_user, offset)
 
-        serializer = AbstractAbstractScoutsMemberListResponseSerializer(data=json_data)
+        serializer = AbstractScoutsMemberListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member_list: AbstractAbstractScoutsMemberListResponse = serializer.save()
+        member_list: AbstractScoutsMemberListResponse = serializer.save()
 
         return member_list
 
@@ -350,15 +373,13 @@ class GroupAdmin:
 
         return json_data
 
-    def search_member(
-        self, active_user: settings.AUTH_USER_MODEL, term: str
-    ) -> AbstractAbstractScoutsMemberSearchResponse:
+    def search_member(self, active_user: settings.AUTH_USER_MODEL, term: str) -> AbstractScoutsMemberSearchResponse:
         json_data = self.search_member_raw(active_user, term)
 
-        serializer = AbstractAbstractScoutsMemberSearchResponseSerializer(data=json_data)
+        serializer = AbstractScoutsMemberSearchResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member_list: AbstractAbstractScoutsMemberSearchResponse = serializer.save()
+        member_list: AbstractScoutsMemberSearchResponse = serializer.save()
 
         return member_list
 

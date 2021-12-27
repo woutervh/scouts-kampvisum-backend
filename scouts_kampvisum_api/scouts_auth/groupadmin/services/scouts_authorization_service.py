@@ -24,7 +24,7 @@ class ScoutsAuthorizationService(AuthorizationService):
     1) Full user information, after a groupadmin call to /profiel (the "me" call)
     2) BASIC PERMISSIONS: Membership of groups, defined in roles.yaml and loaded by PermissionService, after successfull authentication
         -> load_user_scouts_groups
-    3) ADMINISTRATOR: Membership of administrator groups, after a groupadmin call to /groep
+    3) ADMINISTRATOR: Membership of administrator groups, from the user informatiom (/profiel)
     4) SECTION LEADER: Section leader status, loaded after a groupadmin call for every function
         -> load_user_functions
     5) GROUP LEADER: Group leader status, from the function code in the profile response in 1)

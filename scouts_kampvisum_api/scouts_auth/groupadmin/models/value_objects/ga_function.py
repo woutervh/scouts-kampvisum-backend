@@ -3,28 +3,36 @@ from datetime import date, datetime
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsGrouping, AbstractScoutsLink
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
+from scouts_auth.inuits.models import AbstractNonModel
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField, OptionalDateTimeField
 
 
-class AbstractScoutsFunction:
+class AbstractScoutsFunction(AbstractNonModel):
 
-    group_admin_id: str
-    type: str
+    group_admin_id = OptionalCharField()
+    type = OptionalCharField()
+    function = OptionalCharField()
+    begin = OptionalDateTimeField()
+    end = OptionalDateTimeField()
+    max_birth_date = OptionalDateField()
+    code = OptionalCharField()
+    description = OptionalCharField()
+    adjunct = OptionalCharField()
+
+    # Declare as foreign keys in concrete subclasses
     scouts_group: AbstractScoutsGroup
-    function: str
     scouts_groups: List[AbstractScoutsGroup]
     groupings: List[AbstractScoutsGrouping]
-    begin: datetime
-    end: datetime
-    max_birth_date: date
-    code: str
-    description: str
-    adjunct: str
     links: List[AbstractScoutsLink]
 
+    # Runtime data
     _scouts_function_code: AbstractScoutsFunctionCode = None
     groups_section_leader: Dict[str, bool]
     groups_group_leader: Dict[str, bool]
     is_district_commissioner: bool = False
+
+    class Meta:
+        abstract = True
 
     def __init__(
         self,
@@ -60,7 +68,10 @@ class AbstractScoutsFunction:
         self.groups_section_leader = groups_section_leader if groups_section_leader else {}
         self.groups_group_leader = groups_group_leader if groups_group_leader else {}
 
-    def _parse_function_code(self):
+        # super().__init__([], {})
+
+    @property
+    def function_code(self):
         if self._scouts_function_code is None:
             self._scouts_function_code = AbstractScoutsFunctionCode(self.code)
         return self._scouts_function_code
@@ -69,12 +80,10 @@ class AbstractScoutsFunction:
         return self.groups_section_leader.get(group.group_admin_id, False)
 
     def is_group_leader(self, group: AbstractScoutsGroup) -> bool:
-        return (
-            self._parse_function_code().is_group_leader() and self.scouts_group.group_admin_id == group.group_admin_id
-        )
+        return self.function_code.is_group_leader() and self.scouts_group.group_admin_id == group.group_admin_id
 
     def is_district_commissioner(self) -> bool:
-        return self._parse_function_code().is_district_commissioner()
+        return self.function_code.is_district_commissioner()
 
     def __str__(self):
         return "group_admin_id ({}), type ({}), function({}), scouts_group({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
@@ -94,4 +103,4 @@ class AbstractScoutsFunction:
         )
 
     def to_descriptive_string(self):
-        return "{} -> {} ({})".format(self.scouts_group.group_admin_id, self.code, self.description)
+        return "{} -> {} ({}),".format(self.scouts_group.group_admin_id, self.code, self.description)

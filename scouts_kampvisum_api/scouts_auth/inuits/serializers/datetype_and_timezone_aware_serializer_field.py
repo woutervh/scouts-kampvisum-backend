@@ -8,6 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 class DatetypeAndTimezoneAwareDateTimeSerializerField(serializers.DateTimeField):
+    serialize = True
+
     def to_internal_value(self, value):
         if not value:
             return None
@@ -25,14 +27,17 @@ class DatetypeAndTimezoneAwareDateTimeSerializerField(serializers.DateTimeField)
         if not value:
             return None
 
-        if isinstance(value, date):
+        if not isinstance(value, datetime):
             logger.warn(
-                "Field %s: Attempting to serializer a date value for a datetime field, transforming to datetime",
+                "Field %s: Attempting to serialize a date value for a datetime field, transforming to datetime",
                 self.field_name,
             )
             value = datetime.combine(value, datetime.min.time())
 
         if not hasattr(value, "tzinfo") or value.tzinfo is None or value.tzinfo.utcoffset(value) is None:
+            logger.warn(
+                "Field %s: Attempting to serialize a datetime value that does not have timzone info", self.field_name
+            )
             value = pytz.utc.localize(value)
 
         return super().to_representation(value)
