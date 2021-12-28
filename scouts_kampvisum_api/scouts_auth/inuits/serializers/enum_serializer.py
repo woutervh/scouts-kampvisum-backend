@@ -11,6 +11,9 @@ class EnumSerializer(serializers.Serializer):
     value = serializers.SerializerMethodField()
     label = serializers.SerializerMethodField()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def get_id(self, obj):
         # Set id equal to value to make it easier for clients
         return self.get_value(obj)

@@ -8,6 +8,9 @@ logger = logging.getLogger(__name__)
 
 
 class NonModelSerializer(serializers.Serializer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def _get_attribute(self, instance, attribute_name):
         # logger.debug("Getting attribute %s for instance of %s", attribute_name, instance.__class__.__name__)
         if hasattr(instance, attribute_name):

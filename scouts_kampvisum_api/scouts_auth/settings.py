@@ -53,7 +53,7 @@ LOGGING = {
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
-        "scouts_auth": {
+        "scouts-auth": {
             "handlers": ["console"],
             "level": "DEBUG",
             "propagate": False,
@@ -88,9 +88,7 @@ DEBUG = env.bool("DEBUG", default=False)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = env.str(
-    "BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-)
+BASE_DIR = env.str("BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 BASE_URL = env.str("BASE_URL")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
@@ -147,7 +145,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-AUTH_USER_MODEL = "scouts_auth.ScoutsUser"
+AUTH_USER_MODEL = "scouts_auth.User"
 AUTHORIZATION_ROLES_CONFIG_PACKAGE = "initial_data"
 AUTHORIZATION_ROLES_CONFIG_YAML = "roles.yaml"
 

@@ -33,21 +33,19 @@ RUN apt-get update; \
         libpq-dev \
         libffi-dev \
         python3-dev \
-        default-libmysqlclient-dev \
-        openssh-client \
-        git
+        default-libmysqlclient-dev
 RUN python -m pip install "poetry==${POETRY_VERSION}"
 COPY pyproject.toml poetry.lock* ./
 
-# SSH
-ADD ./scripts/ssh/id_rsa /
-RUN chmod 600 /id_rsa
-RUN cp /etc/ssh/ssh_config /etc/ssh/ssh_config.backup
-RUN echo "    IdentityFile /id_rsa" >> /etc/ssh/ssh_config
-# Avoids the need to perform a ssh-keyscan on the repository
-RUN echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
-RUN git config --global user.email "boro@inuits.eu"
-RUN git config --global user.name "inuits"
+# # SSH
+# ADD ./scripts/ssh/id_rsa /
+# RUN chmod 600 /id_rsa
+# RUN cp /etc/ssh/ssh_config /etc/ssh/ssh_config.backup
+# RUN echo "    IdentityFile /id_rsa" >> /etc/ssh/ssh_config
+# # Avoids the need to perform a ssh-keyscan on the repository
+# RUN echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+# RUN git config --global user.email "boro@inuits.eu"
+# RUN git config --global user.name "inuits"
 
 ### Development stage
 FROM preparation-stage AS development-stage
@@ -55,14 +53,14 @@ FROM preparation-stage AS development-stage
 RUN poetry config virtualenvs.create false
 RUN poetry install
 
-# Cleanup SSH
-RUN rm -f /id_rsa
-RUN rm -f /etc/ssh/ssh_config
-RUN mv /etc/ssh/ssh_config.backup /etc/ssh/ssh_config
-RUN apt-get purge -y \
-        openssh-client \
-        git
-RUN apt-get autoremove -y
+# # Cleanup SSH
+# RUN rm -f /id_rsa
+# RUN rm -f /etc/ssh/ssh_config
+# RUN mv /etc/ssh/ssh_config.backup /etc/ssh/ssh_config
+# RUN apt-get purge -y \
+#         openssh-client \
+#         git
+# RUN apt-get autoremove -y
 
 CMD ["--no-migrate"]
 

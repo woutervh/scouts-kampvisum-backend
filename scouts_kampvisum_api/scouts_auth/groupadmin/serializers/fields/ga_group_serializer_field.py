@@ -2,6 +2,7 @@ import logging
 
 from rest_framework import serializers
 
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -49,6 +50,11 @@ class AbstractScoutsGroupSerializerField(serializers.Field):
             return None
 
         logger.debug("GROUP FIELD data: %s", group_admin_id)
-        return GroupAdmin().get_group_serialized(
+        group = GroupAdmin().get_group_serialized(
             active_user=self.context.get("request").user, group_group_admin_id=group_admin_id
         )
+
+        return group.get("group_admin_id")
+
+    def validate(self, data: dict) -> AbstractScoutsGroup:
+        return AbstractScoutsGroup(**data)

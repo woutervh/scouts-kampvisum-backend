@@ -26,7 +26,9 @@ class OIDCRefreshView(views.APIView):
 
         data = serializer.validated_data
         try:
-            tokens = self.service.get_tokens_by_refresh_token(refresh_token=data.get("refreshToken"))
+            tokens = self.service.get_tokens_by_refresh_token(
+                user=request.user, refresh_token=data.get("refreshToken")
+            )
         except HTTPError as e:
             raise TokenRequestException(e)
 

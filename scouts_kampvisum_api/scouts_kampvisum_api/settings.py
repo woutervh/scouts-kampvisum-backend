@@ -154,10 +154,10 @@ def correct_url(issuer, url):
 #                                                                              #
 # ############################################################################ #
 INSTALLED_APPS = [
+    "apps.signals",
     "django.contrib.admin",
     "django.contrib.auth",
     "scouts_auth",
-    "apps.signals",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",

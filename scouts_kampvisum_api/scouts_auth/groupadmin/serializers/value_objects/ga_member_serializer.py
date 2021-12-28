@@ -7,7 +7,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsMember,
     AbstractScoutsAddress,
 )
-from scouts_auth.groupadmin.serializers import (
+from scouts_auth.groupadmin.serializers.value_objects import (
     AbstractScoutsLinkSerializer,
     AbstractScoutsContactSerializer,
     AbstractScoutsAddressSerializer,

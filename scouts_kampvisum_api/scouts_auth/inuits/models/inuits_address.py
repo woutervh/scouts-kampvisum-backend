@@ -13,5 +13,16 @@ class InuitsAddress(AbstractNonModel):
     class Meta:
         abstract = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+
+    #     self.street = kwargs.get("street", "")
+    #     self.number = kwargs.get("number", "")
+    #     self.letter_box = kwargs.get("letter_box", "")
+    #     self.postal_code = kwargs.get("postal_code", "")
+    #     self.city = kwargs.get("city", "")
+
+    def address_details_to_str(self):
+        return "street({}), number({}), letter_box({}), postal_code({}), city({})".format(
+            self.street, self.number, self.letter_box, self.postal_code, self.city
+        )

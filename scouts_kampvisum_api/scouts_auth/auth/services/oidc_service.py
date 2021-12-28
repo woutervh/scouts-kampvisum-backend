@@ -1,8 +1,10 @@
-import logging, requests
+import logging
+from datetime import datetime
 
 from django.conf import settings
 
 from scouts_auth.auth.utils import SettingsHelper
+from scouts_auth.auth.signals import ScoutsAuthSignalSender
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -29,7 +31,7 @@ class OIDCService:
 
         return self.service.post(self.oidc_endpoint, payload)
 
-    def get_tokens_by_refresh_token(self, refresh_token: str) -> dict:
+    def get_tokens_by_refresh_token(self, user: settings.AUTH_USER_MODEL, refresh_token: str) -> dict:
         payload = {
             "refresh_token": refresh_token,
             "grant_type": "refresh_token",
@@ -38,4 +40,8 @@ class OIDCService:
         }
         logger.debug("SCOUTS_AUTH: OIDC - refreshing authentication")
 
-        return self.service.post(self.oidc_endpoint, payload)
+        result = self.service.post(self.oidc_endpoint, payload)
+
+        ScoutsAuthSignalSender().send_refreshed(user=user)
+
+        return result

@@ -1,7 +1,7 @@
 import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsAddress
-from scouts_auth.groupadmin.serializers import AbstractScoutsPositionSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsPositionSerializer
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 

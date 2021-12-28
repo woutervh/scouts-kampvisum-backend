@@ -43,3 +43,7 @@ class SettingsHelper:
     @staticmethod
     def get_oidc_proxy(default_value=None):
         return getattr(settings, "OIDC_PROXY", default_value)
+
+    @staticmethod
+    def get_profile_refresh_time(default_value=24):
+        return getattr(settings, "PROFILE_REFRESH", default_value)

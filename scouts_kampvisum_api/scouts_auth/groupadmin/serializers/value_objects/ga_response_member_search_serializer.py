@@ -4,7 +4,10 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsMemberSearchMember,
     AbstractScoutsMemberSearchResponse,
 )
-from scouts_auth.groupadmin.serializers import AbstractScoutsLinkSerializer, AbstractScoutsResponseSerializer
+from scouts_auth.groupadmin.serializers.value_objects import (
+    AbstractScoutsLinkSerializer,
+    AbstractScoutsResponseSerializer,
+)
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 

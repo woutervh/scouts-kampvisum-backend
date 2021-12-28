@@ -1,7 +1,7 @@
 import logging
 
 from scouts_auth.groupadmin.models import ScoutsAllowedCalls
-from scouts_auth.groupadmin.serializers import AbstractScoutsLinkSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsLinkSerializer
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
