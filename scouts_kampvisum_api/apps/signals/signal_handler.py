@@ -24,6 +24,7 @@ class SignalHandler:
             "SIGNAL received: 'app_ready' from %s", ScoutsAuthSignalSender.sender
         )
         try:
+            logger.debug("Populating user permissions")
             PermissionService().populate_roles()
         except Exception as exc:
             logger.error("Unable to populate user roles", exc)

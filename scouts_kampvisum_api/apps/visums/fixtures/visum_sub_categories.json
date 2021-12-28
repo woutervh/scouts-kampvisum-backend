@@ -108,7 +108,7 @@
 			],
 			"is_default": true,
 			"explanation": "Info over verzekeringen",
-			"url": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/waarvoor-ben-je-verzekerd"
+			"link": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/waarvoor-ben-je-verzekerd"
 		}
 	},
 	{

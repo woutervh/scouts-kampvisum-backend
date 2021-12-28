@@ -5,7 +5,7 @@ from apps.groups.managers import ScoutsSectionNameManager
 
 from scouts_auth.groupadmin.scouts import AgeGroup
 from scouts_auth.inuits.models import AbstractBaseModel, Gender
-from scouts_auth.inuits.models.fields import RequiredCharField, DefaultCharField
+from scouts_auth.inuits.models.fields import RequiredCharField, DefaultCharField, DefaultIntegerField
 
 # FIXTURE: scouts_section_names
 # Taken from https://nl.wikipedia.org/wiki/Tak_(scouting)
@@ -27,12 +27,12 @@ class ScoutsSectionName(AbstractBaseModel):
 
     name = RequiredCharField(max_length=128)
     gender = DefaultCharField(
-        choices=Gender,
+        choices=Gender.choices,
         default=Gender.UNKNOWN,
         max_length=1,
     )
-    age_group = DefaultCharField(
-        choices=AgeGroup, default=AgeGroup.AGE_GROUP_UNKNOWN, max_length=3
+    age_group = DefaultIntegerField(
+        choices=AgeGroup.choices, default=AgeGroup.AGE_GROUP_UNKNOWN
     )
     hidden = models.BooleanField(default=False)
 

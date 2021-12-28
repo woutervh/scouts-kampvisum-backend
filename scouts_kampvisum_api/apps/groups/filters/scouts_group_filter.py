@@ -1,6 +1,6 @@
 import django_filters
 
-from apps.groups.models import ScoutsGroup
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
 
 
 class ScoutsGroupFilter(django_filters.FilterSet):
@@ -8,7 +8,7 @@ class ScoutsGroupFilter(django_filters.FilterSet):
     term = django_filters.CharFilter(method="search_term_filter")
 
     class Meta:
-        model = ScoutsGroup
+        model = AbstractScoutsGroup
         fields = "__all__"
 
     def search_term_filter(self, queryset, name, value):

@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 
-from scouts_auth.groupadmin.views import (
+from apps.groups.views import (
     ScoutsSectionViewSet,
     ScoutsSectionNameViewSet,
 )

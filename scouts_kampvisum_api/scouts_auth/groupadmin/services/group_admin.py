@@ -3,7 +3,7 @@ import logging, requests
 from django.conf import settings
 from django.http import Http404
 from rest_framework import status
-from drf_yasg2.utils import swagger_auto_schema
+# from drf_yasg2.utils import swagger_auto_schema
 
 from scouts_auth.groupadmin.models import (
     ScoutsAllowedCalls,
@@ -98,9 +98,9 @@ class GroupAdmin:
 
         return json_data
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: ScoutsAllowedCallsSerializer},
-    )
+    # @swagger_auto_schema(
+    #     responses={status.HTTP_200_OK: ScoutsAllowedCallsSerializer},
+    # )
     def get_allowed_calls(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsAllowedCalls:
         json_data = self.get_allowed_calls_raw(active_user)
 

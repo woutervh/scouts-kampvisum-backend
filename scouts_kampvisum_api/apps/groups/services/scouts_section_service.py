@@ -8,6 +8,8 @@ from apps.groups.models import (
 )
 from apps.groups.services import ScoutsSectionNameService
 
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
+
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +27,7 @@ class ScoutsSectionService:
         logger.debug(
             "GROUP ('%s'), NAME ('%s'), HIDDEN: %s", group.name, name.name, hidden
         )
-        if not isinstance(group, ScoutsGroup):
+        if not isinstance(group, AbstractScoutsGroup):
             from ..services import ScoutsGroupService
 
             group = ScoutsGroupService().get_group(group)
@@ -71,7 +73,7 @@ class ScoutsSectionService:
     def _section_update(
         self,
         instance: ScoutsSection,
-        group: ScoutsGroup = None,
+        group: AbstractScoutsGroup = None,
         name: ScoutsSectionName = None,
         hidden=False,
         **fields

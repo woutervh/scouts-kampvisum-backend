@@ -1,14 +1,14 @@
 [
 	{
 		"pk": 1,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Groep"
 		}
 	},
 	{
 		"pk": 2,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "District",
 			"parent": [
@@ -18,7 +18,7 @@
 	},
 	{
 		"pk": 3,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Gouw",
 			"parent": [
@@ -28,14 +28,14 @@
 	},
 	{
 		"pk": 4,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Zeescouts"
 		}
 	},
 	{
 		"pk": 5,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Akabe",
 			"parent": [
@@ -45,7 +45,7 @@
 	},
 	{
 		"pk": 6,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Akabetak",
 			"parent": [
@@ -55,7 +55,7 @@
 	},
 	{
 		"pk": 7,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Jeugdverblijf",
 			"parent": [
@@ -65,7 +65,7 @@
 	},
 	{
 		"pk": 8,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "OpenKamp",
 			"parent": [
@@ -75,7 +75,7 @@
 	},
 	{
 		"pk": 9,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Jin",
 			"parent": [
@@ -85,7 +85,7 @@
 	},
 	{
 		"pk": 10,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Jambe",
 			"parent": [
@@ -95,7 +95,7 @@
 	},
 	{
 		"pk": 11,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Technieken",
 			"parent": [
@@ -105,7 +105,7 @@
 	},
 	{
 		"pk": 12,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Givers",
 			"parent": [
@@ -115,7 +115,7 @@
 	},
 	{
 		"pk": 13,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Jamboree",
 			"parent": [
@@ -125,7 +125,7 @@
 	},
 	{
 		"pk": 14,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "HO",
 			"parent": [
@@ -135,7 +135,7 @@
 	},
 	{
 		"pk": 15,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "HONL",
 			"parent": [
@@ -145,7 +145,7 @@
 	},
 	{
 		"pk": 16,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Tijdschriften",
 			"parent": [
@@ -155,14 +155,14 @@
 	},
 	{
 		"pk": 17,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Test"
 		}
 	},
 	{
 		"pk": 18,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Verbond",
 			"parent": [
@@ -172,7 +172,7 @@
 	},
 	{
 		"pk": 19,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Ploeg",
 			"parent": [
@@ -182,7 +182,7 @@
 	},
 	{
 		"pk": 20,
-		"model": "groups.GroupType",
+		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Akazeetak",
 			"parent": [

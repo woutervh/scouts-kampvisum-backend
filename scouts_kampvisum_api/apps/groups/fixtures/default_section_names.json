@@ -1,7 +1,7 @@
 [
 	{
 		"pk": 1,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -13,7 +13,7 @@
 	},
 	{
 		"pk": 2,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -25,7 +25,7 @@
 	},
 	{
 		"pk": 3,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -37,7 +37,7 @@
 	},
 	{
 		"pk": 4,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -49,7 +49,7 @@
 	},
 	{
 		"pk": 5,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -61,7 +61,7 @@
 	},
 	{
 		"pk": 6,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -73,7 +73,7 @@
 	},
 	{
 		"pk": 7,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -85,7 +85,7 @@
 	},
 	{
 		"pk": 8,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -97,7 +97,7 @@
 	},
 	{
 		"pk": 9,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -109,7 +109,7 @@
 	},
 	{
 		"pk": 10,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -121,7 +121,7 @@
 	},
 	{
 		"pk": 11,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -133,7 +133,7 @@
 	},
 	{
 		"pk": 12,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -145,7 +145,7 @@
 	},
 	{
 		"pk": 13,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -157,7 +157,7 @@
 	},
 	{
 		"pk": 14,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Groep"
@@ -169,7 +169,7 @@
 	},
 	{
 		"pk": 15,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Zeescouts"
@@ -181,7 +181,7 @@
 	},
 	{
 		"pk": 16,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Zeescouts"
@@ -193,7 +193,7 @@
 	},
 	{
 		"pk": 17,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Zeescouts"
@@ -205,7 +205,7 @@
 	},
 	{
 		"pk": 18,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Zeescouts"
@@ -217,7 +217,7 @@
 	},
 	{
 		"pk": 19,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Zeescouts"
@@ -229,7 +229,7 @@
 	},
 	{
 		"pk": 20,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Zeescouts"
@@ -241,7 +241,7 @@
 	},
 	{
 		"pk": 21,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Test"
@@ -253,7 +253,7 @@
 	},
 	{
 		"pk": 23,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Test"
@@ -265,7 +265,7 @@
 	},
 	{
 		"pk": 24,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Test"
@@ -277,7 +277,7 @@
 	},
 	{
 		"pk": 25,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Test"
@@ -289,7 +289,7 @@
 	},
 	{
 		"pk": 26,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Test"
@@ -301,7 +301,7 @@
 	},
 	{
 		"pk": 27,
-		"model": "groups.DefaultSectionName",
+		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
 				"Test"

@@ -1,5 +1,4 @@
 import requests, logging
-from datetime import datetime
 from requests.exceptions import HTTPError
 
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend

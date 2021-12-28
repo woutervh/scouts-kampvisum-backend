@@ -1,7 +1,7 @@
 [
 	{
 		"pk": 1,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "kapoenen",
 			"gender": "M",
@@ -10,7 +10,7 @@
 	},
 	{
 		"pk": 2,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "elfjes",
 			"gender": "F",
@@ -19,7 +19,7 @@
 	},
 	{
 		"pk": 3,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeehondjes",
 			"gender": "H",
@@ -28,7 +28,7 @@
 	},
 	{
 		"pk": 4,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "welpen",
 			"gender": "M",
@@ -37,7 +37,7 @@
 	},
 	{
 		"pk": 5,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "kabouters",
 			"gender": "F",
@@ -46,7 +46,7 @@
 	},
 	{
 		"pk": 6,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeewelpen",
 			"gender": "H",
@@ -55,7 +55,7 @@
 	},
 	{
 		"pk": 7,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "wouters",
 			"gender": "H",
@@ -64,7 +64,7 @@
 	},
 	{
 		"pk": 8,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "kawellen",
 			"gender": "H",
@@ -73,7 +73,7 @@
 	},
 	{
 		"pk": 9,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "jongverkenners",
 			"gender": "M",
@@ -82,7 +82,7 @@
 	},
 	{
 		"pk": 10,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "jonggidsen",
 			"gender": "F",
@@ -91,7 +91,7 @@
 	},
 	{
 		"pk": 11,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "scheepsmakkers",
 			"gender": "H",
@@ -100,7 +100,7 @@
 	},
 	{
 		"pk": 12,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "jonggivers",
 			"gender": "H",
@@ -109,7 +109,7 @@
 	},
 	{
 		"pk": 13,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "verkenners",
 			"gender": "M",
@@ -118,7 +118,7 @@
 	},
 	{
 		"pk": 14,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "gidsen",
 			"gender": "F",
@@ -127,7 +127,7 @@
 	},
 	{
 		"pk": 15,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeeverkenners",
 			"gender": "H",
@@ -136,7 +136,7 @@
 	},
 	{
 		"pk": 16,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "givers",
 			"gender": "H",
@@ -145,7 +145,7 @@
 	},
 	{
 		"pk": 17,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "jins",
 			"gender": "H",
@@ -154,7 +154,7 @@
 	},
 	{
 		"pk": 18,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "loodsen",
 			"gender": "H",
@@ -163,7 +163,7 @@
 	},
 	{
 		"pk": 19,
-		"model": "groups.SectionName",
+		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "leiding",
 			"gender": "H",
