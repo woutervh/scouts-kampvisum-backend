@@ -1,6 +1,5 @@
 [
 	{
-		"pk": 1,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -12,7 +11,6 @@
 		}
 	},
 	{
-		"pk": 2,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -24,7 +22,6 @@
 		}
 	},
 	{
-		"pk": 3,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -36,7 +33,6 @@
 		}
 	},
 	{
-		"pk": 4,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -48,7 +44,6 @@
 		}
 	},
 	{
-		"pk": 5,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -60,7 +55,6 @@
 		}
 	},
 	{
-		"pk": 6,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -72,7 +66,6 @@
 		}
 	},
 	{
-		"pk": 7,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -84,7 +77,6 @@
 		}
 	},
 	{
-		"pk": 8,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -96,7 +88,6 @@
 		}
 	},
 	{
-		"pk": 9,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -108,7 +99,6 @@
 		}
 	},
 	{
-		"pk": 10,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -120,7 +110,6 @@
 		}
 	},
 	{
-		"pk": 11,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -132,7 +121,6 @@
 		}
 	},
 	{
-		"pk": 12,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -144,7 +132,6 @@
 		}
 	},
 	{
-		"pk": 13,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -156,7 +143,6 @@
 		}
 	},
 	{
-		"pk": 14,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -168,7 +154,6 @@
 		}
 	},
 	{
-		"pk": 15,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -180,7 +165,6 @@
 		}
 	},
 	{
-		"pk": 16,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -192,7 +176,6 @@
 		}
 	},
 	{
-		"pk": 17,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -204,7 +187,6 @@
 		}
 	},
 	{
-		"pk": 18,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -216,7 +198,6 @@
 		}
 	},
 	{
-		"pk": 19,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -228,7 +209,6 @@
 		}
 	},
 	{
-		"pk": 20,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -240,7 +220,6 @@
 		}
 	},
 	{
-		"pk": 21,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -252,7 +231,6 @@
 		}
 	},
 	{
-		"pk": 23,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -264,7 +242,6 @@
 		}
 	},
 	{
-		"pk": 24,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -276,7 +253,6 @@
 		}
 	},
 	{
-		"pk": 25,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -288,7 +264,6 @@
 		}
 	},
 	{
-		"pk": 26,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [
@@ -300,7 +275,6 @@
 		}
 	},
 	{
-		"pk": 27,
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
 			"type": [

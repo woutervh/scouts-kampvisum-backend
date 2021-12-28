@@ -1,5 +1,11 @@
-from django.db import models
+import uuid
 
+from django.db import models
+from django.db.models.signals import pre_save
+from django.core.exceptions import ValidationError
+from django.dispatch import receiver
+
+from apps.groups.managers import DefaultScoutsSectionNameManager
 from apps.groups.models import ScoutsSectionName, ScoutsGroupType
 
 from scouts_auth.inuits.models import AbstractBaseModel
@@ -12,14 +18,28 @@ class DefaultScoutsSectionName(AbstractBaseModel):
     Currently, if the group is not a zeescouts group, it is assumed the group
     type is 'Groep'.
     """
+    
+    objects = DefaultScoutsSectionNameManager()
 
     type = models.ForeignKey(ScoutsGroupType, null=True, on_delete=models.CASCADE)
-    name = models.ForeignKey(ScoutsSectionName, on_delete=models.DO_NOTHING)
+    name = models.ForeignKey(ScoutsSectionName, null=True, on_delete=models.DO_NOTHING)
 
     class Meta:
-        # Set managed to False unless
-        managed = False
         unique_together = ("type", "name")
 
     def clean(self):
-        pass
+        if self.type is None or self.name is None:
+            raise ValidationError("A DefaultScoutsSectionName needs a group type and a section name")
+
+    @receiver(pre_save)
+    def set_uuid_on_save(sender, instance, *args, **kwargs):
+        if instance.pk is None:
+            try:
+                instance = DefaultScoutsSectionName.objects.all().filter(type=kwargs.get("type"), name=kwargs.get("name"))
+                
+                if instance:
+                    return
+            except:
+                pass
+            
+            instance.id = uuid.uuid4()

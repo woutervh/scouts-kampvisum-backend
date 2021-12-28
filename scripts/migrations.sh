@@ -11,9 +11,9 @@ APPS=(
 	"visums"
 )
 FIXTURES=(
-	"group_types.json"
-	"section_names.json"
-	"default_section_names.json"
+	"scouts_group_types.json"
+	"scouts_section_names.json"
+	"default_scouts_section_names.json"
 	"visum_categories.json"
 	"visum_sub_categories.json"
 	"visum_category_set_priorities.json"
