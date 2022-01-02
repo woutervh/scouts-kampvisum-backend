@@ -1,6 +1,5 @@
 [
 	{
-		"pk": 1,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "kapoenen",
@@ -9,7 +8,6 @@
 		}
 	},
 	{
-		"pk": 2,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "elfjes",
@@ -18,7 +16,6 @@
 		}
 	},
 	{
-		"pk": 3,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeehondjes",
@@ -27,7 +24,6 @@
 		}
 	},
 	{
-		"pk": 4,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "welpen",
@@ -36,7 +32,6 @@
 		}
 	},
 	{
-		"pk": 5,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "kabouters",
@@ -45,7 +40,6 @@
 		}
 	},
 	{
-		"pk": 6,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeewelpen",
@@ -54,7 +48,6 @@
 		}
 	},
 	{
-		"pk": 7,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "wouters",
@@ -63,7 +56,6 @@
 		}
 	},
 	{
-		"pk": 8,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "kawellen",
@@ -72,7 +64,6 @@
 		}
 	},
 	{
-		"pk": 9,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "jongverkenners",
@@ -81,7 +72,6 @@
 		}
 	},
 	{
-		"pk": 10,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "jonggidsen",
@@ -90,7 +80,6 @@
 		}
 	},
 	{
-		"pk": 11,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "scheepsmakkers",
@@ -99,7 +88,6 @@
 		}
 	},
 	{
-		"pk": 12,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "jonggivers",
@@ -108,7 +96,6 @@
 		}
 	},
 	{
-		"pk": 13,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "verkenners",
@@ -117,7 +104,6 @@
 		}
 	},
 	{
-		"pk": 14,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "gidsen",
@@ -126,7 +112,6 @@
 		}
 	},
 	{
-		"pk": 15,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeeverkenners",
@@ -135,7 +120,6 @@
 		}
 	},
 	{
-		"pk": 16,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "givers",
@@ -144,7 +128,6 @@
 		}
 	},
 	{
-		"pk": 17,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "jins",
@@ -153,7 +136,6 @@
 		}
 	},
 	{
-		"pk": 18,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "loodsen",
@@ -162,7 +144,6 @@
 		}
 	},
 	{
-		"pk": 19,
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "leiding",

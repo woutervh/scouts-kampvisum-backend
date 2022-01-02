@@ -32,8 +32,7 @@ RUN apt-get update; \
         gcc \
         libpq-dev \
         libffi-dev \
-        python3-dev \
-        default-libmysqlclient-dev
+        python3-dev
 RUN python -m pip install "poetry==${POETRY_VERSION}"
 COPY pyproject.toml poetry.lock* ./
 

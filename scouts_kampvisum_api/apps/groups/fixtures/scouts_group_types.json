@@ -1,13 +1,11 @@
 [
 	{
-		"pk": 1,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Groep"
 		}
 	},
 	{
-		"pk": 2,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "District",
@@ -17,7 +15,6 @@
 		}
 	},
 	{
-		"pk": 3,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Gouw",
@@ -27,14 +24,12 @@
 		}
 	},
 	{
-		"pk": 4,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Zeescouts"
 		}
 	},
 	{
-		"pk": 5,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Akabe",
@@ -44,7 +39,6 @@
 		}
 	},
 	{
-		"pk": 6,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Akabetak",
@@ -54,7 +48,6 @@
 		}
 	},
 	{
-		"pk": 7,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Jeugdverblijf",
@@ -64,7 +57,6 @@
 		}
 	},
 	{
-		"pk": 8,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "OpenKamp",
@@ -74,7 +66,6 @@
 		}
 	},
 	{
-		"pk": 9,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Jin",
@@ -84,7 +75,6 @@
 		}
 	},
 	{
-		"pk": 10,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Jambe",
@@ -94,7 +84,6 @@
 		}
 	},
 	{
-		"pk": 11,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Technieken",
@@ -104,7 +93,6 @@
 		}
 	},
 	{
-		"pk": 12,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Givers",
@@ -114,7 +102,6 @@
 		}
 	},
 	{
-		"pk": 13,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Jamboree",
@@ -124,7 +111,6 @@
 		}
 	},
 	{
-		"pk": 14,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "HO",
@@ -134,7 +120,6 @@
 		}
 	},
 	{
-		"pk": 15,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "HONL",
@@ -144,7 +129,6 @@
 		}
 	},
 	{
-		"pk": 16,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Tijdschriften",
@@ -154,14 +138,12 @@
 		}
 	},
 	{
-		"pk": 17,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Test"
 		}
 	},
 	{
-		"pk": 18,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Verbond",
@@ -171,7 +153,6 @@
 		}
 	},
 	{
-		"pk": 19,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Ploeg",
@@ -181,7 +162,6 @@
 		}
 	},
 	{
-		"pk": 20,
 		"model": "groups.ScoutsGroupType",
 		"fields": {
 			"type": "Akazeetak",

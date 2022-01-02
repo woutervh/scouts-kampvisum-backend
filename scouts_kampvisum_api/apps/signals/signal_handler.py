@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib.auth.models import Group
 from django.conf import settings
 from django.dispatch import receiver
 
@@ -23,6 +24,12 @@ class SignalHandler:
         logger.debug(
             "SIGNAL received: 'app_ready' from %s", ScoutsAuthSignalSender.sender
         )
+        if not SignalHandler._is_initial_db_ready():
+            logger.debug(
+                "Will not attempt to populate user permissions until migrations have been performed."
+            )
+            return
+
         try:
             logger.debug("Populating user permissions")
             PermissionService().populate_roles()
@@ -64,3 +71,17 @@ class SignalHandler:
         logger.debug(user.to_descriptive_string())
 
         return user
+
+    @staticmethod
+    def _is_initial_db_ready() -> bool:
+        try:
+            groups = Group.objects.all()
+
+            if groups:
+                return True
+        except:
+            logger.debug(
+                "Unable to load authentication groups, database is probably not ready yet"
+            )
+
+        return False
