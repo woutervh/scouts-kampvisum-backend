@@ -10,9 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class CampAPIFilter(filters.FilterSet):
-
-    filter_group = "uuid"
-
     class Meta:
         model = Camp
         fields = []
@@ -20,33 +17,26 @@ class CampAPIFilter(filters.FilterSet):
     @property
     def qs(self):
         parent = super().qs
-        group = self.request.query_params.get("group", None)
+        group_admin_id = self.request.query_params.get("group", None)
         year = self.request.query_params.get("year", None)
 
-        if group and self.filter_group == "uuid":
-            group = uuid.UUID(group)
-
-        if year and group:
+        if year and group_admin_id:
             logger.debug(
-                "Filtering Camp instances with group %s and year %s", group, year
+                "Filtering Camp instances with group %s and year %s",
+                group_admin_id,
+                year,
             )
-            if self.filter_group == "uuid":
-                return parent.filter(
-                    Q(start_date__year=year), Q(sections__group__uuid=group)
-                ).distinct()
-            else:
-                return parent.filter(
-                    Q(start_date__year=year), Q(sections__group__id=group)
-                ).distinct()
+            return parent.filter(
+                Q(start_date__year=year), Q(sections__group_admin_id=group_admin_id)
+            ).distinct()
+
         if year:
             logger.debug("Filtering Camp instances with year %s", year)
             return parent.filter(start_date__year=year)
-        if group:
-            logger.debug("Filtering Camp instances with group %s", group)
-            if self.filter_group == "uuid":
-                return parent.filter(sections__group__uuid=group).distinct()
-            else:
-                return parent.filter(sections__group__id=group).distinct()
+
+        if group_admin_id:
+            logger.debug("Filtering Camp instances with group %s", group_admin_id)
+            return parent.filter(sections__group_admin_id=group_admin_id).distinct()
 
         logger.debug("Filters for Camp not set, returning all instances")
         return parent.all()
