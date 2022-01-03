@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -14,16 +15,15 @@ logger = logging.getLogger(__name__)
 
 class ScoutsSectionViewSet(viewsets.GenericViewSet):
 
-    lookup_field = "uuid"
     serializer_class = ScoutsSectionSerializer
     queryset = ScoutsSection.objects.all()
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
-    def retrieve(self, request, uuid=None):
+    def retrieve(self, request, pk=None):
         """
         Retrieves an existing ScoutSectionName object.
         """
-        instance = self.get_object()
+        instance: ScoutsSection = self.get_object()
         serializer = ScoutsSectionSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
@@ -34,14 +34,18 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         Retrieves a list of all existing Section instances.
         """
 
-        instances = self.filter_queryset(self.get_queryset())
+        instances: List[ScoutsSection] = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = ScoutsSectionSerializer(page, many=True)
+            serializer = ScoutsSectionSerializer(
+                page, many=True, context={"request": request}
+            )
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = ScoutsSectionSerializer(instances, many=True)
+            serializer = ScoutsSectionSerializer(
+                instances, many=True, context={"request": request}
+            )
             return Response(serializer.data)
 
     @action(
