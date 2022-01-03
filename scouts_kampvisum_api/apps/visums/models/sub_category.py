@@ -1,14 +1,21 @@
+import logging
+
 from django.db import models
 
 from apps.visums.models import Category
-from apps.visums.managers import CategoryManager
+from apps.visums.managers import SubCategoryManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
 from scouts_auth.inuits.models.interfaces import Linkable, Explainable
 
 
+logger = logging.getLogger(__name__)
+
+
 class SubCategory(Linkable, Explainable, AbstractBaseModel):
+
+    objects = SubCategoryManager()
 
     category = models.ForeignKey(
         Category,
@@ -16,12 +23,16 @@ class SubCategory(Linkable, Explainable, AbstractBaseModel):
         on_delete=models.CASCADE,
     )
     name = RequiredCharField(max_length=128)
-    is_default = models.BooleanField(default=False)
-
-    objects = CategoryManager()
 
     class Meta:
         ordering = ["name"]
+        unique_together = ("name", "category")
 
     def natural_key(self):
-        return (self.name,)
+        logger.debug("NATURAL KEY CALLED")
+        return (self.name, self.category)
+
+    def __str__(self):
+        return "OBJECT SubCategory: name({}), category({})".format(
+            self.name, str(self.category)
+        )

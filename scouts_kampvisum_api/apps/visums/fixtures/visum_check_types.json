@@ -1,0 +1,51 @@
+[
+	{
+		"pk": 1,
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "SimpleCheck"
+		}
+	},
+	{
+		"pk": 2,
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "DateCheck"
+		}
+	},
+	{
+		"pk": 3,
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "LocationCheck"
+		}
+	},
+	{
+		"pk": 4,
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ContactCheck"
+		}
+	},
+	{
+		"pk": 5,
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "FileUploadCheck"
+		}
+	},
+	{
+		"pk": 6,
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "InputCheck"
+		}
+	},
+	{
+		"pk": 7,
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "InformationCheck"
+		}
+	}
+]

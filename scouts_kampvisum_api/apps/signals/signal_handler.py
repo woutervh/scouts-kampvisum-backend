@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Group
 from django.conf import settings
 from django.dispatch import receiver
@@ -75,9 +76,9 @@ class SignalHandler:
     @staticmethod
     def _is_initial_db_ready() -> bool:
         try:
-            groups = Group.objects.all()
+            content_types = ContentType.objects.all()
 
-            if groups:
+            if content_types:
                 return True
         except:
             logger.debug(

@@ -2,7 +2,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -13,7 +13,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -24,7 +24,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -35,7 +35,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -46,7 +46,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -57,7 +57,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -68,7 +68,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -79,7 +79,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -90,7 +90,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -101,7 +101,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -112,7 +112,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -123,7 +123,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -134,7 +134,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -145,7 +145,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Groep"
 			],
 			"name": [
@@ -156,7 +156,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Zeescouts"
 			],
 			"name": [
@@ -167,7 +167,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Zeescouts"
 			],
 			"name": [
@@ -178,7 +178,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Zeescouts"
 			],
 			"name": [
@@ -189,7 +189,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Zeescouts"
 			],
 			"name": [
@@ -200,7 +200,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Zeescouts"
 			],
 			"name": [
@@ -211,7 +211,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Zeescouts"
 			],
 			"name": [
@@ -222,7 +222,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Test"
 			],
 			"name": [
@@ -233,7 +233,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Test"
 			],
 			"name": [
@@ -244,7 +244,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Test"
 			],
 			"name": [
@@ -255,7 +255,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Test"
 			],
 			"name": [
@@ -266,7 +266,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Test"
 			],
 			"name": [
@@ -277,7 +277,7 @@
 	{
 		"model": "groups.DefaultScoutsSectionName",
 		"fields": {
-			"type": [
+			"group_type": [
 				"Test"
 			],
 			"name": [

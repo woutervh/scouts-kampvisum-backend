@@ -1,62 +1,74 @@
 [
 	{
-		"pk": 1,
 		"model": "visums.Category",
 		"fields": {
 			"name": "Planning",
+			"category_set": [
+				2022,
+				"Test"
+			],
 			"index": 0,
-			"description": "",
-			"is_default": true
+			"description": ""
 		}
 	},
 	{
-		"pk": 2,
 		"model": "visums.Category",
 		"fields": {
 			"name": "Logistiek",
+			"category_set": [
+				2022,
+				"Test"
+			],
 			"index": 1,
-			"description": "",
-			"is_default": true
+			"description": ""
 		}
 	},
 	{
-		"pk": 3,
 		"model": "visums.Category",
 		"fields": {
 			"name": "Communicatie & afspraken",
+			"category_set": [
+				2022,
+				"Test"
+			],
 			"index": 2,
-			"description": "",
-			"is_default": true
+			"description": ""
 		}
 	},
 	{
-		"pk": 4,
 		"model": "visums.Category",
 		"fields": {
 			"name": "Veiligheid",
+			"category_set": [
+				2022,
+				"Test"
+			],
 			"index": 3,
-			"description": "",
-			"is_default": true
+			"description": ""
 		}
 	},
 	{
-		"pk": 5,
 		"model": "visums.Category",
 		"fields": {
 			"name": "Leden & leiding",
+			"category_set": [
+				2022,
+				"Test"
+			],
 			"index": 4,
-			"description": "",
-			"is_default": true
+			"description": ""
 		}
 	},
 	{
-		"pk": 6,
 		"model": "visums.Category",
 		"fields": {
 			"name": "Budget",
+			"category_set": [
+				2022,
+				"Test"
+			],
 			"index": 5,
-			"description": "",
-			"is_default": true
+			"description": ""
 		}
 	}
 ]

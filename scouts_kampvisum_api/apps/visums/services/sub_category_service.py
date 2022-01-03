@@ -1,12 +1,14 @@
 import logging
 
 from apps.visums.models import Category, SubCategory
-from apps.visums.services import ConcernService
+from apps.visums.services import CheckService
 
 logger = logging.getLogger(__name__)
 
 
 class SubCategoryService:
+    check_service = CheckService()
+
     def create(self, *, name: str, category: Category) -> SubCategory:
         """
         Saves a SubCategory object to the DB.
@@ -35,17 +37,16 @@ class SubCategoryService:
 
         return instance
 
-    def deepcopy(self, instance: SubCategory) -> SubCategory:
-        concern_service = ConcernService()
-        instance_copy = copy_basemodel(instance)
-        instance_copy.is_default = False
+    # def deepcopy(self, instance: SubCategory) -> SubCategory:
+    #     instance_copy = copy_basemodel(instance)
+    #     instance_copy.is_default = False
 
-        instance_copy.full_clean()
-        instance_copy.save()
+    #     instance_copy.full_clean()
+    #     instance_copy.save()
 
-        concerns = instance.concerns.all()
-        for concern in concerns:
-            concern_copy = concern_service.deepcopy(concern)
-            instance_copy.concerns.add(concern_copy)
+    #     checks = instance.checks.all()
+    #     for check in checks:
+    #         check_copy = self.check_service.deepcopy(check)
+    #         instance_copy.checks.add(check_copy)
 
-        return instance_copy
+    #     return instance_copy

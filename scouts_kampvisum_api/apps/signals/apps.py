@@ -13,4 +13,4 @@ class SignalsConfig(AppConfig):
         import scouts_auth.auth.signals
         from .signal_handler import SignalHandler
 
-        logger.debug("insurance app is ready")
+        logger.debug("App is ready")

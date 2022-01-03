@@ -1,158 +1,186 @@
 [
 	{
-		"pk": 1,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Datum",
 			"category": [
-				"Planning"
-			],
-			"is_default": true
+				"Planning",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 2,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Activiteiten",
 			"category": [
-				"Planning"
-			],
-			"is_default": true
+				"Planning",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 3,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Menu",
 			"category": [
-				"Planning"
-			],
-			"is_default": true
+				"Planning",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 4,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Locatie(s) - kaartje",
 			"category": [
-				"Logistiek"
-			],
-			"is_default": true
+				"Logistiek",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 5,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Locatie(s) - info",
 			"category": [
-				"Logistiek"
-			],
-			"is_default": true
+				"Logistiek",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 6,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Vervoer",
 			"category": [
-				"Logistiek"
-			],
-			"is_default": true
+				"Logistiek",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 7,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Materiaal",
 			"category": [
-				"Logistiek"
-			],
-			"is_default": true
+				"Logistiek",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 8,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Ouders",
 			"category": [
-				"Communicatie & afspraken"
-			],
-			"is_default": true
+				"Communicatie & afspraken",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 9,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Afspraken",
 			"category": [
-				"Communicatie & afspraken"
-			],
-			"is_default": true
+				"Communicatie & afspraken",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 10,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Verzekeringen",
 			"category": [
-				"Veiligheid"
+				"Veiligheid",
+				[
+					2022,
+					"Test"
+				]
 			],
-			"is_default": true,
 			"explanation": "Info over verzekeringen",
 			"link": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/waarvoor-ben-je-verzekerd"
 		}
 	},
 	{
-		"pk": 11,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Zorgverlening",
 			"category": [
-				"Veiligheid"
-			],
-			"is_default": true
+				"Veiligheid",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 12,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Leiding",
 			"category": [
-				"Leden & leiding"
-			],
-			"is_default": true
+				"Leden & leiding",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 13,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Leden",
 			"category": [
-				"Leden & leiding"
-			],
-			"is_default": true
+				"Leden & leiding",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	},
 	{
-		"pk": 14,
 		"model": "visums.SubCategory",
 		"fields": {
 			"name": "Begroting",
 			"category": [
-				"Budget"
-			],
-			"is_default": true
+				"Budget",
+				[
+					2022,
+					"Test"
+				]
+			]
 		}
 	}
 ]

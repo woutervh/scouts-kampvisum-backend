@@ -1,42 +1,37 @@
 [
 	{
-		"pk": 1,
 		"model": "visums.CategorySetPriority",
 		"fields": {
 			"owner": "Verbond",
-            "priority": 10
+			"priority": 10
 		}
 	},
-    {
-		"pk": 2,
+	{
 		"model": "visums.CategorySetPriority",
 		"fields": {
 			"owner": "Gouw",
-            "priority": 100
+			"priority": 100
 		}
 	},
-    {
-		"pk": 3,
+	{
 		"model": "visums.CategorySetPriority",
 		"fields": {
 			"owner": "District",
-            "priority": 1000
+			"priority": 1000
 		}
 	},
-    {
-		"pk": 4,
+	{
 		"model": "visums.CategorySetPriority",
 		"fields": {
 			"owner": "Groep",
-            "priority": 2000
+			"priority": 2000
 		}
 	},
-    {
-		"pk": 5,
+	{
 		"model": "visums.CategorySetPriority",
 		"fields": {
 			"owner": "Tak",
-            "priority": 3000
+			"priority": 3000
 		}
 	}
 ]

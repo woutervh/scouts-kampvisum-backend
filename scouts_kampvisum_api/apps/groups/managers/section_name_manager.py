@@ -1,4 +1,9 @@
+import logging
+
 from django.db import models
+
+
+logger = logging.getLogger(__name__)
 
 
 class ScoutsSectionNameManager(models.Manager):
@@ -9,4 +14,10 @@ class ScoutsSectionNameManager(models.Manager):
     """
 
     def get_by_natural_key(self, name):
+        logger.debug(
+            "GET BY NATURAL KEY %s: (name: %s (%s))",
+            "ScoutsSectionName",
+            name,
+            type(name).__name__,
+        )
         return self.get(name=name)

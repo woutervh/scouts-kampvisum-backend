@@ -22,17 +22,18 @@ class DefaultScoutsSectionName(AbstractBaseModel):
 
     objects = DefaultScoutsSectionNameManager()
 
-    type = models.ForeignKey(ScoutsGroupType, null=True, on_delete=models.CASCADE)
+    group_type = models.ForeignKey(ScoutsGroupType, null=True, on_delete=models.CASCADE)
     name = models.ForeignKey(ScoutsSectionName, null=True, on_delete=models.DO_NOTHING)
 
     class Meta:
-        unique_together = ("type", "name")
+        unique_together = ("group_type", "name")
 
     def clean(self):
-        if self.type is None or self.name is None:
+        if self.group_type is None or self.name is None:
             raise ValidationError(
                 "A DefaultScoutsSectionName needs a group type and a section name"
             )
 
     def natural_key(self):
-        return (self.type, self.name)
+        logger.debug("NATURAL KEY CALLED")
+        return (self.group_type, self.name)

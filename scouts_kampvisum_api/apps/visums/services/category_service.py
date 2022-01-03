@@ -33,18 +33,18 @@ class CategoryService:
 
         return instance
 
-    def deepcopy(self, instance: Category) -> Category:
-        sub_category_service = SubCategoryService()
+    # def deepcopy(self, instance: Category) -> Category:
+    #     sub_category_service = SubCategoryService()
 
-        instance_copy = copy_basemodel(instance)
-        instance_copy.is_default = False
+    #     instance_copy = copy_basemodel(instance)
+    #     instance_copy.is_default = False
 
-        instance_copy.full_clean()
-        instance_copy.save()
+    #     instance_copy.full_clean()
+    #     instance_copy.save()
 
-        sub_categories = instance.sub_categories.all()
-        for sub_category in sub_categories:
-            sub_category_copy = sub_category_service.deepcopy(sub_category)
-            instance_copy.sub_categories.add(sub_category_copy)
+    #     sub_categories = instance.sub_categories.all()
+    #     for sub_category in sub_categories:
+    #         sub_category_copy = sub_category_service.deepcopy(sub_category)
+    #         instance_copy.sub_categories.add(sub_category_copy)
 
-        return instance_copy
+    #     return instance_copy

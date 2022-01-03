@@ -14,10 +14,14 @@ FIXTURES=(
 	"scouts_group_types.json"
 	"scouts_section_names.json"
 	"default_scouts_section_names.json"
+	"camp_years.json"
+	"visum_camp_year_category_sets.json"
+	"visum_category_set_priorities.json"
+	"visum_category_sets.json"
 	"visum_categories.json"
 	"visum_sub_categories.json"
-	"visum_category_set_priorities.json"
-	"visum_concern_types.json"
+	"visum_check_types.json"
+	"visum_checks.json"
 )
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }
@@ -62,7 +66,7 @@ load_fixture() {
 	echo "============================================================"
 	echo "LOADING DATA: $1"
 	echo "============================================================"
-	python manage.py loaddata $1
+	python manage.py loaddata --natural $1
 }
 
 for APP in ${APPS[@]}; do

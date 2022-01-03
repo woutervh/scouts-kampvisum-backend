@@ -1,0 +1,1336 @@
+[
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_date_members",
+            "sub_category": [
+                "Datum",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "DateCheck"
+            ],
+            "explanation": "Start- en einddatum voor het ledenkamp"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_date_leaders",
+            "sub_category": [
+                "Datum",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "DateCheck"
+            ],
+            "explanation": "Start- en einddatum voor het leidingskamp"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_activities_camp",
+            "sub_category": [
+                "Activiteiten",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Voor- en nakamp geregeld ?"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_activities_rain",
+            "sub_category": [
+                "Activiteiten",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Regenplanning opgesteld ?"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_activities_heat",
+            "sub_category": [
+                "Activiteiten",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Hitteplanning opgemaakt ?"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_activities_totemisation",
+            "sub_category": [
+                "Activiteiten",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Totemisatie gepland ?"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_activities_night_activity",
+            "sub_category": [
+                "Activiteiten",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Nachtspel planning ok ?"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_activities_upload_general_planning",
+            "sub_category": [
+                "Activiteiten",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier de algemene kampplanning op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_activities_upload_other_planning",
+            "sub_category": [
+                "Activiteiten",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad het regenplan, hitteplan en afspraken rond totemisatie en nachtspel op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_menu_balanced_diet",
+            "sub_category": [
+                "Menu",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ]
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_menu_vegetarian_diet",
+            "sub_category": [
+                "Menu",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ]
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_menu_upload",
+            "sub_category": [
+                "Menu",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ]
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_location_name",
+            "sub_category": [
+                "Locatie(s) - kaartje",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "InputCheck"
+            ]
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_location_contact",
+            "sub_category": [
+                "Locatie(s) - kaartje",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "ContactCheck"
+            ]
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_location_contact_cell",
+            "sub_category": [
+                "Locatie(s) - kaartje",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "ContactCheck"
+            ]
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_location_location",
+            "sub_category": [
+                "Locatie(s) - kaartje",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "LocationCheck"
+            ],
+            "explanation": "Aanduiding kampplaats op kaart"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_location_contract",
+            "sub_category": [
+                "Locatie(s) - kaartje",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je contract op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_info_water",
+            "sub_category": [
+                "Locatie(s) - info",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Water dat niet uit de kraan of aangekochte flessen komt (bronwater, regenputten, ...) moet gecontroleerd worden. De eigenaar moet hier zelf een attest voor aanvragen. Het is ook zeer belangrijk om na te gaan waarvoor de waterslangen nog gebruikt worden. Als een boer bijvoorbeeld door het jaar zijn sproeistoffen door deze slangen jaagt, spreekt het voor zich dat die niet voor drinkwater geschikt zijn, behalve indien deze chemisch ontsmet zijn. Vermijd ook stilstaand water (bv. wanneer de waterslang de hele dag in de zon ligt)."
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_info_toilets",
+            "sub_category": [
+                "Locatie(s) - info",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "In Vlaanderen en Wallonië bestaat er geen overkoepelende reglementering rond het graven van HUDO’s, maar verschillende gemeentebesturen en/of eigenaars van kampeerweides verbieden het wel. Als je een HUDO graaft, tracht dit dan zo ecologisch mogelijk te doen. Belangrijk is dat je de HUDO minstens op een afstand van 70 meter van beken en andere watertjes uitgraaft. Voorzie een vuilniszak voor maandverband e.a. In de Oostkantons mogen er geen putten gegraven worden voor HUDO’s. Dat wil zeggen dat je verplicht bent om op een kampeerweide gebruik te maken van chemische toiletten. Check vooraf bij de verhuurder van de kampeerweide of hij chemische toiletten voorziet, zoniet zal je er zelf voor moeten zorgen. Ook GFT-putten (groente-, fruit- en tuinafval) zijn verboden. Gebruik daarvoor de gereglementeerde afvalzakken of de composthoop van de kampuitbater. www.opkamp.be > regelgeving > hudo"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_info_fire",
+            "sub_category": [
+                "Locatie(s) - info",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "In Vlaanderen mag je geen vuur maken op minder dan 25 meter van huizen, bossen, heide, boomgaarden, hagen, graan en stro. Voor een kampvuur kan je wel een uitzondering krijgen, maar dan moet je minstens 35 dagen voor je kamp een machtiging aanvragen bij het Agentschap voor Natuur en Bos. De Waalse regelgeving voorziet geen machtiging als je korter bij het bos een vuur wil maken. Informeer je ook steeds over de reglementering van je kampgemeente; deze kan strenger zijn dan de 25-meterregel (wat vaak het geval is in de Oostkantons). Ook rook verspreiden over de openbare weg is verboden."
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_info_electricity",
+            "sub_category": [
+                "Locatie(s) - info",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Electriciteit"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_info_store",
+            "sub_category": [
+                "Locatie(s) - info",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Winkel in de buurt"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_transport_members",
+            "sub_category": [
+                "Vervoer",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Transportplanning voor leden"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_transport_leaders",
+            "sub_category": [
+                "Vervoer",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Transportplanning voor leiding"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_transport_materials",
+            "sub_category": [
+                "Vervoer",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Transportplanning voor materialen"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_transport_upload",
+            "sub_category": [
+                "Vervoer",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je vervoersplanning op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_materials_checked",
+            "sub_category": [
+                "Materiaal",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Materiaal nagekeken ?"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_materials_upload",
+            "sub_category": [
+                "Materiaal",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je materiaallijst op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_parents_ombudsman",
+            "sub_category": [
+                "Ouders",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Duidelijk aanspreekpunt voor de ouders"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_parents_ombudsman_contact",
+            "sub_category": [
+                "Ouders",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "ContactCheck"
+            ],
+            "explanation": "Naam aanspreekpunt"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_parents_informed",
+            "sub_category": [
+                "Ouders",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Ouders zijn voldoende geïnformeerd"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_parents_brochure",
+            "sub_category": [
+                "Ouders",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier de brochure voor ouders op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_agreements_rules",
+            "sub_category": [
+                "Afspraken",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Algemene kampregels"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_agreements_smoking",
+            "sub_category": [
+                "Afspraken",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Afspraken: roken"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_agreements_sexuality",
+            "sub_category": [
+                "Afspraken",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Afspraken: sex en relaties"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_agreements_alcohol",
+            "sub_category": [
+                "Afspraken",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Afspraken: alcohol- en BOB-regeling"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_agreements_parents",
+            "sub_category": [
+                "Afspraken",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Zijn ouders op de hoogte van de afspraken ?"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_agreements_upload",
+            "sub_category": [
+                "Afspraken",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je afspraken op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_insurance_upload",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "InformationCheck"
+            ]
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_insurance_members",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Alle leden en leiding verzekerd"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_insurance_non_members",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Alle niet-leden (fouriers, bezoekers) verzekerd"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_insurance_cars",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Alle voertuigen verzekerd"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_insurance_materials",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Alle materiaal verzekerd"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_insurance_upload",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier je verzekeringsdocumenten op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_healthcare_gp",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Huisarts in de buurt"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_healthcare_gp_location",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "LocationCheck"
+            ],
+            "explanation": "Locatie huisarts"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_healthcare_pharmacy",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Apotheek in de buurt"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_healthcare_pharmacy_location",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "LocationCheck"
+            ],
+            "explanation": "Locatie apotheek"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_healthcare_hospital",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Ziekenhuis in de buurt"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_healthcare_hospital_location",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "LocationCheck"
+            ],
+            "explanation": "Locatie ziekenhuis"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_healthcare_hospital_ehbo",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "EHBO-koffer volledig samengesteld",
+            "link": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_healthcare_hospital_emergency_contact",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Lijst met noodnummers"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_leaders_main",
+            "sub_category": [
+                "Leiding",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "21-jarige verantwoordelijke"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_leaders_responsible",
+            "sub_category": [
+                "Leiding",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "ContactCheck"
+            ],
+            "explanation": "Contactgegevens kampverantwoordelijke"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_leaders_responsible_2",
+            "sub_category": [
+                "Leiding",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "ContactCheck"
+            ],
+            "explanation": "Contactgegevens 2de kampverantwoordelijke"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_leaders_home_contact",
+            "sub_category": [
+                "Leiding",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "ContactCheck"
+            ],
+            "explanation": "Contactgegevens thuisverantwoordelijke"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_leaders_cooks",
+            "sub_category": [
+                "Leiding",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Voldoende fouriers"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_leaders_leader_count",
+            "sub_category": [
+                "Leiding",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "InputCheck"
+            ],
+            "explanation": "Totaal aantal leiding"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_members_medical_info",
+            "sub_category": [
+                "Leden",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Individuele steekkaarten ok"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_members_id",
+            "sub_category": [
+                "Leden",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Copy identiteitskaarten"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_members_payment",
+            "sub_category": [
+                "Leden",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Leden betaald"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_members_registered",
+            "sub_category": [
+                "Leden",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Leden ingeschreven"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_members_count",
+            "sub_category": [
+                "Leden",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "InputCheck"
+            ],
+            "explanation": "Totaal aantal leden"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "budget_budget_balanced",
+            "sub_category": [
+                "Begroting",
+                [
+                    "Budget",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Evenwichtig begroting"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "budget_budget_leaders",
+            "sub_category": [
+                "Begroting",
+                [
+                    "Budget",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Afspraken betaling leiding"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "budget_budget_members",
+            "sub_category": [
+                "Begroting",
+                [
+                    "Budget",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "explanation": "Kampgeld leden ontvangen"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "budget_budget_upload",
+            "sub_category": [
+                "Begroting",
+                [
+                    "Budget",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "FileUploadCheck"
+            ],
+            "explanation": "Laad hier de digitale begroting op"
+        }
+    }
+]

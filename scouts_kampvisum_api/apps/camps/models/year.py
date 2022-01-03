@@ -29,6 +29,6 @@ class CampYear(AuditedBaseModel):
         return (self.year,)
 
     def __str__(self):
-        return "CampYear {self.year}: {self.start_date} - {self.end_date}".format(
-            self=self
+        return "OBJECT CampYear: year({}), start_date({}), end_date({})".format(
+            self.year, self.start_date, self.end_date
         )

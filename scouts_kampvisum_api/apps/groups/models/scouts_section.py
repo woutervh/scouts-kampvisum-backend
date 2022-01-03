@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 
 from apps.groups.models import ScoutsSectionName
@@ -5,6 +7,9 @@ from apps.groups.models import ScoutsSectionName
 
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
+
+
+logger = logging.getLogger(__name__)
 
 
 class ScoutsSection(AbstractBaseModel):
@@ -18,3 +23,12 @@ class ScoutsSection(AbstractBaseModel):
 
     class Meta:
         ordering = ["name__age_group"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["group_admin_id"], name="unique_section_group_admin_id"
+            )
+        ]
+
+    def natural_key(self):
+        logger.debug("NATURAL KEY CALLED")
+        return (self.group_admin_id,)

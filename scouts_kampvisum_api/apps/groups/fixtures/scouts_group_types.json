@@ -2,13 +2,13 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Groep"
+			"group_type": "Groep"
 		}
 	},
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "District",
+			"group_type": "District",
 			"parent": [
 				"Groep"
 			]
@@ -17,7 +17,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Gouw",
+			"group_type": "Gouw",
 			"parent": [
 				"Groep"
 			]
@@ -26,13 +26,13 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Zeescouts"
+			"group_type": "Zeescouts"
 		}
 	},
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Akabe",
+			"group_type": "Akabe",
 			"parent": [
 				"Groep"
 			]
@@ -41,7 +41,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Akabetak",
+			"group_type": "Akabetak",
 			"parent": [
 				"Groep"
 			]
@@ -50,7 +50,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Jeugdverblijf",
+			"group_type": "Jeugdverblijf",
 			"parent": [
 				"Groep"
 			]
@@ -59,7 +59,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "OpenKamp",
+			"group_type": "OpenKamp",
 			"parent": [
 				"Groep"
 			]
@@ -68,7 +68,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Jin",
+			"group_type": "Jin",
 			"parent": [
 				"Groep"
 			]
@@ -77,7 +77,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Jambe",
+			"group_type": "Jambe",
 			"parent": [
 				"Groep"
 			]
@@ -86,7 +86,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Technieken",
+			"group_type": "Technieken",
 			"parent": [
 				"Groep"
 			]
@@ -95,7 +95,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Givers",
+			"group_type": "Givers",
 			"parent": [
 				"Groep"
 			]
@@ -104,7 +104,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Jamboree",
+			"group_type": "Jamboree",
 			"parent": [
 				"Groep"
 			]
@@ -113,7 +113,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "HO",
+			"group_type": "HO",
 			"parent": [
 				"Groep"
 			]
@@ -122,7 +122,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "HONL",
+			"group_type": "HONL",
 			"parent": [
 				"Groep"
 			]
@@ -131,7 +131,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Tijdschriften",
+			"group_type": "Tijdschriften",
 			"parent": [
 				"Groep"
 			]
@@ -140,13 +140,13 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Test"
+			"group_type": "Test"
 		}
 	},
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Verbond",
+			"group_type": "Verbond",
 			"parent": [
 				"Groep"
 			]
@@ -155,7 +155,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Ploeg",
+			"group_type": "Ploeg",
 			"parent": [
 				"Groep"
 			]
@@ -164,7 +164,7 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"type": "Akazeetak",
+			"group_type": "Akazeetak",
 			"parent": [
 				"Zeescouts"
 			]
