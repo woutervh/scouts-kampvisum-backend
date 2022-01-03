@@ -97,14 +97,14 @@ class CampAPIViewSet(viewsets.GenericViewSet):
             return Response(serializer.data)
 
     @action(
-        detail=True,
+        detail=False,
         methods=["get"],
         permission_classes=[IsAuthenticated],
-        url_path="years",
+        url_path=r"(?P<group_admin_id>\w+)/years",
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
-    def get_available_years(self, request, uuid=None):
-        camps = Camp.objects.filter(sections__group__uuid=uuid).distinct()
+    def get_available_years(self, request, group_admin_id=None):
+        camps = Camp.objects.filter(sections__group_admin_id=group_admin_id).distinct()
 
         if camps.count() != 0:
             years = list(
