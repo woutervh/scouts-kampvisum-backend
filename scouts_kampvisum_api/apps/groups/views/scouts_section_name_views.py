@@ -19,7 +19,6 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing scout section names.
     """
 
-    lookup_field = "uuid"
     serializer_class = ScoutsSectionNameSerializer
     queryset = ScoutsSectionName.objects.all()
 
@@ -47,7 +46,7 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionNameSerializer})
-    def retrieve(self, request, uuid=None):
+    def retrieve(self, request, pk=None):
         """
         Retrieves an existing ScoutSectionName object.
         """
@@ -60,7 +59,7 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         request_body=ScoutsSectionNameSerializer,
         responses={status.HTTP_200_OK: ScoutsSectionNameSerializer},
     )
-    def partial_update(self, request, uuid=None):
+    def partial_update(self, request, pk=None):
         """
         Updates an existing ScoutsSectionName object.
         """
@@ -103,14 +102,14 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
-    def delete(self, request, uuid):
+    def delete(self, request, pk=None):
         """
         Deletes a ScoutsSectionName instance by uuid
         """
-        instance = ScoutsSectionName.objects.get(uuid=uuid)
+        instance = ScoutsSectionName.objects.get(pk=pk)
 
         if not instance:
-            logger.error("No SectionName found with uuid '%s'", uuid)
+            logger.error("No SectionName found with id '%s'", pk)
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
         instance.delete()

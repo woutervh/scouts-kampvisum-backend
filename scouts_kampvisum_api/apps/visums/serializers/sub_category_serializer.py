@@ -18,7 +18,7 @@ class SubCategoryAPISerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategory()
-        fields = ["name", "uuid", "status"]
+        fields = ["name", "id", "status"]
 
     def get_status(self, obj):
         return False

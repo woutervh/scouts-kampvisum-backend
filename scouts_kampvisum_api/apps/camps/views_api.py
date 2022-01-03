@@ -1,4 +1,5 @@
 import logging
+
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
@@ -22,30 +23,34 @@ class CampAPIViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing camp instances.
     """
 
-    lookup_field = "uuid"
     serializer_class = CampSerializer
     queryset = Camp.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = CampAPIFilter
+
+    camp_service = CampService()
 
     @swagger_auto_schema(
         request_body=CampAPISerializer,
         responses={status.HTTP_201_CREATED: CampSerializer},
     )
     def create(self, request):
-        data = request.data
+        logger.debug("CREATE REQUEST DATA: %s", request.data)
 
-        serializer = CampAPISerializer(data=data, context={"request": request})
+        serializer = CampAPISerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
-        camp = CampService().camp_create(**serializer.validated_data)
+        validated_data = serializer.validated_data
+        logger.debug("CREATE VALIDATED DATA: %s", validated_data)
+
+        camp = self.camp_service.camp_create(**validated_data)
 
         output_serializer = CampSerializer(camp, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampAPISerializer})
-    def retrieve(self, request, uuid=None):
+    def retrieve(self, request, pk=None):
         instance = self.get_object()
         serializer = CampAPISerializer(instance, context={"request": request})
 
@@ -55,7 +60,7 @@ class CampAPIViewSet(viewsets.GenericViewSet):
         request_body=CampAPISerializer,
         responses={status.HTTP_200_OK: CampSerializer},
     )
-    def partial_update(self, request, uuid=None):
+    def partial_update(self, request, pk=None):
         camp = self.get_object()
 
         serializer = CampAPISerializer(
@@ -63,7 +68,7 @@ class CampAPIViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        logger.debug("Updating Camp with uuid %s", uuid)
+        logger.debug("Updating Camp with id %s", pk)
 
         updated_camp = CampService().camp_update(
             instance=camp, **serializer.validated_data
@@ -76,10 +81,10 @@ class CampAPIViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
-    def delete(self, request, uuid):
-        logger.debug("Deleting Camp with uuid %s", uuid)
+    def delete(self, request, pk):
+        logger.debug("Deleting Camp with id %s", pk)
 
-        camp = get_object_or_404(Camp.objects, uuid=uuid)
+        camp = get_object_or_404(Camp.objects, pk=pk)
         camp.delete()
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

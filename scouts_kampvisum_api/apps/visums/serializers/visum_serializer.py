@@ -10,7 +10,7 @@ from scouts_auth.inuits.mixins import FlattenSerializerMixin
 class CampVisumSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = CampVisum
-        fields = ["uuid"]
+        fields = ["id"]
         flatten = [
             ("camp", CampAPISerializer),
             ("category_set", CategorySetAPISerializer),

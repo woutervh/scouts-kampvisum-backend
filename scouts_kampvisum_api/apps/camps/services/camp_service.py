@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class CampService:
+    year_service = CampYearService()
+
     def camp_create(self, *args, **fields) -> Camp:
         """
         Saves a Camp object to the DB.
@@ -27,7 +29,7 @@ class CampService:
 
         logger.debug("Creating camp with name '%s'", name)
         camp = Camp()
-        camp.year = CampYearService().get_or_create_year(year)
+        camp.year = self.year_service.get_or_create_year(year)
         camp.name = name
         if start_date:
             camp.start_date = start_date
@@ -38,11 +40,11 @@ class CampService:
         camp.save()
 
         logger.debug("Linking %d section(s) to camp '%s'", len(sections), camp.name)
-        section_objects = ScoutsSection.objects.filter(uuid__in=sections)
+        # section_objects = ScoutsSection.objects.filter(id__in=sections)
 
-        if section_objects.count() == 0:
-            raise ObjectDoesNotExist("No sections found for uuid(s): %s", sections)
-        for section in section_objects:
+        # if section_objects.count() == 0:
+        #     raise ObjectDoesNotExist("No sections found for id(s): %s", sections)
+        for section in sections:
             camp.sections.add(section)
         camp.save()
 
@@ -61,7 +63,7 @@ class CampService:
         instance.start_date = fields.get("start_date", instance.start_date)
         instance.end_date = fields.get("end_date", instance.end_date)
 
-        sections = ScoutsSection.objects.filter(uuid__in=sections)
+        sections = ScoutsSection.objects.filter(id__in=sections)
         instance.sections.clear()
         for section in sections:
             instance.sections.add(section)

@@ -1,4 +1,4 @@
-import logging
+import logging, uuid
 from rest_framework import serializers
 
 from apps.groups.models import ScoutsSection
@@ -35,8 +35,30 @@ class ScoutsSectionAPISerializer(FlattenSerializerMixin, serializers.ModelSerial
 
     class Meta:
         model = ScoutsSection
-        fields = ["uuid"]
+        fields = ["id"]
         flatten = [("name", ScoutsSectionNameAPISerializer)]
+
+    def to_internal_value(self, data: dict) -> dict:
+        logger.debug("SERIALIZER DATA: %s (%s)", data, type(data).__name__)
+
+        if isinstance(data, str):
+            id = data
+            data = {}
+            data["id"] = data
+
+        return super().to_internal_value(data)
+
+    def validate(self, data: dict) -> ScoutsSection:
+        if not data:
+            return None
+
+        if not data.get("id"):
+            if not data.get("group_admin_id") and data.get("name"):
+                raise serializers.ValidationError(
+                    "A ScoutsSection can only be identified by either a uuid or the combination of a name and the groups group admin id"
+                )
+
+        return data
 
 
 class ScoutsSectionCreationAPISerializer(serializers.Serializer):

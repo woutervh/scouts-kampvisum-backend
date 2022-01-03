@@ -22,7 +22,6 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing camp instances.
     """
 
-    lookup_field = "uuid"
     serializer_class = CampVisumSerializer
     queryset = CampVisum.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
@@ -47,7 +46,7 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
-    def retrieve(self, request, uuid=None):
+    def retrieve(self, request, pk=None):
         instance = self.get_object()
         serializer = CampVisumSerializer(instance, context={"request": request})
 
@@ -57,7 +56,7 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         request_body=CampVisumSerializer,
         responses={status.HTTP_200_OK: CampVisumSerializer},
     )
-    def partial_update(self, request, uuid=None):
+    def partial_update(self, request, pk=None):
         instance = self.get_object()
 
         serializer = CampVisumSerializer(
@@ -68,7 +67,7 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        logger.debug("Updating CampVisum with uuid %s", uuid)
+        logger.debug("Updating CampVisum with id %s", pk)
 
         updated_instance = CampVisumService().visum_update(
             instance=instance, **serializer.validated_data
@@ -95,10 +94,10 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
-    def destroy(self, request, uuid):
-        logger.debug("Deleting CampVisum with uuid %s", uuid)
+    def destroy(self, request, pk):
+        logger.debug("Deleting CampVisum with id %s", pk)
 
-        instance = get_object_or_404(CampVisum.objects, uuid=uuid)
+        instance = get_object_or_404(CampVisum.objects, pk=pk)
         instance.delete()
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

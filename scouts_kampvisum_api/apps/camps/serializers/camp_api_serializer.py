@@ -19,11 +19,14 @@ class CampAPISerializer(FlattenSerializerMixin, serializers.ModelSerializer):
     Serializes a Camp instance from and to the frontend.
     """
 
-    sections = ScoutsSectionAPISerializer(many=True)
+    # sections = ScoutsSectionAPISerializer(many=True)
+    sections = serializers.PrimaryKeyRelatedField(
+        queryset=ScoutsSection.objects.all(), many=True
+    )
 
     class Meta:
         model = Camp
-        fields = ("name", "start_date", "end_date", "sections")
+        fields = ("name", "sections")
         flatten = [("year", CampYearAPISerializer)]
 
     def validate(self, data):
@@ -32,18 +35,15 @@ class CampAPISerializer(FlattenSerializerMixin, serializers.ModelSerializer):
         if not data.get("name"):
             raise ValidationError("A Camp must have a name")
 
-        if not data.get("year"):
-            raise ValidationError("A camp must be tied to a CampYear")
-
         if not data.get("sections"):
             raise ValidationError("A Camp must have at least 1 Section attached")
-        else:
-            for section_uuid in data.get("sections"):
-                try:
-                    ScoutsSection.objects.get(uuid=section_uuid)
-                except ObjectDoesNotExist:
-                    raise ValidationError(
-                        "Invalid UUID. No Section with that UUID: " + str(section_uuid)
-                    )
+        # else:
+        #     for section_uuid in data.get("sections"):
+        #         try:
+        #             ScoutsSection.objects.get(id=section_uuid)
+        #         except ObjectDoesNotExist:
+        #             raise ValidationError(
+        #                 "Invalid ID. No Section with that ID: " + str(section_uuid)
+        #             )
 
         return data

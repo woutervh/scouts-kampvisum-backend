@@ -1,4 +1,4 @@
-import logging, warnings
+import logging, warnings, uuid
 from typing import List
 
 from django.conf import settings
@@ -131,20 +131,20 @@ class ScoutsSectionService:
         If uuid is None, then the group argument must be presented.
         """
         group = fields.get("group", None)
-        uuid = fields.get("uuid", None)
+        id = fields.get("id", None)
         name = fields.get("name", None)
 
         logger.debug("SECTION FIELDS: %s", fields)
 
-        if uuid is None and name is None:
+        if id is None and name is None:
             return ScoutsSection.objects.all()
 
-        if uuid is not None and not isinstance(uuid, dict):
-            if isinstance(uuid, list):
-                return list(ScoutsSection.objects.filter(uuid__in=uuid).values_list())
+        if id is not None and not isinstance(id, dict):
+            if isinstance(id, list):
+                return list(ScoutsSection.objects.filter(id__in=id).values_list())
 
-            if isinstance(uuid, uuid.UUID):
-                return get_object_or_404(ScoutsSection, uuid=uuid)
+            if isinstance(id, uuid.UUID):
+                return get_object_or_404(ScoutsSection, id=id)
 
         if name is not None and not isinstance(name, dict):
             if isinstance(name, list):
