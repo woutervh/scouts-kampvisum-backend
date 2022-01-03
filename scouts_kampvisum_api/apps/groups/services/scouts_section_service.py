@@ -1,14 +1,23 @@
-import logging
-import warnings
+import logging, warnings
+from typing import List
+
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 
 from apps.groups.models import (
+    DefaultScoutsSectionName,
+    ScoutsGroupType,
     ScoutsSectionName,
     ScoutsSection,
 )
-from apps.groups.services import ScoutsSectionNameService
+from apps.groups.services import (
+    DefaultScoutsSectionNameService,
+    ScoutsSectionNameService,
+)
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)
@@ -16,10 +25,16 @@ logger = logging.getLogger(__name__)
 
 class ScoutsSectionService:
 
+    group_admin = GroupAdmin()
+    default_section_name_service = DefaultScoutsSectionNameService()
     section_name_service = ScoutsSectionNameService()
 
     def section_create_or_update(
-        self, group=None, name=None, hidden=False, **fields
+        self,
+        group: AbstractScoutsGroup = None,
+        name: ScoutsSectionName = None,
+        hidden: bool = False,
+        **fields
     ) -> ScoutsSection:
         """
         Creates or updates a ScoutsSection instance.
@@ -28,18 +43,30 @@ class ScoutsSectionService:
             "GROUP ('%s'), NAME ('%s'), HIDDEN: %s", group.name, name.name, hidden
         )
         if not isinstance(group, AbstractScoutsGroup):
-            from ..services import ScoutsGroupService
-
-            group = ScoutsGroupService().get_group(group)
+            if not isinstance(group, str):
+                raise ValidationError(
+                    "Invalid group admin id %s (type: %s)", group, type(group).__name__
+                )
+            group = self.group_admin.get_group(group)
 
         name_instance = None
         if not isinstance(name, ScoutsSectionName):
             name_instance = self.section_name_service.name_get(name=name)
 
+        logger.debug(
+            "Querying existing ScoutsSection instances with group admin id %s and name %s (%s)",
+            group.group_admin_id,
+            name,
+            type(name).__name__,
+        )
         if name_instance is None:
-            qs = ScoutsSection.objects.filter(group=group, name__name=name)
+            qs = ScoutsSection.objects.filter(
+                group_admin_id=group.group_admin_id, name__name=name
+            )
         else:
-            qs = ScoutsSection.objects.filter(group=group, name=name)
+            qs = ScoutsSection.objects.filter(
+                group_admin_id=group.group_admin_id, name=name
+            )
         count = qs.count()
 
         if count > 0:
@@ -55,13 +82,17 @@ class ScoutsSectionService:
             return self._section_update(instance, group, name, hidden, **fields)
 
     def _section_create(
-        self, group=None, name=None, hidden=False, **fields
+        self,
+        group: AbstractScoutsGroup = None,
+        name: ScoutsSectionName = None,
+        hidden: bool = False,
+        **fields
     ) -> ScoutsSection:
         if name is None or not isinstance(name, ScoutsSectionName):
             name = self.section_name_service.name_create(name=name)
         instance = ScoutsSection()
 
-        instance.group = group
+        instance.group_admin_id = group.group_admin_id
         instance.name = name
         instance.hidden = hidden
 
@@ -83,7 +114,7 @@ class ScoutsSectionService:
         """
         logger.debug("Updating Section with name '%s'", instance.name.name)
 
-        instance.group = group
+        instance.group_admin_id = group.group_admin_id
         instance.name = name
         instance.hidden = hidden
 
@@ -129,3 +160,67 @@ class ScoutsSectionService:
         logger.debug("No Section instances found with the given args")
 
         return None
+
+    def link_default_sections(self, user: settings.AUTH_USER_MODEL):
+        """
+        Links default sections to a group.
+        """
+
+        groups = user.scouts_groups
+        created_sections = list()
+
+        for group in groups:
+            logger.debug("Linking sections to GROUP: %s (%s)", group, group.name)
+
+            sections = ScoutsSection.objects.all().filter(
+                group_admin_id=group.group_admin_id
+            )
+
+            # @TODO update if necessary
+            logger.debug(
+                "Found %d SECTIONS to link to group %s with type %s",
+                sections.count(),
+                group.name,
+                group.type,
+            )
+            if sections.count() == 0:
+                group_type = ScoutsGroupType.objects.get(group_type=group.type)
+                default_scouts_section_names: List[
+                    DefaultScoutsSectionName
+                ] = self.default_section_name_service.load_for_type(group_type)
+
+                logger.debug(
+                    "Found %d default section NAMES", len(default_scouts_section_names)
+                )
+                for name in default_scouts_section_names:
+                    logger.debug("Linking section NAME: %s", name.name)
+                    created_sections.append(
+                        self.section_create_or_update(
+                            group, name.name, name.name.hidden
+                        )
+                    )
+
+        return created_sections
+
+    # def add_section(self, instance: Group, **fields):
+    #     """
+    #     Adds Section instances to a Group.
+    #     """
+    #     logger.debug("FIELDS: %s", fields)
+    #     sections = self.section_service.section_read(group=instance, **fields)
+
+    #     if sections is None or len(sections) == 0:
+    #         section = self.section_service.section_create_or_update(
+    #             group=instance, **fields
+    #         )
+    #     else:
+    #         section = sections[0]
+
+    #     logger.debug("Section to add: %s", section)
+
+    #     instance.sections.add(section)
+
+    #     instance.full_clean()
+    #     instance.save()
+
+    #     return instance

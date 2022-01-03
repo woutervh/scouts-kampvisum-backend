@@ -1,4 +1,6 @@
 import logging
+from typing import List
+
 from django.db.models import Q
 
 from apps.groups.models import DefaultScoutsSectionName
@@ -8,13 +10,14 @@ logger = logging.getLogger(__name__)
 
 
 class DefaultScoutsSectionNameService:
-    def load_for_type(self, type):
+    def load_for_type(self, group_type) -> List[DefaultScoutsSectionName]:
         """
         Loads default names based on group type or the parent group type.
         """
         logger.debug(
-            "Loading DefaultScoutsSectionName instances for type '%s'", type.type
+            "Loading DefaultScoutsSectionName instances for type '%s'",
+            group_type.group_type,
         )
         return DefaultScoutsSectionName.objects.filter(
-            Q(type=type) | Q(type__parent=type)
+            Q(group_type=group_type) | Q(group_type__parent=group_type)
         ).distinct()

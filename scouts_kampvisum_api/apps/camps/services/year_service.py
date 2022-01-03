@@ -89,6 +89,8 @@ class CampYearService:
         """
         current = datetime.date.today()
 
+        logger.debug("CURRENT: %s", current)
+
         year = self._get_year(current)
 
         if not year:

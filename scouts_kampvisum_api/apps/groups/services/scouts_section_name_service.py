@@ -14,6 +14,7 @@ class ScoutsSectionNameService:
         """
         Retrieves a SectionName instance based on the name.
         """
+        logger.debug("Retrieving ScoutsSectionName with name %s", name)
         qs = ScoutsSectionName.objects.filter(name=name).values_list()
         count = qs.count()
 

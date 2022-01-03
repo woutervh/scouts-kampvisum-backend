@@ -25,7 +25,8 @@ class ScoutsSection(AbstractBaseModel):
         ordering = ["name__age_group"]
         constraints = [
             models.UniqueConstraint(
-                fields=["group_admin_id"], name="unique_section_group_admin_id"
+                fields=["group_admin_id", "name"],
+                name="unique_section_group_admin_id_and_name",
             )
         ]
 

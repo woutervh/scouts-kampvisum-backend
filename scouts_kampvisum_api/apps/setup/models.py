@@ -94,18 +94,18 @@ class Setup:
             SetupItem(
                 "sections",
                 namespace="apps.groups.services",
-                module="ScoutsGroupService",
+                module="ScoutsSectionService",
                 function="link_default_sections",
-                args=None,
+                args=[request.user],
             ),
-            SetupItem(
-                "category_sets",
-                endpoint="/api/category_sets/import",
-                namespace="apps.visums.services",
-                module="CategorySetService",
-                function="setup_default_sets",
-                args=None,
-            ),
+            # SetupItem(
+            #     "category_sets",
+            #     endpoint="/api/category_sets/import",
+            #     namespace="apps.visums.services",
+            #     module="CategorySetService",
+            #     function="setup_default_sets",
+            #     args=None,
+            # ),
         ]
 
         for item in self.items:
