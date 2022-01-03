@@ -2,6 +2,7 @@ import logging
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.groups.models import ScoutsSection
@@ -41,4 +42,25 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
             return self.get_paginated_response(serializer.data)
         else:
             serializer = ScoutsSectionSerializer(instances, many=True)
+            return Response(serializer.data)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"(?P<group_admin_id>\w+)",
+    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
+    def list_by_group(self, request, group_admin_id):
+        instances = ScoutsSection.objects.all().filter(group_admin_id=group_admin_id)
+        page = self.paginate_queryset(instances)
+
+        if page is not None:
+            serializer = ScoutsSectionSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = ScoutsSectionSerializer(
+                instances, many=True, context={"request": request}
+            )
             return Response(serializer.data)

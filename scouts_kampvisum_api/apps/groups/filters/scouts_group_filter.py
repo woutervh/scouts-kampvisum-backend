@@ -5,12 +5,12 @@ from scouts_auth.groupadmin.models import AbstractScoutsGroup
 
 class ScoutsGroupFilter(django_filters.FilterSet):
 
-    term = django_filters.CharFilter(method="search_term_filter")
+    group = django_filters.CharFilter(method="search_group")
 
     class Meta:
         model = AbstractScoutsGroup
         fields = "__all__"
 
-    def search_term_filter(self, queryset, name, value):
-        # Annotate brand license so we can do an icontains on entire string
+    def search_group(self, queryset, name, value):
+
         return ()
