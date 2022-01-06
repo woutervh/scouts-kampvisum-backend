@@ -12,7 +12,7 @@ class CategoryService:
     sub_category_service = SubCategoryService()
 
     def link_categories(
-        self, linked_category_set: LinkedCategorySet, category_set: CategorySet
+        self, request, linked_category_set: LinkedCategorySet, category_set: CategorySet
     ) -> LinkedCategorySet:
         logger.debug("Linking categories")
 
@@ -28,12 +28,12 @@ class CategoryService:
             linked_category.save()
 
             self.sub_category_service.link_sub_categories(
-                linked_category=linked_category, category=category
+                request, linked_category=linked_category, category=category
             )
 
         return linked_category_set
 
-    def create(self, *, name: str) -> Category:
+    def create(self, request, name: str) -> Category:
         """
         Saves a Category object to the DB.
         """
@@ -47,7 +47,7 @@ class CategoryService:
 
         return instance
 
-    def update(self, *, instance: Category, **fields) -> Category:
+    def update(self, request, instance: Category, **fields) -> Category:
         """
         Updates an existing Category object in the DB.
         """

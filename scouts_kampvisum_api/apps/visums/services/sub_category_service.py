@@ -10,7 +10,7 @@ class SubCategoryService:
     check_service = CheckService()
 
     def link_sub_categories(
-        self, linked_category: LinkedCategory, category: Category
+        self, request, linked_category: LinkedCategory, category: Category
     ) -> LinkedCategory:
         logger.debug("Linking sub-categories")
 
@@ -25,12 +25,14 @@ class SubCategoryService:
             linked_sub_category.save()
 
             self.check_service.link_checks(
-                linked_sub_category=linked_sub_category, sub_category=sub_category
+                request,
+                linked_sub_category=linked_sub_category,
+                sub_category=sub_category,
             )
 
         return linked_category
 
-    def create(self, *, name: str, category: Category) -> SubCategory:
+    def create(self, request, name: str, category: Category) -> SubCategory:
         """
         Saves a SubCategory object to the DB.
         """
@@ -45,7 +47,7 @@ class SubCategoryService:
 
         return instance
 
-    def update(self, *, instance: SubCategory, **fields) -> SubCategory:
+    def update(self, request, instance: SubCategory, **fields) -> SubCategory:
         """
         Updates an existing SubCategory object in the DB.
         """

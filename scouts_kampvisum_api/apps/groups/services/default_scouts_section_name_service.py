@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class DefaultScoutsSectionNameService:
-    def load_for_type(self, group_type) -> List[DefaultScoutsSectionName]:
+    def load_for_type(self, request, group_type: str) -> List[DefaultScoutsSectionName]:
         """
         Loads default names based on group type or the parent group type.
         """

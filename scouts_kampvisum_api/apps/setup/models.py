@@ -81,7 +81,7 @@ class Setup:
                 namespace="apps.camps.services",
                 module="CampYearService",
                 function="setup_camp_years",
-                args=None,
+                args=[request.user],
             ),
             # SetupItem(
             #     "groups",
@@ -95,7 +95,7 @@ class Setup:
                 "sections",
                 namespace="apps.groups.services",
                 module="ScoutsSectionService",
-                function="link_default_sections",
+                function="setup_default_sections",
                 args=[request.user],
             ),
             # SetupItem(

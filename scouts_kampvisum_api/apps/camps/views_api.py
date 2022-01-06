@@ -43,7 +43,7 @@ class CampAPIViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("CREATE VALIDATED DATA: %s", validated_data)
 
-        camp = self.camp_service.camp_create(**validated_data)
+        camp = self.camp_service.camp_create(request, **validated_data)
 
         output_serializer = CampSerializer(camp, context={"request": request})
 
@@ -70,8 +70,8 @@ class CampAPIViewSet(viewsets.GenericViewSet):
 
         logger.debug("Updating Camp with id %s", pk)
 
-        updated_camp = CampService().camp_update(
-            instance=camp, **serializer.validated_data
+        updated_camp = self.camp_service.camp_update(
+            request, instance=camp, **serializer.validated_data
         )
 
         output_serializer = CampSerializer(updated_camp, context={"request": request})

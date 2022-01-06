@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class CheckService:
     def link_checks(
-        self, linked_sub_category: LinkedSubCategory, sub_category: SubCategory
+        self, request, linked_sub_category: LinkedSubCategory, sub_category: SubCategory
     ) -> LinkedSubCategory:
         logger.debug("Linking checks")
 

@@ -31,23 +31,27 @@ class ScoutsSectionService:
 
     def section_create_or_update(
         self,
-        group: AbstractScoutsGroup = None,
+        request,
+        group_admin_id: str = None,
         name: ScoutsSectionName = None,
         hidden: bool = False,
-        **fields
     ) -> ScoutsSection:
         """
         Creates or updates a ScoutsSection instance.
         """
-        logger.debug(
-            "GROUP ('%s'), NAME ('%s'), HIDDEN: %s", group.name, name.name, hidden
+        scouts_group = self.group_admin.get_group(
+            active_user=request.user, group_group_admin_id=group_admin_id
         )
-        if not isinstance(group, AbstractScoutsGroup):
-            if not isinstance(group, str):
-                raise ValidationError(
-                    "Invalid group admin id %s (type: %s)", group, type(group).__name__
-                )
-            group = self.group_admin.get_group(group)
+        if not scouts_group:
+            raise ValidationError(
+                "Invalid group admin id {} for scouts group".format(group_admin_id)
+            )
+        logger.debug(
+            "GROUP ('%s'), NAME ('%s'), HIDDEN: %s",
+            scouts_group.name,
+            name.name,
+            hidden,
+        )
 
         name_instance = None
         if not isinstance(name, ScoutsSectionName):
@@ -55,17 +59,17 @@ class ScoutsSectionService:
 
         logger.debug(
             "Querying existing ScoutsSection instances with group admin id %s and name %s (%s)",
-            group.group_admin_id,
+            scouts_group.group_admin_id,
             name,
             type(name).__name__,
         )
         if name_instance is None:
             qs = ScoutsSection.objects.filter(
-                group_admin_id=group.group_admin_id, name__name=name
+                group_admin_id=scouts_group.group_admin_id, name__name=name
             )
         else:
             qs = ScoutsSection.objects.filter(
-                group_admin_id=group.group_admin_id, name=name
+                group_admin_id=scouts_group.group_admin_id, name=name
             )
         count = qs.count()
 
@@ -75,18 +79,18 @@ class ScoutsSectionService:
 
         if count == 0:
             logger.debug("Creating ScoutsSection with name '%s'", name)
-            return self._section_create(group, name, hidden, **fields)
+            return self._section_create(request, scouts_group, name, hidden)
         if count == 1:
             instance = qs[0]
             logger.debug("Updating ScoutsSection with name '%s'", instance.name.name)
-            return self._section_update(instance, group, name, hidden, **fields)
+            return self._section_update(request, instance, scouts_group, name, hidden)
 
     def _section_create(
         self,
+        request,
         group: AbstractScoutsGroup = None,
         name: ScoutsSectionName = None,
         hidden: bool = False,
-        **fields
     ) -> ScoutsSection:
         if name is None or not isinstance(name, ScoutsSectionName):
             name = self.section_name_service.name_create(name=name)
@@ -104,11 +108,11 @@ class ScoutsSectionService:
 
     def _section_update(
         self,
+        request,
         instance: ScoutsSection,
         group: AbstractScoutsGroup = None,
         name: ScoutsSectionName = None,
         hidden=False,
-        **fields
     ) -> ScoutsSection:
         """
         Updates an existing Section instance.
@@ -124,45 +128,45 @@ class ScoutsSectionService:
 
         return instance
 
-    def section_read(self, *args, **fields) -> ScoutsSection:
-        """
-        Retrieves a Section by uuid or SectionName.
+    # def section_read(self, request, **fields) -> ScoutsSection:
+    #     """
+    #     Retrieves a Section by uuid or SectionName.
 
-        If uuid or name are lists, then lists will be returned.
-        If uuid is None, then the group argument must be presented.
-        """
-        group = fields.get("group", None)
-        id = fields.get("id", None)
-        name = fields.get("name", None)
+    #     If uuid or name are lists, then lists will be returned.
+    #     If uuid is None, then the group argument must be presented.
+    #     """
+    #     group = fields.get("group", None)
+    #     id = fields.get("id", None)
+    #     name = fields.get("name", None)
 
-        logger.debug("SECTION FIELDS: %s", fields)
+    #     logger.debug("SECTION FIELDS: %s", fields)
 
-        if id is None and name is None:
-            return ScoutsSection.objects.all()
+    #     if id is None and name is None:
+    #         return ScoutsSection.objects.all()
 
-        if id is not None and not isinstance(id, dict):
-            if isinstance(id, list):
-                return list(ScoutsSection.objects.filter(id__in=id).values_list())
+    #     if id is not None and not isinstance(id, dict):
+    #         if isinstance(id, list):
+    #             return list(ScoutsSection.objects.filter(id__in=id).values_list())
 
-            if isinstance(id, uuid.UUID):
-                return get_object_or_404(ScoutsSection, id=id)
+    #         if isinstance(id, uuid.UUID):
+    #             return get_object_or_404(ScoutsSection, id=id)
 
-        if name is not None and not isinstance(name, dict):
-            if isinstance(name, list):
-                return list(
-                    ScoutsSection.objects.filter(
-                        group=group, name__name__in=name
-                    ).values_list()
-                )
+    #     if name is not None and not isinstance(name, dict):
+    #         if isinstance(name, list):
+    #             return list(
+    #                 ScoutsSection.objects.filter(
+    #                     group=group, name__name__in=name
+    #                 ).values_list()
+    #             )
 
-            if isinstance(name, str):
-                return list(ScoutsSection.objects.filter(group=group, name__name=name))
+    #         if isinstance(name, str):
+    #             return list(ScoutsSection.objects.filter(group=group, name__name=name))
 
-        logger.debug("No Section instances found with the given args")
+    #     logger.debug("No Section instances found with the given args")
 
-        return None
+    #     return None
 
-    def link_default_sections(self, user: settings.AUTH_USER_MODEL):
+    def setup_default_sections(self, request, user: settings.AUTH_USER_MODEL):
         """
         Links default sections to a group.
         """

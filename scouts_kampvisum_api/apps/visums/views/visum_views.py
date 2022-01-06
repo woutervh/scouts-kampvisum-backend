@@ -28,6 +28,8 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = CampVisumAPIFilter
 
+    camp_visum_service = CampVisumService()
+
     @swagger_auto_schema(
         request_body=CampVisumSerializer,
         responses={status.HTTP_201_CREATED: CampVisumSerializer},
@@ -35,15 +37,15 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
     def create(self, request):
         data = request.data
 
-        logger.debug("CREATE REQUEST DATA: %s", data)
+        logger.debug("CAMP VISUM CREATE REQUEST DATA: %s", data)
         # serializer = CampVisumSerializer(data=data, context={"request": request})
         serializer = CampAPISerializer(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("CREATE VALIDATED DATA: %s", validated_data)
+        logger.debug("CAMP VISUM CREATE VALIDATED DATA: %s", validated_data)
 
-        camp = CampVisumService().visum_create(**validated_data)
+        camp = self.camp_visum_service.visum_create(request, **validated_data)
 
         output_serializer = CampVisumSerializer(camp, context={"request": request})
 
@@ -63,6 +65,8 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
     def partial_update(self, request, pk=None):
         instance = self.get_object()
 
+        logger.debug("CAMP VISUM UPDATE REQUEST DATA: %s", request.data)
+
         serializer = CampVisumSerializer(
             data=request.data,
             instance=instance,
@@ -71,10 +75,13 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
+        validated_data = serializer.validated_data
+        logger.debug("CAMP VISUM UPDATE VALIDATED DATA: %s", validated_data)
+
         logger.debug("Updating CampVisum with id %s", pk)
 
-        updated_instance = CampVisumService().visum_update(
-            instance=instance, **serializer.validated_data
+        updated_instance = self.camp_visum_service.visum_update(
+            request, instance=instance, **validated_data
         )
 
         output_serializer = CampVisumSerializer(

@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status
@@ -12,6 +14,9 @@ from apps.visums.services import CategoryService
 from apps.visums.serializers import CategorySerializer, SubCategorySerializer
 
 
+logger = logging.getLogger(__name__)
+
+
 class CategoryViewSet(viewsets.GenericViewSet):
     """
     A viewset for viewing and editing Category instances.
@@ -19,6 +24,8 @@ class CategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+
+    category_service = CategoryService()
 
     @swagger_auto_schema(
         request_body=CategorySerializer,
@@ -28,13 +35,16 @@ class CategoryViewSet(viewsets.GenericViewSet):
         """
         Creates a new Category instance.
         """
-
+        logger.debug("CATEGORY CREATE REQUEST DATA: %s", request.data)
         input_serializer = CategorySerializer(
             data=request.data, context={"request": request}
         )
         input_serializer.is_valid(raise_exception=True)
 
-        instance = CategoryService().camp_create(**input_serializer.validated_data)
+        validated_data = input_serializer.validated_data
+        logger.debug("CATEGORY CREATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.category_service.camp_create(request, **validated_data)
 
         output_serializer = CategorySerializer(instance, context={"request": request})
 
@@ -62,6 +72,7 @@ class CategoryViewSet(viewsets.GenericViewSet):
 
         instance = self.get_object()
 
+        logger.debug("CATEGORY UPDATE REQUEST DATA: %s", request.data)
         serializer = CategorySerializer(
             data=request.data,
             instance=instance,
@@ -70,8 +81,11 @@ class CategoryViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_instance = CategoryService().update(
-            instance=instance, **serializer.validated_data
+        validated_data = serializer.validated_data
+        logger.debug("CATEGORY UPDATE VALIDATED DATA: %s", validated_data)
+
+        updated_instance = self.category_service.update(
+            request, instance=instance, **validated_data
         )
 
         output_serializer = CategorySerializer(

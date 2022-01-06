@@ -22,6 +22,8 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
     serializer_class = ScoutsSectionNameSerializer
     queryset = ScoutsSectionName.objects.all()
 
+    section_name_service = ScoutsSectionNameService()
+
     @swagger_auto_schema(
         request_body=ScoutsSectionNameSerializer,
         responses={status.HTTP_201_CREATED: ScoutsSectionNameSerializer},
@@ -35,7 +37,7 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        instance = ScoutsSectionNameService().name_create(
+        instance = self.section_name_service.name_create(
             **input_serializer.validated_data
         )
 
@@ -73,8 +75,8 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_instance = ScoutsSectionNameService().name_update(
-            instance=instance, **serializer.validated_data
+        updated_instance = self.section_name_service.name_update(
+            request, instance=instance, **serializer.validated_data
         )
 
         output_serializer = ScoutsSectionNameSerializer(

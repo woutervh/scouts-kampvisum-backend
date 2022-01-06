@@ -38,7 +38,9 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("SECTION CREATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.section_service.section_create_or_update(**validated_data)
+        instance = self.section_service.section_create_or_update(
+            request, **validated_data
+        )
 
         output_serializer = ScoutsSectionSerializer(
             instance, context={"request": request}

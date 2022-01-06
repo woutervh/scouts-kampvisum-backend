@@ -13,7 +13,7 @@ class CampVisumService:
     camp_service = CampService()
     category_set_service = CategorySetService()
 
-    def visum_create(self, **fields) -> CampVisum:
+    def visum_create(self, request, **fields) -> CampVisum:
         logger.debug("Creating Campvisum with data: %s", fields)
 
         # camp_data = fields.get("camp")
@@ -21,11 +21,11 @@ class CampVisumService:
         camp_name = camp_data.get("name")
 
         logger.debug("Creating camp with name '%s'", camp_name)
-        camp = self.camp_service.camp_create(**camp_data)
+        camp = self.camp_service.camp_create(request, **camp_data)
 
         logger.debug("Linking category set to visum")
         category_set: LinkedCategorySet = (
-            self.category_set_service.get_linked_category_set(camp)
+            self.category_set_service.get_linked_category_set(request, camp)
         )
 
         visum = CampVisum()
@@ -38,14 +38,16 @@ class CampVisumService:
 
         return visum
 
-    def visum_update(self, instance: CampVisum, **fields) -> CampVisum:
+    def visum_update(self, request, instance: CampVisum, **fields) -> CampVisum:
         """
         Updates an existing CampVisum object in the DB.
         """
         camp = instance.camp
         camp_fields = fields.pop("camp")
 
-        instance.camp = self.camp_service.camp_update(instance=camp, **camp_fields)
+        instance.camp = self.camp_service.camp_update(
+            request, instance=camp, **camp_fields
+        )
 
         instance.full_clean()
         instance.save()

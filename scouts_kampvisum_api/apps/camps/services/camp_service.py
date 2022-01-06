@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class CampService:
     year_service = CampYearService()
 
-    def camp_create(self, *args, **fields) -> Camp:
+    def camp_create(self, request, **fields) -> Camp:
         """
         Saves a Camp object to the DB.
         """
@@ -50,7 +50,7 @@ class CampService:
 
         return camp
 
-    def camp_update(self, instance: Camp, **fields) -> Camp:
+    def camp_update(self, request, instance: Camp, **fields) -> Camp:
         """
         Updates an existing Camp object in the DB.
         """

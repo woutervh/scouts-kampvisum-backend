@@ -9,6 +9,8 @@ from apps.groups.serializers import (
 )
 
 from scouts_auth.groupadmin.serializers.fields import AbstractScoutsGroupSerializerField
+from scouts_auth.groupadmin.scouts import AgeGroup
+from scouts_auth.inuits.models.enums import Gender
 from scouts_auth.inuits.mixins import FlattenSerializerMixin
 
 
@@ -23,7 +25,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
     # group = AbstractScoutsGroupSerializerField(source="group_admin_id")
     group_type = ScoutsGroupTypeSerializer()
     name = ScoutsSectionNameSerializer()
-    hidden = serializers.BooleanField()
+    hidden = serializers.BooleanField(default=False)
 
     class Meta:
         model = ScoutsSection
@@ -38,7 +40,19 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
 
         name = data.get("name", None)
         if name:
-            data["name"] = {"name": name}
+            if isinstance(name, dict):
+                section_name_name = name.get("name")
+                section_name_gender = name.get("gender", Gender.MIXED)
+                section_name_age_group = name.get(
+                    "age_group", AgeGroup.AGE_GROUP_UNKNOWN
+                )
+                data["name"] = {
+                    "name": section_name_name,
+                    "gender": section_name_gender,
+                    "age_group": section_name_age_group,
+                }
+            else:
+                data["name"] = {"name": name}
 
         logger.debug("SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
 

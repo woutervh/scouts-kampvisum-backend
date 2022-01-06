@@ -29,6 +29,8 @@ class CampViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = CampFilter
 
+    camp_service = CampService()
+
     @swagger_auto_schema(
         request_body=CampSerializer,
         responses={status.HTTP_201_CREATED: CampSerializer},
@@ -41,7 +43,7 @@ class CampViewSet(viewsets.GenericViewSet):
         serializer = CampSerializer(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
-        camp = CampService().camp_create(**serializer.validated_data)
+        camp = self.camp_service.camp_create(request, **serializer.validated_data)
 
         output_serializer = CampSerializer(camp, context={"request": request})
 
@@ -68,7 +70,9 @@ class CampViewSet(viewsets.GenericViewSet):
 
         logger.debug("Updating Camp with pk %s", pk)
 
-        updated_camp = CampService().camp_update(camp=camp, **serializer.validated_data)
+        updated_camp = self.camp_service.camp_update(
+            request, camp=camp, **serializer.validated_data
+        )
 
         output_serializer = CampSerializer(updated_camp, context={"request": request})
 

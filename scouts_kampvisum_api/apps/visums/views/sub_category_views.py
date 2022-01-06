@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status
@@ -10,6 +12,9 @@ from apps.visums.services import SubCategoryService
 from apps.visums.serializers import SubCategorySerializer
 
 
+logger = logging.getLogger(__name__)
+
+
 class SubCategoryViewSet(viewsets.GenericViewSet):
     """
     A viewset for viewing and editing SubCategory instances.
@@ -17,6 +22,8 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = SubCategorySerializer
     queryset = SubCategory.objects.all()
+
+    sub_category_service = SubCategoryService()
 
     @swagger_auto_schema(
         request_body=SubCategorySerializer,
@@ -26,13 +33,16 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         """
         Creates a new SubCategory instance.
         """
-
+        logger.debug("SUB CATEGORY CREATE REQUEST DATA: %s", request.data)
         input_serializer = SubCategorySerializer(
             data=request.data, context={"request": request}
         )
         input_serializer.is_valid(raise_exception=True)
 
-        instance = SubCategoryService().camp_create(**input_serializer.validated_data)
+        validated_data = input_serializer.validated_data
+        logger.debug("SUB CATEGORY CREATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.sub_category_service.camp_create(request, **validated_data)
 
         output_serializer = SubCategorySerializer(
             instance, context={"request": request}
@@ -62,6 +72,7 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
 
         instance = self.get_object()
 
+        logger.debug("SUB CATEGORY UPDATE REQUEST DATA: %s", request.data)
         serializer = SubCategorySerializer(
             data=request.data,
             instance=instance,
@@ -70,8 +81,11 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_instance = SubCategoryService().update(
-            instance=instance, **serializer.validated_data
+        validated_data = serializer.validated_data
+        logger.debug("SUB CATEGORY UPDATE VALIDATED DATA: %s", validated_data)
+
+        updated_instance = self.sub_category_service.update(
+            request, instance=instance, **validated_data
         )
 
         output_serializer = SubCategorySerializer(

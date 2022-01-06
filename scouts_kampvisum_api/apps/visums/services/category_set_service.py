@@ -29,7 +29,7 @@ class CategorySetService:
     group_admin = GroupAdmin()
 
     def get_default_category_set(
-        self, camp_year: CampYear, group_type: ScoutsGroupType
+        self, request, camp_year: CampYear, group_type: ScoutsGroupType
     ) -> CategorySet:
         logger.debug(
             "Looking for category sets for camp year %s and group type %s",
@@ -45,17 +45,17 @@ class CategorySetService:
 
         return None
 
-    def has_default_set(self, type: ScoutsGroupType):
-        category_set = self.get_default_set(type)
+    def has_default_set(self, request, type: ScoutsGroupType):
+        category_set = self.get_default_set(request, type)
 
         if category_set is not None:
             return True
 
         return False
 
-    def get_linked_category_set(self, camp: Camp) -> LinkedCategorySet:
+    def get_linked_category_set(self, request, camp: Camp) -> LinkedCategorySet:
         category_set = self.get_default_category_set(
-            camp_year=camp.year, group_type=camp.sections.first().group_type
+            request, camp_year=camp.year, group_type=camp.sections.first().group_type
         )
 
         linked_category_set = LinkedCategorySet()
@@ -65,7 +65,9 @@ class CategorySetService:
         linked_category_set.full_clean()
         linked_category_set.save()
 
-        return self.category_service.link_categories(linked_category_set, category_set)
+        return self.category_service.link_categories(
+            request, linked_category_set, category_set
+        )
 
     # def setup_default_set(
     #     self,

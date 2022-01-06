@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class ScoutsSectionNameService:
-    def name_get(self, name) -> ScoutsSectionName:
+    def name_get(self, request, name: str) -> ScoutsSectionName:
         """
         Retrieves a SectionName instance based on the name.
         """
@@ -26,7 +26,11 @@ class ScoutsSectionNameService:
         return list(qs)
 
     def name_create(
-        self, name, gender=Gender.MIXED, age_group=AgeGroup.AGE_GROUP_UNKNOWN, **fields
+        self,
+        request,
+        name: str,
+        gender=Gender.MIXED,
+        age_group=AgeGroup.AGE_GROUP_UNKNOWN,
     ) -> ScoutsSectionName:
         """
         Saves a SectionName object to the DB.
@@ -40,7 +44,7 @@ class ScoutsSectionNameService:
         return instance
 
     def name_update(
-        self, *, instance: ScoutsSectionName, **fields
+        self, request, instance: ScoutsSectionName, **fields
     ) -> ScoutsSectionName:
         """
         Updates an existing SectionName object in the DB.
