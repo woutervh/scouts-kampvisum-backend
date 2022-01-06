@@ -13,7 +13,7 @@ class CampVisumService:
     camp_service = CampService()
     category_set_service = CategorySetService()
 
-    def visum_create(self, **fields):
+    def visum_create(self, **fields) -> CampVisum:
         logger.debug("Creating Campvisum with data: %s", fields)
 
         # camp_data = fields.get("camp")

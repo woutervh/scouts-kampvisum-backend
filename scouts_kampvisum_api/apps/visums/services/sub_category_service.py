@@ -12,9 +12,10 @@ class SubCategoryService:
     def link_sub_categories(
         self, linked_category: LinkedCategory, category: Category
     ) -> LinkedCategory:
-        logger.debug("Linking categories")
+        logger.debug("Linking sub-categories")
 
         for sub_category in category.sub_categories.all():
+            logger.debug("Linked sub-category: %s", sub_category.name)
             linked_sub_category = LinkedSubCategory()
 
             linked_sub_category.parent = sub_category

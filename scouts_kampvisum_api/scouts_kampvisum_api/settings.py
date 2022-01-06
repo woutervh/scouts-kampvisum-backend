@@ -124,7 +124,7 @@ LOGGING = {
         },
         "scouts_auth": {
             "handlers": ["console"],
-            "level": LOGGING_LEVEL,
+            "level": LOGGING_LEVEL_ROOT,
             "propagate": False,
         },
         "apps": {
