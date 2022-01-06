@@ -23,7 +23,7 @@ class CampVisumSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
         model = CampVisum
         fields = ["id"]
         flatten = [
-            ("camp", CampSerializer),
+            ("camp", CampAPISerializer),
             ("category_set", LinkedCategorySetSerializer),
         ]
 

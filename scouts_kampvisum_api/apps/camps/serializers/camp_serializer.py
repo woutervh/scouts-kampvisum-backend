@@ -1,9 +1,9 @@
 import logging
+
 from rest_framework import serializers
 
 from apps.camps.models import Camp
 from apps.camps.serializers import CampYearSerializer
-
 from apps.groups.serializers import ScoutsSectionSerializer
 
 from scouts_auth.inuits.mixins import FlattenSerializerMixin
