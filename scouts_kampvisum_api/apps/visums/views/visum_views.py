@@ -89,10 +89,14 @@ class CampVisumAPIViewSet(viewsets.GenericViewSet):
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = CampVisumSerializer(page, many=True)
+            serializer = CampVisumSerializer(
+                page, many=True, context={"request": request}
+            )
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = CampVisumSerializer(instances, many=True)
+            serializer = CampVisumSerializer(
+                instances, many=True, context={"request": request}
+            )
             return Response(serializer.data)
 
     @swagger_auto_schema(

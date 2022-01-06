@@ -22,6 +22,7 @@ class CampSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
     # start_date = OptionalDateField()
     # end_date = OptionalDateField()
     # sections = SectionSerializer(many=True)
+    sections = ScoutsSectionSerializer(many=True)
 
     class Meta:
         model = Camp
