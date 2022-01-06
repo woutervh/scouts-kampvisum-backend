@@ -29,6 +29,25 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         model = ScoutsSection
         fields = "__all__"
 
+    def to_internal_value(self, data: dict) -> dict:
+        logger.debug("SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
+
+        group_type = data.get("group_type", None)
+        if group_type:
+            data["group_type"] = {"group_type": group_type}
+
+        name = data.get("name", None)
+        if name:
+            data["name"] = {"name": name}
+
+        logger.debug("SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
+
+        data = super().to_internal_value(data)
+
+        logger.debug("SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
+
+        return data
+
 
 class ScoutsSectionAPISerializer(FlattenSerializerMixin, serializers.ModelSerializer):
     """

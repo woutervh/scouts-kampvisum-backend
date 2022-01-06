@@ -1,14 +1,14 @@
 from rest_framework import serializers
 
 from apps.visums.models import LinkedCategory
-from apps.visums.serializers import LinkedCategorySetSerializer, CategorySerializer
+from apps.visums.serializers import CategorySerializer, LinkedSubCategorySerializer
 
 
 class LinkedCategorySerializer(serializers.ModelSerializer):
 
     parent = CategorySerializer()
-    category_set = LinkedCategorySetSerializer()
+    sub_categories = LinkedSubCategorySerializer(many=True)
 
     class Meta:
         model = LinkedCategory
-        fields = "__all__"
+        exclude = ["category_set"]

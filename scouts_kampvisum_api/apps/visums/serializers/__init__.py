@@ -8,8 +8,8 @@ from .category_set_serializer import CategorySetSerializer
 from .category_set_serializer import CategorySetAPISerializer
 from .check_type_serializer import CheckTypeSerializer
 from .check_serializer import CheckSerializer
-from .linked_category_set_serializer import LinkedCategorySetSerializer
-from .linked_category_serializer import LinkedCategorySerializer
-from .linked_sub_category_serializer import LinkedSubCategorySerializer
 from .linked_check_serializer import LinkedCheckSerializer
+from .linked_sub_category_serializer import LinkedSubCategorySerializer
+from .linked_category_serializer import LinkedCategorySerializer
+from .linked_category_set_serializer import LinkedCategorySetSerializer
 from .visum_serializer import CampVisumSerializer
