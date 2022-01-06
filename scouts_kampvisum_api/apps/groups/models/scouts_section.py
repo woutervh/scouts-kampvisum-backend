@@ -2,7 +2,7 @@ import logging
 
 from django.db import models
 
-from apps.groups.models import ScoutsSectionName
+from apps.groups.models import ScoutsGroupType, ScoutsSectionName
 
 
 from scouts_auth.inuits.models import AbstractBaseModel
@@ -18,6 +18,7 @@ class ScoutsSection(AbstractBaseModel):
     """
 
     group_admin_id = RequiredCharField(max_length=64)
+    group_type = models.ForeignKey(ScoutsGroupType, on_delete=models.CASCADE)
     name = models.ForeignKey(ScoutsSectionName, on_delete=models.DO_NOTHING)
     hidden = models.BooleanField(default=False)
 

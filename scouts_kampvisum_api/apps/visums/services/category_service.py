@@ -1,12 +1,38 @@
 import logging
 
+from apps.visums.models import LinkedCategorySet, CategorySet, LinkedCategory, Category
 from apps.visums.services import SubCategoryService
-from apps.visums.models import Category
 
 logger = logging.getLogger(__name__)
 
 
 class CategoryService:
+
+    # category_set_service = CategorySetService()
+    sub_category_service = SubCategoryService()
+
+    def link_categories(
+        self, linked_category_set: LinkedCategorySet, category_set: CategorySet
+    ) -> LinkedCategorySet:
+        logger.debug("Linking categories")
+
+        for category in category_set.categories.all():
+            logger.debug("Linked category: '%s'", category.name)
+
+            linked_category = LinkedCategory()
+
+            linked_category.parent = category
+            linked_category.category_set = linked_category_set
+
+            linked_category.full_clean()
+            linked_category.save()
+
+            self.sub_category_service.link_sub_categories(
+                linked_category=linked_category, category=category
+            )
+
+        return linked_category_set
+
     def create(self, *, name: str) -> Category:
         """
         Saves a Category object to the DB.

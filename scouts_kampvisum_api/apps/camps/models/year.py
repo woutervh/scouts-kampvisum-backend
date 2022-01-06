@@ -32,3 +32,6 @@ class CampYear(AuditedBaseModel):
         return "OBJECT CampYear: year({}), start_date({}), end_date({})".format(
             self.year, self.start_date, self.end_date
         )
+
+    def to_simple_str(self):
+        return "{}".format(self.year)

@@ -29,7 +29,7 @@ class CampAPISerializer(FlattenSerializerMixin, serializers.ModelSerializer):
         fields = ("name", "sections")
         flatten = [("year", CampYearAPISerializer)]
 
-    def validate(self, data):
+    def validate(self, data: dict) -> dict:
         logger.debug("Camp API DATA: %s", data)
 
         if not data.get("name"):

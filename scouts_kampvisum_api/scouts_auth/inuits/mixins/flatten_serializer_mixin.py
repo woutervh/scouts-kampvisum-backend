@@ -1,4 +1,4 @@
-import logging, uuid
+import logging, uuid, inspect
 
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ class FlattenSerializerMixin(object):
         if hasattr(self.Meta, "flatten"):
             for field, serializer_class in self.Meta.flatten:
                 logger.debug(
-                    "Serializer INPUT: Flattening field %s with serializer %s",
+                    "Flattened INPUT: Flattening field %s with serializer %s",
                     field,
                     serializer_class.__name__,
                 )
@@ -73,8 +73,15 @@ class FlattenSerializerMixin(object):
         for key in nested_fields:
             logger.debug("Append value %s to key %s", nested_fields[key], key)
             data[key] = nested_fields[key]
+
+        logger.debug("Flattened data: %s", data)
+        logger.debug(
+            "Sending to serializer parent %s",
+            ", ".join(parent.__name__ for parent in inspect.getmro(self.__class__)),
+        )
         internal_values = super().to_internal_value(data)
 
         logger.debug("Internal values: %s", internal_values)
 
         return internal_values
+        # return data

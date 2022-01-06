@@ -1,6 +1,6 @@
 import logging
 
-from apps.visums.models import CampVisum
+from apps.visums.models import LinkedCategorySet, CampVisum
 from apps.visums.services import CategorySetService
 from apps.camps.services import CampService
 
@@ -16,14 +16,17 @@ class CampVisumService:
     def visum_create(self, **fields):
         logger.debug("Creating Campvisum with data: %s", fields)
 
-        camp_data = fields.get("camp")
+        # camp_data = fields.get("camp")
+        camp_data = fields
         camp_name = camp_data.get("name")
 
         logger.debug("Creating camp with name '%s'", camp_name)
         camp = self.camp_service.camp_create(**camp_data)
 
         logger.debug("Linking category set to visum")
-        category_set = self.category_set_service.category_set_create(camp)
+        category_set: LinkedCategorySet = (
+            self.category_set_service.get_linked_category_set(camp)
+        )
 
         visum = CampVisum()
 

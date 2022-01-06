@@ -52,3 +52,6 @@ class CategorySet(AuditedBaseModel):
                 str(self.category_set), str(self.group_type), str(self.priority)
             )
         )
+
+    def to_simple_str(self):
+        return "CategorySet ({})".format(self.id)

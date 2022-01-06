@@ -32,3 +32,15 @@ class Camp(AuditedBaseModel):
         """
         for section in self.sections.all():
             return section.group.type
+
+    def __str__(self):
+        return "OBJECT Camp: year({}), name({}), start_date({}), end_date({}), sections({})".format(
+            str(self.year),
+            self.name,
+            self.start_date,
+            self.end_date,
+            str(self.sections),
+        )
+
+    def to_simple_str(self):
+        return "Camp ({}), {} {}".format(self.id, self.year.year, self.name)

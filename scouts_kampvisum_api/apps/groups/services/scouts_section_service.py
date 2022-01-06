@@ -93,6 +93,7 @@ class ScoutsSectionService:
         instance = ScoutsSection()
 
         instance.group_admin_id = group.group_admin_id
+        instance.group_type = ScoutsGroupType.objects.get(group_type=group.type)
         instance.name = name
         instance.hidden = hidden
 

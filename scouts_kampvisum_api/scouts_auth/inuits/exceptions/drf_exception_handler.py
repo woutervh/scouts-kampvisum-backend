@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def drf_exception_handler(exc, context):
     """Handle Django ValidationError as an accepted exception"""
-    logger.error("EXC:", exc)
+    logger.error("EXC: %s", exc)
     if isinstance(exc, DjangoValidationError):
         try:
             detail = exc.message_dict
