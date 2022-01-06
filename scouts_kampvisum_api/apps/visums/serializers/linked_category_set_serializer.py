@@ -6,7 +6,7 @@ from apps.visums.serializers import CategorySetSerializer
 
 class LinkedCategorySetSerializer(serializers.ModelSerializer):
 
-    parent = CategorySetSerializer
+    parent = CategorySetSerializer()
 
     class Meta:
         model = LinkedCategorySet

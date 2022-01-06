@@ -22,12 +22,14 @@ class CampSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
     # start_date = OptionalDateField()
     # end_date = OptionalDateField()
     # sections = SectionSerializer(many=True)
+    year = CampYearSerializer()
     sections = ScoutsSectionSerializer(many=True)
 
     class Meta:
         model = Camp
-        fields = ("name", "year", "start_date", "end_date", "sections")
-        flatten = [("year", CampYearSerializer)]
+        fields = "__all__"
+        # fields = ("name", "year", "start_date", "end_date", "sections")
+        # flatten = [("year", CampYearSerializer)]
 
     def create(self, validated_data) -> Camp:
         return Camp(**validated_data)

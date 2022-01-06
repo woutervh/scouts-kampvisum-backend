@@ -19,13 +19,18 @@ logger = logging.getLogger(__name__)
 
 
 class CampVisumSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
+
+    camp = CampSerializer()
+    category_set = LinkedCategorySetSerializer()
+
     class Meta:
         model = CampVisum
-        fields = ["id"]
-        flatten = [
-            ("camp", CampSerializer),
-            ("category_set", LinkedCategorySetSerializer),
-        ]
+        # fields = ["id"]
+        # flatten = [
+        #     ("camp", CampSerializer),
+        #     ("category_set", LinkedCategorySetSerializer),
+        # ]
+        fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
         logger.debug("SERIALIZER TO INTERNAL VALUE: %s", data)
