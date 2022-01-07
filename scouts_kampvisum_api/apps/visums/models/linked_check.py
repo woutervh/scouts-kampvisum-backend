@@ -6,7 +6,7 @@ from apps.visums.models.enums import CheckState
 from scouts_auth.inuits.models import AbstractBaseModel, PersistedFile
 from scouts_auth.inuits.models.fields import (
     DefaultCharField,
-    RequiredCharField,
+    OptionalCharField,
     DatetypeAwareDateField,
 )
 
@@ -34,7 +34,7 @@ class LinkedSimpleCheck(LinkedCheck):
 # A check that contains a date
 # ##############################################################################
 class LinkedDateCheck(LinkedCheck):
-    value = DatetypeAwareDateField()
+    value = DatetypeAwareDateField(null=True, blank=True)
 
 
 # ##############################################################################
@@ -43,8 +43,8 @@ class LinkedDateCheck(LinkedCheck):
 # A check that contains a start and end date
 # ##############################################################################
 class LinkedDurationCheck(LinkedCheck):
-    start_date = DatetypeAwareDateField()
-    end_date = DatetypeAwareDateField()
+    start_date = DatetypeAwareDateField(null=True, blank=True)
+    end_date = DatetypeAwareDateField(null=True, blank=True)
 
 
 # ##############################################################################
@@ -54,7 +54,7 @@ class LinkedDurationCheck(LinkedCheck):
 # ##############################################################################
 class LinkedLocationCheck(LinkedCheck):
     # @TODO
-    value = RequiredCharField(max_length=64)
+    value = OptionalCharField(max_length=64)
 
 
 # ##############################################################################
@@ -64,7 +64,7 @@ class LinkedLocationCheck(LinkedCheck):
 # ##############################################################################
 class LinkedLocationContactCheck(LinkedCheck):
     # @TODO
-    value = RequiredCharField(max_length=64)
+    value = OptionalCharField(max_length=64)
 
 
 # ##############################################################################
@@ -73,7 +73,7 @@ class LinkedLocationContactCheck(LinkedCheck):
 # A check that selects members and non-members
 # ##############################################################################
 class LinkedMemberCheck(LinkedCheck):
-    value = RequiredCharField(max_length=64)
+    value = OptionalCharField(max_length=64)
 
 
 # ##############################################################################
@@ -82,7 +82,7 @@ class LinkedMemberCheck(LinkedCheck):
 # A check that contains contact information
 # ##############################################################################
 class LinkedContactCheck(LinkedCheck):
-    value = RequiredCharField(max_length=64)
+    value = OptionalCharField(max_length=64)
 
 
 # ##############################################################################
@@ -91,7 +91,9 @@ class LinkedContactCheck(LinkedCheck):
 # A check that contains a file
 # ##############################################################################
 class LinkedFileUploadCheck(LinkedCheck):
-    value = models.OneToOneField(PersistedFile, on_delete=models.CASCADE)
+    value = models.OneToOneField(
+        PersistedFile, on_delete=models.CASCADE, null=True, blank=True
+    )
 
 
 # ##############################################################################
@@ -100,7 +102,7 @@ class LinkedFileUploadCheck(LinkedCheck):
 # A check that contains text
 # ##############################################################################
 class LinkedInputCheck(LinkedCheck):
-    value = RequiredCharField(max_length=300)
+    value = OptionalCharField(max_length=300)
 
 
 # ##############################################################################
