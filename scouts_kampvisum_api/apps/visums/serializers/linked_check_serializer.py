@@ -35,3 +35,5 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
         logger.debug(
             "%s value: %s (%s)", type(check).__name__, value, type(value).__name__
         )
+
+        return value
