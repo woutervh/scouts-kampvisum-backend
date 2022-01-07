@@ -18,7 +18,7 @@ from apps.visums.services import CampVisumService
 logger = logging.getLogger(__name__)
 
 
-class CampVisumAPIViewSet(viewsets.GenericViewSet):
+class CampVisumViewSet(viewsets.GenericViewSet):
     """
     A viewset for viewing and editing camp instances.
     """
