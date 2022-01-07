@@ -1,6 +1,15 @@
-from django.db import models
+import logging
 
-from apps.visums.models import LinkedSubCategory, VisumCheck
+from django.db import models
+from django.core.exceptions import ValidationError
+
+from apps.visums.models import (
+    LinkedSubCategory,
+    VisumCheck,
+    CheckType,
+    VisumCheck,
+    CheckType,
+)
 from apps.visums.models.enums import CheckState
 
 from scouts_auth.inuits.models import AbstractBaseModel, PersistedFile
@@ -11,12 +20,53 @@ from scouts_auth.inuits.models.fields import (
 )
 
 
+logger = logging.getLogger(__name__)
+
+
 class LinkedCheck(AbstractBaseModel):
 
     parent = models.ForeignKey(VisumCheck, on_delete=models.CASCADE)
     sub_category = models.ForeignKey(
         LinkedSubCategory, on_delete=models.CASCADE, related_name="checks"
     )
+
+    # Hackety hack ?
+    def get_value_type(self):
+        concrete_type = LinkedCheck.get_concrete_check_type(self.parent)
+
+        check = concrete_type.__class__.objects.get(linkedcheck_ptr=self.id)
+        logger.debug("CONCRETE CHECK: %s", check)
+
+        return check
+
+    @staticmethod
+    def get_concrete_check_type(check: VisumCheck):
+        check_type: CheckType = check.check_type
+
+        if check_type.is_simple_check():
+            return LinkedSimpleCheck()
+        elif check_type.is_date_check():
+            return LinkedDateCheck()
+        elif check_type.is_duration_check():
+            return LinkedDurationCheck()
+        elif check_type.is_location_check():
+            return LinkedLocationCheck()
+        elif check_type.is_location_contact_check():
+            return LinkedLocationContactCheck()
+        elif check_type.is_member_check():
+            return LinkedMemberCheck()
+        elif check_type.is_contact_check():
+            return LinkedContactCheck()
+        elif check_type.is_file_upload_check():
+            return LinkedFileUploadCheck()
+        elif check_type.is_input_check():
+            return LinkedInputCheck()
+        elif check_type.is_information_check():
+            return LinkedInformationCheck()
+        else:
+            raise ValidationError(
+                "Check type {} is not recognized".format(check_type.check_type)
+            )
 
 
 # ##############################################################################

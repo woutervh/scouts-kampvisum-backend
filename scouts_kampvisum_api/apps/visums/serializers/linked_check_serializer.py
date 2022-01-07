@@ -26,9 +26,12 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
         )
 
     def get_value(self, obj: LinkedCheck):
-        if not hasattr(obj, "value"):
-            logger.debug("LinkedCheck object has no value: %s", str(obj))
+        check = obj.get_value_type()
+        if not hasattr(check, "value"):
+            logger.debug("%s object has no value: %s", type(check).__name__, str(obj))
             return None
 
-        value = obj.value
-        logger.debug("LinkedCheck value: %s", value, type(value).__name__)
+        value = check.value
+        logger.debug(
+            "%s value: %s (%s)", type(check).__name__, value, type(value).__name__
+        )
