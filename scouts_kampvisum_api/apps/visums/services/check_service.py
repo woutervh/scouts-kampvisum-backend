@@ -62,7 +62,7 @@ class CheckService:
         elif check_type.is_contact_check():
             return LinkedContactCheck()
         elif check_type.is_file_upload_check():
-            LinkedFileUploadCheck()
+            return LinkedFileUploadCheck()
         elif check_type.is_input_check():
             return LinkedInputCheck()
         elif check_type.is_information_check():
