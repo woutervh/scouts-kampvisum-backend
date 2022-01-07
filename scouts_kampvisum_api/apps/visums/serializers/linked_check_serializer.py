@@ -31,9 +31,11 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
             logger.debug("%s object has no value: %s", type(check).__name__, str(obj))
             return None
 
-        value = check.value
         logger.debug(
-            "%s value: %s (%s)", type(check).__name__, value, type(value).__name__
+            "%s value: %s (%s)",
+            type(check).__name__,
+            check.value,
+            type(check.value).__name__,
         )
 
-        return value
+        return check.value
