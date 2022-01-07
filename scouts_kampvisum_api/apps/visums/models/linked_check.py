@@ -30,15 +30,6 @@ class LinkedCheck(AbstractBaseModel):
         LinkedSubCategory, on_delete=models.CASCADE, related_name="checks"
     )
 
-    # Hackety hack ?
-    def get_value_type(self):
-        concrete_type = LinkedCheck.get_concrete_check_type(self.parent)
-
-        check = concrete_type.__class__.objects.get(linkedcheck_ptr=self.id)
-        logger.debug("CONCRETE CHECK: %s", check)
-
-        return check
-
     @staticmethod
     def get_concrete_check_type(check: VisumCheck):
         check_type: CheckType = check.check_type

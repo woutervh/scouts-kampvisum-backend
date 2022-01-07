@@ -21,6 +21,26 @@ class OptionalCharField(serializers.CharField):
         super().__init__(*args, **kwargs)
 
 
+class DefaultCharSerializerField(serializers.CharField):
+    """
+    Initializes a serializers.CharField as optional with a default.
+
+    This is equivalent to setting a serializers.CharField as such:
+    some_optional_char_field = serializers.CharField(
+        required=False, allow_blank=True, allow_null=True, default=<some_default_value>
+    )
+    If max_length is not specified, it is set to 128.
+
+    @see https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.Field.null
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs["required"] = False
+        kwargs["allow_blank"] = True
+        kwargs["allow_null"] = True
+        super().__init__(*args, **kwargs)
+
+
 class OptionalIntegerField(serializers.IntegerField):
     """
     Initializes a serializers.IntegerField that is optional.

@@ -10,7 +10,7 @@ from apps.visums.models import (
 logger = logging.getLogger(__name__)
 
 
-class CheckService:
+class VisumCheckService:
     def link_checks(
         self, request, linked_sub_category: LinkedSubCategory, sub_category: SubCategory
     ) -> LinkedSubCategory:
