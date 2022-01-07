@@ -5,6 +5,7 @@ from django.db import models
 from apps.visums.managers import CheckTypeManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.interfaces import Describable
 from scouts_auth.inuits.models.fields import RequiredCharField
 
 
@@ -18,7 +19,10 @@ class CheckTypeEndpoint(models.TextChoices):
 
     SIMPLE_CHECK = "SimpleCheck", "simple"
     DATE_CHECK = "DateCheck", "date"
+    DURATION_CHECK = "DurationCheck", "duration"
     LOCATION_CHECK = "LocationCheck", "location"
+    LOCATION_CONTACT_CHECK = "LocationContactCheck", "location_contact"
+    MEMBER_CHECK = "MemberCheck", "member"
     CONTACT_CHECK = "ContactCheck", "contact"
     FILE_UPLOAD_CHECK = "FileUploadCheck", "file"
     INPUT_CHECK = "InputCheck", "input"
@@ -32,7 +36,7 @@ class CheckTypeEndpoint(models.TextChoices):
         return None
 
 
-class CheckType(AbstractBaseModel):
+class CheckType(Describable, AbstractBaseModel):
 
     objects = CheckTypeManager()
 
@@ -55,6 +59,36 @@ class CheckType(AbstractBaseModel):
         logger.debug("ENDPOINT: %s", endpoint)
 
         return endpoint
+
+    def is_simple_check(self):
+        return self.check_type == CheckTypeEndpoint.SIMPLE_CHECK
+
+    def is_date_check(self):
+        return self.check_type == CheckTypeEndpoint.DATE_CHECK
+
+    def is_duration_check(self):
+        return self.check_type == CheckTypeEndpoint.DURATION_CHECK
+
+    def is_location_check(self):
+        return self.check_type == CheckTypeEndpoint.LOCATION_CHECK
+
+    def is_location_contact_check(self):
+        return self.check_type == CheckTypeEndpoint.LOCATION_CONTACT_CHECK
+
+    def is_member_check(self):
+        return self.check_type == CheckTypeEndpoint.MEMBER_CHECK
+
+    def is_contact_check(self):
+        return self.check_type == CheckTypeEndpoint.CONTACT_CHECK
+
+    def is_file_upload_check(self):
+        return self.check_type == CheckTypeEndpoint.FILE_UPLOAD_CHECK
+
+    def is_input_check(self):
+        return self.check_type == CheckTypeEndpoint.INPUT_CHECK
+
+    def is_information_check(self):
+        return self.check_type == CheckTypeEndpoint.INFORMATION_CHECK
 
     def __str__(self):
         return "OBJECT CheckType: check_type({})".format(self.check_type)

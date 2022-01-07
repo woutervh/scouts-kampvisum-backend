@@ -59,17 +59,3 @@ class SubCategoryService:
         instance.save()
 
         return instance
-
-    # def deepcopy(self, instance: SubCategory) -> SubCategory:
-    #     instance_copy = copy_basemodel(instance)
-    #     instance_copy.is_default = False
-
-    #     instance_copy.full_clean()
-    #     instance_copy.save()
-
-    #     checks = instance.checks.all()
-    #     for check in checks:
-    #         check_copy = self.check_service.deepcopy(check)
-    #         instance_copy.checks.add(check_copy)
-
-    #     return instance_copy

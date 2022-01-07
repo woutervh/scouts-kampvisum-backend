@@ -14,7 +14,8 @@ from apps.visums.models import (
     CategorySet,
     Category,
     SubCategory,
-    Check,
+    CheckType,
+    VisumCheck,
 )
 
 
@@ -51,7 +52,9 @@ class DatabaseHelper:
                 return DatabaseHelper.find_category(instance, **kwargs)
             elif isinstance(instance, SubCategory):
                 return DatabaseHelper.find_sub_category(instance, **kwargs)
-            elif isinstance(instance, Check):
+            elif isinstance(instance, CheckType):
+                return DatabaseHelper.find_check_type(instance, **kwargs)
+            elif isinstance(instance, VisumCheck):
                 return DatabaseHelper.find_check(instance, **kwargs)
             else:
                 return
@@ -202,10 +205,25 @@ class DatabaseHelper:
             return instance
 
     @staticmethod
-    def find_check(instance: Check, **kwargs):
+    def find_check_type(instance: CheckType, **kwargs):
         logger.debug("Finding INSTANCE %s: %s", type(instance).__name__, instance)
         try:
-            instance = Check.objects.all().filter(type=kwargs.get("type")).last()
+            instance = (
+                CheckType.objects.all().filter(check_type=kwargs.get("type")).last()
+            )
+            if instance:
+                logger.debug("Found INSTANCE %s: %s", type(instance).__name__, instance)
+                return instance
+            raise
+        except:
+            instance.id = uuid.uuid4()
+            return instance
+
+    @staticmethod
+    def find_check(instance: VisumCheck, **kwargs):
+        logger.debug("Finding INSTANCE %s: %s", type(instance).__name__, instance)
+        try:
+            instance = VisumCheck.objects.all().filter(type=kwargs.get("type")).last()
             if instance:
                 logger.debug("Found INSTANCE %s: %s", type(instance).__name__, instance)
                 return instance

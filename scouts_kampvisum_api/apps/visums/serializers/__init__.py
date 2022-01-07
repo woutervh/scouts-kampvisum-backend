@@ -7,7 +7,7 @@ from .category_serializer import CategoryAPISerializer
 from .category_set_serializer import CategorySetSerializer
 from .category_set_serializer import CategorySetAPISerializer
 from .check_type_serializer import CheckTypeSerializer
-from .check_serializer import CheckSerializer
+from .visum_check_serializer import VisumCheckSerializer
 from .linked_check_serializer import LinkedCheckSerializer
 from .linked_sub_category_serializer import LinkedSubCategorySerializer
 from .linked_category_serializer import LinkedCategorySerializer

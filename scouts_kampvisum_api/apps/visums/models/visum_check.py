@@ -2,7 +2,7 @@ import logging
 
 from django.db import models
 
-from apps.visums.managers import CheckManager
+from apps.visums.managers import VisumCheckManager
 from apps.visums.models import SubCategory, CheckType
 
 from scouts_auth.inuits.models import AbstractBaseModel
@@ -13,9 +13,9 @@ from scouts_auth.inuits.models.interfaces import Translatable, Linkable, Explain
 logger = logging.getLogger(__name__)
 
 
-class Check(Translatable, Linkable, Explainable, AbstractBaseModel):
+class VisumCheck(Explainable, Linkable, Translatable, AbstractBaseModel):
 
-    objects = CheckManager()
+    objects = VisumCheckManager()
 
     name = RequiredCharField(max_length=64)
     sub_category = models.ForeignKey(
@@ -32,6 +32,6 @@ class Check(Translatable, Linkable, Explainable, AbstractBaseModel):
         return (self.name, self.sub_category)
 
     def __str__(self):
-        return "OBJECT Check: name({}), sub_category({}), check_type({})".format(
+        return "OBJECT VisumCheck: name({}), sub_category({}), check_type({})".format(
             self.name, str(self.sub_category), str(self.check_type)
         )

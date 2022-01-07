@@ -1,51 +1,72 @@
 [
 	{
-		"pk": 1,
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "SimpleCheck"
+			"check_type": "SimpleCheck",
+			"description": "A check that can be checked, unchecked or set as not applicable"
 		}
 	},
 	{
-		"pk": 2,
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "DateCheck"
+			"check_type": "DateCheck",
+			"description": "A check that contains a date"
 		}
 	},
 	{
-		"pk": 3,
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "LocationCheck"
+			"check_type": "DurationCheck",
+			"description": "A check that contains a start and end date"
 		}
 	},
 	{
-		"pk": 4,
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "ContactCheck"
+			"check_type": "LocationCheck",
+			"description": "A check that contains a geo-coordinate"
 		}
 	},
 	{
-		"pk": 5,
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "FileUploadCheck"
+			"check_type": "LocationContactCheck",
+			"description": "A check that contains a geo-coordinate and contact details"
 		}
 	},
 	{
-		"pk": 6,
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "InputCheck"
+			"check_type": "MemberCheck",
+			"description": "A check that selects members and non-members"
 		}
 	},
 	{
-		"pk": 7,
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "InformationCheck"
+			"check_type": "ContactCheck",
+			"description": "A check that contains contact information"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "FileUploadCheck",
+			"description": "A check that contains a file"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "InputCheck",
+			"description": "A check that contains text"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "InformationCheck",
+			"description": "A check that contains extra information as text"
 		}
 	}
 ]

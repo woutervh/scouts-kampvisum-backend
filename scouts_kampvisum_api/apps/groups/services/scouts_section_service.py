@@ -166,10 +166,11 @@ class ScoutsSectionService:
 
     #     return None
 
-    def setup_default_sections(self, request, user: settings.AUTH_USER_MODEL):
+    def setup_default_sections(self, request):
         """
         Links default sections to a group.
         """
+        user: settings.AUTH_USER_MODEL = request.user
 
         groups = user.scouts_groups
         created_sections = list()
@@ -192,7 +193,7 @@ class ScoutsSectionService:
                 group_type = ScoutsGroupType.objects.get(group_type=group.type)
                 default_scouts_section_names: List[
                     DefaultScoutsSectionName
-                ] = self.default_section_name_service.load_for_type(group_type)
+                ] = self.default_section_name_service.load_for_type(request, group_type)
 
                 logger.debug(
                     "Found %d default section NAMES", len(default_scouts_section_names)
@@ -201,7 +202,7 @@ class ScoutsSectionService:
                     logger.debug("Linking section NAME: %s", name.name)
                     created_sections.append(
                         self.section_create_or_update(
-                            group, name.name, name.name.hidden
+                            request, group.group_admin_id, name.name, name.name.hidden
                         )
                     )
 

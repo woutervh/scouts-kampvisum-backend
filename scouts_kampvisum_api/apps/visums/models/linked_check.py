@@ -1,13 +1,19 @@
 from django.db import models
 
-from apps.visums.models import LinkedSubCategory, Check
+from apps.visums.models import LinkedSubCategory, VisumCheck
+from apps.visums.models.enums import CheckState
 
-from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models import AbstractBaseModel, PersistedFile
+from scouts_auth.inuits.models.fields import (
+    DefaultCharField,
+    RequiredCharField,
+    DatetypeAwareDateField,
+)
 
 
 class LinkedCheck(AbstractBaseModel):
 
-    parent = models.ForeignKey(Check, on_delete=models.CASCADE)
+    parent = models.ForeignKey(VisumCheck, on_delete=models.CASCADE)
     sub_category = models.ForeignKey(
         LinkedSubCategory, on_delete=models.CASCADE, related_name="checks"
     )
@@ -18,11 +24,6 @@ class LinkedCheck(AbstractBaseModel):
 #
 # A check that can be checked, unchecked or set as not applicable
 # ##############################################################################
-from apps.visums.models.enums import CheckState
-
-from scouts_auth.inuits.models.fields import DefaultCharField
-
-
 class LinkedSimpleCheck(LinkedCheck):
     value = DefaultCharField(choices=CheckState.choices, default=CheckState.UNCHECKED)
 
@@ -32,11 +33,18 @@ class LinkedSimpleCheck(LinkedCheck):
 #
 # A check that contains a date
 # ##############################################################################
-from scouts_auth.inuits.models.fields import DatetypeAwareDateField
-
-
 class LinkedDateCheck(LinkedCheck):
     value = DatetypeAwareDateField()
+
+
+# ##############################################################################
+# LinkedDurationCheck
+#
+# A check that contains a start and end date
+# ##############################################################################
+class LinkedDurationCheck(LinkedCheck):
+    start_date = DatetypeAwareDateField()
+    end_date = DatetypeAwareDateField()
 
 
 # ##############################################################################
@@ -44,10 +52,28 @@ class LinkedDateCheck(LinkedCheck):
 #
 # A check that contains a geo-coordinate
 # ##############################################################################
-
-
 class LinkedLocationCheck(LinkedCheck):
-    pass
+    # @TODO
+    value = RequiredCharField(max_length=64)
+
+
+# ##############################################################################
+# LinkedLocationContactCheck
+#
+# A check that contains a geo-coordinate and contact details
+# ##############################################################################
+class LinkedLocationContactCheck(LinkedCheck):
+    # @TODO
+    value = RequiredCharField(max_length=64)
+
+
+# ##############################################################################
+# LinkedMemberCheck
+#
+# A check that selects members and non-members
+# ##############################################################################
+class LinkedMemberCheck(LinkedCheck):
+    value = RequiredCharField(max_length=64)
 
 
 # ##############################################################################
@@ -55,9 +81,6 @@ class LinkedLocationCheck(LinkedCheck):
 #
 # A check that contains contact information
 # ##############################################################################
-from scouts_auth.inuits.models.fields import RequiredCharField
-
-
 class LinkedContactCheck(LinkedCheck):
     value = RequiredCharField(max_length=64)
 
@@ -67,14 +90,8 @@ class LinkedContactCheck(LinkedCheck):
 #
 # A check that contains a file
 # ##############################################################################
-from scouts_auth.inuits.models import PersistedFile
-
-
 class LinkedFileUploadCheck(LinkedCheck):
-    # value = models.OneToOneField(
-    #     PersistedFile, on_delete=models.CASCADE, related_name="check"
-    # )
-    pass
+    value = models.OneToOneField(PersistedFile, on_delete=models.CASCADE)
 
 
 # ##############################################################################
@@ -92,4 +109,5 @@ class LinkedInputCheck(LinkedCheck):
 # A check that contains extra information as text
 # ##############################################################################
 class LinkedInformationCheck(LinkedInputCheck):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

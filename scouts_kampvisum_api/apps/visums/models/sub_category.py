@@ -7,13 +7,13 @@ from apps.visums.managers import SubCategoryManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
-from scouts_auth.inuits.models.interfaces import Linkable, Explainable
+from scouts_auth.inuits.models.interfaces import Describable, Explainable, Linkable
 
 
 logger = logging.getLogger(__name__)
 
 
-class SubCategory(Linkable, Explainable, AbstractBaseModel):
+class SubCategory(Describable, Explainable, Linkable, AbstractBaseModel):
 
     objects = SubCategoryManager()
 

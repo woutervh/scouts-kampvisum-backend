@@ -55,7 +55,7 @@ class SetupItem:
 
         return self.creation_count
 
-    def check(self):
+    def verify_setup(self):
         """Runs the setup action"""
         logger.debug("from %s import %s", self.namespace, self.module)
         mod = importlib.import_module(self.namespace)
@@ -81,7 +81,7 @@ class Setup:
                 namespace="apps.camps.services",
                 module="CampYearService",
                 function="setup_camp_years",
-                args=[request.user],
+                args=[request],
             ),
             # SetupItem(
             #     "groups",
@@ -96,7 +96,7 @@ class Setup:
                 namespace="apps.groups.services",
                 module="ScoutsSectionService",
                 function="setup_default_sections",
-                args=[request.user],
+                args=[request],
             ),
             # SetupItem(
             #     "category_sets",
@@ -110,7 +110,7 @@ class Setup:
 
         for item in self.items:
             logger.info("Performing setup for action '%s'", item.name)
-            item.check()
+            item.verify_setup()
             status = item.status()
 
             if not status:

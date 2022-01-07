@@ -4,11 +4,9 @@ from apps.visums.models import CategorySet
 from apps.visums.serializers import (
     CampYearCategorySetSerializer,
     CategorySetPrioritySerializer,
-    CategorySerializer,
     CategoryAPISerializer,
 )
 from apps.groups.serializers import ScoutsGroupTypeSerializer
-from apps.camps.serializers import CampYearSerializer
 
 
 class CategorySetSerializer(serializers.ModelSerializer):
