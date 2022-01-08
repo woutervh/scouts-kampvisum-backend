@@ -1,13 +1,13 @@
 import logging
 
 from apps.visums.models import LinkedCategory, Category, LinkedSubCategory, SubCategory
-from apps.visums.services import VisumCheckService
+from apps.visums.services import CheckService
 
 logger = logging.getLogger(__name__)
 
 
 class SubCategoryService:
-    check_service = VisumCheckService()
+    check_service = CheckService()
 
     def link_sub_categories(
         self, request, linked_category: LinkedCategory, category: Category

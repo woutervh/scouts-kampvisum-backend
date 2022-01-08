@@ -5,9 +5,9 @@ from django.core.exceptions import ValidationError
 
 from apps.visums.models import (
     LinkedSubCategory,
-    VisumCheck,
+    Check,
     CheckType,
-    VisumCheck,
+    Check,
     CheckType,
 )
 from apps.visums.models.enums import CheckState
@@ -25,13 +25,16 @@ logger = logging.getLogger(__name__)
 
 class LinkedCheck(AbstractBaseModel):
 
-    parent = models.ForeignKey(VisumCheck, on_delete=models.CASCADE)
+    parent = models.ForeignKey(Check, on_delete=models.CASCADE)
     sub_category = models.ForeignKey(
         LinkedSubCategory, on_delete=models.CASCADE, related_name="checks"
     )
 
+    class Meta:
+        ordering = ["parent__index"]
+
     @staticmethod
-    def get_concrete_check_type(check: VisumCheck):
+    def get_concrete_check_type(check: Check):
         check_type: CheckType = check.check_type
 
         if check_type.is_simple_check():

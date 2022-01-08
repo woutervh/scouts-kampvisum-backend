@@ -1,5 +1,5 @@
 from .camp_year_category_set_service import CampYearCategorySetService
-from .visum_check_service import VisumCheckService
+from .check_service import CheckService
 from .sub_category_service import SubCategoryService
 from .category_service import CategoryService
 from .category_set_service import CategorySetService

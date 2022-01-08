@@ -11,3 +11,6 @@ class LinkedSubCategory(AbstractBaseModel):
     category = models.ForeignKey(
         LinkedCategory, on_delete=models.CASCADE, related_name="sub_categories"
     )
+
+    class Meta:
+        ordering = ["parent__index"]

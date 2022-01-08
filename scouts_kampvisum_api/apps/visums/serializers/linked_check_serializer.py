@@ -14,7 +14,7 @@ from apps.visums.models import (
     LinkedCommentCheck,
 )
 from apps.visums.models.enums import CheckState
-from apps.visums.serializers import VisumCheckSerializer
+from apps.visums.serializers import CheckSerializer
 from apps.visums.services import LinkedCheckService
 from apps.visums.urls import LinkedCheckEndpointFactory
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 class LinkedCheckSerializer(serializers.ModelSerializer):
 
-    parent = VisumCheckSerializer()
+    parent = CheckSerializer()
     endpoint = serializers.SerializerMethodField()
     value = serializers.SerializerMethodField()
 
@@ -44,7 +44,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
         if check.parent.check_type.is_simple_check():
             value = self.get_simple_check_value(obj, check)
         elif check.parent.check_type.is_duration_check():
-            value = "({},{})".format(check.start_date, check.end_date)
+            value = self.get_duration_check_value(obj, check)
         else:
             value = check.value
 
@@ -57,10 +57,19 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
         return value
 
-    def get_simple_check_value(self, obj: LinkedCheck, check: LinkedSimpleCheck):
+    def get_simple_check_value(
+        self, obj: LinkedCheck, check: LinkedSimpleCheck
+    ) -> CheckState:
         logger.debug("CHECK VALUE: %s", check.value)
 
         return check.value
+
+    def get_duration_check_value(
+        self, obj: LinkedCheck, check: LinkedDurationCheck
+    ) -> dict:
+        logger.debug("DURATION CHECK DATA: %s", str(check))
+
+        return {"start_date": check.start_date, "end_date": check.end_date}
 
 
 class LinkedSimpleCheckSerializer(LinkedCheckSerializer):

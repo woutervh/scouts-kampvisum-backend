@@ -1,6 +1,6 @@
 [
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_date_members",
             "sub_category": [
@@ -21,7 +21,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_date_leaders",
             "sub_category": [
@@ -42,7 +42,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_activities_camp",
             "sub_category": [
@@ -63,7 +63,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_activities_rain",
             "sub_category": [
@@ -84,7 +84,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_activities_heat",
             "sub_category": [
@@ -105,7 +105,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_activities_totemisation",
             "sub_category": [
@@ -126,7 +126,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_activities_night_activity",
             "sub_category": [
@@ -147,7 +147,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_activities_upload_general_planning",
             "sub_category": [
@@ -168,7 +168,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_activities_upload_other_planning",
             "sub_category": [
@@ -189,7 +189,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_menu_balanced_diet",
             "sub_category": [
@@ -209,7 +209,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_menu_vegetarian_diet",
             "sub_category": [
@@ -229,7 +229,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "planning_menu_upload",
             "sub_category": [
@@ -249,7 +249,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_location_name",
             "sub_category": [
@@ -269,7 +269,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_location_contact",
             "sub_category": [
@@ -289,7 +289,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_location_contact_cell",
             "sub_category": [
@@ -309,7 +309,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_location_location",
             "sub_category": [
@@ -330,7 +330,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_location_contract",
             "sub_category": [
@@ -351,7 +351,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_info_water",
             "sub_category": [
@@ -372,7 +372,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_info_toilets",
             "sub_category": [
@@ -393,7 +393,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_info_fire",
             "sub_category": [
@@ -414,7 +414,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_info_electricity",
             "sub_category": [
@@ -435,7 +435,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_info_store",
             "sub_category": [
@@ -456,7 +456,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_transport_members",
             "sub_category": [
@@ -477,7 +477,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_transport_leaders",
             "sub_category": [
@@ -498,7 +498,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_transport_materials",
             "sub_category": [
@@ -519,7 +519,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_transport_upload",
             "sub_category": [
@@ -540,7 +540,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_materials_checked",
             "sub_category": [
@@ -561,7 +561,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "logistics_materials_upload",
             "sub_category": [
@@ -582,7 +582,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_parents_ombudsman",
             "sub_category": [
@@ -603,7 +603,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_parents_ombudsman_contact",
             "sub_category": [
@@ -624,7 +624,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_parents_informed",
             "sub_category": [
@@ -645,7 +645,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_parents_brochure",
             "sub_category": [
@@ -666,7 +666,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_agreements_rules",
             "sub_category": [
@@ -687,7 +687,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_agreements_smoking",
             "sub_category": [
@@ -708,7 +708,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_agreements_sexuality",
             "sub_category": [
@@ -729,7 +729,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_agreements_alcohol",
             "sub_category": [
@@ -750,7 +750,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_agreements_parents",
             "sub_category": [
@@ -771,7 +771,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "communication_agreements_upload",
             "sub_category": [
@@ -792,7 +792,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_insurance_upload",
             "sub_category": [
@@ -812,7 +812,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_insurance_members",
             "sub_category": [
@@ -833,7 +833,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_insurance_non_members",
             "sub_category": [
@@ -854,7 +854,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_insurance_cars",
             "sub_category": [
@@ -875,7 +875,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_insurance_materials",
             "sub_category": [
@@ -896,7 +896,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_insurance_upload",
             "sub_category": [
@@ -917,7 +917,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_healthcare_gp",
             "sub_category": [
@@ -938,7 +938,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_healthcare_gp_location",
             "sub_category": [
@@ -959,7 +959,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_healthcare_pharmacy",
             "sub_category": [
@@ -980,7 +980,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_healthcare_pharmacy_location",
             "sub_category": [
@@ -1001,7 +1001,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_healthcare_hospital",
             "sub_category": [
@@ -1022,7 +1022,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_healthcare_hospital_location",
             "sub_category": [
@@ -1043,7 +1043,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_healthcare_hospital_ehbo",
             "sub_category": [
@@ -1065,7 +1065,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "safety_healthcare_hospital_emergency_contact",
             "sub_category": [
@@ -1086,7 +1086,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_leaders_main",
             "sub_category": [
@@ -1107,7 +1107,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_leaders_responsible",
             "sub_category": [
@@ -1128,7 +1128,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_leaders_responsible_2",
             "sub_category": [
@@ -1149,7 +1149,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_leaders_home_contact",
             "sub_category": [
@@ -1170,7 +1170,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_leaders_cooks",
             "sub_category": [
@@ -1191,7 +1191,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_leaders_leader_count",
             "sub_category": [
@@ -1212,7 +1212,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_members_medical_info",
             "sub_category": [
@@ -1233,7 +1233,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_members_id",
             "sub_category": [
@@ -1254,7 +1254,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_members_payment",
             "sub_category": [
@@ -1275,7 +1275,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_members_registered",
             "sub_category": [
@@ -1296,7 +1296,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "participants_members_count",
             "sub_category": [
@@ -1317,7 +1317,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "budget_budget_balanced",
             "sub_category": [
@@ -1338,7 +1338,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "budget_budget_leaders",
             "sub_category": [
@@ -1359,7 +1359,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "budget_budget_members",
             "sub_category": [
@@ -1380,7 +1380,7 @@
         }
     },
     {
-        "model": "visums.VisumCheck",
+        "model": "visums.Check",
         "fields": {
             "name": "budget_budget_upload",
             "sub_category": [

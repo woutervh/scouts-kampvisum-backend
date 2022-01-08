@@ -178,7 +178,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
     def list(self, request):
         """
-        Gets all VisumCheck instances (filtered).
+        Gets all Check instances (filtered).
         """
 
         instances = self.filter_queryset(self.get_queryset())

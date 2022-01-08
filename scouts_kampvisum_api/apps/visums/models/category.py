@@ -6,17 +6,14 @@ from apps.visums.managers import CategoryManager
 from apps.visums.models import CategorySet
 
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.interfaces import Describable, Explainable
-from scouts_auth.inuits.models.fields import (
-    RequiredCharField,
-    RequiredIntegerField,
-)
+from scouts_auth.inuits.models.interfaces import Describable, Explainable, Indexable
+from scouts_auth.inuits.models.fields import RequiredCharField
 
 
 logger = logging.getLogger(__name__)
 
 
-class Category(Describable, Explainable, AbstractBaseModel):
+class Category(Describable, Explainable, Indexable, AbstractBaseModel):
 
     objects = CategoryManager()
 
@@ -24,7 +21,6 @@ class Category(Describable, Explainable, AbstractBaseModel):
     category_set = models.ForeignKey(
         CategorySet, on_delete=models.CASCADE, related_name="categories"
     )
-    index = RequiredIntegerField(default=0)
 
     class Meta:
         ordering = ["index"]

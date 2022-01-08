@@ -6,9 +6,9 @@ from django.db import models
 logger = logging.getLogger(__name__)
 
 
-class VisumCheckManager(models.Manager):
+class CheckManager(models.Manager):
     """
-    Loads VisumCheck instances by their name, not their id.
+    Loads Check instances by their name, not their id.
 
     This is useful for defining fixtures.
     """
