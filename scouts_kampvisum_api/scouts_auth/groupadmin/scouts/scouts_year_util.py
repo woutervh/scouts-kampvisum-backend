@@ -32,3 +32,17 @@ class ScoutsTemporalDetails:
             return datetime.date(date.year - 1, 9, 1)
 
         return datetime.date(date.year, 9, 1)
+
+    @staticmethod
+    def get_end_of_camp_year(date):
+        """
+        Returns the start of the scout year based on a limit date for camps.
+
+        A request for a scout year is assumed to mean the next calendar year
+        if the current date is later than this limit date.
+        The next camp year is assumed to start on the 1st of May.
+        """
+        if date.month >= 5:
+            return datetime.date(date.year + 1, 8, 31)
+
+        return datetime.date(date.year, 8, 31)

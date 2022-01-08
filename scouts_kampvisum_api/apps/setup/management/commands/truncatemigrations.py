@@ -11,10 +11,28 @@ class Command(BaseCommand):
     help = "Truncates django's migrations table"
     exception = False
 
-    def handle(self, *args, **kwargs):
-        from apps.camps.services import CampYearService
+    def _drop(self, cursor, table, name=None):
+        if name is None:
+            name = table
+        logger.debug("Dropping table %s", name)
+        cursor.execute("DROP TABLE IF EXISTS {} CASCADE".format(table))
 
-        logger.debug("Truncating migrations table")
+    def _drop_all_tables(self, cursor):
+        cursor.execute("DROP SCHEMA public CASCADE;")
+        cursor.execute("CREATE SCHEMA public;")
+        # cursor.execute("GRANT ALL ON SCHEMA public TO postgres;")
+        cursor.execute("GRANT ALL ON SCHEMA public to public;")
+
+    def handle(self, *args, **kwargs):
 
         with connection.cursor() as cursor:
-            cursor.execute("TRUNCATE TABLE django_migrations")
+            # self._drop(cursor, "django_migrations")
+            # self._drop(cursor, "django_content_type")
+            # self._drop(cursor, "django_admin_log")
+            # self._drop(cursor, "django_session")
+            # self._drop(cursor, "auth_permission")
+            # self._drop(cursor, "auth_group_permissions")
+            # self._drop(cursor, "auth_group")
+            # self._drop(cursor, "scouts_auth_scoutuser_user_permissions")
+            # self._drop(cursor, "scouts_auth_scoutuser_groups")
+            self._drop_all_tables(cursor)
