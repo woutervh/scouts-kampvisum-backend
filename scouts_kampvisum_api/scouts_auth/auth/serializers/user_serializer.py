@@ -1,11 +1,12 @@
 from rest_framework import serializers
 
 from scouts_auth.auth.models import User
-
 from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
+from scouts_auth.inuits.serializers import NonModelSerializer
 
 
-class UserSerializer(serializers.ModelSerializer):
+# class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(NonModelSerializer):
     """
     Serializes a User instance into a string.
     """
