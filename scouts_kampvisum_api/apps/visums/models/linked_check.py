@@ -46,14 +46,10 @@ class LinkedCheck(AbstractBaseModel):
             return LinkedLocationContactCheck()
         elif check_type.is_member_check():
             return LinkedMemberCheck()
-        elif check_type.is_contact_check():
-            return LinkedContactCheck()
         elif check_type.is_file_upload_check():
             return LinkedFileUploadCheck()
-        elif check_type.is_input_check():
-            return LinkedInputCheck()
-        elif check_type.is_information_check():
-            return LinkedInformationCheck()
+        elif check_type.is_comment_check():
+            return LinkedCommentCheck()
         else:
             raise ValidationError(
                 "Check type {} is not recognized".format(check_type.check_type)
@@ -118,15 +114,6 @@ class LinkedMemberCheck(LinkedCheck):
 
 
 # ##############################################################################
-# LinkedContactCheck
-#
-# A check that contains contact information
-# ##############################################################################
-class LinkedContactCheck(LinkedCheck):
-    value = OptionalCharField(max_length=64)
-
-
-# ##############################################################################
 # LinkedFileUploadCheck
 #
 # A check that contains a file
@@ -138,19 +125,9 @@ class LinkedFileUploadCheck(LinkedCheck):
 
 
 # ##############################################################################
-# LinkedInputCheck
+# LinkedCommentCheck
 #
-# A check that contains text
+# A check that contains comments
 # ##############################################################################
-class LinkedInputCheck(LinkedCheck):
+class LinkedCommentCheck(LinkedCheck):
     value = OptionalCharField(max_length=300)
-
-
-# ##############################################################################
-# LinkedInformationCheck
-#
-# A check that contains extra information as text
-# ##############################################################################
-class LinkedInformationCheck(LinkedInputCheck):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)

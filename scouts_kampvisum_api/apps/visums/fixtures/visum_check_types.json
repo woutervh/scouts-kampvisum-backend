@@ -44,13 +44,6 @@
 	{
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "ContactCheck",
-			"description": "A check that contains contact information"
-		}
-	},
-	{
-		"model": "visums.CheckType",
-		"fields": {
 			"check_type": "FileUploadCheck",
 			"description": "A check that contains a file"
 		}
@@ -58,15 +51,8 @@
 	{
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "InputCheck",
-			"description": "A check that contains text"
-		}
-	},
-	{
-		"model": "visums.CheckType",
-		"fields": {
-			"check_type": "InformationCheck",
-			"description": "A check that contains extra information as text"
+			"check_type": "CommentCheck",
+			"description": "A check that contains comments"
 		}
 	}
 ]

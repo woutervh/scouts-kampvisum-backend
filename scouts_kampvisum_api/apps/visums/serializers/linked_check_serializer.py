@@ -10,10 +10,8 @@ from apps.visums.models import (
     LinkedLocationCheck,
     LinkedLocationContactCheck,
     LinkedMemberCheck,
-    LinkedContactCheck,
     LinkedFileUploadCheck,
-    LinkedInputCheck,
-    LinkedInformationCheck,
+    LinkedCommentCheck,
 )
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import VisumCheckSerializer
@@ -85,7 +83,7 @@ class LinkedDateCheckSerializer(LinkedCheckSerializer):
 class LinkedDurationCheckSerializer(LinkedCheckSerializer):
     class Meta:
         model = LinkedDurationCheck
-        fields = "__all__"
+        fields = ["start_date", "end_date"]
 
 
 class LinkedLocationCheckSerializer(LinkedCheckSerializer):
@@ -106,25 +104,13 @@ class LinkedMemberCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
 
-class LinkedContactCheckSerializer(LinkedCheckSerializer):
-    class Meta:
-        model = LinkedContactCheck
-        fields = "__all__"
-
-
 class LinkedFileUploadCheckSerializer(LinkedCheckSerializer):
     class Meta:
         model = LinkedFileUploadCheck
         fields = "__all__"
 
 
-class LinkedInputCheckSerializer(LinkedCheckSerializer):
+class LinkedCommentCheckSerializer(LinkedCheckSerializer):
     class Meta:
-        model = LinkedInputCheck
-        fields = "__all__"
-
-
-class LinkedInformationCheckSerializer(LinkedCheckSerializer):
-    class Meta:
-        model = LinkedInformationCheck
+        model = LinkedCommentCheck
         fields = "__all__"

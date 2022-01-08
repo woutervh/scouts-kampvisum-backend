@@ -16,9 +16,7 @@ from .linked_check import (
     LinkedLocationCheck,
     LinkedLocationContactCheck,
     LinkedMemberCheck,
-    LinkedContactCheck,
     LinkedFileUploadCheck,
-    LinkedInputCheck,
-    LinkedInformationCheck,
+    LinkedCommentCheck,
 )
 from .visum import CampVisum

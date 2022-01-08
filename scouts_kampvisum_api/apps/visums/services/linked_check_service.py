@@ -12,10 +12,8 @@ from apps.visums.models import (
     LinkedLocationCheck,
     LinkedLocationContactCheck,
     LinkedMemberCheck,
-    LinkedContactCheck,
     LinkedFileUploadCheck,
-    LinkedInputCheck,
-    LinkedInformationCheck,
+    LinkedCommentCheck,
 )
 
 
@@ -49,17 +47,29 @@ class LinkedCheckService:
 
         return instance
 
+    def get_date_check(self, check_id):
+        try:
+            return LinkedDateCheck.objects.get(linkedcheck_ptr=check_id)
+        except LinkedDateCheck.DoesNotExist:
+            raise Http404
+
     def get_duration_check(self, check_id):
         try:
             return LinkedDurationCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedDurationCheck.DoesNotExist:
             raise Http404
 
-    def get_date_check(self, check_id):
-        try:
-            return LinkedDateCheck.objects.get(linkedcheck_ptr=check_id)
-        except LinkedDateCheck.DoesNotExist:
-            raise Http404
+    def update_duration_check(self, instance: LinkedDurationCheck, **data):
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+        instance.start_date = data.get("start_date", None)
+        instance.end_date = data.get("end_date", None)
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
 
     def get_location_check(self, check_id):
         try:
@@ -79,26 +89,25 @@ class LinkedCheckService:
         except LinkedMemberCheck.DoesNotExist:
             raise Http404
 
-    def get_contact_check(self, check_id):
-        try:
-            return LinkedContactCheck.objects.get(linkedcheck_ptr=check_id)
-        except LinkedContactCheck.DoesNotExist:
-            raise Http404
-
     def get_file_upload_check(self, check_id):
         try:
             return LinkedFileUploadCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedFileUploadCheck.DoesNotExist:
             raise Http404
 
-    def get_input_check(self, check_id):
+    def get_comment_check(self, check_id):
         try:
-            return LinkedInputCheck.objects.get(linkedcheck_ptr=check_id)
-        except LinkedInputCheck.DoesNotExist:
+            return LinkedCommentCheck.objects.get(linkedcheck_ptr=check_id)
+        except LinkedCommentCheck.DoesNotExist:
             raise Http404
 
-    def get_information_check(self, check_id):
-        try:
-            return LinkedInformationCheck.objects.get(linkedcheck_ptr=check_id)
-        except LinkedInformationCheck.DoesNotExist:
-            raise Http404
+    def update_comment_check(self, instance: LinkedCommentCheck, **data):
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+        instance.value = data.get("value", None)
+
+        instance.full_clean()
+        instance.save()
+
+        return instance

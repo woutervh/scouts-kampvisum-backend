@@ -42,6 +42,26 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
+            "name": "planning_date_comments",
+            "sub_category": [
+                "Datum",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
             "name": "planning_activities_camp",
             "sub_category": [
                 "Activiteiten",
@@ -142,6 +162,26 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
+            "name": "planning_activities_comments",
+            "sub_category": [
+                "Activiteiten",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
             "name": "planning_activities_upload_general_planning",
             "sub_category": [
                 "Activiteiten",
@@ -222,6 +262,26 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
+            "name": "planning_menu_comments",
+            "sub_category": [
+                "Menu",
+                [
+                    "Planning",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
             "name": "planning_menu_upload",
             "sub_category": [
                 "Menu",
@@ -242,66 +302,6 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
-            "name": "logistics_location_name",
-            "sub_category": [
-                "Locatie(s) - kaartje",
-                [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
-                ]
-            ],
-            "check_type": [
-                "InputCheck"
-            ],
-            "label": "Duid de kamplocatie aan"
-        }
-    },
-    {
-        "model": "visums.VisumCheck",
-        "fields": {
-            "name": "logistics_location_contact",
-            "sub_category": [
-                "Locatie(s) - kaartje",
-                [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
-                ]
-            ],
-            "check_type": [
-                "ContactCheck"
-            ],
-            "label": "Contactgegevens verhuurder kamplocatie"
-        }
-    },
-    {
-        "model": "visums.VisumCheck",
-        "fields": {
-            "name": "logistics_location_contact_cell",
-            "sub_category": [
-                "Locatie(s) - kaartje",
-                [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
-                ]
-            ],
-            "check_type": [
-                "ContactCheck"
-            ],
-            "label": "Telefoon verhuurder kamplocatie"
-        }
-    },
-    {
-        "model": "visums.VisumCheck",
-        "fields": {
             "name": "logistics_location_location",
             "sub_category": [
                 "Locatie(s) - kaartje",
@@ -316,7 +316,27 @@
             "check_type": [
                 "LocationCheck"
             ],
-            "label": "Aanduiding kampplaats op kaart"
+            "label": "Gegevens kampplaats en verhuurder"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
+            "name": "logistics_location_comments",
+            "sub_category": [
+                "Locatie(s) - kaartje",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
         }
     },
     {
@@ -445,6 +465,26 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
+            "name": "logistics_info_comments",
+            "sub_category": [
+                "Locatie(s) - info",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
             "name": "logistics_transport_members",
             "sub_category": [
                 "Vervoer",
@@ -505,6 +545,26 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
+            "name": "logistics_transport_comments",
+            "sub_category": [
+                "Vervoer",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
             "name": "logistics_transport_upload",
             "sub_category": [
                 "Vervoer",
@@ -540,6 +600,26 @@
                 "SimpleCheck"
             ],
             "label": "Materiaal nagekeken ?"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
+            "name": "logistics_materials_comments",
+            "sub_category": [
+                "Materiaal",
+                [
+                    "Logistiek",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
         }
     },
     {
@@ -597,7 +677,7 @@
                 ]
             ],
             "check_type": [
-                "ContactCheck"
+                "MemberCheck"
             ],
             "label": "Naam aanspreekpunt"
         }
@@ -620,6 +700,26 @@
                 "SimpleCheck"
             ],
             "label": "Ouders zijn voldoende geïnformeerd"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
+            "name": "communication_parents_comments",
+            "sub_category": [
+                "Ouders",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
         }
     },
     {
@@ -745,6 +845,26 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
+            "name": "communication_agreements_comments",
+            "sub_category": [
+                "Afspraken",
+                [
+                    "Communicatie & afspraken",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
             "name": "communication_agreements_upload",
             "sub_category": [
                 "Afspraken",
@@ -777,7 +897,7 @@
                 ]
             ],
             "check_type": [
-                "InformationCheck"
+                "FileUploadCheck"
             ],
             "label": "Upload hier je verzekeringsdocumenten"
         }
@@ -865,6 +985,26 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
+            "name": "safety_insurance_comments",
+            "sub_category": [
+                "Verzekeringen",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
             "name": "safety_insurance_upload",
             "sub_category": [
                 "Verzekeringen",
@@ -887,7 +1027,7 @@
         "fields": {
             "name": "safety_healthcare_gp",
             "sub_category": [
-                "Verzekeringen",
+                "Zorgverlening",
                 [
                     "Veiligheid",
                     [
@@ -907,7 +1047,7 @@
         "fields": {
             "name": "safety_healthcare_gp_location",
             "sub_category": [
-                "Verzekeringen",
+                "Zorgverlening",
                 [
                     "Veiligheid",
                     [
@@ -927,7 +1067,7 @@
         "fields": {
             "name": "safety_healthcare_pharmacy",
             "sub_category": [
-                "Verzekeringen",
+                "Zorgverlening",
                 [
                     "Veiligheid",
                     [
@@ -947,7 +1087,7 @@
         "fields": {
             "name": "safety_healthcare_pharmacy_location",
             "sub_category": [
-                "Verzekeringen",
+                "Zorgverlening",
                 [
                     "Veiligheid",
                     [
@@ -967,7 +1107,7 @@
         "fields": {
             "name": "safety_healthcare_hospital",
             "sub_category": [
-                "Verzekeringen",
+                "Zorgverlening",
                 [
                     "Veiligheid",
                     [
@@ -987,7 +1127,7 @@
         "fields": {
             "name": "safety_healthcare_hospital_location",
             "sub_category": [
-                "Verzekeringen",
+                "Zorgverlening",
                 [
                     "Veiligheid",
                     [
@@ -1007,7 +1147,7 @@
         "fields": {
             "name": "safety_healthcare_hospital_ehbo",
             "sub_category": [
-                "Verzekeringen",
+                "Zorgverlening",
                 [
                     "Veiligheid",
                     [
@@ -1026,9 +1166,29 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
+            "name": "safety_healthcare_comments",
+            "sub_category": [
+                "Zorgverlening",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
             "name": "safety_healthcare_hospital_emergency_contact",
             "sub_category": [
-                "Verzekeringen",
+                "Zorgverlening",
                 [
                     "Veiligheid",
                     [
@@ -1040,7 +1200,7 @@
             "check_type": [
                 "FileUploadCheck"
             ],
-            "label": "Lijst met noodnummers"
+            "label": "Upload hier de lijst met noodnummers"
         }
     },
     {
@@ -1078,7 +1238,7 @@
                 ]
             ],
             "check_type": [
-                "ContactCheck"
+                "MemberCheck"
             ],
             "label": "Contactgegevens kampverantwoordelijke"
         }
@@ -1098,7 +1258,7 @@
                 ]
             ],
             "check_type": [
-                "ContactCheck"
+                "MemberCheck"
             ],
             "label": "Contactgegevens 2de kampverantwoordelijke"
         }
@@ -1118,7 +1278,7 @@
                 ]
             ],
             "check_type": [
-                "ContactCheck"
+                "MemberCheck"
             ],
             "label": "Contactgegevens thuisverantwoordelijke"
         }
@@ -1146,7 +1306,7 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
-            "name": "participants_leaders_leader_count",
+            "name": "participants_leaders_comments",
             "sub_category": [
                 "Leiding",
                 [
@@ -1158,9 +1318,9 @@
                 ]
             ],
             "check_type": [
-                "InputCheck"
+                "CommentCheck"
             ],
-            "label": "Totaal aantal leiding"
+            "label": "Opmerkingen"
         }
     },
     {
@@ -1226,7 +1386,7 @@
     {
         "model": "visums.VisumCheck",
         "fields": {
-            "name": "participants_members_registered",
+            "name": "participants_members_comments",
             "sub_category": [
                 "Leden",
                 [
@@ -1238,29 +1398,9 @@
                 ]
             ],
             "check_type": [
-                "SimpleCheck"
+                "CommentCheck"
             ],
-            "label": "Leden ingeschreven"
-        }
-    },
-    {
-        "model": "visums.VisumCheck",
-        "fields": {
-            "name": "participants_members_count",
-            "sub_category": [
-                "Leden",
-                [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
-                ]
-            ],
-            "check_type": [
-                "InputCheck"
-            ],
-            "label": "Totaal aantal leden"
+            "label": "Opmerkingen"
         }
     },
     {
@@ -1321,6 +1461,26 @@
                 "SimpleCheck"
             ],
             "label": "Kampgeld leden ontvangen"
+        }
+    },
+    {
+        "model": "visums.VisumCheck",
+        "fields": {
+            "name": "budget_budget_comments",
+            "sub_category": [
+                "Begroting",
+                [
+                    "Budget",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
         }
     },
     {

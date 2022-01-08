@@ -31,15 +31,11 @@ patch_location_contact_check = LinkedCheckViewSet.as_view(
 patch_member_check = LinkedCheckViewSet.as_view(
     {"patch": "partial_update_member_check"}
 )
-patch_contact_check = LinkedCheckViewSet.as_view(
-    {"patch": "partial_update_contact_check"}
-)
 patch_file_upload_check = LinkedCheckViewSet.as_view(
     {"patch": "partial_update_file_upload_check"}
 )
-patch_input_check = LinkedCheckViewSet.as_view({"patch": "partial_update_input_check"})
-patch_information_check = LinkedCheckViewSet.as_view(
-    {"patch": "partial_update_information_check"}
+patch_comment_check = LinkedCheckViewSet.as_view(
+    {"patch": "partial_update_comment_check"}
 )
 
 urlpatterns = [
@@ -66,20 +62,14 @@ urlpatterns = [
         "checks/member/<uuid:check_id>", patch_member_check, name="patch_member_check"
     ),
     path(
-        "checks/contact/<uuid:check_id>",
-        patch_contact_check,
-        name="patch_contact_check",
-    ),
-    path(
         "checks/file/<uuid:check_id>",
         patch_file_upload_check,
         name="patch_file_upload_check",
     ),
-    path("checks/input/<uuid:check_id>", patch_input_check, name="patch_input_check"),
     path(
-        "checks/info/<uuid:check_id>",
-        patch_information_check,
-        name="patch_information_check",
+        "checks/comment/<uuid:check_id>",
+        patch_comment_check,
+        name="patch_comment_check",
     ),
 ]
 

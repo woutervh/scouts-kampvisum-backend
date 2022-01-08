@@ -15,10 +15,8 @@ from apps.visums.models import (
     LinkedLocationCheck,
     LinkedLocationContactCheck,
     LinkedMemberCheck,
-    LinkedContactCheck,
     LinkedFileUploadCheck,
-    LinkedInputCheck,
-    LinkedInformationCheck,
+    LinkedCommentCheck,
 )
 from apps.visums.serializers import (
     LinkedCheckSerializer,
@@ -28,10 +26,8 @@ from apps.visums.serializers import (
     LinkedLocationCheckSerializer,
     LinkedLocationContactCheckSerializer,
     LinkedMemberCheckSerializer,
-    LinkedContactCheckSerializer,
     LinkedFileUploadCheckSerializer,
-    LinkedInputCheckSerializer,
-    LinkedInformationCheckSerializer,
+    LinkedCommentCheckSerializer,
 )
 from apps.visums.services import LinkedCheckService
 
@@ -116,6 +112,64 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = LinkedSimpleCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedDurationCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedDurationCheckSerializer},
+    )
+    def partial_update_duration_check(self, request, check_id):
+        instance = self.linked_check_service.get_duration_check(check_id)
+
+        logger.debug("DURATION CHECK UPDATE REQUEST DATA: %s", request.data)
+        serializer = LinkedDurationCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("DURATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.update_duration_check(
+            instance, **validated_data
+        )
+
+        output_serializer = LinkedDurationCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedCommentCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedCommentCheckSerializer},
+    )
+    def partial_update_comment_check(self, request, check_id):
+        instance = self.linked_check_service.get_comment_check(check_id)
+
+        logger.debug("COMMENT CHECK UPDATE REQUEST DATA: %s", request.data)
+        serializer = LinkedCommentCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("COMMENT CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.update_comment_check(
+            instance, **validated_data
+        )
+
+        output_serializer = LinkedCommentCheckSerializer(
             instance, context={"request": request}
         )
 

@@ -16,10 +16,8 @@ from .linked_check_serializer import (
     LinkedLocationCheckSerializer,
     LinkedLocationContactCheckSerializer,
     LinkedMemberCheckSerializer,
-    LinkedContactCheckSerializer,
     LinkedFileUploadCheckSerializer,
-    LinkedInputCheckSerializer,
-    LinkedInformationCheckSerializer,
+    LinkedCommentCheckSerializer,
 )
 from .linked_sub_category_serializer import LinkedSubCategorySerializer
 from .linked_category_serializer import LinkedCategorySerializer

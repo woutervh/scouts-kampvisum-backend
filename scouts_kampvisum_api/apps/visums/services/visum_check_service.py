@@ -17,7 +17,7 @@ class VisumCheckService:
         logger.debug("Linking checks")
 
         for check in sub_category.checks.all():
-            linked_check = LinkedCheck.get_concrete_check_type(request, check)
+            linked_check = LinkedCheck.get_concrete_check_type(check)
             logger.debug(
                 "Linked check: %s (type: %s)", check.name, type(linked_check).__name__
             )
