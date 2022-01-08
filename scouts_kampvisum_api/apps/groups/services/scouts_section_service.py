@@ -166,11 +166,14 @@ class ScoutsSectionService:
 
     #     return None
 
-    def setup_default_sections(self, request):
+    def setup_default_sections(
+        self, request=None, user: settings.AUTH_USER_MODEL = None
+    ):
         """
         Links default sections to a group.
         """
-        user: settings.AUTH_USER_MODEL = request.user
+        if not user:
+            user: settings.AUTH_USER_MODEL = request.user
 
         groups = user.scouts_groups
         created_sections = list()

@@ -1,9 +1,10 @@
 import logging
 
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import Group
 from django.conf import settings
 from django.dispatch import receiver
+
+from apps.groups.services import ScoutsSectionService
 
 from scouts_auth.auth.signals import ScoutsAuthSignalSender, app_ready, authenticated
 from scouts_auth.auth.services import PermissionService
@@ -56,20 +57,24 @@ class SignalHandler:
             "SIGNAL received: 'authenticated' from %s", ScoutsAuthSignalSender.sender
         )
 
-        service = ScoutsAuthorizationService()
+        authorization_service = ScoutsAuthorizationService()
+        section_service = ScoutsSectionService()
 
         if not user.fully_loaded:
             logger.debug(
                 "SIGNAL handling for 'authenticated' -> Loading additional user groups"
             )
-            user = service.load_user_scouts_groups(user)
+            user = authorization_service.load_user_scouts_groups(user)
             logger.debug(
                 "SIGNAL handling for 'authenticated' -> Loading scouts functions"
             )
-            user = service.load_user_functions(user)
+            user = authorization_service.load_user_functions(user)
         user.fully_loaded = True
 
         logger.debug(user.to_descriptive_string())
+
+        logger.debug("Settings up sections for user groups")
+        section_service.setup_default_sections(user=user)
 
         return user
 

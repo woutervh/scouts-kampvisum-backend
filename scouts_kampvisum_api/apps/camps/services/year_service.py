@@ -81,7 +81,7 @@ class CampYearService:
 
     #     return year
 
-    def setup_camp_years(self, request):
+    def setup_camp_years(self, request=None):
         """
         Checks to see if a camp year for the current calendar year exist.
 
