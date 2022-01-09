@@ -3,7 +3,7 @@ import logging
 from rest_framework import serializers
 
 from scouts_auth.inuits.models import InuitsPersonalDetails
-from scouts_auth.inuits.serializers import DatetypeAwareDateSerializerField
+from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField
 
 
 logger = logging.getLogger(__name__)

@@ -19,12 +19,24 @@ class SerializerSwitchField(serializers.Field):
         }
 
     def __init__(self, *args, **kwargs):
-        self.create_serializer = kwargs.pop("create_serializer", copy.deepcopy(self.create_serializer))
-        self.update_serializer = kwargs.pop("update_serializer", copy.deepcopy(self.update_serializer))
-        assert self.create_serializer is not None, "`create_serializer` is a required argument."
-        assert not inspect.isclass(self.create_serializer), "`create_serializer` has not been instantiated."
-        assert self.update_serializer is not None, "`update_serializer` is a required argument."
-        assert not inspect.isclass(self.update_serializer), "`update_serializer` has not been instantiated."
+        self.create_serializer = kwargs.pop(
+            "create_serializer", copy.deepcopy(self.create_serializer)
+        )
+        self.update_serializer = kwargs.pop(
+            "update_serializer", copy.deepcopy(self.update_serializer)
+        )
+        assert (
+            self.create_serializer is not None
+        ), "`create_serializer` is a required argument."
+        assert not inspect.isclass(
+            self.create_serializer
+        ), "`create_serializer` has not been instantiated."
+        assert (
+            self.update_serializer is not None
+        ), "`update_serializer` is a required argument."
+        assert not inspect.isclass(
+            self.update_serializer
+        ), "`update_serializer` has not been instantiated."
         super().__init__(*args, **kwargs)
         self.create_serializer.bind(field_name="", parent=self)
         self.update_serializer.bind(field_name="", parent=self)

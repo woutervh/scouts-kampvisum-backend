@@ -34,6 +34,7 @@ class LinkedCheckService:
         try:
             return LinkedSimpleCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedSimpleCheck.DoesNotExist:
+            logger.error("LinkedSimpleCheck with id %s not found", check_id)
             raise Http404
 
     def update_simple_check(self, instance: LinkedSimpleCheck, **data):
@@ -57,6 +58,7 @@ class LinkedCheckService:
         try:
             return LinkedDurationCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedDurationCheck.DoesNotExist:
+            logger.error("LinkedDurationCheck with id %s not found", check_id)
             raise Http404
 
     def update_duration_check(self, instance: LinkedDurationCheck, **data):
@@ -75,30 +77,35 @@ class LinkedCheckService:
         try:
             return LinkedLocationCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedLocationCheck.DoesNotExist:
+            logger.error("LinkedLocationCheck with id %s not found", check_id)
             raise Http404
 
     def get_location_contact_check(self, check_id):
         try:
             return LinkedLocationContactCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedLocationContactCheck.DoesNotExist:
+            logger.error("LinkedLocationContactCheck with id %s not found", check_id)
             raise Http404
 
     def get_member_check(self, check_id):
         try:
             return LinkedMemberCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedMemberCheck.DoesNotExist:
+            logger.error("LinkedMemberCheck with id %s not found", check_id)
             raise Http404
 
     def get_file_upload_check(self, check_id):
         try:
             return LinkedFileUploadCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedFileUploadCheck.DoesNotExist:
+            logger.error("LinkedFileUploadCheck with id %s not found", check_id)
             raise Http404
 
     def get_comment_check(self, check_id):
         try:
             return LinkedCommentCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedCommentCheck.DoesNotExist:
+            logger.error("LinkedCommentCheck with id %s not found", check_id)
             raise Http404
 
     def update_comment_check(self, instance: LinkedCommentCheck, **data):

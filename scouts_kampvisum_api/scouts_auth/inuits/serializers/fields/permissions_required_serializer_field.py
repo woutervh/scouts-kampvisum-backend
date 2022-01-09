@@ -3,7 +3,7 @@ import copy, inspect
 from rest_framework import serializers
 
 
-class PermissionRequiredField(serializers.Field):
+class PermissionRequiredSerializerField(serializers.Field):
     field = None
     permission = None
 
@@ -23,7 +23,7 @@ class PermissionRequiredField(serializers.Field):
         if not request:
             raise Exception(
                 "Make sure request has been given to the context of the serializer,"
-                "otherwise PermissionRequiredField won't work"
+                "otherwise PermissionRequiredSerializerField won't work"
             )
 
         if self.permission and request.user.has_perm(self.permission):

@@ -3,7 +3,10 @@ from rest_framework import serializers
 
 from apps.camps.models import CampYear
 
-from scouts_auth.inuits.serializers.fields import OptionalDateField, RequiredYearField
+from scouts_auth.inuits.serializers.fields import (
+    OptionalDateSerializerField,
+    RequiredYearSerializerField,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -24,9 +27,9 @@ class CampYearAPISerializer(serializers.Serializer):
 
 class CampYearSerializer(serializers.ModelSerializer):
 
-    year = RequiredYearField()
-    start_date = OptionalDateField()
-    end_date = OptionalDateField()
+    year = RequiredYearSerializerField()
+    start_date = OptionalDateSerializerField()
+    end_date = OptionalDateSerializerField()
 
     class Meta:
         model = CampYear

@@ -1,7 +1,5 @@
 import logging
 
-from rest_framework import serializers
-
 from scouts_auth.inuits.models import InuitsCountry
 from scouts_auth.inuits.serializers import NonModelSerializer
 

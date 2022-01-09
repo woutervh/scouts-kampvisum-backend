@@ -54,7 +54,7 @@ class CheckType(Describable, AbstractBaseModel):
     def endpoint_route(self):
         endpoint = CheckTypeEndpoint.endpoint_from_type(self.check_type)
 
-        logger.debug("ENDPOINT: %s", endpoint)
+        # logger.debug("ENDPOINT: %s", endpoint)
 
         return endpoint
 

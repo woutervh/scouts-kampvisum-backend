@@ -4,16 +4,16 @@ from apps.visums.models import Category
 from apps.visums.serializers import SubCategoryAPISerializer
 
 from scouts_auth.inuits.serializers.fields import (
-    OptionalCharField,
-    RequiredIntegerField,
+    OptionalCharSerializerField,
+    RequiredIntegerSerializerField,
 )
 
 
 class CategorySerializer(serializers.ModelSerializer):
 
     name = serializers.CharField(max_length=128)
-    index = RequiredIntegerField()
-    description = OptionalCharField()
+    index = RequiredIntegerSerializerField()
+    description = OptionalCharSerializerField()
 
     class Meta:
         model = Category()

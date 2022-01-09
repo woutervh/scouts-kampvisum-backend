@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
-from scouts_auth.inuits.serializers import DatetypeAwareDateSerializerField
+from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField
 
 
-class OptionalCharField(serializers.CharField):
+class OptionalCharSerializerField(serializers.CharField):
     """
     Initializes a serializers.CharField that is optional.
 
@@ -41,7 +41,7 @@ class DefaultCharSerializerField(serializers.CharField):
         super().__init__(*args, **kwargs)
 
 
-class OptionalIntegerField(serializers.IntegerField):
+class OptionalIntegerSerializerField(serializers.IntegerField):
     """
     Initializes a serializers.IntegerField that is optional.
 
@@ -58,7 +58,7 @@ class OptionalIntegerField(serializers.IntegerField):
         super().__init__(*args, **kwargs)
 
 
-class RequiredIntegerField(serializers.IntegerField):
+class RequiredIntegerSerializerField(serializers.IntegerField):
     """
     Initializes a serializers.IntegerField that is required.
 
@@ -74,7 +74,7 @@ class RequiredIntegerField(serializers.IntegerField):
         super().__init__(*args, **kwargs)
 
 
-class OptionalChoiceField(serializers.ChoiceField):
+class OptionalChoiceSerializerField(serializers.ChoiceField):
     """
     Initializes a serializers.ChoiceField that is optional.
 
@@ -92,7 +92,7 @@ class OptionalChoiceField(serializers.ChoiceField):
         super().__init__(*args, **kwargs)
 
 
-class RequiredYearField(serializers.IntegerField):
+class RequiredYearSerializerField(serializers.IntegerField):
     """
     Initializes a serializers.IntegerField that represents a required year.
 
@@ -111,7 +111,7 @@ class RequiredYearField(serializers.IntegerField):
         super().__init__(*args, **kwargs)
 
 
-class OptionalDateField(DatetypeAwareDateSerializerField):
+class OptionalDateSerializerField(DatetypeAwareDateSerializerField):
     """
     Initializes a serializers.DateField that is optional.
 
@@ -128,7 +128,7 @@ class OptionalDateField(DatetypeAwareDateSerializerField):
         super().__init__(*args, **kwargs)
 
 
-class OptionalDateTimeField(serializers.DateTimeField):
+class OptionalDateTimeSerializerField(serializers.DateTimeField):
     """
     Initializes a serializers.DateField that is optional.
 

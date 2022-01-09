@@ -1,6 +1,9 @@
 import logging
 
-from scouts_auth.groupadmin.models import AbstractScoutsGeoCoordinate, AbstractScoutsPosition
+from scouts_auth.groupadmin.models import (
+    AbstractScoutsGeoCoordinate,
+    AbstractScoutsPosition,
+)
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -17,7 +20,10 @@ class AbstractScoutsGeoCoordinateSerializer(NonModelSerializer):
         if data is None:
             return None
 
-        validated_data = {"imaginary": data.pop("imag", None), "real": data.pop("real", None)}
+        validated_data = {
+            "imaginary": data.pop("imag", None),
+            "real": data.pop("real", None),
+        }
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
@@ -77,8 +83,12 @@ class AbstractScoutsPositionSerializer(NonModelSerializer):
         longitude = self._parse_geo_coordinate(longitude, "longitude")
 
         validated_data = {
-            "latitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(latitude),
-            "longitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(longitude),
+            "latitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(
+                latitude
+            ),
+            "longitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(
+                longitude
+            ),
         }
 
         remaining_keys = data.keys()
@@ -96,8 +106,12 @@ class AbstractScoutsPositionSerializer(NonModelSerializer):
 
         instance = AbstractScoutsPosition()
 
-        instance.latitude = AbstractScoutsGeoCoordinateSerializer().create(validated_data.pop("latitude", None))
-        instance.longitude = AbstractScoutsGeoCoordinateSerializer().create(validated_data.pop("longitude", None))
+        instance.latitude = AbstractScoutsGeoCoordinateSerializer().create(
+            validated_data.pop("latitude", None)
+        )
+        instance.longitude = AbstractScoutsGeoCoordinateSerializer().create(
+            validated_data.pop("longitude", None)
+        )
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

@@ -18,6 +18,8 @@ from apps.visums.serializers import CheckSerializer
 from apps.visums.services import LinkedCheckService
 from apps.visums.urls import LinkedCheckEndpointFactory
 
+from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField
+
 
 logger = logging.getLogger(__name__)
 
@@ -90,9 +92,13 @@ class LinkedDateCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedDurationCheckSerializer(LinkedCheckSerializer):
+
+    start_date = DatetypeAwareDateSerializerField(required=True)
+    end_date = DatetypeAwareDateSerializerField(required=True)
+
     class Meta:
         model = LinkedDurationCheck
-        fields = ["start_date", "end_date"]
+        fields = "__all__"
 
 
 class LinkedLocationCheckSerializer(LinkedCheckSerializer):
