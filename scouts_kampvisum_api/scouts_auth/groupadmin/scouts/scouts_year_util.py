@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class ScoutsTemporalDetails:
     @staticmethod
-    def get_start_of_scout_year(date):
+    def get_start_of_scout_year(date: datetime.date):
         """
         Returns the start date of the scouts year for the given date.
 
@@ -20,7 +20,7 @@ class ScoutsTemporalDetails:
         return datetime.date(date.year, 9, 1)
 
     @staticmethod
-    def get_start_of_camp_year(date):
+    def get_start_of_camp_year(date: datetime.date):
         """
         Returns the start of the scout year based on a limit date for camps.
 
@@ -34,7 +34,7 @@ class ScoutsTemporalDetails:
         return datetime.date(date.year, 9, 1)
 
     @staticmethod
-    def get_end_of_camp_year(date):
+    def get_end_of_camp_year(date: datetime.date):
         """
         Returns the start of the scout year based on a limit date for camps.
 
@@ -46,3 +46,10 @@ class ScoutsTemporalDetails:
             return datetime.date(date.year + 1, 8, 31)
 
         return datetime.date(date.year, 8, 31)
+
+    @staticmethod
+    def get_start_and_end_date_of_camp_year(date: datetime.date):
+        return (
+            ScoutsTemporalDetails.get_start_of_camp_year(date),
+            ScoutsTemporalDetails.get_end_of_camp_year(date),
+        )

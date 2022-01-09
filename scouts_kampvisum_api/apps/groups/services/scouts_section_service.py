@@ -31,7 +31,8 @@ class ScoutsSectionService:
 
     def section_create_or_update(
         self,
-        request,
+        request=None,
+        user: settings.AUTH_USER_MODEL = None,
         group_admin_id: str = None,
         name: ScoutsSectionName = None,
         hidden: bool = False,
@@ -39,8 +40,11 @@ class ScoutsSectionService:
         """
         Creates or updates a ScoutsSection instance.
         """
+        if not user:
+            user = request.user
+
         scouts_group = self.group_admin.get_group(
-            active_user=request.user, group_group_admin_id=group_admin_id
+            active_user=user, group_group_admin_id=group_admin_id
         )
         if not scouts_group:
             raise ValidationError(
@@ -79,19 +83,25 @@ class ScoutsSectionService:
 
         if count == 0:
             logger.debug("Creating ScoutsSection with name '%s'", name)
-            return self._section_create(request, scouts_group, name, hidden)
+            return self._section_create(request, user, scouts_group, name, hidden)
         if count == 1:
             instance = qs[0]
             logger.debug("Updating ScoutsSection with name '%s'", instance.name.name)
-            return self._section_update(request, instance, scouts_group, name, hidden)
+            return self._section_update(
+                request, user, instance, scouts_group, name, hidden
+            )
 
     def _section_create(
         self,
-        request,
+        request=None,
+        user: settings.AUTH_USER_MODEL = None,
         group: AbstractScoutsGroup = None,
         name: ScoutsSectionName = None,
         hidden: bool = False,
     ) -> ScoutsSection:
+        if not user:
+            user = request.user
+
         if name is None or not isinstance(name, ScoutsSectionName):
             name = self.section_name_service.name_create(name=name)
         instance = ScoutsSection()
@@ -108,8 +118,9 @@ class ScoutsSectionService:
 
     def _section_update(
         self,
-        request,
-        instance: ScoutsSection,
+        request=None,
+        user: settings.AUTH_USER_MODEL = None,
+        instance: ScoutsSection = None,
         group: AbstractScoutsGroup = None,
         name: ScoutsSectionName = None,
         hidden=False,
@@ -117,6 +128,9 @@ class ScoutsSectionService:
         """
         Updates an existing Section instance.
         """
+        if not user:
+            user = request.user
+
         logger.debug("Updating Section with name '%s'", instance.name.name)
 
         instance.group_admin_id = group.group_admin_id
@@ -205,7 +219,11 @@ class ScoutsSectionService:
                     logger.debug("Linking section NAME: %s", name.name)
                     created_sections.append(
                         self.section_create_or_update(
-                            request, group.group_admin_id, name.name, name.name.hidden
+                            request,
+                            user,
+                            group.group_admin_id,
+                            name.name,
+                            name.name.hidden,
                         )
                     )
 

@@ -27,7 +27,7 @@ class CampService:
         start_date = fields.get("start_date", None)
         end_date = fields.get("end_date", None)
 
-        logger.debug("Creating camp with name '%s'", name)
+        logger.debug("Creating camp with name '%s' for year %s", name, year)
         camp = Camp()
         camp.year = self.year_service.get_or_create_year(year)
         camp.name = name

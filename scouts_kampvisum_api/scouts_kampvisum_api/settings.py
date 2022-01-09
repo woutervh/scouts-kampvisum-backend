@@ -132,11 +132,11 @@ LOGGING = {
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
-        "django.db.backends": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": False,
-        },
+        # "django.db.backends": {
+        #     "handlers": ["console"],
+        #     "level": LOGGING_LEVEL,
+        #     "propagate": False,
+        # },
     },
 }
 logging.config.dictConfig(LOGGING)

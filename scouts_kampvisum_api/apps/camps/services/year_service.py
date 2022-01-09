@@ -38,9 +38,12 @@ class CampYearService:
             return self._create_year(date=date)
 
     def _get_year(self, date: datetime.date):
-        camp_date = ScoutsTemporalDetails.get_start_of_camp_year(date)
-        logger.debug("Start date of camp year for date %s: %s", date, camp_date)
-        qs = CampYear.objects.filter(start_date__gte=camp_date, end_date__lte=date)
+        (
+            start_date,
+            end_date,
+        ) = ScoutsTemporalDetails.get_start_and_end_date_of_camp_year(date)
+        logger.debug("Start date of camp year for date %s: %s", date, start_date)
+        qs = CampYear.objects.filter(start_date__lte=start_date, end_date__gte=end_date)
         if qs.count() == 1:
             logger.debug("Found a year: %s", qs[0])
             return qs[0]
@@ -52,6 +55,13 @@ class CampYearService:
 
         start_date = ScoutsTemporalDetails.get_start_of_camp_year(date)
         end_date = ScoutsTemporalDetails.get_end_of_camp_year(date)
+
+        logger.debug(
+            "Creating camp year %s with start date %s and end date %s",
+            end_date.year,
+            start_date,
+            end_date,
+        )
 
         instance.start_date = datetime.datetime(
             start_date.year, start_date.month, start_date.day
