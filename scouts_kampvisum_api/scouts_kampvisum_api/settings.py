@@ -166,6 +166,8 @@ INSTALLED_APPS = [
     "storages",
     "sqlmiddleware",
     "apps.setup",
+    "apps.people",
+    "apps.locations",
     "apps.visums",
     "apps.groups",
     "apps.camps",

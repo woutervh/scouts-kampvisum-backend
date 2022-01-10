@@ -30,7 +30,7 @@
 	{
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "LocationContactCheck",
+			"check_type": "CampLocationCheck",
 			"description": "A check that contains a geo-coordinate and contact details"
 		}
 	},

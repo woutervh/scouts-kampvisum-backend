@@ -54,9 +54,9 @@ urlpatterns = [
         name="patch_location_check",
     ),
     path(
-        "checks/camp_location/<uuid:check_id>",
-        patch_camp_location_check,
-        name="patch_camp_location_check",
+        "checks/location_contact/<uuid:check_id>",
+        patch_location_contact_check,
+        name="patch_location_contact_check",
     ),
     path(
         "checks/member/<uuid:check_id>", patch_member_check, name="patch_member_check"

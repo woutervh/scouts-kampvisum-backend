@@ -8,7 +8,7 @@ from apps.visums.models import (
     LinkedDateCheck,
     LinkedDurationCheck,
     LinkedLocationCheck,
-    LinkedLocationContactCheck,
+    LinkedCampLocationCheck,
     LinkedMemberCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
@@ -18,7 +18,11 @@ from apps.visums.serializers import CheckSerializer
 from apps.visums.services import LinkedCheckService
 from apps.visums.urls import LinkedCheckEndpointFactory
 
-from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField
+from scouts_auth.inuits.serializers import PersistedFileSerializer
+from scouts_auth.inuits.serializers.fields import (
+    DatetypeAwareDateSerializerField,
+    RequiredCharSerializerField,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -45,8 +49,21 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
         if check.parent.check_type.is_simple_check():
             value = self.get_simple_check_value(obj, check)
+        elif check.parent.check_type.is_date_check():
+            value = self.get_date_check_value(obj, check)
         elif check.parent.check_type.is_duration_check():
             value = self.get_duration_check_value(obj, check)
+        elif check.parent.check_type.is_location_check():
+            value = self.get_location_check_value(obj, check)
+        elif check.parent.check_type.is_camp_location_check():
+            value = self.get_camp_location_check_value(obj, check)
+        elif check.parent.check_type.is_member_check():
+            value = self.get_member_check_value(obj, check)
+        elif check.parent.check_type.is_file_upload_check():
+            value = self.get_file_upload_check_value(obj, check)
+        elif check.parent.check_type.is_comment_check():
+            value = self.get_comment_check_value(obj, check)
+
         else:
             value = check.value
 
@@ -62,16 +79,90 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     def get_simple_check_value(
         self, obj: LinkedCheck, check: LinkedSimpleCheck
     ) -> CheckState:
-        logger.debug("CHECK VALUE: %s", check.value)
+        logger.debug("SIMPLE CHECK VALUE: %s", check.value)
 
-        return check.value
+        data = LinkedSimpleCheckSerializer().get_value(check)
+
+        logger.debug("SIMPLE CHECK DATA: %s", data)
+
+        return data
+
+    def get_date_check_value(
+        self, obj: LinkedCheck, check: LinkedDateCheck
+    ) -> CheckState:
+        logger.debug("DATA CHECK VALUE: %s", check.value)
+
+        data = LinkedDateCheckSerializer().get_value(check)
+
+        logger.debug("DATE CHECK DATA: %s", data)
+
+        return data
 
     def get_duration_check_value(
         self, obj: LinkedCheck, check: LinkedDurationCheck
     ) -> dict:
         logger.debug("DURATION CHECK DATA: %s", str(check))
 
-        return {"start_date": check.start_date, "end_date": check.end_date}
+        data = LinkedDurationCheckSerializer().get_value(check)
+
+        logger.debug("DURATION CHECK DATA: %s", data)
+
+        return data
+
+    def get_location_check_value(
+        self, obj: LinkedCheck, check: LinkedLocationCheck
+    ) -> dict:
+        logger.debug("LOCATION CHECK DATA: %s", str(check))
+
+        data = LinkedLocationCheckSerializer().get_value(check)
+
+        logger.debug("LOCATION CHECK DATA: %s", data)
+
+        return data
+
+    def get_camp_location_check_value(
+        self, obj: LinkedCheck, check: LinkedCampLocationCheck
+    ) -> dict:
+        logger.debug("CAMP LOCATION CHECK DATA: %s", str(check))
+
+        data = LinkedCampLocationCheckSerializer().get_value(check)
+
+        logger.debug("CAMP LOCATION CHECK DATA: %s", data)
+
+        return data
+
+    def get_member_check_value(
+        self, obj: LinkedCheck, check: LinkedMemberCheck
+    ) -> dict:
+        logger.debug("MEMBER CHECK DATA: %s", str(check))
+
+        data = LinkedMemberCheckSerializer().get_value(check)
+
+        logger.debug("MEMBER CHECK DATA: %s", data)
+
+        return data
+
+    def get_file_upload_check_value(
+        self, obj: LinkedCheck, check: LinkedFileUploadCheck
+    ) -> dict:
+        logger.debug("FILE UPLOAD CHECK DATA: %s", str(check))
+
+        data = LinkedFileUploadCheckSerializer().get_value(check)
+
+        logger.debug("FILE UPLOAD CHECK DATA: %s", data)
+
+        return data
+
+    def get_comment_check_value(
+        self, obj: LinkedCheck, check: LinkedCommentCheck
+    ) -> dict:
+        logger.debug("COMMENT CHECK DATA: %s", str(check))
+
+        data = LinkedCommentCheckSerializer().get_value(check)
+
+        logger.debug("COMMENT CHECK DATA: %s", data)
+
+        return data
 
 
 class LinkedSimpleCheckSerializer(LinkedCheckSerializer):
@@ -84,11 +175,17 @@ class LinkedSimpleCheckSerializer(LinkedCheckSerializer):
         model = LinkedSimpleCheck
         fields = "__all__"
 
+    def get_value(self, obj: LinkedSimpleCheck) -> dict:
+        return obj.value
+
 
 class LinkedDateCheckSerializer(LinkedCheckSerializer):
     class Meta:
         model = LinkedDateCheck
         fields = "__all__"
+
+    def get_value(self, obj: LinkedDateCheck) -> dict:
+        return obj.value
 
 
 class LinkedDurationCheckSerializer(LinkedCheckSerializer):
@@ -100,17 +197,31 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
         model = LinkedDurationCheck
         fields = "__all__"
 
+    def get_value(self, obj: LinkedDurationCheck) -> dict:
+        data = dict()
+
+        data["start_date"] = obj.start_date
+        data["end_date"] = obj.end_date
+
+        return data
+
 
 class LinkedLocationCheckSerializer(LinkedCheckSerializer):
     class Meta:
         model = LinkedLocationCheck
         fields = "__all__"
 
+    def get_value(self, obj: LinkedLocationCheck) -> dict:
+        return {}
 
-class LinkedLocationContactCheckSerializer(LinkedCheckSerializer):
+
+class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
     class Meta:
-        model = LinkedLocationContactCheck
+        model = LinkedCampLocationCheck
         fields = "__all__"
+
+    def get_value(self, obj: LinkedCampLocationCheck) -> dict:
+        return {}
 
 
 class LinkedMemberCheckSerializer(LinkedCheckSerializer):
@@ -118,14 +229,28 @@ class LinkedMemberCheckSerializer(LinkedCheckSerializer):
         model = LinkedMemberCheck
         fields = "__all__"
 
+    def get_value(self, obj: LinkedMemberCheck) -> dict:
+        return obj.value
+
 
 class LinkedFileUploadCheckSerializer(LinkedCheckSerializer):
+    file = PersistedFileSerializer()
+
     class Meta:
         model = LinkedFileUploadCheck
         fields = "__all__"
 
+    def get_value(self, obj: LinkedFileUploadCheck) -> dict:
+        return obj.value
+
 
 class LinkedCommentCheckSerializer(LinkedCheckSerializer):
+    value = RequiredCharSerializerField()
+
     class Meta:
         model = LinkedCommentCheck
         fields = "__all__"
+
+    def get_value(self, obj: LinkedCommentCheck) -> dict:
+        logger.debug("hm %s", str(obj))
+        return obj.value

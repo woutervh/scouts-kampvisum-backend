@@ -45,8 +45,8 @@ class LinkedCheck(AbstractBaseModel):
             return LinkedDurationCheck()
         elif check_type.is_location_check():
             return LinkedLocationCheck()
-        elif check_type.is_location_contact_check():
-            return LinkedLocationContactCheck()
+        elif check_type.is_camp_location_check():
+            return LinkedCampLocationCheck()
         elif check_type.is_member_check():
             return LinkedMemberCheck()
         elif check_type.is_file_upload_check():
@@ -90,19 +90,45 @@ class LinkedDurationCheck(LinkedCheck):
 # ##############################################################################
 # LinkedLocationCheck
 #
-# A check that contains a geo-coordinate
-# ##############################################################################
-class LinkedLocationCheck(LinkedCheck):
-    # @TODO
-    value = OptionalCharField(max_length=64)
-
-
-# ##############################################################################
-# LinkedLocationContactCheck
-#
 # A check that contains a geo-coordinate and contact details
 # ##############################################################################
-class LinkedLocationContactCheck(LinkedCheck):
+class LinkedLocationCheck(LinkedCheck):
+    name = OptionalCharField(max_length=64)
+
+
+# ##############################################################################
+# LinkedCampLocationCheck
+#
+# A check that contains a geo-coordinate and some required contact details
+# ##############################################################################
+# {
+#     "name": "Scouts Essen",
+#     "contact_name": "Jeroen Wouters",
+#     "contact_phone": "333333333333333",
+#     "contact_email": "bla@email.be",
+#     "locationAddresses": [
+#         {
+#             "name": "Place A (Slaapplaats)",
+#             "isHeadLocation": false,
+#             },
+#             "latLon": [
+#                 51.4679229,
+#                 4.4698256
+#             ],
+#             "address": "2910 Essen, (Antwerp) Belgium"
+#         },
+#         {
+#             "name": "PLACE B (Verzamelplaats)",
+#             "isHeadLocation": true,
+#             "latLon": [
+#                 51.4420353,
+#                 4.5016266
+#             ],
+#             "address": "Nieuwmoersesteenweg 2910 Essen, (Antwerp) Belgium "
+#         }
+#     ]
+# }
+class LinkedCampLocationCheck(LinkedCheck):
     # @TODO
     value = OptionalCharField(max_length=64)
 

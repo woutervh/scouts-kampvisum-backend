@@ -21,7 +21,7 @@ class CheckTypeEndpoint(models.TextChoices):
     DATE_CHECK = "DateCheck", "date"
     DURATION_CHECK = "DurationCheck", "duration"
     LOCATION_CHECK = "LocationCheck", "location"
-    LOCATION_CONTACT_CHECK = "LocationContactCheck", "location_contact"
+    CAMP_LOCATION_CHECK = "CampLocationCheck", "camp_location"
     MEMBER_CHECK = "MemberCheck", "member"
     COMMENT_CHECK = "CommentCheck", "comment"
     FILE_UPLOAD_CHECK = "FileUploadCheck", "file"
@@ -70,8 +70,8 @@ class CheckType(Describable, AbstractBaseModel):
     def is_location_check(self):
         return self.check_type == CheckTypeEndpoint.LOCATION_CHECK
 
-    def is_location_contact_check(self):
-        return self.check_type == CheckTypeEndpoint.LOCATION_CONTACT_CHECK
+    def is_camp_location_check(self):
+        return self.check_type == CheckTypeEndpoint.CAMP_LOCATION_CHECK
 
     def is_member_check(self):
         return self.check_type == CheckTypeEndpoint.MEMBER_CHECK

@@ -10,7 +10,7 @@ from apps.visums.models import (
     LinkedDateCheck,
     LinkedDurationCheck,
     LinkedLocationCheck,
-    LinkedLocationContactCheck,
+    LinkedCampLocationCheck,
     LinkedMemberCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
@@ -80,11 +80,11 @@ class LinkedCheckService:
             logger.error("LinkedLocationCheck with id %s not found", check_id)
             raise Http404
 
-    def get_location_contact_check(self, check_id):
+    def get_camp_location_check(self, check_id):
         try:
-            return LinkedLocationContactCheck.objects.get(linkedcheck_ptr=check_id)
-        except LinkedLocationContactCheck.DoesNotExist:
-            logger.error("LinkedLocationContactCheck with id %s not found", check_id)
+            return LinkedCampLocationCheck.objects.get(linkedcheck_ptr=check_id)
+        except LinkedCampLocationCheck.DoesNotExist:
+            logger.error("LinkedCampLocationCheck with id %s not found", check_id)
             raise Http404
 
     def get_member_check(self, check_id):
@@ -100,6 +100,24 @@ class LinkedCheckService:
         except LinkedFileUploadCheck.DoesNotExist:
             logger.error("LinkedFileUploadCheck with id %s not found", check_id)
             raise Http404
+
+    def update_file_upload_check(self, instance: LinkedFileUploadCheck, uploaded_file):
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+
+        if uploaded_file is None:
+            raise Http404(
+                "Can't store a non-existent file (for check {})".format(instance.id)
+            )
+
+        instance.value.file.save(name=uploaded_file.name, content=uploaded_file)
+        instance.value.content_type = uploaded_file.content_type
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
 
     def get_comment_check(self, check_id):
         try:

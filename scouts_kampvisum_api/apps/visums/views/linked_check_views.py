@@ -13,7 +13,7 @@ from apps.visums.models import (
     LinkedDateCheck,
     LinkedDurationCheck,
     LinkedLocationCheck,
-    LinkedLocationContactCheck,
+    LinkedCampLocationCheck,
     LinkedMemberCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
@@ -24,7 +24,7 @@ from apps.visums.serializers import (
     LinkedDateCheckSerializer,
     LinkedDurationCheckSerializer,
     LinkedLocationCheckSerializer,
-    LinkedLocationContactCheckSerializer,
+    LinkedCampLocationCheckSerializer,
     LinkedMemberCheckSerializer,
     LinkedFileUploadCheckSerializer,
     LinkedCommentCheckSerializer,
@@ -141,6 +141,35 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = LinkedDurationCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedFileUploadCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer},
+    )
+    def partial_update_file_upload_check(self, request, check_id):
+        instance = self.linked_check_service.get_file_upload_check(check_id)
+
+        logger.debug("FILE UPLOAD CHECK UPDATE REQUEST DATA: %s", request.data)
+        serializer = LinkedFileUploadCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("FILE UPLOAD CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.update_file_upload_check(
+            instance=instance, uploaded_file=validated_data.get("value")
+        )
+
+        output_serializer = LinkedFileUploadCheckSerializer(
             instance, context={"request": request}
         )
 

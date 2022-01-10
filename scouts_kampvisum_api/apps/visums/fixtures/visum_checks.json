@@ -314,7 +314,7 @@
                 ]
             ],
             "check_type": [
-                "LocationCheck"
+                "CampLocationCheck"
             ],
             "label": "Gegevens kampplaats en verhuurder"
         }
