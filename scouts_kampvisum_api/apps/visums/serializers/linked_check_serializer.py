@@ -229,7 +229,7 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
         data["contact_email"] = obj.contact_email
         data["center_latitude"] = obj.center_latitude
         data["center_longitude"] = obj.center_longitude
-        data["center_zoom"] = obj.zoom
+        data["zoom"] = obj.zoom
         data["locations"] = CampLocationSerializer(obj.locations, many=True).data
 
         return data
