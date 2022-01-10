@@ -21,6 +21,7 @@ from apps.visums.urls import LinkedCheckEndpointFactory
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 from scouts_auth.inuits.serializers.fields import (
     DatetypeAwareDateSerializerField,
+    OptionalCharSerializerField,
     RequiredCharSerializerField,
 )
 
@@ -208,6 +209,10 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
 
 class LinkedLocationCheckSerializer(LinkedCheckSerializer):
 
+    name = OptionalCharSerializerField()
+    contact_name = OptionalCharSerializerField()
+    contact_phone = OptionalCharSerializerField()
+    contact_email = OptionalCharSerializerField()
     locations = CampLocationSerializer(many=True)
 
     class Meta:
@@ -215,19 +220,24 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     def get_value(self, obj: LinkedLocationCheck) -> dict:
-        return {}
+        data = dict()
+
+        data["name"] = obj.name
+        data["contact_name"] = obj.contact_name
+        data["contact_phone"] = obj.contact_phone
+        data["contact_email"] = obj.contact_email
+        data["locations"] = CampLocationSerializer(obj.locations, many=True).data
+
+        return data
 
 
 class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
-
-    locations = CampLocationSerializer(many=True)
-
     class Meta:
         model = LinkedLocationCheck
         fields = "__all__"
 
     def get_value(self, obj: LinkedLocationCheck) -> dict:
-        data = LinkedLocationCheck().get_value(obj)
+        data = LinkedLocationCheckSerializer().get_value(obj)
 
         data["is_camp_location"] = True
 
