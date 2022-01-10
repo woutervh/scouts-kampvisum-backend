@@ -128,7 +128,7 @@ class LinkedLocationCheck(LinkedCheck):
 #         }
 #     ]
 # }
-class LinkedCampLocationCheck(LinkedCheck):
+class LinkedCampLocationCheck(LinkedLocationCheck):
     # @TODO
     value = OptionalCharField(max_length=64)
 

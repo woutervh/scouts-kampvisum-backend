@@ -11,6 +11,7 @@ class PersistedFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PersistedFile
+        fields = "__all__"
 
     def get_name(self, obj: PersistedFile):
         if obj and hasattr(obj, "file") and obj.file and hasattr(obj.file, "name"):
