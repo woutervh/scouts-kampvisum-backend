@@ -16,6 +16,7 @@ from scouts_auth.inuits.models import AbstractBaseModel, PersistedFile
 from scouts_auth.inuits.models.fields import (
     DefaultCharField,
     OptionalCharField,
+    OptionalIntegerField,
     DatetypeAwareDateField,
 )
 
@@ -99,6 +100,9 @@ class LinkedLocationCheck(LinkedCheck):
     contact_email = OptionalCharField(max_length=128)
     # locations linked through CampLocation object, related_name is 'locations'
     is_camp_location = models.BooleanField(default=False)
+    center_latitude = models.FloatField(null=True, blank=True)
+    center_longitude = models.FloatField(null=True, blank=True)
+    zoom = OptionalIntegerField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

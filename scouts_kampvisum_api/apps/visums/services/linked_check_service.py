@@ -90,6 +90,9 @@ class LinkedCheckService:
         instance.contact_phone = data.get("contact_phone", None)
         instance.contact_email = data.get("contact_email", None)
         instance.is_camp_location = False
+        instance.center_latitude = data.get("center_latitude", None)
+        instance.center_longitude = data.get("center_longitude", None)
+        instance.zoom = data.get("zoom", None)
 
         instance.full_clean()
         instance.save()
@@ -116,6 +119,9 @@ class LinkedCheckService:
         instance.contact_phone = data.get("contact_phone", None)
         instance.contact_email = data.get("contact_email", None)
         instance.is_camp_location = True
+        instance.center_latitude = data.get("center_latitude", None)
+        instance.center_longitude = data.get("center_longitude", None)
+        instance.zoom = data.get("zoom", None)
 
         instance.full_clean()
         instance.save()

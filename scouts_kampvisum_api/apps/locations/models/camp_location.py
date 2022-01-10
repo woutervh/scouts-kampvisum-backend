@@ -2,7 +2,7 @@ from django.db import models
 
 from apps.visums.models import LinkedLocationCheck
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalIntegerField
+from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class CampLocation(AbstractBaseModel):
@@ -15,4 +15,3 @@ class CampLocation(AbstractBaseModel):
     is_main_location = models.BooleanField(default=False)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    zoom = OptionalIntegerField()
