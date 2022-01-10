@@ -1,0 +1,1 @@
+from .camp_location_serializer import CampLocationSerializer

@@ -46,7 +46,7 @@ class LinkedCheck(AbstractBaseModel):
         elif check_type.is_location_check():
             return LinkedLocationCheck()
         elif check_type.is_camp_location_check():
-            return LinkedCampLocationCheck()
+            return LinkedLocationCheck(is_camp_location=True)
         elif check_type.is_member_check():
             return LinkedMemberCheck()
         elif check_type.is_file_upload_check():
@@ -94,6 +94,14 @@ class LinkedDurationCheck(LinkedCheck):
 # ##############################################################################
 class LinkedLocationCheck(LinkedCheck):
     name = OptionalCharField(max_length=64)
+    contact_name = OptionalCharField(max_length=128)
+    contact_phone = OptionalCharField(max_length=64)
+    contact_email = OptionalCharField(max_length=128)
+    # locations linked through CampLocation object, related_name is 'locations'
+    is_camp_location = models.BooleanField(default=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 # ##############################################################################
@@ -101,36 +109,9 @@ class LinkedLocationCheck(LinkedCheck):
 #
 # A check that contains a geo-coordinate and some required contact details
 # ##############################################################################
-# {
-#     "name": "Scouts Essen",
-#     "contact_name": "Jeroen Wouters",
-#     "contact_phone": "333333333333333",
-#     "contact_email": "bla@email.be",
-#     "locationAddresses": [
-#         {
-#             "name": "Place A (Slaapplaats)",
-#             "isHeadLocation": false,
-#             },
-#             "latLon": [
-#                 51.4679229,
-#                 4.4698256
-#             ],
-#             "address": "2910 Essen, (Antwerp) Belgium"
-#         },
-#         {
-#             "name": "PLACE B (Verzamelplaats)",
-#             "isHeadLocation": true,
-#             "latLon": [
-#                 51.4420353,
-#                 4.5016266
-#             ],
-#             "address": "Nieuwmoersesteenweg 2910 Essen, (Antwerp) Belgium "
-#         }
-#     ]
-# }
-class LinkedCampLocationCheck(LinkedLocationCheck):
-    # @TODO
-    value = OptionalCharField(max_length=64)
+# class LinkedCampLocationCheck(LinkedLocationCheck):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
 
 
 # ##############################################################################

@@ -13,7 +13,6 @@ from apps.visums.models import (
     LinkedDateCheck,
     LinkedDurationCheck,
     LinkedLocationCheck,
-    LinkedCampLocationCheck,
     LinkedMemberCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
@@ -141,6 +140,64 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = LinkedDurationCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedLocationCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedLocationCheckSerializer},
+    )
+    def partial_update_location_check(self, request, check_id):
+        instance = self.linked_check_service.get_location_check(check_id)
+
+        logger.debug("LOCATION CHECK UPDATE REQUEST DATA: %s", request.data)
+        serializer = LinkedLocationCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.update_location_check(
+            instance, **validated_data
+        )
+
+        output_serializer = LinkedLocationCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedCampLocationCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer},
+    )
+    def partial_update_camp_location_check(self, request, check_id):
+        instance = self.linked_check_service.get_camp_location_check(check_id)
+
+        logger.debug("CAMP LOCATION CHECK UPDATE REQUEST DATA: %s", request.data)
+        serializer = LinkedCampLocationCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.update_camp_location_check(
+            instance, **validated_data
+        )
+
+        output_serializer = LinkedCampLocationCheckSerializer(
             instance, context={"request": request}
         )
 

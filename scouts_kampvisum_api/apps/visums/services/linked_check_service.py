@@ -2,15 +2,13 @@ import logging
 
 from django.http import Http404
 
+from apps.locations.services import CampLocationService
 from apps.visums.models import (
-    LinkedSubCategory,
-    SubCategory,
     LinkedCheck,
     LinkedSimpleCheck,
     LinkedDateCheck,
     LinkedDurationCheck,
     LinkedLocationCheck,
-    LinkedCampLocationCheck,
     LinkedMemberCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
@@ -21,6 +19,9 @@ logger = logging.getLogger(__name__)
 
 
 class LinkedCheckService:
+
+    location_service = CampLocationService()
+
     @staticmethod
     def get_value_type(check: LinkedCheck):
         concrete_type = LinkedCheck.get_concrete_check_type(check.parent)
@@ -80,12 +81,50 @@ class LinkedCheckService:
             logger.error("LinkedLocationCheck with id %s not found", check_id)
             raise Http404
 
+    def update_location_check(self, instance: LinkedLocationCheck, **data):
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+        instance.name = data.get("name", None)
+        instance.contact_name = data.get("contact_name", None)
+        instance.contact_phone = data.get("contact_phone", None)
+        instance.contact_email = data.get("contact_email", None)
+        instance.is_camp_location = False
+
+        instance.full_clean()
+        instance.save()
+
+        locations = data.get("locations", [])
+        for location in locations:
+            self.location_service.create_or_update(instance=instance, data=location)
+
+        return instance
+
     def get_camp_location_check(self, check_id):
         try:
-            return LinkedCampLocationCheck.objects.get(linkedcheck_ptr=check_id)
-        except LinkedCampLocationCheck.DoesNotExist:
+            return LinkedLocationCheck.objects.get(linkedcheck_ptr=check_id)
+        except LinkedLocationCheck.DoesNotExist:
             logger.error("LinkedCampLocationCheck with id %s not found", check_id)
             raise Http404
+
+    def update_camp_location_check(self, instance: LinkedLocationCheck, **data):
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+        instance.name = data.get("name", None)
+        instance.contact_name = data.get("contact_name", None)
+        instance.contact_phone = data.get("contact_phone", None)
+        instance.contact_email = data.get("contact_email", None)
+        instance.is_camp_location = True
+
+        instance.full_clean()
+        instance.save()
+
+        locations = data.get("locations", [])
+        for location in locations:
+            self.location_service.create_or_update(instance=instance, data=location)
+
+        return instance
 
     def get_member_check(self, check_id):
         try:

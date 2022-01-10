@@ -2,13 +2,13 @@ import logging
 
 from rest_framework import serializers
 
+from apps.locations.serializers import CampLocationSerializer
 from apps.visums.models import (
     LinkedCheck,
     LinkedSimpleCheck,
     LinkedDateCheck,
     LinkedDurationCheck,
     LinkedLocationCheck,
-    LinkedCampLocationCheck,
     LinkedMemberCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
@@ -121,7 +121,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
         return data
 
     def get_camp_location_check_value(
-        self, obj: LinkedCheck, check: LinkedCampLocationCheck
+        self, obj: LinkedCheck, check: LinkedLocationCheck
     ) -> dict:
         logger.debug("CAMP LOCATION CHECK DATA: %s", str(check))
 
@@ -207,6 +207,9 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedLocationCheckSerializer(LinkedCheckSerializer):
+
+    locations = CampLocationSerializer(many=True)
+
     class Meta:
         model = LinkedLocationCheck
         fields = "__all__"
@@ -216,12 +219,19 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
+
+    locations = CampLocationSerializer(many=True)
+
     class Meta:
-        model = LinkedCampLocationCheck
+        model = LinkedLocationCheck
         fields = "__all__"
 
-    def get_value(self, obj: LinkedCampLocationCheck) -> dict:
-        return {}
+    def get_value(self, obj: LinkedLocationCheck) -> dict:
+        data = LinkedLocationCheck().get_value(obj)
+
+        data["is_camp_location"] = True
+
+        return data
 
 
 class LinkedMemberCheckSerializer(LinkedCheckSerializer):
