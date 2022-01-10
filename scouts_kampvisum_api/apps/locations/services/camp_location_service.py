@@ -56,6 +56,7 @@ class CampLocationService:
         location.is_main_location = data.get("is_main_location", False)
         location.latitude = latitude
         location.longitude = longitude
+        location.zoom = data.get("zoom", None)
 
         location.full_clean()
         location.save()
