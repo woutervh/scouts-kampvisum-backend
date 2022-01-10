@@ -223,6 +223,7 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
         logger.debug("LOCATION SERIALIZER DATA: %s", str(obj))
         data = dict()
 
+        data["id"] = obj.id
         data["name"] = obj.name
         data["contact_name"] = obj.contact_name
         data["contact_phone"] = obj.contact_phone
