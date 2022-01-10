@@ -220,6 +220,7 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     def get_value(self, obj: LinkedLocationCheck) -> dict:
+        logger.debug("LOCATION SERIALIZER DATA: %s", str(obj))
         data = dict()
 
         data["name"] = obj.name
@@ -232,6 +233,8 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
+    locations = CampLocationSerializer(many=True)
+
     class Meta:
         model = LinkedLocationCheck
         fields = "__all__"
@@ -239,6 +242,7 @@ class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
     def get_value(self, obj: LinkedLocationCheck) -> dict:
         data = LinkedLocationCheckSerializer().get_value(obj)
 
+        data["locations"] = CampLocationSerializer(obj.locations, many=True).data
         data["is_camp_location"] = True
 
         return data

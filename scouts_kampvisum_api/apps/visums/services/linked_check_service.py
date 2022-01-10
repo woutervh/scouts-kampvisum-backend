@@ -120,8 +120,11 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
+        logger.debug("DATA: %s", data)
+        logger.debug("LOCATIONS: %s", data.get("locations", []))
         locations = data.get("locations", [])
         for location in locations:
+            logger.debug("LOCATION: %s", location)
             self.location_service.create_or_update(instance=instance, data=location)
 
         return instance
