@@ -12,4 +12,5 @@ class CampVisum(AbstractBaseModel):
     category_set = models.ForeignKey(LinkedCategorySet, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ["camp__sections__name__age_group"]
+        # ordering = ["camp__sections__name__age_group"]
+        pass

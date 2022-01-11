@@ -124,7 +124,7 @@ class LinkedLocationCheck(LinkedCheck):
 # A check that selects members and non-members
 # ##############################################################################
 class LinkedMemberCheck(LinkedCheck):
-    value = OptionalCharField(max_length=64)
+    group_admin_id = OptionalCharField(max_length=64)
 
 
 # ##############################################################################

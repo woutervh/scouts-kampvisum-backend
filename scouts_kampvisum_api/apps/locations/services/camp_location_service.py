@@ -10,20 +10,32 @@ logger = logging.getLogger(__name__)
 
 
 class CampLocationService:
-    def create_or_update(self, instance: LinkedLocationCheck, **data):
+
+    # @TODO why is the location in an array in the OrderedDict ?
+    def create_or_update(self, instance: LinkedLocationCheck, data: dict):
         logger.debug("LOCATION SERVICE DATA: %s", data)
+
+        self.create_or_update_location(instance=instance, data=data)
+
+        # for location in data:
+        # logger.debug("LOCATION SERVICE ELEMENT: %s", location)
+        # self.create_or_update_location(instance=instance, data=location)
+
+    def create_or_update_location(
+        self, instance: LinkedLocationCheck, data: dict
+    ) -> CampLocation:
         id = data.get("id", None)
 
-        location_data = dict()
-        keys = data.keys()
-        for key in keys:
-            element = data.get(key)
-            location_data = element
-            logger.debug("ELEMENT: %s", element)
-            element_keys = element.keys()
-            for element_key in element_keys:
-                logger.debug("ITEM: %s", element.get(element_key))
-        logger.debug("TEST: %s", data.get("name"))
+        # location_data = dict()
+        # keys = data.keys()
+        # for key in keys:
+        #     element = data.get(key)
+        #     location_data = element
+        #     logger.debug("ELEMENT: %s", element)
+        #     element_keys = element.keys()
+        #     for element_key in element_keys:
+        #         logger.debug("ITEM: %s", element.get(element_key))
+        # logger.debug("TEST: %s", data.get("name"))
 
         if id:
             location = CampLocation.objects.get(pk=id)
@@ -37,7 +49,7 @@ class CampLocationService:
 
             return self.update(instance, location, **data)
         else:
-            return self.create(instance, **location_data)
+            return self.create(instance, **data)
 
     def create(self, instance: LinkedLocationCheck, **data):
         logger.debug("LOCATION SERVICE CREATE DATA: %s", data)

@@ -11,3 +11,6 @@ class AbstractBaseModel(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def has_id(self):
+        return hasattr(self, "id") and self.id

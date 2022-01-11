@@ -17,6 +17,7 @@ class CampVisumAPIFilter(filters.FilterSet):
     @property
     def qs(self):
         parent = super().qs
+
         group_admin_id = self.request.query_params.get("group", None)
         year = self.request.query_params.get("year", None)
 
@@ -33,12 +34,18 @@ class CampVisumAPIFilter(filters.FilterSet):
             ).distinct()
         if year:
             logger.debug("Filtering CampVisum instances with year %s", year)
-            return parent.filter(camp__start_date__year=year)
+            return parent.filter(camp__start_date__year=year).distinct()
         if group_admin_id:
             logger.debug("Filtering CampVisum instances with group %s", group_admin_id)
-            return parent.filter(
-                camp__sections__group_admin_id=group_admin_id
+            result = parent.filter(
+                Q(camp__sections__group_admin_id=group_admin_id)
             ).distinct()
+            logger.debug(
+                "Found %d CampVisum instances for group %s",
+                result.count(),
+                group_admin_id,
+            )
+            return result
 
         logger.debug("Filters for CampVisum not set, returning all instances")
         return parent.all()

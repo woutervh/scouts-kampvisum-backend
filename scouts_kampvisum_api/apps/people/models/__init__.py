@@ -1,4 +1,2 @@
-from .person import Person
-from .member import Member
-from .non_member import NonMember
-from .contact_person import ContactPerson
+from .inuits_member import InuitsMember
+from .inuits_non_member import InuitsNonMember

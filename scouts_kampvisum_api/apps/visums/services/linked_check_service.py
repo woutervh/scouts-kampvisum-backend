@@ -55,6 +55,17 @@ class LinkedCheckService:
         except LinkedDateCheck.DoesNotExist:
             raise Http404
 
+    def update_date_check(self, instance: LinkedDateCheck, **data):
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+        instance.value = data.get("value", None)
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
+
     def get_duration_check(self, check_id):
         try:
             return LinkedDurationCheck.objects.get(linkedcheck_ptr=check_id)
@@ -82,26 +93,7 @@ class LinkedCheckService:
             raise Http404
 
     def update_location_check(self, instance: LinkedLocationCheck, **data):
-        logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
-        )
-        instance.name = data.get("name", None)
-        instance.contact_name = data.get("contact_name", None)
-        instance.contact_phone = data.get("contact_phone", None)
-        instance.contact_email = data.get("contact_email", None)
-        instance.is_camp_location = False
-        instance.center_latitude = data.get("center_latitude", None)
-        instance.center_longitude = data.get("center_longitude", None)
-        instance.zoom = data.get("zoom", None)
-
-        instance.full_clean()
-        instance.save()
-
-        locations = data.get("locations", [])
-        for location in locations:
-            self.location_service.create_or_update(instance=instance, data=location)
-
-        return instance
+        return self._update_location(instance=instance, is_camp_location=False, **data)
 
     def get_camp_location_check(self, check_id):
         try:
@@ -111,6 +103,11 @@ class LinkedCheckService:
             raise Http404
 
     def update_camp_location_check(self, instance: LinkedLocationCheck, **data):
+        return self._update_location(instance=instance, is_camp_location=True, **data)
+
+    def _update_location(
+        self, instance: LinkedLocationCheck, is_camp_location=False, **data
+    ):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
@@ -118,7 +115,7 @@ class LinkedCheckService:
         instance.contact_name = data.get("contact_name", None)
         instance.contact_phone = data.get("contact_phone", None)
         instance.contact_email = data.get("contact_email", None)
-        instance.is_camp_location = True
+        instance.is_camp_location = is_camp_location
         instance.center_latitude = data.get("center_latitude", None)
         instance.center_longitude = data.get("center_longitude", None)
         instance.zoom = data.get("zoom", None)
@@ -141,6 +138,18 @@ class LinkedCheckService:
         except LinkedMemberCheck.DoesNotExist:
             logger.error("LinkedMemberCheck with id %s not found", check_id)
             raise Http404
+
+    def update_member_check(self, instance: LinkedMemberCheck, **data):
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+        instance.start_date = data.get("start_date", None)
+        instance.end_date = data.get("end_date", None)
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
 
     def get_file_upload_check(self, check_id):
         try:

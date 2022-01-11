@@ -55,38 +55,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         return Response(serializer.data)
 
-    # @swagger_auto_schema(
-    #     request_body=LinkedCheckSerializer,
-    #     responses={status.HTTP_200_OK: LinkedCheckSerializer},
-    # )
-    # def partial_update(self, request, pk):
-    #     instance = self.get_object()
-
-    #     logger.debug("LINKED CHECK UPDATE REQUEST DATA: %s", request.data)
-
-    #     serializer = LinkedCheckSerializer(
-    #         data=request.data,
-    #         instance=instance,
-    #         context={"request": request},
-    #         partial=True,
-    #     )
-    #     serializer.is_valid(raise_exception=True)
-
-    #     validated_data = serializer.validated_data
-    #     logger.debug("LINKED CHECK UPDATE VALIDATED DATA: %s", validated_data)
-
-    #     logger.debug("Updating LinkedCheck with id %s", pk)
-
-    #     updated_instance = self.camp_visum_service.visum_update(
-    #         request, instance=instance, **validated_data
-    #     )
-
-    #     output_serializer = LinkedCheckSerializer(
-    #         updated_instance, context={"request": request}
-    #     )
-
-    #     return Response(output_serializer.data, status=status.HTTP_200_OK)
-
     @swagger_auto_schema(
         request_body=LinkedSimpleCheckSerializer,
         responses={status.HTTP_200_OK: LinkedSimpleCheckSerializer},
@@ -111,6 +79,35 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = LinkedSimpleCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedDateCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedDateCheckSerializer},
+    )
+    def partial_update_date_check(self, request, check_id):
+        instance = self.linked_check_service.get_date_check(check_id)
+
+        logger.debug("DATE CHECK UPDATE REQUEST DATA: %s", request.data)
+        serializer = LinkedDateCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("DATE CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.update_date_check(
+            instance, **validated_data
+        )
+
+        output_serializer = LinkedDateCheckSerializer(
             instance, context={"request": request}
         )
 
