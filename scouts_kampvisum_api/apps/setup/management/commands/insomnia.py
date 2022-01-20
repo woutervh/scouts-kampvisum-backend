@@ -57,8 +57,8 @@ class Command(BaseCommand):
         data["camp_first"] = str(Camp.objects.first().id)
         data["camp_last"] = str(Camp.objects.last().id)
         # NonMember
-        data["non_member_first"] = str(InuitsNonMember.objects.first().id)
-        data["non_member_last"] = str(InuitsNonMember.objects.last().id)
+        # data["non_member_first"] = str(InuitsNonMember.objects.first().id)
+        # data["non_member_last"] = str(InuitsNonMember.objects.last().id)
         # CategorySet
         data["camp_year_category_set_first"] = str(
             CampYearCategorySet.objects.first().id
