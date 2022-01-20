@@ -115,6 +115,7 @@ LOGGING = {
     "root": {
         "handlers": ["console"],
         "level": LOGGING_LEVEL_ROOT,
+        # "level": LOGGING_LEVEL,
     },
     "loggers": {
         "mozilla_django_oidc": {
@@ -128,6 +129,16 @@ LOGGING = {
             "propagate": False,
         },
         "apps": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+        "rest_framework": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+        "drf-yasg2": {
             "handlers": ["console"],
             "level": LOGGING_LEVEL,
             "propagate": False,

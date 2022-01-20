@@ -9,7 +9,7 @@ from apps.camps.models import Camp
 logger = logging.getLogger(__name__)
 
 
-class CampAPIFilter(filters.FilterSet):
+class CampFilter(filters.FilterSet):
     class Meta:
         model = Camp
         fields = []
@@ -40,8 +40,3 @@ class CampAPIFilter(filters.FilterSet):
 
         logger.debug("Filters for Camp not set, returning all instances")
         return parent.all()
-
-
-class CampFilter(CampAPIFilter):
-
-    filter_group = "pk"

@@ -15,61 +15,62 @@ from apps.visums.views import (
     LinkedCheckViewSet,
 )
 
-patch_simple_check = LinkedCheckViewSet.as_view(
-    {"patch": "partial_update_simple_check"}
+simple_check = LinkedCheckViewSet.as_view(
+    {"get": "retrieve_simple_check", "patch": "partial_update_simple_check"}
 )
-patch_date_check = LinkedCheckViewSet.as_view({"patch": "partial_update_date_check"})
-patch_duration_check = LinkedCheckViewSet.as_view(
-    {"patch": "partial_update_duration_check"}
+date_check = LinkedCheckViewSet.as_view(
+    {"get": "retrieve_date_check", "patch": "partial_update_date_check"}
 )
-patch_location_check = LinkedCheckViewSet.as_view(
-    {"patch": "partial_update_location_check"}
+duration_check = LinkedCheckViewSet.as_view(
+    {"get": "retrieve_duration_check", "patch": "partial_update_duration_check"}
 )
-patch_camp_location_check = LinkedCheckViewSet.as_view(
-    {"patch": "partial_update_camp_location_check"}
+location_check = LinkedCheckViewSet.as_view(
+    {"get": "retrieve_location_check", "patch": "partial_update_location_check"}
 )
-patch_member_check = LinkedCheckViewSet.as_view(
-    {"patch": "partial_update_member_check"}
+camp_location_check = LinkedCheckViewSet.as_view(
+    {
+        "get": "retrieve_camp_location_check",
+        "patch": "partial_update_camp_location_check",
+    }
 )
-patch_file_upload_check = LinkedCheckViewSet.as_view(
-    {"patch": "partial_update_file_upload_check"}
+member_check = LinkedCheckViewSet.as_view(
+    {"get": "retrieve_member_check", "patch": "partial_update_member_check"}
 )
-patch_comment_check = LinkedCheckViewSet.as_view(
-    {"patch": "partial_update_comment_check"}
+file_upload_check = LinkedCheckViewSet.as_view(
+    {"get": "retrieve_file_upload_check", "patch": "partial_update_file_upload_check"}
+)
+comment_check = LinkedCheckViewSet.as_view(
+    {"get": "retrieve_comment_check", "patch": "partial_update_comment_check"}
 )
 
 urlpatterns = [
-    path(
-        "checks/simple/<uuid:check_id>", patch_simple_check, name="patch_simple_check"
-    ),
-    path("checks/date/<uuid:check_id>", patch_date_check, name="patch_date_check"),
+    path("checks/simple/<uuid:check_id>", simple_check, name="simple_check"),
+    path("checks/date/<uuid:check_id>", date_check, name="date_check"),
     path(
         "checks/duration/<uuid:check_id>",
-        patch_duration_check,
-        name="patch_duration_check",
+        duration_check,
+        name="duration_check",
     ),
     path(
         "checks/location/<uuid:check_id>",
-        patch_location_check,
-        name="patch_location_check",
+        location_check,
+        name="location_check",
     ),
     path(
         "checks/camp_location/<uuid:check_id>",
-        patch_camp_location_check,
-        name="patch_camp_location_check",
+        camp_location_check,
+        name="camp_location_check",
     ),
-    path(
-        "checks/member/<uuid:check_id>", patch_member_check, name="patch_member_check"
-    ),
+    path("checks/member/<uuid:check_id>", member_check, name="member_check"),
     path(
         "checks/file/<uuid:check_id>",
-        patch_file_upload_check,
-        name="patch_file_upload_check",
+        file_upload_check,
+        name="file_upload_check",
     ),
     path(
         "checks/comment/<uuid:check_id>",
-        patch_comment_check,
-        name="patch_comment_check",
+        comment_check,
+        name="comment_check",
     ),
 ]
 

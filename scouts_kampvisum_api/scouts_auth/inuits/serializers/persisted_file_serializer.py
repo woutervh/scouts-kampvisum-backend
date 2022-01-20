@@ -6,10 +6,12 @@ from scouts_auth.inuits.models import PersistedFile
 
 class PersistedFileSerializer(serializers.ModelSerializer):
 
-    id = serializers.UUIDField()
-    url = serializers.SerializerMethodField()
-    name = serializers.SerializerMethodField()
-    size = serializers.SerializerMethodField()
+    # id = serializers.UUIDField(required=False, null=True)
+    file = serializers.FileField(required=False)
+    content_type = serializers.CharField(required=False)
+    url = serializers.SerializerMethodField(required=False)
+    name = serializers.SerializerMethodField(required=False)
+    size = serializers.SerializerMethodField(required=False)
 
     class Meta:
         model = PersistedFile

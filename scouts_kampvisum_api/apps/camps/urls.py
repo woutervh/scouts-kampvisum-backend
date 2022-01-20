@@ -1,11 +1,10 @@
 from rest_framework import routers
-from .views import CampViewSet
-from .views_api import CampAPIViewSet
+from .views import CampViewSet, CampYearViewSet
 
 
 router = routers.SimpleRouter()
 
-router.register(r"camps", CampAPIViewSet, "camp")
-router.register(r"debug/camps", CampViewSet, "debug_camp")
+router.register(r"camps", CampViewSet, "camp")
+router.register(r"camp_years", CampYearViewSet, "camp")
 
 urlpatterns = router.urls

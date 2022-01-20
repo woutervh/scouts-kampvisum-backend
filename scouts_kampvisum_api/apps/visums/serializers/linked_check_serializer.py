@@ -266,7 +266,7 @@ class LinkedMemberCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedFileUploadCheckSerializer(LinkedCheckSerializer):
-    file = PersistedFileSerializer()
+    value = PersistedFileSerializer()
 
     class Meta:
         model = LinkedFileUploadCheck

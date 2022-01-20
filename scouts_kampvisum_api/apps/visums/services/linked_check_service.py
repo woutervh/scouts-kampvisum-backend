@@ -14,6 +14,8 @@ from apps.visums.models import (
     LinkedCommentCheck,
 )
 
+from scouts_auth.inuits.models import PersistedFile
+
 
 logger = logging.getLogger(__name__)
 
@@ -168,6 +170,7 @@ class LinkedCheckService:
                 "Can't store a non-existent file (for check {})".format(instance.id)
             )
 
+        instance.value = PersistedFile()
         instance.value.file.save(name=uploaded_file.name, content=uploaded_file)
         instance.value.content_type = uploaded_file.content_type
 

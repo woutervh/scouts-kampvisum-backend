@@ -3,7 +3,7 @@ from .category_set_priority import CategorySetPriority
 from .category_set import CategorySet
 from .category import Category
 from .sub_category import SubCategory
-from .check_type import CheckType
+from .check_type import CheckType, CheckTypeEndpoint
 from .check import Check
 from .linked_category_set import LinkedCategorySet
 from .linked_category import LinkedCategory

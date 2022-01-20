@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class CampYearService:
+    def create_year(self, request, **data):
+        return self.get_or_create_year(request, data.get("year", None))
+
     def get_or_create_year(self, request, date=None):
         """
         Returns a CampYear instance.
