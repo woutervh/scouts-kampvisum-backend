@@ -15,6 +15,7 @@ from apps.visums.models import (
 )
 
 from scouts_auth.inuits.models import PersistedFile
+from scouts_auth.inuits.services import PersistedFileService
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,7 @@ logger = logging.getLogger(__name__)
 class LinkedCheckService:
 
     location_service = CampLocationService()
+    persisted_file_service = PersistedFileService()
 
     @staticmethod
     def get_value_type(check: LinkedCheck):
@@ -170,9 +172,13 @@ class LinkedCheckService:
                 "Can't store a non-existent file (for check {})".format(instance.id)
             )
 
-        instance.value = PersistedFile()
-        instance.value.file.save(name=uploaded_file.name, content=uploaded_file)
-        instance.value.content_type = uploaded_file.content_type
+        file = self.persisted_file_service.save(
+            name=uploaded_file.name,
+            content=uploaded_file,
+            content_type=uploaded_file.content_type,
+        )
+
+        instance.value.add(file)
 
         instance.full_clean()
         instance.save()

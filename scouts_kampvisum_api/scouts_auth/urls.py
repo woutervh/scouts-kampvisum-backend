@@ -16,4 +16,5 @@ urlpatterns = [
     path("oidc/refresh/", OIDCRefreshView.as_view(), name="refresh"),
     # path("oidc/", include("mozilla_django_oidc.urls")),
     path("", include("scouts_auth.groupadmin.urls")),
+    path("", include("scouts_auth.inuits.urls")),
 ]

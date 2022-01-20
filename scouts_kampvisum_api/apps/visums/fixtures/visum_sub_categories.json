@@ -160,6 +160,19 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
+			"name": "Fourage",
+			"category": [
+				"Leden & leiding",
+				[
+					2022,
+					"Test"
+				]
+			]
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
 			"name": "Leden",
 			"category": [
 				"Leden & leiding",

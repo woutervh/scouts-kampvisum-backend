@@ -133,9 +133,7 @@ class LinkedMemberCheck(LinkedCheck):
 # A check that contains a file
 # ##############################################################################
 class LinkedFileUploadCheck(LinkedCheck):
-    value = models.OneToOneField(
-        PersistedFile, on_delete=models.CASCADE, null=True, blank=True
-    )
+    value = models.ManyToManyField(PersistedFile)
 
 
 # ##############################################################################

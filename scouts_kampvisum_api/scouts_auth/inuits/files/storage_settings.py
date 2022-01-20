@@ -7,6 +7,7 @@ class StorageSettings(SettingsHelper):
     USE_S3_STORAGE = "USE_S3_STORAGE"
 
     S3_STORAGE_SERVICE = "scouts_auth.inuits.files.aws.S3StorageService"
+    FILE_UPLOAD_ALLOWED_EXTENSIONS = "FILE_UPLOAD_ALLOWED_EXTENSIONS"
 
     @staticmethod
     def get_default_storage():
@@ -31,3 +32,7 @@ class StorageSettings(SettingsHelper):
     @staticmethod
     def get_s3_file_overwrite():
         return StorageSettings.get("AWS_S3_FILE_OVERWRITE")
+
+    @staticmethod
+    def get_allowed_file_extensions() -> list:
+        return StorageSettings.get_list(StorageSettings.FILE_UPLOAD_ALLOWED_EXTENSIONS)

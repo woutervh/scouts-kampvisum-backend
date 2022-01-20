@@ -1,19 +1,42 @@
 import os, logging
+from typing import List
 
-from django.conf import settings
 from django.core.exceptions import ValidationError
+
+from scouts_auth.inuits.files import StorageSettings
 
 
 logger = logging.getLogger(__name__)
 
 
-file_upload_allowed_extensions = settings.FILE_UPLOAD_ALLOWED_EXTENSIONS
-
-
 def validate_file_extension(value):
-    extension = os.path.splitext(value.name)[1]
+    configured_allowed_extensions: List[
+        str
+    ] = StorageSettings.get_allowed_file_extensions()
+    if (
+        len(configured_allowed_extensions) == 1
+        and configured_allowed_extensions[0] == "*"
+    ):
+        return
 
-    allowed_extensions = ["." + ext if not ext.startswith(".") else ext for ext in file_upload_allowed_extensions]
+    extension = os.path.splitext(value.name)[1].lower()
+
+    allowed_extensions = [
+        "." + ext.lower() if not ext.startswith(".") else ext
+        for ext in configured_allowed_extensions
+    ]
+
+    logger.info(
+        "Configured: %s, allowed: %s", configured_allowed_extensions, allowed_extensions
+    )
 
     if not extension in allowed_extensions:
-        raise ValidationError("File type not supported, only [" + allowed_extensions + "]")
+        raise ValidationError(
+            "File extensions '{}' not allowed for upload by setting {}, only [{}]".format(
+                extension,
+                StorageSettings.FILE_UPLOAD_ALLOWED_EXTENSIONS,
+                ", ".join(allowed_extensions),
+            )
+        )
+
+    return

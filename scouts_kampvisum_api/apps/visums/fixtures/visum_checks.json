@@ -1286,9 +1286,29 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_leaders_cooks",
+            "name": "participants_leaders_comments",
             "sub_category": [
                 "Leiding",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_cooks_sufficient",
+            "sub_category": [
+                "Fourage",
                 [
                     "Leden & leiding",
                     [
@@ -1306,9 +1326,29 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_leaders_comments",
+            "name": "participants_cooks_cooks",
             "sub_category": [
-                "Leiding",
+                "Fourage",
+                [
+                    "Leden & leiding",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "MemberCheck"
+            ],
+            "label": "Opmerkingen"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_cooks_comments",
+            "sub_category": [
+                "Fourage",
                 [
                     "Leden & leiding",
                     [
