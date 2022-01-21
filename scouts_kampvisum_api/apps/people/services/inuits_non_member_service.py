@@ -1,9 +1,11 @@
 import logging
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 from apps.people.models import InuitsNonMember
+
+from scouts_auth.groupadmin.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)
@@ -11,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 class InuitsNonMemberService:
     def inuits_non_member_create(
-        self, inuits_non_member: InuitsNonMember, created_by: settings.AUTH_USER_MODEL
+        self,
+        inuits_non_member: InuitsNonMember,
+        created_by: settings.AUTH_USER_MODEL,
     ) -> InuitsNonMember:
         # Check if the instance already exists
         if inuits_non_member.has_id():
@@ -33,12 +37,24 @@ class InuitsNonMemberService:
                 pass
 
         logger.debug(
-            "Creating InuitsNonMember with name %s %s",
+            "Creating InuitsNonMember with name %s %s for group %s",
             inuits_non_member.first_name,
             inuits_non_member.last_name,
+            inuits_non_member.group_group_admin_id,
         )
+
+        if not GroupAdmin().validate_group(
+            active_user=created_by,
+            group_group_admin_id=inuits_non_member.group_group_admin_id,
+        ):
+            raise ValidationError(
+                "Invalid group admin id for group: {}".format(
+                    inuits_non_member.group_group_admin_id
+                )
+            )
+
         inuits_non_member = InuitsNonMember(
-            group_admin_id=inuits_non_member.group_admin_id,
+            group_group_admin_id=inuits_non_member.group_group_admin_id,
             first_name=inuits_non_member.first_name,
             last_name=inuits_non_member.last_name,
             phone_number=inuits_non_member.phone_number,

@@ -32,12 +32,20 @@ class Command(BaseCommand):
             LinkedCommentCheck,
             LinkedFileUploadCheck,
         )
+        from scouts_auth.inuits.models import PersistedFile
+        from scouts_auth.inuits.services import PersistedFileService
 
         data = dict()
 
         # ScoutsSectionName
         data["scouts_section_name_first"] = str(ScoutsSectionName.objects.first().id)
         data["scouts_section_name_last"] = str(ScoutsSectionName.objects.last().id)
+        data["scouts_section_name_kapoenen"] = str(
+            ScoutsSectionName.objects.get(name="kapoenen").id
+        )
+        data["scouts_section_name_welpen"] = str(
+            ScoutsSectionName.objects.get(name="welpen").id
+        )
         # ScoutsSection
         data["scouts_section_first"] = str(ScoutsSection.objects.first().id)
         data["scouts_section_last"] = str(ScoutsSection.objects.last().id)
@@ -47,7 +55,7 @@ class Command(BaseCommand):
         # Year
         data["current_year"] = str(datetime.datetime.now().year)
         data["next_year"] = str(int(data.get("current_year")) + 1)
-        # Camp
+        # CampYear
         data["camp_year_first"] = str(CampYear.objects.first().id)
         data["camp_year_last"] = str(CampYear.objects.last().id)
         data["camp_year_current"] = str(
@@ -56,6 +64,12 @@ class Command(BaseCommand):
         # Camp
         data["camp_first"] = str(Camp.objects.first().id)
         data["camp_last"] = str(Camp.objects.last().id)
+        # PersistedFile
+        service = PersistedFileService()
+        service.save_local_file("initial_data/test/menu.pdf")
+        service.save_local_file("initial_data/test/planning.pdf")
+        data["file_first"] = str(PersistedFile.objects.first().id)
+        data["file_last"] = str(PersistedFile.objects.last().id)
         # NonMember
         # data["non_member_first"] = str(InuitsNonMember.objects.first().id)
         # data["non_member_last"] = str(InuitsNonMember.objects.last().id)

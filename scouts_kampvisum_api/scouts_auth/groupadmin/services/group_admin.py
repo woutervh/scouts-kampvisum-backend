@@ -232,6 +232,19 @@ class GroupAdmin:
 
         return AbstractScoutsGroupSerializer(group).data
 
+    def validate_group(
+        self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str
+    ) -> bool:
+        serialized_group = self.get_group_serialized(active_user, group_group_admin_id)
+
+        if (
+            serialized_group
+            and serialized_group.get("group_admin_id") == group_group_admin_id
+        ):
+            return True
+
+        return False
+
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep{group_group_admin_id_fragment_start}
     def get_functions_raw(
         self,

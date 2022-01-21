@@ -1,6 +1,7 @@
-import logging
+import logging, mimetypes
 
 from django.http import Http404
+from django.core.files.base import File
 
 from scouts_auth.inuits.models import PersistedFile
 
@@ -34,3 +35,12 @@ class PersistedFileService:
         instance.save()
 
         return instance
+
+    def save_local_file(self, path):
+        with open(path, "rb") as f:
+            file = File(f)
+            mime, encoding = mimetypes.guess_type(path)
+
+            logger.debug("PATH: %s - MIME: %s", path, mime)
+            print("PATH: {} - MIME: {}".format(path, mime))
+            return self.save_file(name=file.name, content=file, content_type=mime)
