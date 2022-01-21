@@ -82,7 +82,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     ) -> CheckState:
         # logger.debug("SIMPLE CHECK VALUE: %s", check.value)
 
-        data = LinkedSimpleCheckSerializer().get_value(check)
+        data = LinkedSimpleCheckSerializer.get_value(check)
 
         # logger.debug("SIMPLE CHECK DATA: %s", data)
 
@@ -93,7 +93,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     ) -> CheckState:
         # logger.debug("DATA CHECK VALUE: %s", check.value)
 
-        data = LinkedDateCheckSerializer().get_value(check)
+        data = LinkedDateCheckSerializer.get_value(check)
 
         # logger.debug("DATE CHECK DATA: %s", data)
 
@@ -104,7 +104,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     ) -> dict:
         # logger.debug("DURATION CHECK DATA: %s", str(check))
 
-        data = LinkedDurationCheckSerializer().get_value(check)
+        data = LinkedDurationCheckSerializer.get_value(check)
 
         # logger.debug("DURATION CHECK DATA: %s", data)
 
@@ -115,7 +115,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     ) -> dict:
         # logger.debug("LOCATION CHECK DATA: %s", str(check))
 
-        data = LinkedLocationCheckSerializer().get_value(check)
+        data = LinkedLocationCheckSerializer.get_value(check)
 
         # logger.debug("LOCATION CHECK DATA: %s", data)
 
@@ -126,7 +126,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     ) -> dict:
         # logger.debug("CAMP LOCATION CHECK DATA: %s", str(check))
 
-        data = LinkedCampLocationCheckSerializer().get_value(check)
+        data = LinkedCampLocationCheckSerializer.get_value(check)
 
         # logger.debug("CAMP LOCATION CHECK DATA: %s", data)
 
@@ -137,7 +137,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     ) -> dict:
         # logger.debug("MEMBER CHECK DATA: %s", str(check))
 
-        data = LinkedMemberCheckSerializer().get_value(check)
+        data = LinkedMemberCheckSerializer.get_value(check)
 
         # logger.debug("MEMBER CHECK DATA: %s", data)
 
@@ -148,7 +148,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     ) -> dict:
         # logger.debug("FILE UPLOAD CHECK DATA: %s", str(check))
 
-        data = LinkedFileUploadCheckSerializer().get_value(check)
+        data = LinkedFileUploadCheckSerializer.get_value(check)
 
         # logger.debug("FILE UPLOAD CHECK DATA: %s", data)
 
@@ -159,7 +159,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     ) -> dict:
         # logger.debug("COMMENT CHECK DATA: %s", str(check))
 
-        data = LinkedCommentCheckSerializer().get_value(check)
+        data = LinkedCommentCheckSerializer.get_value(check)
 
         # logger.debug("COMMENT CHECK DATA: %s", data)
 
@@ -176,7 +176,8 @@ class LinkedSimpleCheckSerializer(LinkedCheckSerializer):
         model = LinkedSimpleCheck
         fields = "__all__"
 
-    def get_value(self, obj: LinkedSimpleCheck) -> dict:
+    @staticmethod
+    def get_value(obj: LinkedSimpleCheck) -> dict:
         return obj.value
 
 
@@ -185,7 +186,8 @@ class LinkedDateCheckSerializer(LinkedCheckSerializer):
         model = LinkedDateCheck
         fields = "__all__"
 
-    def get_value(self, obj: LinkedDateCheck) -> dict:
+    @staticmethod
+    def get_value(obj: LinkedDateCheck) -> dict:
         return obj.value
 
 
@@ -198,7 +200,8 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
         model = LinkedDurationCheck
         fields = "__all__"
 
-    def get_value(self, obj: LinkedDurationCheck) -> dict:
+    @staticmethod
+    def get_value(obj: LinkedDurationCheck) -> dict:
         data = dict()
 
         data["start_date"] = obj.start_date
@@ -219,7 +222,8 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
         model = LinkedLocationCheck
         fields = "__all__"
 
-    def get_value(self, obj: LinkedLocationCheck) -> dict:
+    @staticmethod
+    def get_value(obj: LinkedLocationCheck) -> dict:
         # logger.debug("LOCATION SERIALIZER DATA: %s", str(obj))
         data = dict()
 
@@ -243,7 +247,8 @@ class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
         model = LinkedLocationCheck
         fields = "__all__"
 
-    def get_value(self, obj: LinkedLocationCheck) -> dict:
+    @staticmethod
+    def get_value(obj: LinkedLocationCheck) -> dict:
         data = LinkedLocationCheckSerializer().get_value(obj)
 
         data["locations"] = CampLocationSerializer(obj.locations, many=True).data
@@ -257,7 +262,8 @@ class LinkedMemberCheckSerializer(LinkedCheckSerializer):
         model = LinkedMemberCheck
         fields = "__all__"
 
-    def get_value(self, obj: LinkedMemberCheck) -> dict:
+    @staticmethod
+    def get_value(obj: LinkedMemberCheck) -> dict:
         data = dict()
 
         data["group_admin_id"] = obj.group_admin_id
@@ -272,8 +278,9 @@ class LinkedFileUploadCheckSerializer(LinkedCheckSerializer):
         model = LinkedFileUploadCheck
         fields = "__all__"
 
-    def get_value(self, obj: LinkedFileUploadCheck) -> dict:
-        return obj.value
+    @staticmethod
+    def get_value(obj: LinkedFileUploadCheck) -> list:
+        return PersistedFileSerializer(obj.value.all(), many=True).data
 
 
 class LinkedCommentCheckSerializer(LinkedCheckSerializer):
@@ -283,6 +290,7 @@ class LinkedCommentCheckSerializer(LinkedCheckSerializer):
         model = LinkedCommentCheck
         fields = "__all__"
 
-    def get_value(self, obj: LinkedCommentCheck) -> dict:
+    @staticmethod
+    def get_value(obj: LinkedCommentCheck) -> dict:
         # logger.debug("hm %s", str(obj))
         return obj.value
