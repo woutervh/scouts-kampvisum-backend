@@ -23,6 +23,7 @@ class Check(Explainable, Indexable, Linkable, Translatable, AbstractBaseModel):
     objects = CheckManager()
 
     name = RequiredCharField(max_length=64)
+    is_multiple = models.BooleanField(default=False)
     sub_category = models.ForeignKey(
         SubCategory, related_name="checks", on_delete=models.CASCADE
     )
@@ -37,6 +38,6 @@ class Check(Explainable, Indexable, Linkable, Translatable, AbstractBaseModel):
         return (self.name, self.sub_category)
 
     def __str__(self):
-        return "OBJECT Check: name({}), sub_category({}), check_type({})".format(
-            self.name, str(self.sub_category), str(self.check_type)
+        return "OBJECT Check: name({}), sub_category({}), check_type({}), is_multiple ({})".format(
+            self.name, str(self.sub_category), str(self.check_type), self.is_multiple
         )

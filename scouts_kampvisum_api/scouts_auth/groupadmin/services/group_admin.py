@@ -388,6 +388,19 @@ class GroupAdmin:
 
         return AbstractScoutsMemberFrontendSerializer(member).data
 
+    def validate_member(
+        self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
+    ) -> bool:
+        serialized_member = self.get_member_info_serialized(active_user, group_admin_id)
+
+        if (
+            serialized_member
+            and serialized_member.get("group_admin_id") == group_admin_id
+        ):
+            return True
+
+        return False
+
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}/steekkaart
     def get_member_medical_flash_card(
         self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str

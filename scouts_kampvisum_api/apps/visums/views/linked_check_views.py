@@ -17,6 +17,7 @@ from apps.visums.models import (
     LinkedDurationCheck,
     LinkedLocationCheck,
     LinkedMemberCheck,
+    LinkedParticipantCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
 )
@@ -28,6 +29,7 @@ from apps.visums.serializers import (
     LinkedLocationCheckSerializer,
     LinkedCampLocationCheckSerializer,
     LinkedMemberCheckSerializer,
+    LinkedParticipantCheckSerializer,
     LinkedFileUploadCheckSerializer,
     LinkedCommentCheckSerializer,
 )
@@ -246,6 +248,86 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = LinkedCampLocationCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedMemberCheckSerializer})
+    def retrieve_member_check(self, request, check_id=None):
+        instance: LinkedMemberCheck = self.linked_check_service.get_member_check(
+            check_id
+        )
+        serializer = LinkedMemberCheckSerializer(instance, context={"request": request})
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        request_body=LinkedMemberCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedMemberCheckSerializer},
+    )
+    def partial_update_member_check(self, request, check_id):
+        instance = self.linked_check_service.get_member_check(check_id)
+
+        logger.debug("MEMBER CHECK UPDATE REQUEST DATA: %s", request.data)
+        serializer = LinkedMemberCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("MEMBER CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.update_member_check(
+            instance, **validated_data
+        )
+
+        output_serializer = LinkedMemberCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
+    )
+    def retrieve_participant_check(self, request, check_id=None):
+        instance: LinkedParticipantCheck = (
+            self.linked_check_service.get_participant_check(check_id)
+        )
+        serializer = LinkedParticipantCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        request_body=LinkedParticipantCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
+    )
+    def partial_update_participant_check(self, request, check_id):
+        instance = self.linked_check_service.get_participant_check(check_id)
+
+        logger.debug("PARTICIPANT CHECK UPDATE REQUEST DATA: %s", request.data)
+        serializer = LinkedParticipantCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("PARTICIPANT CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.update_participant_check(
+            instance, **validated_data
+        )
+
+        output_serializer = LinkedParticipantCheckSerializer(
             instance, context={"request": request}
         )
 

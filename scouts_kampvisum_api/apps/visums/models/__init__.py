@@ -15,6 +15,7 @@ from .linked_check import (
     LinkedDurationCheck,
     LinkedLocationCheck,
     LinkedMemberCheck,
+    LinkedParticipantCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
 )

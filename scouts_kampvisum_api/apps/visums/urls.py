@@ -34,7 +34,18 @@ camp_location_check = LinkedCheckViewSet.as_view(
     }
 )
 member_check = LinkedCheckViewSet.as_view(
-    {"get": "retrieve_member_check", "patch": "partial_update_member_check"}
+    {
+        "get": "retrieve_member_check",
+        "patch": "partial_update_member_check",
+        "delete": "unlink_member",
+    }
+)
+participant_check = LinkedCheckViewSet.as_view(
+    {
+        "get": "retrieve_participant_check",
+        "patch": "partial_update_participant_check",
+        "delete": "unlink_participant",
+    }
 )
 file_upload_check = LinkedCheckViewSet.as_view(
     {"get": "retrieve_file_upload_check", "patch": "partial_update_file_upload_check"}
@@ -62,6 +73,11 @@ urlpatterns = [
         name="camp_location_check",
     ),
     path("checks/member/<uuid:check_id>", member_check, name="member_check"),
+    path(
+        "checks/participant/<uuid:check_id>",
+        participant_check,
+        name="participant_check",
+    ),
     path(
         "checks/file/<uuid:check_id>",
         file_upload_check,

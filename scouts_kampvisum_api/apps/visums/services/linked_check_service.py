@@ -10,11 +10,11 @@ from apps.visums.models import (
     LinkedDurationCheck,
     LinkedLocationCheck,
     LinkedMemberCheck,
+    LinkedParticipantCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
 )
 
-from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.services import PersistedFileService
 
 
@@ -147,7 +147,30 @@ class LinkedCheckService:
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-        instance.start_date = data.get("start_date", None)
+        instance.group_admin_id = data.get("start_date", None)
+        instance.end_date = data.get("end_date", None)
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
+
+    def unlink_member(self, instance: LinkedMemberCheck, **data):
+        logger.debug("Unlinking member from instance with id %s", instance.id)
+        logger.debug("DATA: %s", data)
+
+    def get_Participant_check(self, check_id):
+        try:
+            return LinkedParticipantCheck.objects.get(linkedcheck_ptr=check_id)
+        except LinkedParticipantCheck.DoesNotExist:
+            logger.error("LinkedParticipantCheck with id %s not found", check_id)
+            raise Http404
+
+    def update_participant_check(self, instance: LinkedParticipantCheck, **data):
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+        instance.group_admin_id = data.get("start_date", None)
         instance.end_date = data.get("end_date", None)
 
         instance.full_clean()

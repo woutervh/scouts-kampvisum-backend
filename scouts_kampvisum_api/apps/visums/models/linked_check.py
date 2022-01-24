@@ -3,10 +3,9 @@ import logging
 from django.db import models
 from django.core.exceptions import ValidationError
 
+from apps.people.models import InuitsMember, InuitsParticipant
 from apps.visums.models import (
     LinkedSubCategory,
-    Check,
-    CheckType,
     Check,
     CheckType,
 )
@@ -50,6 +49,8 @@ class LinkedCheck(AbstractBaseModel):
             return LinkedLocationCheck(is_camp_location=True)
         elif check_type.is_member_check():
             return LinkedMemberCheck()
+        elif check_type.is_participant_check():
+            return LinkedParticipantCheck()
         elif check_type.is_file_upload_check():
             return LinkedFileUploadCheck()
         elif check_type.is_comment_check():
@@ -121,10 +122,19 @@ class LinkedLocationCheck(LinkedCheck):
 # ##############################################################################
 # LinkedMemberCheck
 #
-# A check that selects members and non-members
+# A check that selects members
 # ##############################################################################
 class LinkedMemberCheck(LinkedCheck):
-    group_admin_id = OptionalCharField(max_length=64)
+    value = models.ManyToManyField(InuitsMember)
+
+
+# ##############################################################################
+# LinkedParticipantCheck
+#
+# A check that selects members and non-members
+# ##############################################################################
+class LinkedParticipantCheck(LinkedCheck):
+    value = models.ManyToManyField(InuitsParticipant)
 
 
 # ##############################################################################

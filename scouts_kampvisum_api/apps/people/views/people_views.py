@@ -45,8 +45,6 @@ class PeopleViewSet(viewsets.GenericViewSet):
     def _list(self, request, include_inactive: bool = False):
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)
-        start = DateUtils.datetime_from_isoformat(self.request.GET.get("start", None))
-        end = DateUtils.datetime_from_isoformat(self.request.GET.get("end", None))
 
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
@@ -57,15 +55,9 @@ class PeopleViewSet(viewsets.GenericViewSet):
             )
         else:
             logger.debug(
-                "Searching for members and non-members with term and group %s",
+                "Searching for members and non-members with term %s and group %s",
+                search_term,
                 group_group_admin_id,
-            )
-
-        if start and end:
-            logger.debug(
-                "Searching for non-members who are already insured between %s and %s",
-                start,
-                end,
             )
 
         members: List[AbstractScoutsMember] = self.service.search_member_filtered(
@@ -75,9 +67,6 @@ class PeopleViewSet(viewsets.GenericViewSet):
         )
 
         queryset = self.get_queryset()
-        # Include non-members with a running insurance in the search results if needed
-        if start and end:
-            queryset = queryset.currently_insured(start, end)
         non_members = self.filter_queryset(queryset)
         results = [*members, *non_members]
         output_serializer = PeopleSerializer(results, many=True)
