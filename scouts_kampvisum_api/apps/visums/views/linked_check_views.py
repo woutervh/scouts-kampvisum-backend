@@ -1,6 +1,7 @@
 import logging
 from typing import List
 
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, status
@@ -515,6 +516,20 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         return self._list(
             self.get_queryset().filter(
                 parent__check_type__check_type=CheckTypeEndpoint.MEMBER_CHECK
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"member/linked",
+    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedMemberCheckSerializer})
+    def list_linked_member_checks(self, request):
+        return self._list(
+            LinkedMemberCheck.objects.filter(
+                Q(parent__check_type__check_type=CheckTypeEndpoint.MEMBER_CHECK)
+                & Q(value__isnull=False)
             )
         )
 

@@ -1,3 +1,4 @@
+from django.urls import path
 from rest_framework import routers
 
 from apps.people.views import (
@@ -6,6 +7,10 @@ from apps.people.views import (
     PeopleViewSet,
 )
 
+urlpatterns = [
+    path("members/ga/<str:uuid>", MemberViewSet.as_view({"get": "retrieve_scouts_member"})),
+    path("members/ga/", MemberViewSet.as_view({"get": "list_scouts_member"})),
+]
 
 router = routers.SimpleRouter()
 
@@ -13,4 +18,4 @@ router.register(r"members", MemberViewSet, "members")
 router.register(r"non_members", NonMemberViewSet, "non_members")
 router.register(r"people", PeopleViewSet, "people")
 
-urlpatterns = router.urls
+urlpatterns += router.urls

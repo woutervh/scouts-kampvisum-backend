@@ -5,7 +5,7 @@ from django.db.models.functions import Concat
 from django.db.models import Q
 from django_filters import FilterSet, CharFilter
 
-from apps.people.models import InuitsNonMember
+from apps.people.models import InuitsMember
 
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ class InuitsMemberFilter(FilterSet):
     term = CharFilter(method="search_term_filter")
 
     class Meta:
-        model = InuitsNonMember
+        model = InuitsMember
         fields = []
 
     def search_term_filter(self, queryset, name, value):
