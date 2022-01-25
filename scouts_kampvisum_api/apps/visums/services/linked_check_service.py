@@ -164,7 +164,11 @@ class LinkedCheckService:
                 raise Http404
             
             scouts_member: AbstractScoutsMember = self.groupadmin.get_member_info(active_user=request.user, group_admin_id=group_admin_id)
+            
+            # @TODO: check if the member already exists
+            # @TODO: check if the member is already linked
             inuits_member = InuitsMember.from_scouts_member(scouts_member)
+            
             inuits_member.full_clean()
             inuits_member.save()
             
