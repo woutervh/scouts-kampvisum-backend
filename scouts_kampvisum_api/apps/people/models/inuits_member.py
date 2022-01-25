@@ -1,6 +1,7 @@
 from apps.people.managers import InuitsMemberManager
 
 from scouts_auth.groupadmin.scouts import GroupAdminIdField
+from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import OptionalCharField, DatetypeAwareDateField
 
@@ -32,3 +33,14 @@ class InuitsMember(AuditedBaseModel):
             return True
 
         return False
+
+    @staticmethod
+    def from_scouts_member(scouts_member: AbstractScoutsMember):
+        member = InuitsMember()
+        
+        member.group_admin_id = scouts_member.group_admin_id
+        member.first_name = scouts_member.first_name
+        member.last_name = scouts_member.last_name
+        member.birth_date = scouts_member.birth_date
+        
+        return member

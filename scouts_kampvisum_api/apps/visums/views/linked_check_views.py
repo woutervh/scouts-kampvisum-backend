@@ -4,6 +4,7 @@ from typing import List
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
+from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -269,6 +270,10 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     def partial_update_member_check(self, request, check_id):
         instance = self.linked_check_service.get_member_check(check_id)
+        
+        if not instance:
+            logger.error("Unknown member check with id {}".format(check_id))
+            raise Http404
 
         logger.debug("MEMBER CHECK UPDATE REQUEST DATA: %s", request.data)
         serializer = LinkedMemberCheckSerializer(
@@ -283,7 +288,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("MEMBER CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_member_check(
-            instance, **validated_data
+            request, instance, **validated_data
         )
 
         output_serializer = LinkedMemberCheckSerializer(
@@ -291,6 +296,13 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedMemberCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedMemberCheckSerializer},
+    )
+    def unlink_member(self, request, check_id):
+        pass
 
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}

@@ -2,6 +2,7 @@ import logging
 
 from django.http import Http404
 
+from apps.people.models import InuitsMember
 from apps.locations.services import CampLocationService
 from apps.visums.models import (
     LinkedCheck,
@@ -15,6 +16,8 @@ from apps.visums.models import (
     LinkedCommentCheck,
 )
 
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.services import PersistedFileService
 
 
@@ -25,6 +28,7 @@ class LinkedCheckService:
 
     location_service = CampLocationService()
     persisted_file_service = PersistedFileService()
+    groupadmin = GroupAdminMemberService()
 
     @staticmethod
     def get_value_type(check: LinkedCheck):
@@ -143,15 +147,31 @@ class LinkedCheckService:
             logger.error("LinkedMemberCheck with id %s not found", check_id)
             raise Http404
 
-    def update_member_check(self, instance: LinkedMemberCheck, **data):
+    def update_member_check(self, request, instance: LinkedMemberCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-        instance.group_admin_id = data.get("start_date", None)
-        instance.end_date = data.get("end_date", None)
+        members = data.get("value", [])
+        if not members or len(members) == 0:
+            logger.error("Empty list of group admin ids")
+            raise Http404
+        
+        for member in members:
+            group_admin_id = member.get("group_admin_id", None)
+            
+            if not group_admin_id:
+                logger.error("Expecting a list of dictionaries with 'group_admin_id' set.")
+                raise Http404
+            
+            scouts_member: AbstractScoutsMember = self.groupadmin.get_member_info(active_user=request.user, group_admin_id=group_admin_id)
+            inuits_member = InuitsMember.from_scouts_member(scouts_member)
+            inuits_member.full_clean()
+            inuits_member.save()
+            
+            instance.value.add(inuits_member)
 
         instance.full_clean()
-        instance.save()
+        instance.save()        
 
         return instance
 
@@ -159,7 +179,7 @@ class LinkedCheckService:
         logger.debug("Unlinking member from instance with id %s", instance.id)
         logger.debug("DATA: %s", data)
 
-    def get_Participant_check(self, check_id):
+    def get_participant_check(self, check_id):
         try:
             return LinkedParticipantCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedParticipantCheck.DoesNotExist:
