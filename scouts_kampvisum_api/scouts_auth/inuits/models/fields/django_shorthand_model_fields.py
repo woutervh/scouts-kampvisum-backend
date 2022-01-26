@@ -317,12 +317,12 @@ class OptionalForeignKey(models.ForeignKey):
 
     This is equivalent to setting a models.ForeignKey as such:
     some_optional_foreign_key = models.ForeignKey(
-        blank=False,
+        blank=True,
         null=True,
     )
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs["blank"] = False
+        kwargs["blank"] = True
         kwargs["null"] = True
         super().__init__(*args, **kwargs)

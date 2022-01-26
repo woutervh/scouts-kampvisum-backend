@@ -270,9 +270,11 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     def partial_update_member_check(self, request, check_id):
         instance = self.linked_check_service.get_member_check(check_id)
-        
+
         if not instance:
-            logger.error("Unknown member check with id {}".format(check_id))
+            logger.error(
+                "Can't add member: Unknown member check with id {}".format(check_id)
+            )
             raise Http404
 
         logger.debug("MEMBER CHECK UPDATE REQUEST DATA: %s", request.data)
@@ -302,7 +304,35 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedMemberCheckSerializer},
     )
     def unlink_member(self, request, check_id):
-        pass
+        instance = self.linked_check_service.get_member_check(check_id)
+
+        if not instance:
+            logger.error(
+                "Can't unlink member: Unknown member check with id {}".format(check_id)
+            )
+            raise Http404
+
+        logger.debug("MEMBER CHECK UNLINK REQUEST DATA: %s", request.data)
+        serializer = LinkedMemberCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("MEMBER CHECK UNLINK VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.unlink_member(
+            request, instance, **validated_data
+        )
+
+        output_serializer = LinkedMemberCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
@@ -337,7 +367,44 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("PARTICIPANT CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_participant_check(
-            instance, **validated_data
+            request, instance, **validated_data
+        )
+
+        output_serializer = LinkedParticipantCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedParticipantCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
+    )
+    def unlink_participant(self, request, check_id):
+        instance = self.linked_check_service.get_participant_check(check_id)
+
+        if not instance:
+            logger.error(
+                "Can't unlink participant: Unknown participant check with id {}".format(
+                    check_id
+                )
+            )
+            raise Http404
+
+        logger.debug("PARTICIPANT CHECK UNLINK REQUEST DATA: %s", request.data)
+        serializer = LinkedParticipantCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("PARTICIPANT CHECK UNLINK VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.unlink_participant(
+            request, instance, **validated_data
         )
 
         output_serializer = LinkedParticipantCheckSerializer(
@@ -385,6 +452,41 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         instance = self.linked_check_service.update_file_upload_check(
             instance=instance, uploaded_file=validated_data.get("file")
+        )
+
+        output_serializer = LinkedFileUploadCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedFileUploadCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer},
+    )
+    def unlink_file(self, request, check_id):
+        instance = self.linked_check_service.get_file_upload_check(check_id)
+
+        if not instance:
+            logger.error(
+                "Can't unlink file: Unknown file check with id {}".format(check_id)
+            )
+            raise Http404
+
+        logger.debug("FILE UPLOAD CHECK UNLINK REQUEST DATA: %s", request.data)
+        serializer = LinkedFileUploadCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("FILE UPLOAD CHECK UNLINK VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.unlink_file(
+            request, instance, **validated_data
         )
 
         output_serializer = LinkedFileUploadCheckSerializer(
@@ -506,6 +608,20 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     @action(
         detail=False,
         methods=["get"],
+        url_path=r"location/linked",
+    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationCheckSerializer})
+    def list_linked_location_checks(self, request):
+        return self._list(
+            LinkedLocationCheck.objects.filter(
+                Q(parent__check_type__check_type=CheckTypeEndpoint.LOCATION_CHECK)
+                & Q(locations__isnull=False)
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
         url_path=r"camp_location",
     )
     @swagger_auto_schema(
@@ -515,6 +631,25 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         return self._list(
             self.get_queryset().filter(
                 parent__check_type__check_type=CheckTypeEndpoint.CAMP_LOCATION_CHECK
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"camp_location/linked",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer}
+    )
+    def list_linked_camp_location_checks(self, request):
+        return self._list(
+            LinkedLocationCheck.objects.filter(
+                Q(is_camp_location=False)
+                & Q(
+                    parent__check_type__check_type=CheckTypeEndpoint.CAMP_LOCATION_CHECK
+                )
+                & Q(locations__isnull=False)
             )
         )
 
@@ -548,6 +683,37 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     @action(
         detail=False,
         methods=["get"],
+        url_path=r"participant",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
+    )
+    def list_participant_checks(self, request):
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.PARTICIPANT_CHECK
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"participant/linked",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
+    )
+    def list_linked_participant_checks(self, request):
+        return self._list(
+            LinkedParticipantCheck.objects.filter(
+                Q(parent__check_type__check_type=CheckTypeEndpoint.PARTICIPANT_CHECK)
+                & (Q(value__member__isnull=False) | Q(value__non_member__isnull=False))
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
         url_path=r"file",
     )
     @swagger_auto_schema(
@@ -557,6 +723,22 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         return self._list(
             self.get_queryset().filter(
                 parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"file/linked",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
+    )
+    def list_linked_files(self, request):
+        return self._list(
+            LinkedFileUploadCheck.objects.filter(
+                Q(parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK)
+                & Q(value__isnull=False)
             )
         )
 

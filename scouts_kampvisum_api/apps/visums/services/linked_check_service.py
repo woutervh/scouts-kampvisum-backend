@@ -3,6 +3,7 @@ import logging
 from django.http import Http404
 
 from apps.people.models import InuitsMember
+from apps.people.services import InuitsMemberService
 from apps.locations.services import CampLocationService
 from apps.visums.models import (
     LinkedCheck,
@@ -28,6 +29,7 @@ class LinkedCheckService:
 
     location_service = CampLocationService()
     persisted_file_service = PersistedFileService()
+    inuits_member_service = InuitsMemberService()
     groupadmin = GroupAdminMemberService()
 
     @staticmethod
@@ -155,27 +157,32 @@ class LinkedCheckService:
         if not members or len(members) == 0:
             logger.error("Empty list of group admin ids")
             raise Http404
-        
+
         for member in members:
-            group_admin_id = member.get("group_admin_id", None)
-            
-            if not group_admin_id:
-                logger.error("Expecting a list of dictionaries with 'group_admin_id' set.")
-                raise Http404
-            
-            scouts_member: AbstractScoutsMember = self.groupadmin.get_member_info(active_user=request.user, group_admin_id=group_admin_id)
-            
+            # group_admin_id = member.get("group_admin_id", None)
+
+            # if not group_admin_id:
+            #     logger.error(
+            #         "Expecting a list of dictionaries with 'group_admin_id' set."
+            #     )
+            #     raise Http404
+
+            scouts_member: AbstractScoutsMember = self.groupadmin.get_member_info(
+                active_user=request.user, group_admin_id=member.group_admin_id
+            )
+
             # @TODO: check if the member already exists
             # @TODO: check if the member is already linked
+            # @TODO: add check if multiple members can be added
             inuits_member = InuitsMember.from_scouts_member(scouts_member)
-            
+
             inuits_member.full_clean()
             inuits_member.save()
-            
+
             instance.value.add(inuits_member)
 
         instance.full_clean()
-        instance.save()        
+        instance.save()
 
         return instance
 
@@ -190,12 +197,44 @@ class LinkedCheckService:
             logger.error("LinkedParticipantCheck with id %s not found", check_id)
             raise Http404
 
-    def update_participant_check(self, instance: LinkedParticipantCheck, **data):
+    def update_participant_check(
+        self, request, instance: LinkedParticipantCheck, **data
+    ):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-        instance.group_admin_id = data.get("start_date", None)
-        instance.end_date = data.get("end_date", None)
+
+        participants = data.get("value", [])
+        if not participants or len(participants) == 0:
+            logger.error("Empty participant list")
+            raise Http404
+
+        for participant in participants:
+            # group_admin_id = member.get("group_admin_id", None)
+
+            # if not group_admin_id:
+            #     logger.error(
+            #         "Expecting a list of dictionaries with 'group_admin_id' set."
+            #     )
+            #     raise Http404
+            logger.debug("participant: %s", participant)
+
+            if participant.has_member():
+                participant.member = self.inuits_member_service.member_create_or_update(
+                    inuits_member=participant.member, user=request.user
+                )
+                participant.non_member = None
+
+                participant.full_clean()
+                participant.save()
+
+                instance.value.add(participant)
+            elif participant.has_non_member():
+                instance.value.add(participant)
+            else:
+                raise Http404(
+                    "A participant must be either a member or a non-member. None given"
+                )
 
         instance.full_clean()
         instance.save()

@@ -9,13 +9,15 @@ from scouts_auth.inuits.models.fields import (
 
 
 class InuitsPersonalDetails(AbstractNonModel):
-    first_name = RequiredCharField(max_length=15)
-    last_name = RequiredCharField(max_length=25)
+    first_name = RequiredCharField(max_length=32)
+    last_name = RequiredCharField(max_length=64)
     phone_number = OptionalCharField(max_length=24)
     cell_number = OptionalCharField(max_length=24)
     email = OptionalEmailField()
     birth_date = OptionalDateField()
-    gender = DefaultCharField(choices=Gender.choices, default=Gender.UNKNOWN, max_length=1)
+    gender = DefaultCharField(
+        choices=Gender.choices, default=Gender.UNKNOWN, max_length=1
+    )
 
     class Meta:
         abstract = True
@@ -40,4 +42,24 @@ class InuitsPersonalDetails(AbstractNonModel):
             self.email,
             self.birth_date,
             self.gender,
+        )
+
+    def equals_personal_details(self, updated_personal_details):
+        if not updated_personal_details:
+            return False
+
+        if (
+            not type(updated_personal_details).__class__.__name__
+            == self.__class__.__name__
+        ):
+            return False
+
+        return (
+            self.first_name == updated_personal_details.first_name
+            and self.last_name == updated_personal_details.last_name
+            and self.phone_number == updated_personal_details.phone_number
+            and self.cell_number == updated_personal_details.cell_number
+            and self.email == updated_personal_details.email
+            and self.birth_date == updated_personal_details.birth_date
+            and self.gender == updated_personal_details.gender
         )

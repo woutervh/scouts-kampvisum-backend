@@ -8,7 +8,10 @@ from apps.people.views import (
 )
 
 urlpatterns = [
-    path("members/ga/<str:uuid>", MemberViewSet.as_view({"get": "retrieve_scouts_member"})),
+    path(
+        "members/ga/<str:group_admin_id>",
+        MemberViewSet.as_view({"get": "retrieve_scouts_member"}),
+    ),
     path("members/ga/", MemberViewSet.as_view({"get": "list_scouts_member"})),
 ]
 

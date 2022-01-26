@@ -1035,26 +1035,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "safety_healthcare_gp_location",
-            "sub_category": [
-                "Zorgverlening",
-                [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
-                ]
-            ],
-            "check_type": [
-                "LocationCheck"
-            ],
-            "label": "Locatie huisarts"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "safety_healthcare_pharmacy",
             "sub_category": [
                 "Zorgverlening",
@@ -1070,26 +1050,6 @@
                 "SimpleCheck"
             ],
             "label": "Apotheek in de buurt"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "safety_healthcare_pharmacy_location",
-            "sub_category": [
-                "Zorgverlening",
-                [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
-                ]
-            ],
-            "check_type": [
-                "LocationCheck"
-            ],
-            "label": "Locatie apotheek"
         }
     },
     {
@@ -1115,26 +1075,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "safety_healthcare_hospital_location",
-            "sub_category": [
-                "Zorgverlening",
-                [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
-                ]
-            ],
-            "check_type": [
-                "LocationCheck"
-            ],
-            "label": "Locatie ziekenhuis"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "safety_healthcare_hospital_ehbo",
             "sub_category": [
                 "Zorgverlening",
@@ -1151,6 +1091,26 @@
             ],
             "label": "EHBO-koffer volledig samengesteld",
             "link": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_healthcare_gp_pharmacy_hospital_location",
+            "sub_category": [
+                "Zorgverlening",
+                [
+                    "Veiligheid",
+                    [
+                        2022,
+                        "Test"
+                    ]
+                ]
+            ],
+            "check_type": [
+                "LocationCheck"
+            ],
+            "label": "Locatie huisarts, apotheek, ziekenhuis"
         }
     },
     {
@@ -1229,7 +1189,7 @@
                 ]
             ],
             "check_type": [
-                "MemberCheck"
+                "ParticipantCheck"
             ],
             "label": "Contactgegevens kampverantwoordelijke"
         }
@@ -1249,29 +1209,9 @@
                 ]
             ],
             "check_type": [
-                "MemberCheck"
-            ],
-            "label": "Contactgegevens 2de kampverantwoordelijke"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "participants_leaders_home_contact",
-            "sub_category": [
-                "Leiding",
-                [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
-                ]
-            ],
-            "check_type": [
                 "ParticipantCheck"
             ],
-            "label": "Contactgegevens thuisverantwoordelijke"
+            "label": "Contactgegevens 2de kampverantwoordelijke"
         }
     },
     {
@@ -1292,6 +1232,7 @@
                 "MemberCheck"
             ],
             "is_multiple": true,
+            "is_member": true,
             "label": "Lijst van kampleiding"
         }
     },
@@ -1454,6 +1395,7 @@
                 "MemberCheck"
             ],
             "is_multiple": true,
+            "is_member": true,
             "label": "Lijst van leden"
         }
     },

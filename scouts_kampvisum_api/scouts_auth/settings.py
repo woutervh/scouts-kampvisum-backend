@@ -55,7 +55,7 @@ LOGGING = {
         },
         "scouts-auth": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": LOGGING_LEVEL,
             "propagate": False,
         },
         "apps": {
@@ -64,6 +64,11 @@ LOGGING = {
             "propagate": False,
         },
         "inuits": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+        "django.db.backends": {
             "handlers": ["console"],
             "level": LOGGING_LEVEL,
             "propagate": False,
@@ -88,7 +93,9 @@ DEBUG = env.bool("DEBUG", default=False)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = env.str("BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = env.str(
+    "BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 BASE_URL = env.str("BASE_URL")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 

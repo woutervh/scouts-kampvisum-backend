@@ -40,8 +40,8 @@ class NonMemberViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("NON MEMBER CREATE VALIDATED REQUEST DATA: %s", validated_data)
 
-        non_member = self.service.inuits_non_member_create(
-            inuits_non_member=validated_data, created_by=request.user
+        non_member = self.service.create_or_update(
+            inuits_non_member=validated_data, user=request.user
         )
 
         output_serializer = InuitsNonMemberSerializer(
@@ -72,7 +72,7 @@ class NonMemberViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        inuits_non_member = self.service.inuits_non_member_update(
+        inuits_non_member = self.service.update(
             inuits_non_member=inuits_non_member,
             updated_inuits_non_member=serializer.validated_data,
             updated_by=request.user,

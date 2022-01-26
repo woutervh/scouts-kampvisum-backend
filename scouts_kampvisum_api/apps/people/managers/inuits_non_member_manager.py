@@ -19,3 +19,22 @@ class InuitsNonMemberManager(models.Manager):
     def get_queryset(self):
         # Return InuitsNonMember instances that can show up in searches
         return InuitsNonMemberQuerySet(self.model, using=self._db)
+
+    def safe_get(self, *args, **kwargs):
+        pk = kwargs.get("id", kwargs.get("pk", None))
+
+        if pk:
+            logger.debug("pk: %s", pk)
+            try:
+                return self.get_queryset().get(pk=pk)
+            except:
+                logger.debug("hmmm")
+                pass
+
+        return None
+
+    def exists(self, pk):
+        if self.safe_get(pk=pk):
+            return True
+
+        return False

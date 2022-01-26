@@ -31,6 +31,7 @@ camp_location_check = LinkedCheckViewSet.as_view(
     {
         "get": "retrieve_camp_location_check",
         "patch": "partial_update_camp_location_check",
+        "delete": "unlink_location",
     }
 )
 member_check = LinkedCheckViewSet.as_view(
@@ -48,7 +49,11 @@ participant_check = LinkedCheckViewSet.as_view(
     }
 )
 file_upload_check = LinkedCheckViewSet.as_view(
-    {"get": "retrieve_file_upload_check", "patch": "partial_update_file_upload_check"}
+    {
+        "get": "retrieve_file_upload_check",
+        "patch": "partial_update_file_upload_check",
+        "delete": "unlink_file",
+    }
 )
 comment_check = LinkedCheckViewSet.as_view(
     {"get": "retrieve_comment_check", "patch": "partial_update_comment_check"}

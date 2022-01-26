@@ -102,8 +102,13 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         """
         Deletes a PersistedFile instance.
         """
+        instance: PersistedFile = get_object_or_404(PersistedFile.objects, pk=pk)
+        logger.debug(
+            "Deleting PersistedFile instance with id %s and name %s",
+            instance.id,
+            instance.file.name,
+        )
 
-        instance = get_object_or_404(PersistedFile.objects, pk=pk)
         instance.delete()
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

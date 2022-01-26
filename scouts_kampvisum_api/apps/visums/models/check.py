@@ -24,6 +24,7 @@ class Check(Explainable, Indexable, Linkable, Translatable, AbstractBaseModel):
 
     name = RequiredCharField(max_length=64)
     is_multiple = models.BooleanField(default=False)
+    is_member = models.BooleanField(default=False)
     sub_category = models.ForeignKey(
         SubCategory, related_name="checks", on_delete=models.CASCADE
     )

@@ -32,7 +32,10 @@ class AbstractScoutsMemberPersonalDataSerializer(NonModelSerializer):
         if data is None:
             return None
 
-        validated_data: dict = {"gender": data.pop("geslacht", None), "phone_number": data.pop("gsm", None)}
+        validated_data: dict = {
+            "gender": data.pop("geslacht", None),
+            "phone_number": data.pop("gsm", None),
+        }
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
@@ -177,14 +180,24 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
             "email": data.pop("email", None),
             "username": data.pop("gebruikersnaam", None),
             "group_admin_id": data.pop("id", None),
-            "addresses": AbstractScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
-            "contacts": AbstractScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
-            "functions": AbstractScoutsFunctionSerializer(many=True).to_internal_value(data.pop("functies", [])),
-            "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
+            "addresses": AbstractScoutsAddressSerializer(many=True).to_internal_value(
+                data.pop("adressen", [])
+            ),
+            "contacts": AbstractScoutsContactSerializer(many=True).to_internal_value(
+                data.pop("contacten", [])
+            ),
+            "functions": AbstractScoutsFunctionSerializer(many=True).to_internal_value(
+                data.pop("functies", [])
+            ),
+            "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value(
+                data.pop("groepen", [])
+            ),
             "group_specific_fields": AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
                 data.pop("groepseigenVelden", {})
             ),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
+                data.pop("links", [])
+            ),
         }
 
         remaining_keys = data.keys()
@@ -205,8 +218,10 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
         instance.personal_data = AbstractScoutsMemberPersonalDataSerializer().create(
             validated_data.pop("personal_data", None)
         )
-        instance.group_admin_data = AbstractScoutsMemberGroupAdminDataSerializer().create(
-            validated_data.pop("group_admin_data", None)
+        instance.group_admin_data = (
+            AbstractScoutsMemberGroupAdminDataSerializer().create(
+                validated_data.pop("group_admin_data", None)
+            )
         )
         instance.scouts_data = AbstractScoutsMemberScoutsDataSerializer().create(
             validated_data.pop("scouts_data", None)
@@ -214,16 +229,26 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
         instance.email = validated_data.pop("email", None)
         instance.username = validated_data.pop("username", None)
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
-        instance.addresses = AbstractScoutsAddressSerializer(many=True).create(validated_data.pop("addresses", []))
-        instance.contacts = AbstractScoutsContactSerializer(many=True).create(validated_data.pop("contacts", []))
-        instance.functions = AbstractScoutsFunctionSerializer(many=True).create(validated_data.pop("functions", []))
+        instance.addresses = AbstractScoutsAddressSerializer(many=True).create(
+            validated_data.pop("addresses", [])
+        )
+        instance.contacts = AbstractScoutsContactSerializer(many=True).create(
+            validated_data.pop("contacts", [])
+        )
+        instance.functions = AbstractScoutsFunctionSerializer(many=True).create(
+            validated_data.pop("functions", [])
+        )
         instance.scouts_groups = AbstractScoutsGroupSerializer(many=True).create(
             validated_data.pop("scouts_groups", [])
         )
-        instance.group_specific_fields = AbstractScoutsGroupSpecificFieldSerializer().create(
-            validated_data.pop("group_specific_fields", {})
+        instance.group_specific_fields = (
+            AbstractScoutsGroupSpecificFieldSerializer().create(
+                validated_data.pop("group_specific_fields", {})
+            )
         )
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(
+            validated_data.pop("links", [])
+        )
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

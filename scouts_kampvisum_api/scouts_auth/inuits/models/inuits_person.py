@@ -14,3 +14,8 @@ class InuitsPerson(InuitsPersonalDetails, InuitsAddress, AuditedBaseModel):
 
     def person_to_str(self):
         return self.personal_details_to_str() + ", " + self.address_details_to_str()
+
+    def equals_person(self, updated_person):
+        return self.equals_personal_details(updated_person) and self.equals_address(
+            updated_person
+        )
