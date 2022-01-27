@@ -24,21 +24,17 @@ class InuitsMemberManager(models.Manager):
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         group_admin_id = kwargs.get("group_admin_id", None)
-        obj = None
 
         if group_admin_id and not pk:
-            logger.debug("1")
             return self.safe_get_by_group_admin_id(group_admin_id)
 
         if pk:
-            logger.debug("2")
             obj = self.safe_get_by_id(pk)
 
             if obj:
                 return obj
 
         if group_admin_id:
-            logger.debug("3")
             return self.safe_get_by_group_admin_id(group_admin_id)
 
         return None

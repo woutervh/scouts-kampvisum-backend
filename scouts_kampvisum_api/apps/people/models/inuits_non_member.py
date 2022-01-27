@@ -34,6 +34,6 @@ class InuitsNonMember(InuitsPerson):
         )
 
     def __str__(self):
-        return "group_group_admin_id ({}), {}, comment ({})".format(
-            self.group_group_admin_id, self.person_to_str(), self.comment
+        return "id ({}), group_group_admin_id ({}), {}, comment ({})".format(
+            self.id, self.group_group_admin_id, self.person_to_str(), self.comment
         )

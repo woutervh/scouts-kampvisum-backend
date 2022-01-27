@@ -11,7 +11,6 @@ from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.visums.models import (
-    CheckType,
     CheckTypeEndpoint,
     LinkedCheck,
     LinkedSimpleCheck,
@@ -73,7 +72,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedSimpleCheckSerializer},
     )
     def partial_update_simple_check(self, request, check_id):
-        instance = self.linked_check_service.get_simple_check(check_id)
+        instance: LinkedSimpleCheck = self.linked_check_service.get_simple_check(
+            check_id
+        )
 
         logger.debug("SIMPLE CHECK UPDATE REQUEST DATA: %s", request.data)
         serializer = LinkedSimpleCheckSerializer(

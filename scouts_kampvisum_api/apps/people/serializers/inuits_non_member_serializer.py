@@ -16,9 +16,9 @@ class InuitsNonMemberSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         logger.debug("DATA: %s", data)
         # If the data dict contains an id, assume it's simple object input
-        if data.get("id", None):
+        id = data.get("id", None)
+        if id:
             instance = InuitsNonMember.objects.safe_get(pk=id)
-            logger.debug("instance: %s", instance)
             if instance:
                 return instance
         data = super().to_internal_value(data)
@@ -27,6 +27,10 @@ class InuitsNonMemberSerializer(serializers.ModelSerializer):
         return data
 
     def validate(self, data: dict) -> InuitsNonMember:
+        if isinstance(data, InuitsNonMember):
+            logger.debug("INSTANCE: %s", data)
+            return data
+
         logger.debug("DATA: %s", data)
 
         return InuitsNonMember(**data)
