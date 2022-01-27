@@ -219,22 +219,28 @@ class LinkedCheckService:
             #     raise Http404
             logger.debug("participant: %s", participant)
 
+            member = None
+            non_member = None
             if participant.has_member():
-                participant.member = self.inuits_member_service.member_create_or_update(
+                member = self.inuits_member_service.member_create_or_update(
                     inuits_member=participant.member, user=request.user
                 )
-                participant.non_member = None
-
-                participant.full_clean()
-                participant.save()
-
-                instance.value.add(participant)
+                non_member = None
             elif participant.has_non_member():
-                instance.value.add(participant)
+                member = None
+                non_member = participant.non_member
             else:
                 raise Http404(
                     "A participant must be either a member or a non-member. None given"
                 )
+
+            participant.member = member
+            participant.non_member = non_member
+
+            participant.full_clean()
+            participant.save()
+
+            instance.value.add(participant)
 
         instance.full_clean()
         instance.save()
