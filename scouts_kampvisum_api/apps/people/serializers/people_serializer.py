@@ -111,6 +111,6 @@ class PeopleSerializer(serializers.Serializer):
             return obj.addresses[0].city
 
     def get_is_member(self, obj):
-        if self.get_group_admin_id:
+        if self.get_group_admin_id(obj):
             return True
         return False
