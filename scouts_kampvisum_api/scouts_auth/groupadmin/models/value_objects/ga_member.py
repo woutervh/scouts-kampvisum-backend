@@ -20,13 +20,19 @@ from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateFiel
 class AbstractScoutsMemberPersonalData(AbstractNonModel):
 
     phone_number = OptionalCharField()
-    gender: Gender = models.CharField(choices=Gender, default=Gender.UNKNOWN, max_length="1")
+    gender: Gender = models.CharField(
+        choices=Gender, default=Gender.UNKNOWN, max_length="1"
+    )
 
     class Meta:
         abstract = True
 
     def __init__(self, gender: Gender = None, phone_number: str = ""):
-        self.gender = gender if gender and isinstance(gender, Gender) else GenderHelper.parse_gender(gender)
+        self.gender = (
+            gender
+            if gender and isinstance(gender, Gender)
+            else GenderHelper.parse_gender(gender)
+        )
         self.phone_number = phone_number
 
         # super().__init__([], {})
@@ -44,7 +50,9 @@ class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
     class Meta:
         abstract = True
 
-    def __init__(self, first_name: str = "", last_name: str = "", birth_date: date = None):
+    def __init__(
+        self, first_name: str = "", last_name: str = "", birth_date: date = None
+    ):
         self.first_name = first_name
         self.last_name = last_name
         self.birth_date = birth_date
@@ -52,7 +60,9 @@ class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
         # super().__init__([], {})
 
     def __str__(self):
-        return "first_name({}), last_name({}), birth_date({})".format(self.first_name, self.last_name, self.birth_date)
+        return "first_name({}), last_name({}), birth_date({})".format(
+            self.first_name, self.last_name, self.birth_date
+        )
 
 
 class AbstractScoutsMemberScoutsData(AbstractNonModel):
@@ -70,7 +80,9 @@ class AbstractScoutsMemberScoutsData(AbstractNonModel):
         # super().__init__([], {})
 
     def __str__(self):
-        return "membership_number({}), customer_number({})".format(self.customer_number, self.membership_number)
+        return "membership_number({}), customer_number({})".format(
+            self.customer_number, self.membership_number
+        )
 
 
 class AbstractScoutsMember(AbstractNonModel):
@@ -116,7 +128,9 @@ class AbstractScoutsMember(AbstractNonModel):
         self.contacts = contacts if contacts else []
         self.functions = functions if functions else []
         self.scouts_groups = scouts_groups if scouts_groups else []
-        self.group_specific_fields = group_specific_fields if group_specific_fields else []
+        self.group_specific_fields = (
+            group_specific_fields if group_specific_fields else []
+        )
         self.links = links if links else []
 
         # super().__init__([], {})
@@ -131,6 +145,10 @@ class AbstractScoutsMember(AbstractNonModel):
     @property
     def phone_number(self):
         return self.personal_data.phone_number
+
+    @property
+    def cell_number(self):
+        return self.phone_number
 
     @property
     def first_name(self):
@@ -156,6 +174,27 @@ class AbstractScoutsMember(AbstractNonModel):
     def address(self):
         if len(self.addresses) > 0:
             return self.addresses[0]
+        return AbstractScoutsAddress()
+
+    @property
+    def street(self):
+        return self.address.street
+
+    @property
+    def number(self):
+        return self.address.number
+
+    @property
+    def letter_box(self):
+        return self.address.letter_box
+
+    @property
+    def postal_code(self):
+        return self.address.postal_code
+
+    @property
+    def city(self):
+        return self.address.city
 
     def __str__(self):
         return (

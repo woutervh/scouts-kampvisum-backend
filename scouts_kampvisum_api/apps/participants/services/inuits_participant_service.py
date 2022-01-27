@@ -1,5 +1,6 @@
 import logging
 
+from django.http import Http404
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
@@ -17,178 +18,214 @@ class InuitsParticipantService:
 
     def create_or_update(
         self,
-        inuits_non_member,
+        participant: InuitsParticipant,
         user: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
     ):
-        try:
-            non_member = InuitsParticipant.objects.get(
-                group_group_admin_id=inuits_non_member.group_group_admin_id,
-                email=inuits_non_member.email,
-            )
+        existing_participant = InuitsParticipant.objects.safe_get(
+            participant.id, participant.group_admin_id
+        )
 
+        if existing_participant:
             return self.update(
-                inuits_non_member=non_member,
-                updated_inuits_non_member=inuits_non_member,
+                participant=existing_participant,
+                updated_participant=participant,
                 updated_by=user,
                 skip_validation=skip_validation,
             )
-        except:
+        else:
             return self.create(
-                inuits_non_member=inuits_non_member,
+                participant=participant,
                 created_by=user,
                 skip_validation=skip_validation,
             )
 
+    def create_or_update_member_participant(
+        self,
+        participant: InuitsParticipant,
+        created_by: settings.AUTH_USER_MODEL,
+        instance: InuitsParticipant = None,
+    ) -> InuitsParticipant:
+        member_participant = None
+        if participant.has_group_admin_id():
+            scouts_member = self.groupadmin.get_member_info(
+                active_user=created_by, group_admin_id=participant.group_admin_id
+            )
+
+            if not scouts_member:
+                raise Http404(
+                    "Invalid group admin id for member: {}".format(
+                        participant.group_admin_id
+                    )
+                )
+
+            member_participant = InuitsParticipant.from_scouts_member(scouts_member)
+
+            member_participant.is_member = True
+            member_participant.group_group_admin_id = None
+            member_participant.comment = participant.comment
+            member_participant.created_by = created_by
+
+            member_participant.full_clean()
+            member_participant.save()
+
+        return member_participant
+
     def create(
         self,
-        inuits_non_member: InuitsParticipant,
+        participant: InuitsParticipant,
         created_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
     ) -> InuitsParticipant:
         # Check if the instance already exists
-        if inuits_non_member.has_id():
-            logger.debug(
-                "Querying for InuitsParticipant with id %s", inuits_non_member.id
-            )
-            try:
-                object = InuitsParticipant.objects.get(pk=inuits_non_member.id)
-                if object:
-                    logger.debug(
-                        "Found InuitsParticipant with id %s, not creating",
-                        inuits_non_member.id,
-                    )
-                    return inuits_non_member
-            except ObjectDoesNotExist:
-                pass
+        if participant.has_id():
+            logger.debug("Querying for InuitsParticipant with id %s", participant.id)
+            object = InuitsParticipant.objects.safe_get(pk=participant.id)
+            if object:
+                logger.debug(
+                    "Found InuitsParticipant with id %s, not creating",
+                    participant.id,
+                )
+                return participant
 
         logger.debug(
             "Creating InuitsParticipant with name %s %s and group admin id %s for group %s",
-            inuits_non_member.first_name,
-            inuits_non_member.last_name,
-            inuits_non_member.group_admin_id,
-            inuits_non_member.group_group_admin_id,
+            participant.first_name,
+            participant.last_name,
+            participant.group_admin_id,
+            participant.group_group_admin_id,
         )
+
+        member = self.create_or_update_member_participant(
+            participant=participant, user=created_by
+        )
+        if member:
+            return member
 
         if not skip_validation:
             if not self.groupadmin.validate_group(
                 active_user=created_by,
-                group_group_admin_id=inuits_non_member.group_group_admin_id,
+                group_group_admin_id=participant.group_group_admin_id,
             ):
                 raise ValidationError(
                     "Invalid group admin id for group: {}".format(
-                        inuits_non_member.group_group_admin_id
+                        participant.group_group_admin_id
                     )
                 )
 
-        inuits_non_member = InuitsParticipant(
-            group_group_admin_id=inuits_non_member.group_group_admin_id,
-            group_admin_id=inuits_non_member.group_admin_id,
-            first_name=inuits_non_member.first_name,
-            last_name=inuits_non_member.last_name,
-            phone_number=inuits_non_member.phone_number,
-            cell_number=inuits_non_member.cell_number,
-            email=inuits_non_member.email,
-            birth_date=inuits_non_member.birth_date,
-            gender=inuits_non_member.gender,
-            street=inuits_non_member.street,
-            number=inuits_non_member.number,
-            letter_box=inuits_non_member.letter_box,
-            postal_code=inuits_non_member.postal_code,
-            city=inuits_non_member.city,
-            comment=inuits_non_member.comment,
+        participant = InuitsParticipant(
+            group_admin_id=None,
+            is_member=False,
+            group_group_admin_id=participant.group_group_admin_id,
+            first_name=participant.first_name,
+            last_name=participant.last_name,
+            phone_number=participant.phone_number,
+            cell_number=participant.cell_number,
+            email=participant.email,
+            birth_date=participant.birth_date,
+            gender=participant.gender,
+            street=participant.street,
+            number=participant.number,
+            letter_box=participant.letter_box,
+            postal_code=participant.postal_code,
+            city=participant.city,
+            comment=participant.comment,
             created_by=created_by,
         )
-        inuits_non_member.full_clean()
-        inuits_non_member.save()
+        participant.full_clean()
+        participant.save()
 
-        return inuits_non_member
+        return participant
 
     def update(
         self,
         *,
-        inuits_non_member: InuitsParticipant,
-        updated_inuits_non_member: InuitsParticipant,
+        participant: InuitsParticipant,
+        updated_participant: InuitsParticipant,
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
     ) -> InuitsParticipant:
-        if inuits_non_member.equals(updated_inuits_non_member):
-            return updated_inuits_non_member
+        member = self.create_or_update_member_participant(
+            participant=updated_participant, user=updated_by
+        )
+        if member:
+            return member
+
+        if participant.equals(updated_participant):
+            return updated_participant
 
         # Update the InuitsParticipant instance
-        inuits_non_member.group_group_admin_id = (
-            updated_inuits_non_member.group_group_admin_id
-            if updated_inuits_non_member.group_group_admin_id
-            else inuits_non_member.group_group_admin_id
+        participant.group_group_admin_id = (
+            updated_participant.group_group_admin_id
+            if updated_participant.group_group_admin_id
+            else participant.group_group_admin_id
         )
-        inuits_non_member.first_name = (
-            updated_inuits_non_member.first_name
-            if updated_inuits_non_member.first_name
-            else inuits_non_member.first_name
+        participant.first_name = (
+            updated_participant.first_name
+            if updated_participant.first_name
+            else participant.first_name
         )
-        inuits_non_member.last_name = (
-            updated_inuits_non_member.last_name
-            if updated_inuits_non_member.last_name
-            else inuits_non_member.last_name
+        participant.last_name = (
+            updated_participant.last_name
+            if updated_participant.last_name
+            else participant.last_name
         )
-        inuits_non_member.phone_number = (
-            updated_inuits_non_member.phone_number
-            if updated_inuits_non_member.phone_number
-            else inuits_non_member.phone_number
+        participant.phone_number = (
+            updated_participant.phone_number
+            if updated_participant.phone_number
+            else participant.phone_number
         )
-        inuits_non_member.cell_number = (
-            updated_inuits_non_member.cell_number
-            if updated_inuits_non_member.cell_number
-            else inuits_non_member.cell_number
+        participant.cell_number = (
+            updated_participant.cell_number
+            if updated_participant.cell_number
+            else participant.cell_number
         )
-        inuits_non_member.email = (
-            updated_inuits_non_member.email
-            if updated_inuits_non_member.email
-            else inuits_non_member.email
+        participant.email = (
+            updated_participant.email
+            if updated_participant.email
+            else participant.email
         )
-        inuits_non_member.birth_date = (
-            updated_inuits_non_member.birth_date
-            if updated_inuits_non_member.birth_date
-            else inuits_non_member.birth_date
+        participant.birth_date = (
+            updated_participant.birth_date
+            if updated_participant.birth_date
+            else participant.birth_date
         )
-        inuits_non_member.gender = (
-            updated_inuits_non_member.gender
-            if updated_inuits_non_member.gender
-            else inuits_non_member.gender
+        participant.gender = (
+            updated_participant.gender
+            if updated_participant.gender
+            else participant.gender
         )
-        inuits_non_member.street = (
-            updated_inuits_non_member.street
-            if updated_inuits_non_member.street
-            else inuits_non_member.street
+        participant.street = (
+            updated_participant.street
+            if updated_participant.street
+            else participant.street
         )
-        inuits_non_member.number = (
-            updated_inuits_non_member.number
-            if updated_inuits_non_member.number
-            else inuits_non_member.number
+        participant.number = (
+            updated_participant.number
+            if updated_participant.number
+            else participant.number
         )
-        inuits_non_member.letter_box = (
-            updated_inuits_non_member.letter_box
-            if updated_inuits_non_member.letter_box
-            else inuits_non_member.letter_box
+        participant.letter_box = (
+            updated_participant.letter_box
+            if updated_participant.letter_box
+            else participant.letter_box
         )
-        inuits_non_member.postal_code = (
-            updated_inuits_non_member.postal_code
-            if updated_inuits_non_member.postal_code
-            else inuits_non_member.postal_code
+        participant.postal_code = (
+            updated_participant.postal_code
+            if updated_participant.postal_code
+            else participant.postal_code
         )
-        inuits_non_member.city = (
-            updated_inuits_non_member.city
-            if updated_inuits_non_member.city
-            else inuits_non_member.city
+        participant.city = (
+            updated_participant.city if updated_participant.city else participant.city
         )
-        inuits_non_member.comment = (
-            updated_inuits_non_member.comment
-            if updated_inuits_non_member.comment
-            else inuits_non_member.comment
+        participant.comment = (
+            updated_participant.comment
+            if updated_participant.comment
+            else participant.comment
         )
-        inuits_non_member.updated_by = updated_by
+        participant.updated_by = updated_by
 
-        inuits_non_member.full_clean()
-        inuits_non_member.save()
+        participant.full_clean()
+        participant.save()
 
-        return inuits_non_member
+        return participant

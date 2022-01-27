@@ -5,8 +5,8 @@ from django.core.management.base import BaseCommand
 
 from apps.camps.models import Camp, CampYear
 from apps.groups.models import ScoutsSectionName, ScoutsSection, ScoutsGroupType
-from apps.participants.models import InuitsNonMember
-from apps.participants.services import InuitsNonMemberService
+from apps.participants.models import InuitsParticipant
+from apps.participants.services import InuitsParticipantService
 from apps.visums.models import (
     CampVisum,
     CampYearCategorySet,
@@ -14,6 +14,7 @@ from apps.visums.models import (
     Category,
     SubCategory,
     Check,
+    CheckTypeEndpoint,
     LinkedCategory,
     LinkedSubCategory,
     LinkedCheck,
@@ -21,7 +22,6 @@ from apps.visums.models import (
     LinkedDateCheck,
     LinkedDurationCheck,
     LinkedLocationCheck,
-    LinkedMemberCheck,
     LinkedParticipantCheck,
     LinkedCommentCheck,
     LinkedFileUploadCheck,
@@ -77,8 +77,8 @@ class Command(BaseCommand):
         data["file_last"] = str(PersistedFile.objects.last().id)
         # NonMember
         self.add_non_members(user)
-        data["non_member_first"] = str(InuitsNonMember.objects.first().id)
-        data["non_member_last"] = str(InuitsNonMember.objects.last().id)
+        data["non_member_first"] = str(InuitsParticipant.objects.first().id)
+        data["non_member_last"] = str(InuitsParticipant.objects.last().id)
         # GA member
         data["ga_member_jeroen_budts"] = "5e19c7d0-d448-4c08-ab37-5a20a9054101"
         data["ga_member_jeroen_wouters"] = "1f59774b-e89b-4617-aa7e-2e55fb1045b0"
@@ -139,8 +139,18 @@ class Command(BaseCommand):
             LinkedLocationCheck.objects.filter(is_camp_location=True).last().id
         )
         # MemberCheck
-        data["linked_check_member_first"] = str(LinkedMemberCheck.objects.first().id)
-        data["linked_check_member_last"] = str(LinkedMemberCheck.objects.last().id)
+        data["linked_check_member_first"] = str(
+            LinkedParticipantCheck.objects.filter(parent__is_member=True).first().id
+        )
+        data["linked_check_member_last"] = str(
+            LinkedParticipantCheck.objects.filter(parent__is_member=True).last().id
+        )
+        data["linked_check_participant_first"] = str(
+            LinkedParticipantCheck.objects.filter(parent__is_member=False).first().id
+        )
+        data["linked_check_participant_last"] = str(
+            LinkedParticipantCheck.objects.filter(parent__is_member=False).last().id
+        )
         # ParticipantCheck
         data["linked_check_participant_ombudsman"] = str(
             LinkedParticipantCheck.objects.filter(
@@ -188,12 +198,12 @@ class Command(BaseCommand):
             return user
 
     def add_non_members(self, user: settings.AUTH_USER_MODEL):
-        service = InuitsNonMemberService()
+        service = InuitsParticipantService()
 
         self.add_non_member(
             user,
             service,
-            InuitsNonMember(
+            InuitsParticipant(
                 group_group_admin_id="X9002G",
                 first_name="Jeroen1",
                 last_name="Achternaam1",
@@ -213,7 +223,7 @@ class Command(BaseCommand):
         self.add_non_member(
             user,
             service,
-            InuitsNonMember(
+            InuitsParticipant(
                 group_group_admin_id="X9002G",
                 first_name="Jeroen2",
                 last_name="Achternaam2",
@@ -232,7 +242,7 @@ class Command(BaseCommand):
         self.add_non_member(
             user,
             service,
-            InuitsNonMember(
+            InuitsParticipant(
                 group_group_admin_id="X9002G",
                 first_name="Jeroen3",
                 last_name="Achternaam3",
@@ -252,12 +262,12 @@ class Command(BaseCommand):
     def add_non_member(
         self,
         user: settings.AUTH_USER_MODEL,
-        service: InuitsNonMemberService,
-        non_member: InuitsNonMember,
-    ) -> InuitsNonMember:
+        service: InuitsParticipantService,
+        participant: InuitsParticipant,
+    ) -> InuitsParticipant:
 
         return service.create_or_update(
-            inuits_non_member=non_member,
+            participant=participant,
             user=user,
             skip_validation=True,
         )

@@ -16,6 +16,7 @@ from apps.participants.services import InuitsParticipantService
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
+from scouts_auth.groupadmin.services import GroupAdminMemberService
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     ordering = ["id"]
 
     service = InuitsParticipantService()
+    groupadmin = GroupAdminMemberService()
 
     def get_queryset(self):
         return InuitsParticipant.objects.all()
@@ -46,12 +48,12 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("PARTICIPANT CREATE VALIDATED REQUEST DATA: %s", validated_data)
 
-        non_member = self.service.create_or_update(
-            inuits_non_member=validated_data, user=request.user
+        participant = self.service.create_or_update(
+            participant=validated_data, user=request.user
         )
 
         output_serializer = InuitsParticipantSerializer(
-            non_member, context={"request": request}
+            participant, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
@@ -68,36 +70,36 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: InuitsParticipantSerializer},
     )
     def partial_update(self, request, pk=None):
-        inuits_non_member = self.get_object()
+        participant = self.get_object()
 
         serializer = InuitsParticipantSerializer(
-            instance=inuits_non_member,
+            instance=participant,
             data=request.data,
             context={"request": request},
             partial=True,
         )
         serializer.is_valid(raise_exception=True)
 
-        inuits_non_member = self.service.update(
-            inuits_non_member=inuits_non_member,
-            updated_inuits_non_member=serializer.validated_data,
+        participant = self.service.update(
+            participant=participant,
+            updated_participant=serializer.validated_data,
             updated_by=request.user,
         )
 
-        output_serializer = InuitsParticipantSerializer(inuits_non_member)
+        output_serializer = InuitsParticipantSerializer(participant)
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def list(self, request):
-        inuits_non_members = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(inuits_non_members)
+        participants = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(participants)
 
         if page is not None:
             serializer = InuitsParticipantSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = InuitsParticipantSerializer(inuits_non_members, many=True)
+            serializer = InuitsParticipantSerializer(participants, many=True)
             return Response(serializer.data)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
@@ -129,15 +131,15 @@ class ParticipantViewSet(viewsets.GenericViewSet):
                 group_group_admin_id,
             )
 
-        members: List[AbstractScoutsMember] = self.service.search_member_filtered(
+        members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
             active_user=request.user,
             term=search_term,
             group_group_admin_id=group_group_admin_id,
         )
 
-        queryset = self.get_queryset()
-        non_members = self.filter_queryset(queryset)
-        results = [*members, *non_members]
+        queryset = self.get_queryset().participants()
+        participants = self.filter_queryset(queryset)
+        results = [*members, *participants]
         output_serializer = InuitsParticipantSerializer(results, many=True)
 
         return Response(output_serializer.data)
