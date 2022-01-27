@@ -3,7 +3,7 @@ import logging
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from apps.people.models import InuitsMember, InuitsParticipant
+from apps.participants.models import InuitsParticipant
 from apps.visums.models import (
     LinkedSubCategory,
     Check,
@@ -47,8 +47,6 @@ class LinkedCheck(AbstractBaseModel):
             return LinkedLocationCheck()
         elif check_type.is_camp_location_check():
             return LinkedLocationCheck(is_camp_location=True)
-        elif check_type.is_member_check():
-            return LinkedMemberCheck()
         elif check_type.is_participant_check():
             return LinkedParticipantCheck()
         elif check_type.is_file_upload_check():
@@ -107,25 +105,6 @@ class LinkedLocationCheck(LinkedCheck):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-
-# ##############################################################################
-# LinkedCampLocationCheck
-#
-# A check that contains a geo-coordinate and some required contact details
-# ##############################################################################
-# class LinkedCampLocationCheck(LinkedLocationCheck):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-
-
-# ##############################################################################
-# LinkedMemberCheck
-#
-# A check that selects members
-# ##############################################################################
-class LinkedMemberCheck(LinkedCheck):
-    value = models.ManyToManyField(InuitsMember)
 
 
 # ##############################################################################

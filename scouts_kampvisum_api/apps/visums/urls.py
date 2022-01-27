@@ -34,13 +34,6 @@ camp_location_check = LinkedCheckViewSet.as_view(
         "delete": "unlink_location",
     }
 )
-member_check = LinkedCheckViewSet.as_view(
-    {
-        "get": "retrieve_member_check",
-        "patch": "partial_update_member_check",
-        "delete": "unlink_member",
-    }
-)
 participant_check = LinkedCheckViewSet.as_view(
     {
         "get": "retrieve_participant_check",
@@ -77,7 +70,6 @@ urlpatterns = [
         camp_location_check,
         name="camp_location_check",
     ),
-    path("checks/member/<uuid:check_id>", member_check, name="member_check"),
     path(
         "checks/participant/<uuid:check_id>",
         participant_check,

@@ -3,11 +3,10 @@ import logging
 from django.db import models
 from django.conf import settings
 
-
 logger = logging.getLogger(__name__)
 
 
-class InuitsMemberQuerySet(models.QuerySet):
+class InuitsParticipantQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -16,10 +15,9 @@ class InuitsMemberQuerySet(models.QuerySet):
         return self.filter(group_group_admin_id__in=groups)
 
 
-class InuitsMemberManager(models.Manager):
+class InuitsParticipantManager(models.Manager):
     def get_queryset(self):
-        # Return InuitsNonMember instances that can show up in searches
-        return InuitsMemberQuerySet(self.model, using=self._db)
+        return InuitsParticipantQuerySet(self.model, using=self._db)
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
@@ -50,3 +48,9 @@ class InuitsMemberManager(models.Manager):
             return self.get_queryset().get(group_admin_id=str(group_admin_id))
         except:
             return None
+
+    def exists(self, pk):
+        if self.safe_get(pk=pk):
+            return True
+
+        return False

@@ -5,17 +5,17 @@ from django.db.models.functions import Concat
 from django.db.models import Q
 from django_filters import FilterSet, CharFilter
 
-from apps.people.models import InuitsMember
+from apps.participants.models import InuitsParticipant
 
 
 logger = logging.getLogger(__name__)
 
 
-class InuitsMemberFilter(FilterSet):
+class InuitsParticipantFilter(FilterSet):
     term = CharFilter(method="search_term_filter")
 
     class Meta:
-        model = InuitsMember
+        model = InuitsParticipant
         fields = []
 
     def search_term_filter(self, queryset, name, value):

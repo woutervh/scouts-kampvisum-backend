@@ -2,15 +2,15 @@ import logging
 
 from rest_framework import serializers
 
-from apps.people.models import InuitsNonMember
+from apps.participants.models import InuitsParticipant
 
 
 logger = logging.getLogger(__name__)
 
 
-class InuitsNonMemberSerializer(serializers.ModelSerializer):
+class InuitsParticipantSerializer(serializers.ModelSerializer):
     class Meta:
-        model = InuitsNonMember
+        model = InuitsParticipant
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
@@ -18,7 +18,7 @@ class InuitsNonMemberSerializer(serializers.ModelSerializer):
         # If the data dict contains an id, assume it's simple object input
         id = data.get("id", None)
         if id:
-            instance = InuitsNonMember.objects.safe_get(pk=id)
+            instance = InuitsParticipant.objects.safe_get(pk=id)
             if instance:
                 return instance
         data = super().to_internal_value(data)
@@ -26,11 +26,5 @@ class InuitsNonMemberSerializer(serializers.ModelSerializer):
 
         return data
 
-    def validate(self, data: dict) -> InuitsNonMember:
-        if isinstance(data, InuitsNonMember):
-            logger.debug("INSTANCE: %s", data)
-            return data
-
-        logger.debug("DATA: %s", data)
-
-        return InuitsNonMember(**data)
+    def validate(self, data: dict) -> InuitsParticipant:
+        return InuitsParticipant(**data)

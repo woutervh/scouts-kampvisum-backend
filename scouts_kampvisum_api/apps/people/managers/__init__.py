@@ -1,2 +1,0 @@
-from .inuits_non_member_manager import InuitsNonMemberManager
-from .inuits_member_manager import InuitsMemberManager

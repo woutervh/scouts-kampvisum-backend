@@ -5,8 +5,8 @@ from django.core.management.base import BaseCommand
 
 from apps.camps.models import Camp, CampYear
 from apps.groups.models import ScoutsSectionName, ScoutsSection, ScoutsGroupType
-from apps.people.models import InuitsNonMember
-from apps.people.services import InuitsNonMemberService
+from apps.participants.models import InuitsNonMember
+from apps.participants.services import InuitsNonMemberService
 from apps.visums.models import (
     CampVisum,
     CampYearCategorySet,

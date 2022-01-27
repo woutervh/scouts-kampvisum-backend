@@ -6,7 +6,7 @@ APPS=(
 	"admin"
 	"auth"
 	"scouts_auth"
-	"people"
+	"participants"
 	"locations"
 	"groups"
 	"camps"

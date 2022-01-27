@@ -143,11 +143,11 @@ LOGGING = {
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
-        "django.db.backends": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": False,
-        },
+        # "django.db.backends": {
+        #     "handlers": ["console"],
+        #     "level": LOGGING_LEVEL,
+        #     "propagate": False,
+        # },
     },
 }
 logging.config.dictConfig(LOGGING)
@@ -177,7 +177,7 @@ INSTALLED_APPS = [
     "storages",
     "sqlmiddleware",
     "apps.setup",
-    "apps.people",
+    "apps.participants",
     "apps.locations",
     "apps.visums",
     "apps.groups",

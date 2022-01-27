@@ -2,7 +2,7 @@ import logging
 
 from rest_framework import serializers
 
-from apps.people.serializers import InuitsMemberSerializer, InuitsParticipantSerializer
+from apps.participants.serializers import InuitsParticipantSerializer
 from apps.locations.serializers import CampLocationSerializer
 from apps.visums.models import (
     LinkedCheck,
@@ -10,7 +10,6 @@ from apps.visums.models import (
     LinkedDateCheck,
     LinkedDurationCheck,
     LinkedLocationCheck,
-    LinkedMemberCheck,
     LinkedParticipantCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
@@ -60,8 +59,6 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
             value = LinkedLocationCheckSerializer.get_value(check)
         elif check.parent.check_type.is_camp_location_check():
             value = LinkedCampLocationCheckSerializer.get_value(check)
-        elif check.parent.check_type.is_member_check():
-            value = LinkedMemberCheckSerializer.get_value(check)
         elif check.parent.check_type.is_participant_check():
             value = LinkedParticipantCheckSerializer.get_value(check)
         elif check.parent.check_type.is_file_upload_check():
@@ -173,20 +170,9 @@ class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
         return data
 
 
-class LinkedMemberCheckSerializer(LinkedCheckSerializer):
-    value = InuitsMemberSerializer(many=True)
-
-    class Meta:
-        model = LinkedMemberCheck
-        fields = "__all__"
-
-    @staticmethod
-    def get_value(obj: LinkedMemberCheck) -> dict:
-        return InuitsMemberSerializer(obj.value, many=True).data
-
-
 class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
     value = InuitsParticipantSerializer(many=True)
+
     class Meta:
         model = LinkedParticipantCheck
         fields = "__all__"

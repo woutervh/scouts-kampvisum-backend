@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
-from apps.people.models import InuitsNonMember
+from apps.participants.models import InuitsParticipant
 
 from scouts_auth.groupadmin.services import GroupAdmin
 
@@ -11,7 +11,7 @@ from scouts_auth.groupadmin.services import GroupAdmin
 logger = logging.getLogger(__name__)
 
 
-class InuitsNonMemberService:
+class InuitsParticipantService:
 
     groupadmin = GroupAdmin()
 
@@ -22,7 +22,7 @@ class InuitsNonMemberService:
         skip_validation: bool = False,
     ):
         try:
-            non_member = InuitsNonMember.objects.get(
+            non_member = InuitsParticipant.objects.get(
                 group_group_admin_id=inuits_non_member.group_group_admin_id,
                 email=inuits_non_member.email,
             )
@@ -42,20 +42,20 @@ class InuitsNonMemberService:
 
     def create(
         self,
-        inuits_non_member: InuitsNonMember,
+        inuits_non_member: InuitsParticipant,
         created_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
-    ) -> InuitsNonMember:
+    ) -> InuitsParticipant:
         # Check if the instance already exists
         if inuits_non_member.has_id():
             logger.debug(
-                "Querying for InuitsNonMember with id %s", inuits_non_member.id
+                "Querying for InuitsParticipant with id %s", inuits_non_member.id
             )
             try:
-                object = InuitsNonMember.objects.get(pk=inuits_non_member.id)
+                object = InuitsParticipant.objects.get(pk=inuits_non_member.id)
                 if object:
                     logger.debug(
-                        "Found InuitsNonMember with id %s, not creating",
+                        "Found InuitsParticipant with id %s, not creating",
                         inuits_non_member.id,
                     )
                     return inuits_non_member
@@ -63,9 +63,10 @@ class InuitsNonMemberService:
                 pass
 
         logger.debug(
-            "Creating InuitsNonMember with name %s %s for group %s",
+            "Creating InuitsParticipant with name %s %s and group admin id %s for group %s",
             inuits_non_member.first_name,
             inuits_non_member.last_name,
+            inuits_non_member.group_admin_id,
             inuits_non_member.group_group_admin_id,
         )
 
@@ -80,8 +81,9 @@ class InuitsNonMemberService:
                     )
                 )
 
-        inuits_non_member = InuitsNonMember(
+        inuits_non_member = InuitsParticipant(
             group_group_admin_id=inuits_non_member.group_group_admin_id,
+            group_admin_id=inuits_non_member.group_admin_id,
             first_name=inuits_non_member.first_name,
             last_name=inuits_non_member.last_name,
             phone_number=inuits_non_member.phone_number,
@@ -105,15 +107,15 @@ class InuitsNonMemberService:
     def update(
         self,
         *,
-        inuits_non_member: InuitsNonMember,
-        updated_inuits_non_member: InuitsNonMember,
+        inuits_non_member: InuitsParticipant,
+        updated_inuits_non_member: InuitsParticipant,
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
-    ) -> InuitsNonMember:
+    ) -> InuitsParticipant:
         if inuits_non_member.equals(updated_inuits_non_member):
             return updated_inuits_non_member
 
-        # Update the InuitsNonMember instance
+        # Update the InuitsParticipant instance
         inuits_non_member.group_group_admin_id = (
             updated_inuits_non_member.group_group_admin_id
             if updated_inuits_non_member.group_group_admin_id

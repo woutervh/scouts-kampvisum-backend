@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
-from apps.people.models import InuitsMember
+from apps.participants.models import InuitsMember
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdmin

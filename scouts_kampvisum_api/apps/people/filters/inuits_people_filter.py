@@ -1,2 +1,0 @@
-class InuitsPeopleFilter:
-    pass

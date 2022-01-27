@@ -1,0 +1,1 @@
+from .inuits_participant import InuitsParticipant

@@ -15,7 +15,6 @@ from .linked_check_serializer import (
     LinkedDurationCheckSerializer,
     LinkedLocationCheckSerializer,
     LinkedCampLocationCheckSerializer,
-    LinkedMemberCheckSerializer,
     LinkedParticipantCheckSerializer,
     LinkedFileUploadCheckSerializer,
     LinkedCommentCheckSerializer,

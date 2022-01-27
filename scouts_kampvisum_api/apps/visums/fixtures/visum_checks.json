@@ -1229,7 +1229,7 @@
                 ]
             ],
             "check_type": [
-                "MemberCheck"
+                "ParticipantCheck"
             ],
             "is_multiple": true,
             "is_member": true,
@@ -1392,7 +1392,7 @@
                 ]
             ],
             "check_type": [
-                "MemberCheck"
+                "ParticipantCheck"
             ],
             "is_multiple": true,
             "is_member": true,

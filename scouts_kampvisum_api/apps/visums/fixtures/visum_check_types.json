@@ -37,13 +37,6 @@
 	{
 		"model": "visums.CheckType",
 		"fields": {
-			"check_type": "MemberCheck",
-			"description": "A check that selects members"
-		}
-	},
-	{
-		"model": "visums.CheckType",
-		"fields": {
 			"check_type": "ParticipantCheck",
 			"description": "A check that selects members and non-members"
 		}

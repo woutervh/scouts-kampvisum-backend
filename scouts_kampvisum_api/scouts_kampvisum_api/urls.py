@@ -37,7 +37,7 @@ urlpatterns = [
     path("api/", include("apps.visums.urls")),
     path("api/", include("apps.camps.urls")),
     path("api/", include("apps.groups.urls")),
-    path("api/", include("apps.people.urls")),
+    path("api/", include("apps.participants.urls")),
     path("api/", include("apps.locations.urls")),
     path(
         "api/docs/",

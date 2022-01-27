@@ -2,8 +2,8 @@ import logging
 
 from django.http import Http404
 
-from apps.people.models import InuitsMember
-from apps.people.services import InuitsMemberService
+from apps.participants.models import InuitsParticipant
+from apps.participants.services import InuitsParticipantService
 from apps.locations.services import CampLocationService
 from apps.visums.models import (
     LinkedCheck,
@@ -11,7 +11,6 @@ from apps.visums.models import (
     LinkedDateCheck,
     LinkedDurationCheck,
     LinkedLocationCheck,
-    LinkedMemberCheck,
     LinkedParticipantCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
@@ -29,7 +28,7 @@ class LinkedCheckService:
 
     location_service = CampLocationService()
     persisted_file_service = PersistedFileService()
-    inuits_member_service = InuitsMemberService()
+    inuits_member_service = InuitsParticipantService()
     groupadmin = GroupAdminMemberService()
 
     @staticmethod
@@ -142,54 +141,6 @@ class LinkedCheckService:
 
         return instance
 
-    def get_member_check(self, check_id):
-        try:
-            return LinkedMemberCheck.objects.get(linkedcheck_ptr=check_id)
-        except LinkedMemberCheck.DoesNotExist:
-            logger.error("LinkedMemberCheck with id %s not found", check_id)
-            raise Http404
-
-    def update_member_check(self, request, instance: LinkedMemberCheck, **data):
-        logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
-        )
-        members = data.get("value", [])
-        if not members or len(members) == 0:
-            logger.error("Empty list of group admin ids")
-            raise Http404
-
-        for member in members:
-            # group_admin_id = member.get("group_admin_id", None)
-
-            # if not group_admin_id:
-            #     logger.error(
-            #         "Expecting a list of dictionaries with 'group_admin_id' set."
-            #     )
-            #     raise Http404
-
-            scouts_member: AbstractScoutsMember = self.groupadmin.get_member_info(
-                active_user=request.user, group_admin_id=member.group_admin_id
-            )
-
-            # @TODO: check if the member already exists
-            # @TODO: check if the member is already linked
-            # @TODO: add check if multiple members can be added
-            inuits_member = InuitsMember.from_scouts_member(scouts_member)
-
-            inuits_member.full_clean()
-            inuits_member.save()
-
-            instance.value.add(inuits_member)
-
-        instance.full_clean()
-        instance.save()
-
-        return instance
-
-    def unlink_member(self, instance: LinkedMemberCheck, **data):
-        logger.debug("Unlinking member from instance with id %s", instance.id)
-        logger.debug("DATA: %s", data)
-
     def get_participant_check(self, check_id):
         try:
             return LinkedParticipantCheck.objects.get(linkedcheck_ptr=check_id)
@@ -246,6 +197,10 @@ class LinkedCheckService:
         instance.save()
 
         return instance
+
+    def unlink_participant(self, instance: LinkedParticipantCheck, **data):
+        logger.debug("Unlinking participant from instance with id %s", instance.id)
+        logger.debug("DATA: %s", data)
 
     def get_file_upload_check(self, check_id):
         try:
