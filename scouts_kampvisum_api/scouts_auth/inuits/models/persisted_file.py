@@ -1,6 +1,8 @@
 import logging
 
 from django.db import models
+from django.db.models import Q
+from django.conf import settings
 
 from scouts_auth.inuits.files.validators import validate_file_extension
 from scouts_auth.inuits.models import AuditedBaseModel
@@ -9,7 +11,29 @@ from scouts_auth.inuits.models import AuditedBaseModel
 logger = logging.getLogger(__name__)
 
 
+class PersistedFileQuerySet(models.QuerySet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+class PersistedFileManager(models.Manager):
+    def get_queryset(self):
+        return PersistedFileQuerySet(self.model, using=self._db)
+
+    def safe_get(self, *args, **kwargs):
+        pk = kwargs.get("id", kwargs.get("pk", None))
+        
+        if pk:
+            try:
+                logger.debug("Query PersistentFile with id %s", pk)
+                return self.get_queryset().get(pk=pk)
+            except:
+                pass
+            
+        return None
+    
 class PersistedFile(AuditedBaseModel):
+    objects = PersistedFileManager()
+    
     file = models.FileField(
         validators=[validate_file_extension],
         null=True,

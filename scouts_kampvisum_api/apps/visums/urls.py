@@ -40,7 +40,7 @@ participant_check = LinkedCheckViewSet.as_view(
         "patch": "partial_update_participant_check",
     }
 )
-participant_check_patch = LinkedCheckViewSet.as_view(
+participant_check_unlink = LinkedCheckViewSet.as_view(
     {
         "delete": "unlink_participant",
     }
@@ -49,6 +49,10 @@ file_upload_check = LinkedCheckViewSet.as_view(
     {
         "get": "retrieve_file_upload_check",
         "patch": "partial_update_file_upload_check",
+    }
+)
+file_upload_check_unlink = LinkedCheckViewSet.as_view(
+    {
         "delete": "unlink_file",
     }
 )
@@ -81,13 +85,18 @@ urlpatterns = [
     ),
     path(
         "checks/participant/<uuid:check_id>/<uuid:participant_id>",
-        participant_check_patch,
-        name="participant_check_patch",
+        participant_check_unlink,
+        name="participant_check_unlink",
     ),
     path(
         "checks/file/<uuid:check_id>",
         file_upload_check,
         name="file_upload_check",
+    ),
+    path(
+        "checks/file/<uuid:check_id>/<uuid:persisted_file_id>",
+        file_upload_check_unlink,
+        name="file_upload_check_unlink",
     ),
     path(
         "checks/comment/<uuid:check_id>",

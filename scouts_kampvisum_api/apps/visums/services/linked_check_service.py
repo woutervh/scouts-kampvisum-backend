@@ -18,6 +18,7 @@ from apps.visums.models import (
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
+from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.services import PersistedFileService
 
 
@@ -196,27 +197,35 @@ class LinkedCheckService:
             logger.error("LinkedFileUploadCheck with id %s not found", check_id)
             raise Http404
 
-    def update_file_upload_check(self, instance: LinkedFileUploadCheck, uploaded_file):
+    def update_file_upload_check(self, instance: LinkedFileUploadCheck, files: list):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-
-        if uploaded_file is None:
-            raise Http404(
-                "Can't store a non-existent file (for check {})".format(instance.id)
-            )
-
-        file = self.persisted_file_service.save(
-            name=uploaded_file.name,
-            content=uploaded_file,
-            content_type=uploaded_file.content_type,
-        )
-
-        instance.value.add(file)
+        
+        if not files or len(files) == 0:
+            raise Http404("Can't link an empty list of files")
+        
+        for file in files:
+            instance.value.add(file)
 
         instance.full_clean()
         instance.save()
 
+        return instance
+
+    def unlink_file(self, request, instance: LinkedFileUploadCheck, persisted_file_id, **data):
+        logger.debug("Unlinking file %s from instance with id %s", persisted_file_id, instance.id)
+        logger.debug("DATA: %s", data)
+        
+        file = PersistedFile.objects.safe_get(id=persisted_file_id)
+        if not file:
+            raise Http404("Unknown file with id {}".format(persisted_file_id))
+        
+        instance.value.remove(file)
+        
+        instance.full_clean()
+        instance.save()
+        
         return instance
 
     def get_comment_check(self, check_id):

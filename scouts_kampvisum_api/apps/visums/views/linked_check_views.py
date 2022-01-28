@@ -496,9 +496,13 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedFileUploadCheck = (
             self.linked_check_service.get_file_upload_check(check_id)
         )
+        
+        files = request.data.get("value", [])
+        if not files or len(files) == 0:
+            raise Http404("Can't link an empty list of files")
 
         serializer = PersistedFileSerializer(
-            data=request.data, context={"request": request}
+            data=files, context={"request": request}, many=True
         )
         # serializer = LinkedFileUploadCheckSerializer(
         #     data=request.data,
@@ -512,7 +516,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("FILE UPLOAD CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_file_upload_check(
-            instance=instance, uploaded_file=validated_data.get("file")
+            instance=instance, files=validated_data
         )
 
         output_serializer = LinkedFileUploadCheckSerializer(
@@ -525,7 +529,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         request_body=LinkedFileUploadCheckSerializer,
         responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer},
     )
-    def unlink_file(self, request, check_id):
+    def unlink_file(self, request, check_id, persisted_file_id):
         logger.debug("FILE UPLOAD CHECK UNLINK REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_file_upload_check(check_id)
 
@@ -547,7 +551,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("FILE UPLOAD CHECK UNLINK VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.unlink_file(
-            request, instance, **validated_data
+            request, instance, persisted_file_id, **validated_data
         )
 
         output_serializer = LinkedFileUploadCheckSerializer(
