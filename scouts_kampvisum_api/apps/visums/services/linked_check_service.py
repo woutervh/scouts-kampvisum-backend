@@ -28,7 +28,7 @@ class LinkedCheckService:
 
     location_service = CampLocationService()
     persisted_file_service = PersistedFileService()
-    inuits_member_service = InuitsParticipantService()
+    participant_service = InuitsParticipantService()
     groupadmin = GroupAdminMemberService()
 
     @staticmethod
@@ -154,42 +154,18 @@ class LinkedCheckService:
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-
+        
         participants = data.get("value", [])
         if not participants or len(participants) == 0:
             logger.error("Empty participant list")
             raise Http404
 
         for participant in participants:
-            # group_admin_id = member.get("group_admin_id", None)
-
-            # if not group_admin_id:
-            #     logger.error(
-            #         "Expecting a list of dictionaries with 'group_admin_id' set."
-            #     )
-            #     raise Http404
             logger.debug("participant: %s", participant)
 
-            member = None
-            non_member = None
-            if participant.has_member():
-                member = self.inuits_member_service.member_create_or_update(
-                    inuits_member=participant.member, user=request.user
-                )
-                non_member = None
-            elif participant.has_non_member():
-                member = None
-                non_member = participant.non_member
-            else:
-                raise Http404(
-                    "A participant must be either a member or a non-member. None given"
-                )
-
-            participant.member = member
-            participant.non_member = non_member
-
-            participant.full_clean()
-            participant.save()
+            participant = self.participant_service.create_or_update(
+                participant=participant, user=request.user
+            )
 
             instance.value.add(participant)
 
@@ -198,9 +174,20 @@ class LinkedCheckService:
 
         return instance
 
-    def unlink_participant(self, instance: LinkedParticipantCheck, **data):
-        logger.debug("Unlinking participant from instance with id %s", instance.id)
+    def unlink_participant(self, request, instance: LinkedParticipantCheck, participant_id, **data):
+        logger.debug("Unlinking participant %s from instance with id %s", participant_id, instance.id)
         logger.debug("DATA: %s", data)
+        
+        participant = InuitsParticipant.objects.safe_get(id=participant_id)
+        if not participant:
+            raise Http404("Unknown participant with id {}".format(participant_id))
+        
+        instance.value.remove(participant)
+        
+        instance.full_clean()
+        instance.save()
+        
+        return instance
 
     def get_file_upload_check(self, check_id):
         try:

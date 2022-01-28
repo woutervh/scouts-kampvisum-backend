@@ -23,7 +23,7 @@ class InuitsParticipantService:
         skip_validation: bool = False,
     ):
         existing_participant = InuitsParticipant.objects.safe_get(
-            participant.id, participant.group_admin_id
+            id=participant.id, group_admin_id=participant.group_admin_id, email=participant.email
         )
 
         if existing_participant:
@@ -43,13 +43,13 @@ class InuitsParticipantService:
     def create_or_update_member_participant(
         self,
         participant: InuitsParticipant,
-        created_by: settings.AUTH_USER_MODEL,
+        user: settings.AUTH_USER_MODEL,
         instance: InuitsParticipant = None,
     ) -> InuitsParticipant:
         member_participant = None
         if participant.has_group_admin_id():
             scouts_member = self.groupadmin.get_member_info(
-                active_user=created_by, group_admin_id=participant.group_admin_id
+                active_user=user, group_admin_id=participant.group_admin_id
             )
 
             if not scouts_member:
@@ -64,7 +64,7 @@ class InuitsParticipantService:
             member_participant.is_member = True
             member_participant.group_group_admin_id = None
             member_participant.comment = participant.comment
-            member_participant.created_by = created_by
+            member_participant.created_by = user
 
             member_participant.full_clean()
             member_participant.save()

@@ -38,6 +38,10 @@ participant_check = LinkedCheckViewSet.as_view(
     {
         "get": "retrieve_participant_check",
         "patch": "partial_update_participant_check",
+    }
+)
+participant_check_patch = LinkedCheckViewSet.as_view(
+    {
         "delete": "unlink_participant",
     }
 )
@@ -74,6 +78,11 @@ urlpatterns = [
         "checks/participant/<uuid:check_id>",
         participant_check,
         name="participant_check",
+    ),
+    path(
+        "checks/participant/<uuid:check_id>/<uuid:participant_id>",
+        participant_check_patch,
+        name="participant_check_patch",
     ),
     path(
         "checks/file/<uuid:check_id>",

@@ -10,6 +10,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
+from apps.participants.models import InuitsParticipant
+
 from apps.visums.models import (
     CheckTypeEndpoint,
     LinkedCheck,
@@ -59,6 +61,14 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         return Response(serializer.data)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
+    def list(self, request):
+        """
+        Gets all Check instances (filtered).
+        """
+
+        return self._list(instances=self.filter_queryset(self.get_queryset()))
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
     def retrieve_simple_check(self, request, check_id=None):
         instance: LinkedCheck = self.linked_check_service.get_simple_check(check_id)
         serializer = LinkedCheckSerializer(instance, context={"request": request})
@@ -96,6 +106,19 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"simple",
+    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedSimpleCheckSerializer})
+    def list_simple_checks(self, request):
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.SIMPLE_CHECK
+            )
+        )
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDateCheckSerializer})
     def retrieve_data_check(self, request, check_id=None):
         instance: LinkedDateCheck = self.linked_check_service.get_date_check(check_id)
@@ -131,6 +154,19 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"date",
+    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDateCheckSerializer})
+    def list_date_checks(self, request):
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.DATE_CHECK
+            )
+        )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDurationCheckSerializer})
     def retrieve_duration_check(self, request, check_id=None):
@@ -172,6 +208,19 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"duration",
+    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDurationCheckSerializer})
+    def list_duration_checks(self, request):
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.DURATION_CHECK
+            )
+        )
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationCheckSerializer})
     def retrieve_location_check(self, request, check_id=None):
         instance: LinkedLocationCheck = self.linked_check_service.get_location_check(
@@ -211,6 +260,33 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"location",
+    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationCheckSerializer})
+    def list_location_checks(self, request):
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.LOCATION_CHECK
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"location/linked",
+    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationCheckSerializer})
+    def list_linked_location_checks(self, request):
+        return self._list(
+            LinkedLocationCheck.objects.filter(
+                Q(parent__check_type__check_type=CheckTypeEndpoint.LOCATION_CHECK)
+                & Q(locations__isnull=False)
+            )
+        )
 
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer}
@@ -253,6 +329,40 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"camp_location",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer}
+    )
+    def list_camp_location_checks(self, request):
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.CAMP_LOCATION_CHECK
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"camp_location/linked",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer}
+    )
+    def list_linked_camp_location_checks(self, request):
+        return self._list(
+            LinkedLocationCheck.objects.filter(
+                Q(is_camp_location=False)
+                & Q(
+                    parent__check_type__check_type=CheckTypeEndpoint.CAMP_LOCATION_CHECK
+                )
+                & Q(locations__isnull=False)
+            )
+        )
 
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
@@ -300,7 +410,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         request_body=LinkedParticipantCheckSerializer,
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
     )
-    def unlink_participant(self, request, check_id):
+    def unlink_participant(self, request, check_id, participant_id):
         logger.debug("PARTICIPANT CHECK UNLINK REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_participant_check(check_id)
 
@@ -324,7 +434,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("PARTICIPANT CHECK UNLINK VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.unlink_participant(
-            request, instance, **validated_data
+            request, instance, participant_id, **validated_data
         )
 
         output_serializer = LinkedParticipantCheckSerializer(
@@ -332,6 +442,37 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"participant",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
+    )
+    def list_participant_checks(self, request):
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.PARTICIPANT_CHECK
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"participant/linked",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
+    )
+    def list_linked_participant_checks(self, request):
+        return self._list(
+            LinkedParticipantCheck.objects.filter(
+                Q(parent__check_type__check_type=CheckTypeEndpoint.PARTICIPANT_CHECK)
+                & Q(value__isnull=False)
+            ).distinct()
+        )
 
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
@@ -415,6 +556,37 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"file",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
+    )
+    def list_file_upload_checks(self, request):
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK
+            )
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"file/linked",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
+    )
+    def list_linked_files(self, request):
+        return self._list(
+            LinkedFileUploadCheck.objects.filter(
+                Q(parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK)
+                & Q(value__isnull=False)
+            )
+        )
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCommentCheckSerializer})
     def retrieve_comment_check(self, request, check_id=None):
         instance: LinkedCommentCheck = self.linked_check_service.get_comment_check(
@@ -455,186 +627,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    def _list(self, instances: List[LinkedCheck]):
-        page = self.paginate_queryset(instances)
-
-        if page is not None:
-            serializer = LinkedCheckSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = LinkedCheckSerializer(instances, many=True)
-            return Response(serializer.data)
-
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
-    def list(self, request):
-        """
-        Gets all Check instances (filtered).
-        """
-
-        return self._list(instances=self.filter_queryset(self.get_queryset()))
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"simple",
-    )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedSimpleCheckSerializer})
-    def list_simple_checks(self, request):
-        return self._list(
-            self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.SIMPLE_CHECK
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"date",
-    )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDateCheckSerializer})
-    def list_date_checks(self, request):
-        return self._list(
-            self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.DATE_CHECK
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"duration",
-    )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDurationCheckSerializer})
-    def list_duration_checks(self, request):
-        return self._list(
-            self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.DURATION_CHECK
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"location",
-    )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationCheckSerializer})
-    def list_location_checks(self, request):
-        return self._list(
-            self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.LOCATION_CHECK
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"location/linked",
-    )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationCheckSerializer})
-    def list_linked_location_checks(self, request):
-        return self._list(
-            LinkedLocationCheck.objects.filter(
-                Q(parent__check_type__check_type=CheckTypeEndpoint.LOCATION_CHECK)
-                & Q(locations__isnull=False)
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"camp_location",
-    )
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer}
-    )
-    def list_camp_location_checks(self, request):
-        return self._list(
-            self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.CAMP_LOCATION_CHECK
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"camp_location/linked",
-    )
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer}
-    )
-    def list_linked_camp_location_checks(self, request):
-        return self._list(
-            LinkedLocationCheck.objects.filter(
-                Q(is_camp_location=False)
-                & Q(
-                    parent__check_type__check_type=CheckTypeEndpoint.CAMP_LOCATION_CHECK
-                )
-                & Q(locations__isnull=False)
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"participant",
-    )
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
-    )
-    def list_participant_checks(self, request):
-        return self._list(
-            self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.PARTICIPANT_CHECK
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"participant/linked",
-    )
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
-    )
-    def list_linked_participant_checks(self, request):
-        return self._list(
-            LinkedParticipantCheck.objects.filter(
-                Q(parent__check_type__check_type=CheckTypeEndpoint.PARTICIPANT_CHECK)
-                & (Q(value__member__isnull=False) | Q(value__non_member__isnull=False))
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"file",
-    )
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
-    )
-    def list_file_upload_checks(self, request):
-        return self._list(
-            self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK
-            )
-        )
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"file/linked",
-    )
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
-    )
-    def list_linked_files(self, request):
-        return self._list(
-            LinkedFileUploadCheck.objects.filter(
-                Q(parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK)
-                & Q(value__isnull=False)
-            )
-        )
-
     @action(
         detail=False,
         methods=["get"],
@@ -647,3 +639,13 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                 parent__check_type__check_type=CheckTypeEndpoint.COMMENT_CHECK
             )
         )
+
+    def _list(self, instances: List[LinkedCheck]):
+        page = self.paginate_queryset(instances)
+
+        if page is not None:
+            serializer = LinkedCheckSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = LinkedCheckSerializer(instances, many=True)
+            return Response(serializer.data)

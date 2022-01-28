@@ -106,6 +106,15 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def list(self, request):
         return self._list(request=request)
 
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
+    def list_participants(self, request):
+        queryset = self.get_queryset()
+        participants = self.filter_queryset(queryset)
+        
+        output_serializer = InuitsParticipantSerializer(participants, many=True)
+
+        return Response(output_serializer.data)
+
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: InuitsParticipantSerializer},
     )
@@ -116,6 +125,9 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def _list(self, request, include_inactive: bool = False):
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)
+        
+        if not search_term and not group_group_admin_id:
+            return self.list_participants(request)
 
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
@@ -137,9 +149,9 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             group_group_admin_id=group_group_admin_id,
         )
 
-        queryset = self.get_queryset().participants()
-        participants = self.filter_queryset(queryset)
-        results = [*members, *participants]
+        queryset = self.get_queryset().non_members()
+        non_members = self.filter_queryset(queryset)
+        results = [*[InuitsParticipant.from_scouts_member(member) for member in members], *non_members]
         output_serializer = InuitsParticipantSerializer(results, many=True)
 
         return Response(output_serializer.data)

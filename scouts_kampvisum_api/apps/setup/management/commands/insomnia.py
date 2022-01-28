@@ -77,8 +77,8 @@ class Command(BaseCommand):
         data["file_last"] = str(PersistedFile.objects.last().id)
         # NonMember
         self.add_non_members(user)
-        data["non_member_first"] = str(InuitsParticipant.objects.first().id)
-        data["non_member_last"] = str(InuitsParticipant.objects.last().id)
+        data["participant_non_member_first"] = str(InuitsParticipant.objects.filter(is_member=False).first().id)
+        data["participant_non_member_last"] = str(InuitsParticipant.objects.filter(is_member=False).last().id)
         # GA member
         data["ga_member_jeroen_budts"] = "5e19c7d0-d448-4c08-ab37-5a20a9054101"
         data["ga_member_jeroen_wouters"] = "1f59774b-e89b-4617-aa7e-2e55fb1045b0"
