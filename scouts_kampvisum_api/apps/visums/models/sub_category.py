@@ -2,7 +2,7 @@ import logging
 
 from django.db import models
 
-from apps.visums.models import Category
+from apps.visums.models import CampType, Category
 from apps.visums.managers import SubCategoryManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
@@ -28,6 +28,7 @@ class SubCategory(Describable, Explainable, Indexable, Linkable, AbstractBaseMod
         on_delete=models.CASCADE,
     )
     name = RequiredCharField(max_length=128)
+    camp_types = models.ManyToManyField(CampType)
 
     class Meta:
         ordering = ["name"]

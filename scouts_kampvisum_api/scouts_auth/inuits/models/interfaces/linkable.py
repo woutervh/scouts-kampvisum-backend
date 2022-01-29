@@ -5,6 +5,7 @@ from scouts_auth.inuits.utils import TextUtils
 
 
 class Linkable(models.Model):
+    """Provides a hyperlink for an object (field name: link)"""
 
     link = OptionalTextField()
 

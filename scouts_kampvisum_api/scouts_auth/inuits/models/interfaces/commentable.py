@@ -5,6 +5,7 @@ from scouts_auth.inuits.utils import TextUtils
 
 
 class Commentable(models.Model):
+    """Provides a translatable comment for an object (field name: comment)"""
 
     comment = OptionalTextField()
 

@@ -4,6 +4,7 @@ from scouts_auth.inuits.models.fields import DefaultIntegerField
 
 
 class Indexable(models.Model):
+    """Provides an index to order a list of objects (field name: index)"""
 
     index = DefaultIntegerField(default=0)
 

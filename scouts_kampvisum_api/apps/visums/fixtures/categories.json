@@ -3,6 +3,9 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "Planning",
+			"camp_types": [
+				"*"
+			],
 			"category_set": [
 				2022,
 				"Test"

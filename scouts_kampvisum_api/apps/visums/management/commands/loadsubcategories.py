@@ -10,11 +10,11 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = "Loads the categories from visum_categories.json"
+    help = "Loads the categories from categories.json"
     exception = False
 
     BASE_PATH = "apps/visums/fixtures"
-    FIXTURE = "visum_sub_categories.json"
+    FIXTURE = "sub_categories.json"
     TMP_FIXTURE = "{}_{}".format("adjusted", FIXTURE)
 
     def handle(self, *args, **kwargs):

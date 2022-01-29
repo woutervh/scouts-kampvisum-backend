@@ -5,6 +5,7 @@ from scouts_auth.inuits.utils import TextUtils
 
 
 class Describable(models.Model):
+    """Provides a translatable description for an object (field name: description)"""
 
     description = OptionalTextField()
 

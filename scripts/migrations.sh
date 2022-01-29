@@ -17,13 +17,14 @@ FIXTURES=(
 	"scouts_section_names.json"
 	"default_scouts_section_names.json"
 	# "camp_years.json"
-	"visum_camp_year_category_sets.json"
-	"visum_category_set_priorities.json"
-	# "visum_category_sets.json"
-	# "visum_categories.json"
-	# "visum_sub_categories.json"
-	"visum_check_types.json"
-	# "visum_checks.json"
+	# "camp_year_category_sets.json"
+	"camp_types.json"
+	"category_set_priorities.json"
+	# "category_sets.json"
+	# "categories.json"
+	# "sub_categories.json"
+	"check_types.json"
+	# "checks.json"
 )
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }

@@ -2,7 +2,6 @@ import logging
 
 from django.db import models
 
-from apps.groups.models import ScoutsGroupType
 from apps.visums.managers import CategorySetManager
 from apps.visums.models import CampYearCategorySet, CategorySetPriority
 
@@ -19,10 +18,10 @@ class CategorySet(AuditedBaseModel):
 
     objects = CategorySetManager()
 
-    category_set = models.ForeignKey(
+    camp_year_category_set = models.ForeignKey(
         CampYearCategorySet, on_delete=models.CASCADE, related_name="category_sets"
     )
-    group_type = models.ForeignKey(ScoutsGroupType, on_delete=models.CASCADE)
+    # group_type = models.ForeignKey(ScoutsGroupType, on_delete=models.CASCADE)
     # Indicates the hierarchical source and thereby specifies precedence.
     priority = models.ForeignKey(
         CategorySetPriority,
@@ -31,11 +30,11 @@ class CategorySet(AuditedBaseModel):
     )
 
     class Meta:
-        ordering = ["category_set__camp_year__year"]
+        ordering = ["camp_year_category_set__camp_year__year"]
         constraints = [
             models.UniqueConstraint(
-                fields=["category_set", "group_type"],
-                name="unique_set_for_category_set_and_group_type",
+                fields=["camp_year_category_set", "group_type"],
+                name="unique_set_for_camp_year_category_set_and_group_type",
             ),
         ]
 
@@ -48,8 +47,8 @@ class CategorySet(AuditedBaseModel):
 
     def __str__(self):
         return (
-            "OBJECT CategorySet: category_set({}), group_type({}), priority({})".format(
-                str(self.category_set), str(self.group_type), str(self.priority)
+            "OBJECT CategorySet: camp_year_category_set({}), priority({})".format(
+                self.camp_year_category_set, self.priority
             )
         )
 
