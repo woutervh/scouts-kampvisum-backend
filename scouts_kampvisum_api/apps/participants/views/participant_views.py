@@ -1,3 +1,4 @@
+from asyncio.format_helpers import _format_callback_source
 import logging
 from typing import List
 
@@ -110,7 +111,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def list_participants(self, request):
         queryset = self.get_queryset()
         participants = self.filter_queryset(queryset)
-        
+
         output_serializer = InuitsParticipantSerializer(participants, many=True)
 
         return Response(output_serializer.data)
@@ -122,10 +123,14 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def list_with_previous_members(self, request):
         return self._list(request=request, include_inactive=True)
 
-    def _list(self, request, include_inactive: bool = False):
+    @action(methods=["get"], detail=False)
+    def list_scouts_members(self, request):
+        return self._list(request=request, only_scouts_members=True)
+
+    def _list(self, request, include_inactive: bool = False, only_scouts_members=False):
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)
-        
+
         if not search_term and not group_group_admin_id:
             return self.list_participants(request)
 
@@ -149,9 +154,18 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             group_group_admin_id=group_group_admin_id,
         )
 
-        queryset = self.get_queryset().non_members()
-        non_members = self.filter_queryset(queryset)
-        results = [*[InuitsParticipant.from_scouts_member(member) for member in members], *non_members]
+        if only_scouts_members:
+            results = [
+                InuitsParticipant.from_scouts_member(member) for member in members
+            ]
+        else:
+            queryset = self.get_queryset().non_members()
+            non_members = self.filter_queryset(queryset)
+            results = [
+                *[InuitsParticipant.from_scouts_member(member) for member in members],
+                *non_members,
+            ]
+
         output_serializer = InuitsParticipantSerializer(results, many=True)
 
         return Response(output_serializer.data)
