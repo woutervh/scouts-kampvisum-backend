@@ -6,10 +6,6 @@
 			"camp_types": [
 				"*"
 			],
-			"category_set": [
-				2022,
-				"Test"
-			],
 			"description": "",
 			"explanation": ""
 		}
@@ -18,9 +14,8 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "Logistiek",
-			"category_set": [
-				2022,
-				"Test"
+			"camp_types": [
+				"*"
 			],
 			"description": "",
 			"explanation": ""
@@ -30,9 +25,8 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "Communicatie & afspraken",
-			"category_set": [
-				2022,
-				"Test"
+			"camp_types": [
+				"*"
 			],
 			"description": "",
 			"explanation": ""
@@ -42,9 +36,8 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "Veiligheid",
-			"category_set": [
-				2022,
-				"Test"
+			"camp_types": [
+				"*"
 			],
 			"description": "",
 			"explanation": ""
@@ -54,9 +47,8 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "Leden & leiding",
-			"category_set": [
-				2022,
-				"Test"
+			"camp_types": [
+				"*"
 			],
 			"description": "",
 			"explanation": ""
@@ -66,9 +58,8 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "Budget",
-			"category_set": [
-				2022,
-				"Test"
+			"camp_types": [
+				"*"
 			],
 			"description": "",
 			"explanation": ""

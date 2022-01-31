@@ -1,3 +1,4 @@
+from .camp_type_serializer import CampTypeSerializer
 from .priority_serializer import CategorySetPrioritySerializer
 from .sub_category_serializer import SubCategorySerializer
 from .sub_category_serializer import SubCategoryAPISerializer

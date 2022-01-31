@@ -155,8 +155,7 @@ class DatabaseHelper:
             instance = (
                 CategorySet.objects.all()
                 .filter(
-                    category_set__camp_year__year=kwargs.get("category_set"),
-                    group_type__group_type=kwargs.get("group_type"),
+                    category_set__camp_year__year=kwargs.get("category_set")
                 )
                 .last()
             )

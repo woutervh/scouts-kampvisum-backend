@@ -8,6 +8,7 @@ from django.urls import path
 from rest_framework import routers
 
 from apps.visums.views import (
+    CampTypeViewSet,
     CategoryViewSet,
     SubCategoryViewSet,
     CategorySetViewSet,
@@ -108,6 +109,7 @@ urlpatterns = [
 
 router = routers.SimpleRouter()
 
+router.register("camp_types", CampTypeViewSet, "camp_types")
 router.register(r"categories", CategoryViewSet, "categories")
 router.register(r"sub_categories", SubCategoryViewSet, "sub_categories")
 router.register(r"category_sets", CategorySetViewSet, "category_sets")

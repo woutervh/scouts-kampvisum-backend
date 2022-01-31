@@ -13,22 +13,14 @@ class CategorySetManager(models.Manager):
     This is useful for defining fixtures.
     """
 
-    def get_by_natural_key(self, category_set, group_type):
+    def get_by_natural_key(self, category_set):
         logger.debug(
-            "GET BY NATURAL KEY %s: (category_set: %s (%s), group_type: %s (%s))",
+            "GET BY NATURAL KEY %s: (category_set: %s (%s)",
             "CategorySet",
             category_set,
             type(category_set).__name__,
-            group_type,
-            type(group_type).__name__,
         )
-
-        if type(group_type).__name__ == "ScoutsGroupType":
-            return self.get(
-                category_set__camp_year__year=category_set, group_type=group_type
-            )
-
+        
         return self.get(
-            category_set__camp_year__year=category_set,
-            group_type__group_type=group_type,
+            category_set__camp_year__year=category_set
         )

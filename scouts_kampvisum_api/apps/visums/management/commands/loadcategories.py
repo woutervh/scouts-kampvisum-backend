@@ -5,6 +5,8 @@ from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
+from apps.visums.models import CampType
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +29,8 @@ class Command(BaseCommand):
         tmp_path = os.path.join(parent_path, tmp_data_path)
 
         logger.debug("Loading categories from %s", path)
+        
+        all_camp_types = [[camp_type.camp_type] for camp_type in CampType.objects.all()]
 
         previous_index = -1
         with open(path) as f:
@@ -35,6 +39,11 @@ class Command(BaseCommand):
             for model in data:
                 previous_index = previous_index + 1
                 model.get("fields")["index"] = previous_index
+                
+                camp_types: list = model.get("fields")["camp_types"]
+                if len(camp_types) == 0 or (len(camp_types) == 1 and camp_types[0] == "*"):
+                    # model.get("fields")["camp_types"] = json.dumps(all_camp_types).replace("'", "")
+                    model.get("fields")["camp_types"] = all_camp_types
 
                 logger.debug("MODEL DATA: %s", model)
 

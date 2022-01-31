@@ -29,8 +29,7 @@ class CategoryManager(models.Manager):
         if type(category_set).__name__ == "list":
             return self.get(
                 name=name,
-                category_set__category_set__camp_year__year=category_set[0],
-                category_set__group_type__group_type=category_set[1],
+                category_set__category_set__camp_year__year=category_set[0]
             )
 
         return self.get(

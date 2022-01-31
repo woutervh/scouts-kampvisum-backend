@@ -21,7 +21,6 @@ class CategorySet(AuditedBaseModel):
     camp_year_category_set = models.ForeignKey(
         CampYearCategorySet, on_delete=models.CASCADE, related_name="category_sets"
     )
-    # group_type = models.ForeignKey(ScoutsGroupType, on_delete=models.CASCADE)
     # Indicates the hierarchical source and thereby specifies precedence.
     priority = models.ForeignKey(
         CategorySetPriority,
@@ -33,8 +32,8 @@ class CategorySet(AuditedBaseModel):
         ordering = ["camp_year_category_set__camp_year__year"]
         constraints = [
             models.UniqueConstraint(
-                fields=["camp_year_category_set", "group_type"],
-                name="unique_set_for_camp_year_category_set_and_group_type",
+                fields=["camp_year_category_set"],
+                name="unique_set_for_camp_year_category_set",
             ),
         ]
 
@@ -43,7 +42,7 @@ class CategorySet(AuditedBaseModel):
 
     def natural_key(self):
         logger.debug("NATURAL KEY CALLED")
-        return (self.category_set.camp_year.year, self.group_type)
+        return (self.category_set.camp_year.year)
 
     def __str__(self):
         return (

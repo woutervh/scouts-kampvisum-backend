@@ -1,3 +1,4 @@
+from .camp_type_views import CampTypeViewSet
 from .category_views import CategoryViewSet
 from .sub_category_views import SubCategoryViewSet
 from .check_views import CheckViewSet

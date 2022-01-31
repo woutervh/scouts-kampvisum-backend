@@ -16,7 +16,7 @@ class CampTypeManager(models.Manager):
     def get_by_natural_key(self, camp_type):
         logger.debug(
             "GET BY NATURAL KEY %s: (camp_type: %s (%s))",
-            "Check",
+            "CampType",
             camp_type,
             type(camp_type).__name__,
         )

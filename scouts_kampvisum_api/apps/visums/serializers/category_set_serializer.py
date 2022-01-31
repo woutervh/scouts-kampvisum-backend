@@ -12,7 +12,6 @@ from apps.groups.serializers import ScoutsGroupTypeSerializer
 class CategorySetSerializer(serializers.ModelSerializer):
 
     category_set = CampYearCategorySetSerializer()
-    group_type = ScoutsGroupTypeSerializer()
     priority = CategorySetPrioritySerializer()
     # categories = CategorySerializer(many=True)
     # camp_year = CampYearSerializer()

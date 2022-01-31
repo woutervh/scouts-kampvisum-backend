@@ -1,3 +1,4 @@
+from .camp_type_service import CampTypeService
 from .camp_year_category_set_service import CampYearCategorySetService
 from .check_service import CheckService
 from .sub_category_service import SubCategoryService
