@@ -4,6 +4,7 @@ from django.http import Http404
 
 from apps.participants.models import InuitsParticipant
 from apps.participants.services import InuitsParticipantService
+from apps.locations.models import CampLocation
 from apps.locations.services import CampLocationService
 from apps.visums.models import (
     LinkedCheck,
@@ -105,6 +106,11 @@ class LinkedCheckService:
     def update_location_check(self, instance: LinkedLocationCheck, **data):
         return self._update_location(instance=instance, is_camp_location=False, **data)
 
+    def unlink_location(self, instance: LinkedLocationCheck, location_id, **data):
+        return self._unlink_location(
+            instance=instance, location_id=location_id, is_camp_location=False, **data
+        )
+
     def get_camp_location_check(self, check_id):
         try:
             return LinkedLocationCheck.objects.get(linkedcheck_ptr=check_id)
@@ -114,6 +120,16 @@ class LinkedCheckService:
 
     def update_camp_location_check(self, instance: LinkedLocationCheck, **data):
         return self._update_location(instance=instance, is_camp_location=True, **data)
+
+    def unlink_camp_location(
+        self, instance: LinkedLocationCheck, camp_location_id, **data
+    ):
+        return self._unlink_location(
+            instance=instance,
+            location_id=camp_location_id,
+            is_camp_location=True,
+            **data
+        )
 
     def _update_location(
         self, instance: LinkedLocationCheck, is_camp_location=False, **data
@@ -142,6 +158,32 @@ class LinkedCheckService:
 
         return instance
 
+    def _unlink_location(
+        self,
+        request,
+        instance: LinkedLocationCheck,
+        location_id,
+        is_camp_location=False,
+        **data
+    ):
+        logger.debug(
+            "Unlinking location %s from instance with id %s",
+            location_id,
+            instance.id,
+        )
+        logger.debug("DATA: %s", data)
+
+        location = CampLocation.objects.safe_get(id=location_id)
+        if not location:
+            raise Http404("Unknown location with id {}".format(location_id))
+
+        instance.value.remove(location)
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
+
     def get_participant_check(self, check_id):
         try:
             return LinkedParticipantCheck.objects.get(linkedcheck_ptr=check_id)
@@ -155,7 +197,7 @@ class LinkedCheckService:
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-        
+
         participants = data.get("value", [])
         if not participants or len(participants) == 0:
             logger.error("Empty participant list")
@@ -175,19 +217,25 @@ class LinkedCheckService:
 
         return instance
 
-    def unlink_participant(self, request, instance: LinkedParticipantCheck, participant_id, **data):
-        logger.debug("Unlinking participant %s from instance with id %s", participant_id, instance.id)
+    def unlink_participant(
+        self, request, instance: LinkedParticipantCheck, participant_id, **data
+    ):
+        logger.debug(
+            "Unlinking participant %s from instance with id %s",
+            participant_id,
+            instance.id,
+        )
         logger.debug("DATA: %s", data)
-        
+
         participant = InuitsParticipant.objects.safe_get(id=participant_id)
         if not participant:
             raise Http404("Unknown participant with id {}".format(participant_id))
-        
+
         instance.value.remove(participant)
-        
+
         instance.full_clean()
         instance.save()
-        
+
         return instance
 
     def get_file_upload_check(self, check_id):
@@ -201,10 +249,10 @@ class LinkedCheckService:
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-        
+
         if not files or len(files) == 0:
             raise Http404("Can't link an empty list of files")
-        
+
         for file in files:
             instance.value.add(file)
 
@@ -213,19 +261,23 @@ class LinkedCheckService:
 
         return instance
 
-    def unlink_file(self, request, instance: LinkedFileUploadCheck, persisted_file_id, **data):
-        logger.debug("Unlinking file %s from instance with id %s", persisted_file_id, instance.id)
+    def unlink_file(
+        self, request, instance: LinkedFileUploadCheck, persisted_file_id, **data
+    ):
+        logger.debug(
+            "Unlinking file %s from instance with id %s", persisted_file_id, instance.id
+        )
         logger.debug("DATA: %s", data)
-        
+
         file = PersistedFile.objects.safe_get(id=persisted_file_id)
         if not file:
             raise Http404("Unknown file with id {}".format(persisted_file_id))
-        
+
         instance.value.remove(file)
-        
+
         instance.full_clean()
         instance.save()
-        
+
         return instance
 
     def get_comment_check(self, check_id):
