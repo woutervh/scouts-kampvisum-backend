@@ -15,10 +15,13 @@ class CampTypeManager(models.Manager):
 
     def get_by_natural_key(self, camp_type):
         logger.debug(
-            "GET BY NATURAL KEY %s: (name: %s (%s))",
+            "GET BY NATURAL KEY %s: (camp_type: %s (%s))",
             "Check",
             camp_type,
             type(camp_type).__name__,
         )
 
-        return self.get(camp_type)
+        if camp_type.strip() == "*":
+            logger.debug("ALL CAMP TYPES")
+
+        return self.get(camp_type=camp_type)

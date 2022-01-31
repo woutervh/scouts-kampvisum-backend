@@ -7,6 +7,9 @@ from django.core.exceptions import ValidationError
 from scouts_auth.inuits.models.fields import DatetypeAwareDateField
 
 
+DEFAULT_CHAR_FIELD_LENGTH = 128
+
+
 class OptionalCharField(models.CharField):
     """
     Initializes a models.CharField as optional.
@@ -29,7 +32,7 @@ class OptionalCharField(models.CharField):
             )
             warnings.warn(warning)
         if "max_length" not in kwargs:
-            kwargs["max_length"] = 128
+            kwargs["max_length"] = DEFAULT_CHAR_FIELD_LENGTH
         kwargs["blank"] = True
         super().__init__(*args, **kwargs)
 
@@ -49,7 +52,7 @@ class DefaultCharField(models.CharField):
 
     def __init__(self, *args, **kwargs):
         if "max_length" not in kwargs:
-            kwargs["max_length"] = 128
+            kwargs["max_length"] = DEFAULT_CHAR_FIELD_LENGTH
         kwargs["blank"] = True
         super().__init__(*args, **kwargs)
 
@@ -67,6 +70,8 @@ class RequiredCharField(models.CharField):
     """
 
     def __init__(self, *args, **kwargs):
+        if "max_length" not in kwargs:
+            kwargs["max_length"] = DEFAULT_CHAR_FIELD_LENGTH
         kwargs["blank"] = False
         super().__init__(*args, **kwargs)
 
@@ -84,6 +89,8 @@ class UniqueRequiredCharField(models.CharField):
     """
 
     def __init__(self, *args, **kwargs):
+        if "max_length" not in kwargs:
+            kwargs["max_length"] = DEFAULT_CHAR_FIELD_LENGTH
         kwargs["blank"] = False
         kwargs["unique"] = True
         super().__init__(*args, **kwargs)
