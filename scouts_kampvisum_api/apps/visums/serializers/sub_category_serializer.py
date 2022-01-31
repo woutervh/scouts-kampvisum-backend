@@ -8,7 +8,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=128)
 
     class Meta:
-        model = SubCategory()
+        model = SubCategory
         fields = "__all__"
 
 
@@ -17,7 +17,7 @@ class SubCategoryAPISerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
 
     class Meta:
-        model = SubCategory()
+        model = SubCategory
         fields = ["name", "id", "status"]
 
     def get_status(self, obj):

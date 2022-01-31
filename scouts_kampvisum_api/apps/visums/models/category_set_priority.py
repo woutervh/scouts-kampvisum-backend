@@ -25,7 +25,7 @@ class CategorySetPriority(AbstractBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED")
+        logger.debug("NATURAL KEY CALLED CategorySetPriority")
         return (self.owner,)
 
     def __str__(self):

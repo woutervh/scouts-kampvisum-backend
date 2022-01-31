@@ -2,7 +2,9 @@
     {
         "model": "visums.CampType",
         "fields": {
-            "camp_type": "base",
+            "camp_type": "basis",
+            "is_base": true,
+            "is_default": true,
             "label": "Basiskamp",
             "explanation": "Basis kamptype, met categorieen die bij elk kamp herhaald worden"
         }
@@ -11,6 +13,7 @@
         "model": "visums.CampType",
         "fields": {
             "camp_type": "scouts",
+            "is_base": true,
             "label": "Scouts en AKABE",
             "explanation": "Categorieen voor gewone scouts- en akabegroepen"
         }
@@ -19,6 +22,7 @@
         "model": "visums.CampType",
         "fields": {
             "camp_type": "zeescouts",
+            "is_base": true,
             "label": "Zeescouts",
             "explanation": "Categorieen voor zeescoutsgroepen"
         }
@@ -26,9 +30,19 @@
     {
         "model": "visums.CampType",
         "fields": {
-            "camp_type": "internationaal",
+            "camp_type": "internationaal_trekkamp",
+            "is_base": false,
             "label": "Internationale trekkampen",
             "explanation": "Categorieen voor internationale trekkampen"
+        }
+    },
+    {
+        "model": "visums.CampType",
+        "fields": {
+            "camp_type": "internationaal_zeescoutskamp",
+            "is_base": false,
+            "label": "Internationale zeescoutskampen",
+            "explanation": "Categorieen voor internationale zeescoutskampen"
         }
     }
 ]

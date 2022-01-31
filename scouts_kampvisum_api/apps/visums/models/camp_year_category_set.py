@@ -20,7 +20,7 @@ class CampYearCategorySet(AbstractBaseModel):
     )
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED")
+        logger.debug("NATURAL KEY CALLED CampYearCategorySet")
         return (self.camp_year.year,)
 
     def __str__(self):

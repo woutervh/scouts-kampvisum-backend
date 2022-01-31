@@ -39,12 +39,12 @@ class CampYearService:
             return camp_year
         else:
             return self._create_year(date=date)
-    
+
     def get_current_camp_year(self) -> CampYear:
         return self._get_year(date=datetime.datetime.today())
-    
+
     def get_or_create_current_camp_year(self) -> CampYear:
-        return self.get_or_create_year(date=datetime.datetime.today())
+        return self.get_or_create_year(None, date=datetime.datetime.today())
 
     def _get_year(self, date: datetime.date) -> CampYear:
         (

@@ -4,7 +4,6 @@ from apps.visums.models import CampType
 
 
 class CampTypeSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = CampType()
+        model = CampType
         fields = "__all__"

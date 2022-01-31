@@ -27,7 +27,7 @@ class SubCategoryManager(models.Manager):
             return self.get(
                 name=name,
                 category__name=category[0],
-                category__category_set__category_set__camp_year__year=category[1][0]
+                category__camp_year__year=category[1],
             )
 
         return self.get(name=name, category=category)

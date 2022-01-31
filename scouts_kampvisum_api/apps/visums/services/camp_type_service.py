@@ -6,7 +6,6 @@ logger = logging.getLogger(__name__)
 
 
 class CampTypeService:
-
     def create(self, request, camp_type: str) -> CampType:
         """
         Saves a CampType object to the DB.

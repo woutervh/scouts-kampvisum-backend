@@ -2,10 +2,13 @@
 	{
 		"model": "visums.Category",
 		"fields": {
-			"name": "Planning",
+			"name": "planning",
 			"camp_types": [
-				"*"
+				[
+					"*"
+				]
 			],
+			"label": "Planning",
 			"description": "",
 			"explanation": ""
 		}
@@ -13,10 +16,13 @@
 	{
 		"model": "visums.Category",
 		"fields": {
-			"name": "Logistiek",
+			"name": "logistics",
 			"camp_types": [
-				"*"
+				[
+					"basis"
+				]
 			],
+			"label": "Logistiek",
 			"description": "",
 			"explanation": ""
 		}
@@ -24,10 +30,13 @@
 	{
 		"model": "visums.Category",
 		"fields": {
-			"name": "Communicatie & afspraken",
+			"name": "communication_agreements",
 			"camp_types": [
-				"*"
+				[
+					"basis"
+				]
 			],
+			"label": "Communicatie & afspraken",
 			"description": "",
 			"explanation": ""
 		}
@@ -35,10 +44,13 @@
 	{
 		"model": "visums.Category",
 		"fields": {
-			"name": "Veiligheid",
+			"name": "safety",
 			"camp_types": [
-				"*"
+				[
+					"basis"
+				]
 			],
+			"label": "Veiligheid",
 			"description": "",
 			"explanation": ""
 		}
@@ -46,10 +58,13 @@
 	{
 		"model": "visums.Category",
 		"fields": {
-			"name": "Leden & leiding",
+			"name": "members_leaders",
 			"camp_types": [
-				"*"
+				[
+					"basis"
+				]
 			],
+			"label": "Leden & leiding",
 			"description": "",
 			"explanation": ""
 		}
@@ -57,10 +72,13 @@
 	{
 		"model": "visums.Category",
 		"fields": {
-			"name": "Budget",
+			"name": "budget",
 			"camp_types": [
-				"*"
+				[
+					"basis"
+				]
 			],
+			"label": "Budget",
 			"description": "",
 			"explanation": ""
 		}

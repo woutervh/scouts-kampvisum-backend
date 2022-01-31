@@ -19,11 +19,6 @@ class CampVisumSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
 
     class Meta:
         model = CampVisum
-        # fields = ["id"]
-        # flatten = [
-        #     ("camp", CampSerializer),
-        #     ("category_set", LinkedCategorySetSerializer),
-        # ]
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
@@ -32,13 +27,13 @@ class CampVisumSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
         return super().to_internal_value(data)
 
     def to_representation(self, data: dict) -> dict:
-        logger.debug("VISUM SERIALIZER TO REPRESENTATION: %s", data)
+        # logger.debug("VISUM SERIALIZER TO REPRESENTATION: %s", data)
 
         data = super().to_representation(data)
 
         data["group_group_admin_id"] = (
             data.get("camp", {}).get("sections", [])[0].get("group_admin_id", None)
         )
-        logger.debug("VISUM SERIALIZER TO REPRESENTATION: %s", data)
+        # logger.debug("VISUM SERIALIZER TO REPRESENTATION: %s", data)
 
         return data

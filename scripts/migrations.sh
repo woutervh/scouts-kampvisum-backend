@@ -16,15 +16,9 @@ FIXTURES=(
 	"scouts_group_types.json"
 	"scouts_section_names.json"
 	"default_scouts_section_names.json"
-	# "camp_years.json"
-	# "camp_year_category_sets.json"
 	"camp_types.json"
 	"category_set_priorities.json"
-	# "category_sets.json"
-	# "categories.json"
-	# "sub_categories.json"
 	"check_types.json"
-	# "checks.json"
 )
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }

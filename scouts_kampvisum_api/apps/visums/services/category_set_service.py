@@ -4,6 +4,7 @@ from apps.camps.models import Camp, CampYear
 from apps.camps.services import CampYearService
 from apps.groups.models import ScoutsGroupType
 from apps.visums.models import (
+    CampType,
     CampYearCategorySet,
     CategorySet,
     Category,
@@ -29,14 +30,19 @@ class CategorySetService:
     group_admin = GroupAdmin()
 
     def get_default_category_set(
-        self, request, camp_year: CampYear
+        self, request, camp_year: CampYear, camp_type: CampType = None
     ) -> CategorySet:
+        if camp_type is None:
+            logger.warn("No camp type given, getting default CampType instance")
+            camp_type = CampType.objects.get_default()
+
         logger.debug(
-            "Looking for category sets for camp year %s",
+            "Looking for category sets for camp year %s and camp type %s",
             camp_year.to_simple_str(),
+            camp_type.camp_type,
         )
         qs = CategorySet.objects.filter(
-            category_set__camp_year=camp_year
+            camp_year_category_set__camp_year=camp_year, camp_type=camp_type
         )
 
         if qs.count() > 0:
@@ -53,9 +59,7 @@ class CategorySetService:
         return False
 
     def get_linked_category_set(self, request, camp: Camp) -> LinkedCategorySet:
-        category_set = self.get_default_category_set(
-            request, camp_year=camp.year
-        )
+        category_set = self.get_default_category_set(request, camp_year=camp.year)
 
         linked_category_set = LinkedCategorySet()
 

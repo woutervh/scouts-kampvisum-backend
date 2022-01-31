@@ -12,13 +12,16 @@ from scouts_auth.inuits.models.interfaces import (
     Explainable,
     Indexable,
     Linkable,
+    Translatable,
 )
 
 
 logger = logging.getLogger(__name__)
 
 
-class SubCategory(Describable, Explainable, Indexable, Linkable, AbstractBaseModel):
+class SubCategory(
+    Describable, Explainable, Indexable, Linkable, Translatable, AbstractBaseModel
+):
 
     objects = SubCategoryManager()
 
@@ -35,10 +38,16 @@ class SubCategory(Describable, Explainable, Indexable, Linkable, AbstractBaseMod
         unique_together = ("name", "category")
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED")
+        logger.debug("NATURAL KEY CALLED SubCategory")
         return (self.name, self.category)
 
     def __str__(self):
-        return "OBJECT SubCategory: name({}), category({})".format(
-            self.name, str(self.category)
+        return "OBJECT SubCategory: name({}), label ({}), index ({}), explanation ({}), description ({}), link ({}), category({})".format(
+            self.name,
+            self.label,
+            self.index,
+            self.explanation,
+            self.description,
+            self.link,
+            self.category,
         )

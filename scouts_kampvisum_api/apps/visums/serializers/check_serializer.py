@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.visums.models import Check
-from apps.visums.serializers import SubCategorySerializer, CheckTypeSerializer
+from apps.visums.serializers import CheckTypeSerializer
 
 
 class CheckSerializer(serializers.ModelSerializer):

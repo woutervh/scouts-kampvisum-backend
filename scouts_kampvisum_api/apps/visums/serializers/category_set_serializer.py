@@ -3,29 +3,19 @@ from rest_framework import serializers
 from apps.visums.models import CategorySet
 from apps.visums.serializers import (
     CampYearCategorySetSerializer,
+    CampTypeSerializer,
     CategorySetPrioritySerializer,
-    CategoryAPISerializer,
+    CategorySerializer,
 )
-from apps.groups.serializers import ScoutsGroupTypeSerializer
 
 
 class CategorySetSerializer(serializers.ModelSerializer):
 
-    category_set = CampYearCategorySetSerializer()
+    camp_year_category_set = CampYearCategorySetSerializer()
+    camp_type = CampTypeSerializer()
     priority = CategorySetPrioritySerializer()
-    # categories = CategorySerializer(many=True)
-    # camp_year = CampYearSerializer()
-    # is_default = serializers.BooleanField(default=False)
+    categories = CategorySerializer(many=True)
 
     class Meta:
         model = CategorySet
         fields = "__all__"
-
-
-class CategorySetAPISerializer(serializers.ModelSerializer):
-
-    categories = CategoryAPISerializer(many=True)
-
-    class Meta:
-        model = CategorySet
-        fields = ["categories"]

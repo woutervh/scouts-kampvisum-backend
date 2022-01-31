@@ -48,7 +48,7 @@ class CheckType(Describable, AbstractBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED")
+        logger.debug("NATURAL KEY CALLED CheckType")
         return (self.check_type,)
 
     @property

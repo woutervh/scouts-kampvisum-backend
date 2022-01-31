@@ -17,6 +17,8 @@ class CampType(Translatable, Explainable, AuditedBaseModel):
     objects = CampTypeManager()
 
     camp_type = RequiredCharField()
+    is_base = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["camp_type"]
@@ -25,10 +27,10 @@ class CampType(Translatable, Explainable, AuditedBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED")
+        logger.debug("NATURAL KEY CALLED CampType")
         return (self.camp_type,)
 
     def __str__(self):
-        return "OBJECT CampType: camp_type({}), label ({}), explanation ({})".format(
-            self.camp_type, self.label, self.explanation
+        return "OBJECT CampType: camp_type({}), is_base ({}), is_default ({}), label ({}), explanation ({})".format(
+            self.camp_type, self.is_base, self.is_default, self.label, self.explanation
         )

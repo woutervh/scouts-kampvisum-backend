@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
-from apps.visums.models import CampType, CategorySetPriority, CategorySet
+from apps.visums.models import CampType, CategorySetPriority, CategorySet, Category
 from apps.visums.services import CampYearCategorySetService
 
 
@@ -31,12 +31,28 @@ class Command(BaseCommand):
         # Setup sets for all camp types, with highest priority
         camp_types = CampType.objects.all()
         # Verbond
-        highest_priority = CategorySetPriority.objects.all().order_by("priority").first()
+        highest_priority = (
+            CategorySetPriority.objects.all().order_by("priority").first()
+        )
         # Current Camp Year
-        camp_year_category_set = CampYearCategorySetService().get_category_set_for_curent_year()
-        
+        camp_year_category_set = (
+            CampYearCategorySetService().get_or_create_category_set_for_current_year()
+        )
+
         for camp_type in camp_types:
-            category_set = CategorySet()
-            
-            category_set.camp_year_category_set = camp_year_category_set
-            category_set.priority = highest_priority
+            category_set = CategorySet.objects.get_by_camp_year_and_camp_type(
+                camp_year=camp_year_category_set.camp_year, camp_type=camp_type
+            )
+            if not category_set:
+                category_set = CategorySet()
+
+                category_set.camp_year_category_set = camp_year_category_set
+                category_set.camp_type = camp_type
+                category_set.priority = highest_priority
+
+                category_set.full_clean()
+                category_set.save()
+
+            categories = Category.objects.get_by_camp_type(camp_type)
+            for category in categories:
+                category_set.categories.add(category)

@@ -35,7 +35,7 @@ class Check(Explainable, Indexable, Linkable, Translatable, AbstractBaseModel):
         unique_together = ("name", "sub_category")
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED")
+        logger.debug("NATURAL KEY CALLED Check")
         return (self.name, self.sub_category)
 
     def __str__(self):

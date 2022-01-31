@@ -2,131 +2,161 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "Datum",
+			"name": "date",
 			"category": [
-				"Planning",
+				"planning",
+				2022
+			],
+			"camp_types": [
 				[
-					2022,
-					"Test"
-				]
-			]
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "Activiteiten",
-			"category": [
-				"Planning",
-				[
-					2022,
-					"Test"
-				]
-			]
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "Menu",
-			"category": [
-				"Planning",
-				[
-					2022,
-					"Test"
-				]
-			]
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "Locatie(s) - kaartje",
-			"category": [
-				"Logistiek",
-				[
-					2022,
-					"Test"
-				]
-			]
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "Locatie(s) - info",
-			"category": [
-				"Logistiek",
-				[
-					2022,
-					"Test"
-				]
-			]
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "Vervoer",
-			"category": [
-				"Logistiek",
-				[
-					2022,
-					"Test"
-				]
-			]
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "Materiaal",
-			"category": [
-				"Logistiek",
-				[
-					2022,
-					"Test"
-				]
-			]
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "Ouders",
-			"category": [
-				"Communicatie & afspraken",
-				[
-					2022,
-					"Test"
-				]
-			]
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "Afspraken",
-			"category": [
-				"Communicatie & afspraken",
-				[
-					2022,
-					"Test"
-				]
-			]
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "Verzekeringen",
-			"category": [
-				"Veiligheid",
-				[
-					2022,
-					"Test"
+					"basis"
 				]
 			],
+			"label": "Datum"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "activities",
+			"category": [
+				"planning",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Activiteiten"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "menu",
+			"category": [
+				"planning",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Menu"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "locations_map",
+			"category": [
+				"logistics",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Locatie(s) - kaartje"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "locations_info",
+			"category": [
+				"logistics",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Locatie(s) - info"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "transport",
+			"category": [
+				"logistics",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Vervoer"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "material",
+			"category": [
+				"logistics",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Materiaal"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "parents",
+			"category": [
+				"communication_agreements",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Ouders"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "agreements",
+			"category": [
+				"communication_agreements",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Afspraken"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "insurance",
+			"category": [
+				"safety",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Verzekeringen",
 			"explanation": "Info over verzekeringen",
 			"link": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/waarvoor-ben-je-verzekerd"
 		}
@@ -134,66 +164,81 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "Zorgverlening",
+			"name": "healthcare",
 			"category": [
-				"Veiligheid",
+				"safety",
+				2022
+			],
+			"camp_types": [
 				[
-					2022,
-					"Test"
+					"basis"
 				]
-			]
+			],
+			"label": "Zorgverlening"
 		}
 	},
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "Leiding",
+			"name": "leaders",
 			"category": [
-				"Leden & leiding",
+				"members_leaders",
+				2022
+			],
+			"camp_types": [
 				[
-					2022,
-					"Test"
+					"basis"
 				]
-			]
+			],
+			"label": "Leiding"
 		}
 	},
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "Fourage",
+			"name": "cooks",
 			"category": [
-				"Leden & leiding",
+				"members_leaders",
+				2022
+			],
+			"camp_types": [
 				[
-					2022,
-					"Test"
+					"basis"
 				]
-			]
+			],
+			"label": "Fourage"
 		}
 	},
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "Leden",
+			"name": "members",
 			"category": [
-				"Leden & leiding",
+				"members_leaders",
+				2022
+			],
+			"camp_types": [
 				[
-					2022,
-					"Test"
+					"basis"
 				]
-			]
+			],
+			"label": "Leden"
 		}
 	},
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "Begroting",
+			"name": "budget",
 			"category": [
-				"Budget",
+				"budget",
+				2022
+			],
+			"camp_types": [
 				[
-					2022,
-					"Test"
+					"basis"
 				]
-			]
+			],
+			"label": "Begroting"
 		}
 	}
 ]

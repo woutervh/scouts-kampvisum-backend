@@ -4,13 +4,10 @@
         "fields": {
             "name": "planning_date_members",
             "sub_category": [
-                "Datum",
+                "date",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -25,13 +22,10 @@
         "fields": {
             "name": "planning_date_leaders",
             "sub_category": [
-                "Datum",
+                "date",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -45,13 +39,10 @@
         "fields": {
             "name": "planning_date_comments",
             "sub_category": [
-                "Datum",
+                "date",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -65,13 +56,10 @@
         "fields": {
             "name": "planning_activities_camp",
             "sub_category": [
-                "Activiteiten",
+                "activities",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -85,13 +73,10 @@
         "fields": {
             "name": "planning_activities_rain",
             "sub_category": [
-                "Activiteiten",
+                "activities",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -105,13 +90,10 @@
         "fields": {
             "name": "planning_activities_heat",
             "sub_category": [
-                "Activiteiten",
+                "activities",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -125,13 +107,10 @@
         "fields": {
             "name": "planning_activities_totemisation",
             "sub_category": [
-                "Activiteiten",
+                "activities",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -145,13 +124,10 @@
         "fields": {
             "name": "planning_activities_night_activity",
             "sub_category": [
-                "Activiteiten",
+                "activities",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -165,13 +141,10 @@
         "fields": {
             "name": "planning_activities_comments",
             "sub_category": [
-                "Activiteiten",
+                "activities",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -185,13 +158,10 @@
         "fields": {
             "name": "planning_activities_upload_general_planning",
             "sub_category": [
-                "Activiteiten",
+                "activities",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -206,13 +176,10 @@
         "fields": {
             "name": "planning_menu_balanced_diet",
             "sub_category": [
-                "Menu",
+                "menu",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -226,13 +193,10 @@
         "fields": {
             "name": "planning_menu_vegetarian_diet",
             "sub_category": [
-                "Menu",
+                "menu",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -246,13 +210,10 @@
         "fields": {
             "name": "planning_menu_comments",
             "sub_category": [
-                "Menu",
+                "menu",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -266,13 +227,10 @@
         "fields": {
             "name": "planning_menu_upload",
             "sub_category": [
-                "Menu",
+                "menu",
                 [
-                    "Planning",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "planning",
+                    2022
                 ]
             ],
             "check_type": [
@@ -287,13 +245,10 @@
         "fields": {
             "name": "logistics_location_location",
             "sub_category": [
-                "Locatie(s) - kaartje",
+                "locations_map",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -307,13 +262,10 @@
         "fields": {
             "name": "logistics_location_comments",
             "sub_category": [
-                "Locatie(s) - kaartje",
+                "locations_map",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -327,13 +279,10 @@
         "fields": {
             "name": "logistics_location_contract",
             "sub_category": [
-                "Locatie(s) - kaartje",
+                "locations_map",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -348,13 +297,10 @@
         "fields": {
             "name": "logistics_info_water",
             "sub_category": [
-                "Locatie(s) - info",
+                "locations_info",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -369,13 +315,10 @@
         "fields": {
             "name": "logistics_info_toilets",
             "sub_category": [
-                "Locatie(s) - info",
+                "locations_info",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -390,13 +333,10 @@
         "fields": {
             "name": "logistics_info_fire",
             "sub_category": [
-                "Locatie(s) - info",
+                "locations_info",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -411,13 +351,10 @@
         "fields": {
             "name": "logistics_info_electricity",
             "sub_category": [
-                "Locatie(s) - info",
+                "locations_info",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -431,13 +368,10 @@
         "fields": {
             "name": "logistics_info_store",
             "sub_category": [
-                "Locatie(s) - info",
+                "locations_info",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -451,13 +385,10 @@
         "fields": {
             "name": "logistics_info_comments",
             "sub_category": [
-                "Locatie(s) - info",
+                "locations_info",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -471,13 +402,10 @@
         "fields": {
             "name": "logistics_transport_members",
             "sub_category": [
-                "Vervoer",
+                "transport",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -491,13 +419,10 @@
         "fields": {
             "name": "logistics_transport_leaders",
             "sub_category": [
-                "Vervoer",
+                "transport",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -511,13 +436,10 @@
         "fields": {
             "name": "logistics_transport_materials",
             "sub_category": [
-                "Vervoer",
+                "transport",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -531,13 +453,10 @@
         "fields": {
             "name": "logistics_transport_comments",
             "sub_category": [
-                "Vervoer",
+                "transport",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -551,13 +470,10 @@
         "fields": {
             "name": "logistics_transport_upload",
             "sub_category": [
-                "Vervoer",
+                "transport",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -572,13 +488,10 @@
         "fields": {
             "name": "logistics_materials_checked",
             "sub_category": [
-                "Materiaal",
+                "material",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -592,13 +505,10 @@
         "fields": {
             "name": "logistics_materials_comments",
             "sub_category": [
-                "Materiaal",
+                "material",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -612,13 +522,10 @@
         "fields": {
             "name": "logistics_materials_upload",
             "sub_category": [
-                "Materiaal",
+                "material",
                 [
-                    "Logistiek",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "logistics",
+                    2022
                 ]
             ],
             "check_type": [
@@ -633,13 +540,10 @@
         "fields": {
             "name": "communication_parents_ombudsman",
             "sub_category": [
-                "Ouders",
+                "parents",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -653,13 +557,10 @@
         "fields": {
             "name": "communication_parents_ombudsman_contact",
             "sub_category": [
-                "Ouders",
+                "parents",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -673,13 +574,10 @@
         "fields": {
             "name": "communication_parents_informed",
             "sub_category": [
-                "Ouders",
+                "parents",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -693,13 +591,10 @@
         "fields": {
             "name": "communication_parents_comments",
             "sub_category": [
-                "Ouders",
+                "parents",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -713,13 +608,10 @@
         "fields": {
             "name": "communication_parents_brochure",
             "sub_category": [
-                "Ouders",
+                "parents",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -734,13 +626,10 @@
         "fields": {
             "name": "communication_agreements_rules",
             "sub_category": [
-                "Afspraken",
+                "agreements",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -754,13 +643,10 @@
         "fields": {
             "name": "communication_agreements_smoking",
             "sub_category": [
-                "Afspraken",
+                "agreements",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -774,13 +660,10 @@
         "fields": {
             "name": "communication_agreements_sexuality",
             "sub_category": [
-                "Afspraken",
+                "agreements",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -794,13 +677,10 @@
         "fields": {
             "name": "communication_agreements_alcohol",
             "sub_category": [
-                "Afspraken",
+                "agreements",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -814,13 +694,10 @@
         "fields": {
             "name": "communication_agreements_parents",
             "sub_category": [
-                "Afspraken",
+                "agreements",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -834,13 +711,10 @@
         "fields": {
             "name": "communication_agreements_comments",
             "sub_category": [
-                "Afspraken",
+                "agreements",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -854,13 +728,10 @@
         "fields": {
             "name": "communication_agreements_upload",
             "sub_category": [
-                "Afspraken",
+                "agreements",
                 [
-                    "Communicatie & afspraken",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "communication_agreements",
+                    2022
                 ]
             ],
             "check_type": [
@@ -875,13 +746,10 @@
         "fields": {
             "name": "safety_insurance_upload",
             "sub_category": [
-                "Verzekeringen",
+                "insurance",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -896,13 +764,10 @@
         "fields": {
             "name": "safety_insurance_members",
             "sub_category": [
-                "Verzekeringen",
+                "insurance",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -916,13 +781,10 @@
         "fields": {
             "name": "safety_insurance_non_members",
             "sub_category": [
-                "Verzekeringen",
+                "insurance",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -936,13 +798,10 @@
         "fields": {
             "name": "safety_insurance_cars",
             "sub_category": [
-                "Verzekeringen",
+                "insurance",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -956,13 +815,10 @@
         "fields": {
             "name": "safety_insurance_materials",
             "sub_category": [
-                "Verzekeringen",
+                "insurance",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -976,13 +832,10 @@
         "fields": {
             "name": "safety_insurance_comments",
             "sub_category": [
-                "Verzekeringen",
+                "insurance",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -996,13 +849,10 @@
         "fields": {
             "name": "safety_insurance_upload",
             "sub_category": [
-                "Verzekeringen",
+                "insurance",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1017,13 +867,10 @@
         "fields": {
             "name": "safety_healthcare_gp",
             "sub_category": [
-                "Zorgverlening",
+                "healthcare",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1037,13 +884,10 @@
         "fields": {
             "name": "safety_healthcare_pharmacy",
             "sub_category": [
-                "Zorgverlening",
+                "healthcare",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1057,13 +901,10 @@
         "fields": {
             "name": "safety_healthcare_hospital",
             "sub_category": [
-                "Zorgverlening",
+                "healthcare",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1077,13 +918,10 @@
         "fields": {
             "name": "safety_healthcare_hospital_ehbo",
             "sub_category": [
-                "Zorgverlening",
+                "healthcare",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1098,13 +936,10 @@
         "fields": {
             "name": "safety_healthcare_gp_pharmacy_hospital_location",
             "sub_category": [
-                "Zorgverlening",
+                "healthcare",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1118,13 +953,10 @@
         "fields": {
             "name": "safety_healthcare_comments",
             "sub_category": [
-                "Zorgverlening",
+                "healthcare",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1138,13 +970,10 @@
         "fields": {
             "name": "safety_healthcare_hospital_emergency_contact",
             "sub_category": [
-                "Zorgverlening",
+                "healthcare",
                 [
-                    "Veiligheid",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "safety",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1159,13 +988,10 @@
         "fields": {
             "name": "participants_leaders_main",
             "sub_category": [
-                "Leiding",
+                "leaders",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1179,13 +1005,10 @@
         "fields": {
             "name": "participants_leaders_responsible",
             "sub_category": [
-                "Leiding",
+                "leaders",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1199,13 +1022,10 @@
         "fields": {
             "name": "participants_leaders_responsible_2",
             "sub_category": [
-                "Leiding",
+                "leaders",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1219,13 +1039,10 @@
         "fields": {
             "name": "participants_leaders_leaders",
             "sub_category": [
-                "Leiding",
+                "leaders",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1241,13 +1058,10 @@
         "fields": {
             "name": "participants_leaders_comments",
             "sub_category": [
-                "Leiding",
+                "leaders",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1261,13 +1075,10 @@
         "fields": {
             "name": "participants_cooks_sufficient",
             "sub_category": [
-                "Fourage",
+                "cooks",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1281,13 +1092,10 @@
         "fields": {
             "name": "participants_cooks_cooks",
             "sub_category": [
-                "Fourage",
+                "cooks",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1302,13 +1110,10 @@
         "fields": {
             "name": "participants_cooks_comments",
             "sub_category": [
-                "Fourage",
+                "cooks",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1322,13 +1127,10 @@
         "fields": {
             "name": "participants_members_medical_info",
             "sub_category": [
-                "Leden",
+                "members",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1342,13 +1144,10 @@
         "fields": {
             "name": "participants_members_id",
             "sub_category": [
-                "Leden",
+                "members",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1362,13 +1161,10 @@
         "fields": {
             "name": "participants_members_payment",
             "sub_category": [
-                "Leden",
+                "members",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1382,13 +1178,10 @@
         "fields": {
             "name": "participants_members_members",
             "sub_category": [
-                "Leden",
+                "members",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1404,13 +1197,10 @@
         "fields": {
             "name": "participants_members_comments",
             "sub_category": [
-                "Leden",
+                "members",
                 [
-                    "Leden & leiding",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "members_leaders",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1424,13 +1214,10 @@
         "fields": {
             "name": "budget_budget_balanced",
             "sub_category": [
-                "Begroting",
+                "budget",
                 [
-                    "Budget",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "budget",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1444,13 +1231,10 @@
         "fields": {
             "name": "budget_budget_leaders",
             "sub_category": [
-                "Begroting",
+                "budget",
                 [
-                    "Budget",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "budget",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1464,13 +1248,10 @@
         "fields": {
             "name": "budget_budget_members",
             "sub_category": [
-                "Begroting",
+                "budget",
                 [
-                    "Budget",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "budget",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1484,13 +1265,10 @@
         "fields": {
             "name": "budget_budget_comments",
             "sub_category": [
-                "Begroting",
+                "budget",
                 [
-                    "Budget",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "budget",
+                    2022
                 ]
             ],
             "check_type": [
@@ -1504,13 +1282,10 @@
         "fields": {
             "name": "budget_budget_upload",
             "sub_category": [
-                "Begroting",
+                "budget",
                 [
-                    "Budget",
-                    [
-                        2022,
-                        "Test"
-                    ]
+                    "budget",
+                    2022
                 ]
             ],
             "check_type": [

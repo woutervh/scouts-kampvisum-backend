@@ -8,6 +8,7 @@ from apps.groups.models import ScoutsSectionName, ScoutsSection, ScoutsGroupType
 from apps.participants.models import InuitsParticipant
 from apps.participants.services import InuitsParticipantService
 from apps.visums.models import (
+    CampType,
     CampVisum,
     CampYearCategorySet,
     CategorySet,
@@ -77,13 +78,20 @@ class Command(BaseCommand):
         data["file_last"] = str(PersistedFile.objects.last().id)
         # NonMember
         self.add_non_members(user)
-        data["participant_non_member_first"] = str(InuitsParticipant.objects.filter(is_member=False).first().id)
-        data["participant_non_member_last"] = str(InuitsParticipant.objects.filter(is_member=False).last().id)
+        data["participant_non_member_first"] = str(
+            InuitsParticipant.objects.filter(is_member=False).first().id
+        )
+        data["participant_non_member_last"] = str(
+            InuitsParticipant.objects.filter(is_member=False).last().id
+        )
         # GA member
         data["ga_member_jeroen_budts"] = "5e19c7d0-d448-4c08-ab37-5a20a9054101"
         data["ga_member_jeroen_wouters"] = "1f59774b-e89b-4617-aa7e-2e55fb1045b0"
         data["ga_member_ricardo_acosta_torres"] = "5b4bda13-df27-45f6-bd9c-d7d22a5f7d07"
         data["ga_member_stijn_verholen"] = "b91ba6e9-ab51-49ce-86e8-e77a7224971e"
+        # CampType
+        data["camp_type_first"] = str(CampType.objects.first().id)
+        data["camp_type_last"] = str(CampType.objects.last().id)
         # CategorySet
         data["camp_year_category_set_first"] = str(
             CampYearCategorySet.objects.first().id

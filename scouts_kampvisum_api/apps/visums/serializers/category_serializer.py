@@ -16,7 +16,7 @@ class CategorySerializer(serializers.ModelSerializer):
     description = OptionalCharSerializerField()
 
     class Meta:
-        model = Category()
+        model = Category
         fields = "__all__"
 
 
@@ -26,7 +26,7 @@ class CategoryAPISerializer(serializers.ModelSerializer):
     sub_categories = SubCategoryAPISerializer(many=True)
 
     class Meta:
-        model = Category()
+        model = Category
         fields = ["name", "id", "status", "sub_categories"]
 
     def get_status(self, obj):
