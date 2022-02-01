@@ -106,11 +106,6 @@ class LinkedCheckService:
     def update_location_check(self, instance: LinkedLocationCheck, **data):
         return self._update_location(instance=instance, is_camp_location=False, **data)
 
-    def unlink_location(self, instance: LinkedLocationCheck, location_id, **data):
-        return self._unlink_location(
-            instance=instance, location_id=location_id, is_camp_location=False, **data
-        )
-
     def get_camp_location_check(self, check_id):
         try:
             return LinkedLocationCheck.objects.get(linkedcheck_ptr=check_id)
@@ -120,16 +115,6 @@ class LinkedCheckService:
 
     def update_camp_location_check(self, instance: LinkedLocationCheck, **data):
         return self._update_location(instance=instance, is_camp_location=True, **data)
-
-    def unlink_camp_location(
-        self, instance: LinkedLocationCheck, camp_location_id, **data
-    ):
-        return self._unlink_location(
-            instance=instance,
-            location_id=camp_location_id,
-            is_camp_location=True,
-            **data
-        )
 
     def _update_location(
         self, instance: LinkedLocationCheck, is_camp_location=False, **data
@@ -149,38 +134,18 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        logger.debug("DATA: %s", data)
-        logger.debug("LOCATIONS: %s", data.get("locations", []))
+        existing_locations = [location.id for location in instance.locations.all()]
+
         locations = data.get("locations", [])
         for location in locations:
-            logger.debug("LOCATION: %s", location)
             self.location_service.create_or_update(instance=instance, data=location)
 
-        return instance
-
-    def _unlink_location(
-        self,
-        request,
-        instance: LinkedLocationCheck,
-        location_id,
-        is_camp_location=False,
-        **data
-    ):
-        logger.debug(
-            "Unlinking location %s from instance with id %s",
-            location_id,
-            instance.id,
-        )
-        logger.debug("DATA: %s", data)
-
-        location = CampLocation.objects.safe_get(id=location_id)
-        if not location:
-            raise Http404("Unknown location with id {}".format(location_id))
-
-        instance.value.remove(location)
-
-        instance.full_clean()
-        instance.save()
+        added_locations = [location.id for location in instance.locations.all()]
+        logger.debug("existing: %s", existing_locations)
+        logger.debug("added: %s", added_locations)
+        for location in existing_locations:
+            if not location in added_locations:
+                CampLocation.objects.delete(pk=location)
 
         return instance
 

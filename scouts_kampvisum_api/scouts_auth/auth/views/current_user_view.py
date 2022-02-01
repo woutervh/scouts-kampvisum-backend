@@ -8,7 +8,6 @@ from drf_yasg2.utils import swagger_auto_schema
 from scouts_auth.auth.models import User
 from scouts_auth.auth.serializers import UserSerializer
 
-
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
 from scouts_auth.groupadmin.services import GroupAdmin

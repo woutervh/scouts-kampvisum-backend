@@ -27,7 +27,8 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         """
 
         logger.debug(
-            "User info requested with access_token %s, " + ", id_token %s and payload %s",
+            "User info requested with access_token %s, "
+            + ", id_token %s and payload %s",
             access_token,
             id_token,
             payload,
@@ -79,7 +80,9 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         user.first_name = claims.get("given_name", user.first_name)
         user.last_name = claims.get("family_name", user.last_name)
 
-        logger.debug("Mapping user %s %s with local claims", user.first_name, user.last_name)
+        logger.debug(
+            "Mapping user %s %s with local claims", user.first_name, user.last_name
+        )
 
         roles = claims.get(settings.OIDC_RP_CLIENT_ID, {}).get("roles", [])
         user = self.map_user_roles(user, roles)
@@ -109,7 +112,6 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
         Call parent authenticate but catch HTTPError 401 always,
         even without www-authenticate.
         """
-
         try:
             logger.debug("Authenticating user with OIDC backend")
 
@@ -127,13 +129,17 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
 
             return result
         except HTTPError as exc:
-            logging.exception("SCOUTS-AUTH: Authentication error: %s", exc.response.json())
+            logging.exception(
+                "SCOUTS-AUTH: Authentication error: %s", exc.response.json()
+            )
 
             response = exc.response
             # If oidc returns 401 return auth failed error
             if response.status_code == 401:
                 logging.error("SCOUTS-AUTH: 401 Unable to authenticate")
 
-                raise exceptions.AuthenticationFailed(response.json().get("error_description", response.text))
+                raise exceptions.AuthenticationFailed(
+                    response.json().get("error_description", response.text)
+                )
 
             raise
