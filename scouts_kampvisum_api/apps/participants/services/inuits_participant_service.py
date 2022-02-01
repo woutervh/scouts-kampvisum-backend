@@ -50,6 +50,9 @@ class InuitsParticipantService:
     ) -> InuitsParticipant:
         member_participant = None
         if participant.has_group_admin_id():
+            member_participant = InuitsParticipant.objects.safe_get(
+                group_admin_id=participant.group_admin_id
+            )
             scouts_member = self.groupadmin.get_member_info(
                 active_user=user, group_admin_id=participant.group_admin_id
             )
@@ -61,7 +64,9 @@ class InuitsParticipantService:
                     )
                 )
 
-            member_participant = InuitsParticipant.from_scouts_member(scouts_member)
+            member_participant = InuitsParticipant.from_scouts_member(
+                scouts_member, member_participant
+            )
 
             member_participant.is_member = True
             member_participant.group_group_admin_id = None

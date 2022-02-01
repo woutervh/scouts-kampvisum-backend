@@ -59,12 +59,14 @@ class InuitsParticipant(InuitsPerson):
         )
 
     @staticmethod
-    def from_scouts_member(scouts_member: AbstractScoutsMember):
+    def from_scouts_member(scouts_member: AbstractScoutsMember, instance=None):
         if not scouts_member.group_admin_id:
             raise ValidationError(
                 "Can't create an InuitsParticipant without a valid group admin id"
             )
-        participant = InuitsParticipant()
+        participant = instance
+        if not participant:
+            participant = InuitsParticipant()
 
         participant.id = scouts_member.group_admin_id
         participant.group_admin_id = scouts_member.group_admin_id
