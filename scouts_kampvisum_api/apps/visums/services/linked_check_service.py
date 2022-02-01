@@ -212,9 +212,6 @@ class LinkedCheckService:
 
             instance.value.add(participant)
 
-        instance.full_clean()
-        instance.save()
-
         return instance
 
     def unlink_participant(
