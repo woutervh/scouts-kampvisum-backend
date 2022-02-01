@@ -1,4 +1,4 @@
-import logging
+import logging, uuid
 
 from django.http import Http404
 
@@ -135,17 +135,18 @@ class LinkedCheckService:
         instance.save()
 
         existing_locations = [location.id for location in instance.locations.all()]
-
         locations = data.get("locations", [])
+        posted_locations = [
+            uuid.UUID(location.get("id"))
+            for location in locations
+            if location.get("id", None)
+        ]
+
+        for location in existing_locations:
+            if not location in posted_locations:
+                CampLocation.objects.get(pk=location).delete()
         for location in locations:
             self.location_service.create_or_update(instance=instance, data=location)
-
-        added_locations = [location.id for location in instance.locations.all()]
-        logger.debug("existing: %s", existing_locations)
-        logger.debug("added: %s", added_locations)
-        for location in existing_locations:
-            if not location in added_locations:
-                CampLocation.objects.delete(pk=location)
 
         return instance
 

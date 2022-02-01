@@ -14,11 +14,8 @@ class CampLocationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.debug("CAMP LOCATION SERIALIZER DATA: %s", data)
         id = data.get("id", None)
         data = super().to_internal_value(data)
-        logger.debug("CAMP LOCATION SERIALIZER DATA: %s", data)
         data["id"] = id
-        logger.debug("CAMP LOCATION SERIALIZER DATA: %s", data)
 
         return data

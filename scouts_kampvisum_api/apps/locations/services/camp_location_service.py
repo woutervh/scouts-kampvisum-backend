@@ -15,9 +15,9 @@ class CampLocationService:
     ) -> CampLocation:
         id = data.get("id", None)
         if id:
-            location = CampLocation.objects.get(pk=id)
-
-            if not location:
+            try:
+                location = CampLocation.objects.get(pk=id)
+            except:
                 raise Http404(
                     "No CampLocation found with id {} for LinkedLocationCheck with id {}".format(
                         id, instance.id
