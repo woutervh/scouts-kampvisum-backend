@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from apps.participants.managers import InuitsParticipantManager
 
@@ -59,9 +60,14 @@ class InuitsParticipant(InuitsPerson):
 
     @staticmethod
     def from_scouts_member(scouts_member: AbstractScoutsMember):
+        if not scouts_member.group_admin_id:
+            raise ValidationError(
+                "Can't create an InuitsParticipant without a valid group admin id"
+            )
         participant = InuitsParticipant()
 
-        participant.id = None
+        participant.id = scouts_member.group_admin_id
+        participant.group_admin_id = scouts_member.group_admin_id
         participant.is_member = True
         participant.first_name = (
             scouts_member.first_name if scouts_member.first_name else ""
@@ -90,9 +96,6 @@ class InuitsParticipant(InuitsPerson):
         )
         participant.city = scouts_member.city if scouts_member.city else ""
         participant.group_group_admin_id = ""
-        participant.group_admin_id = (
-            scouts_member.group_admin_id if scouts_member.group_admin_id else ""
-        )
         participant.comment = ""
 
         return participant

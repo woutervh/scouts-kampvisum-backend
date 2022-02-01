@@ -191,6 +191,7 @@ class LinkedCheckService:
             logger.error("LinkedParticipantCheck with id %s not found", check_id)
             raise Http404
 
+    # @TODO make all transactions atomary
     def update_participant_check(
         self, request, instance: LinkedParticipantCheck, **data
     ):

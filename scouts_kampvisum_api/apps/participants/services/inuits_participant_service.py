@@ -23,7 +23,9 @@ class InuitsParticipantService:
         skip_validation: bool = False,
     ):
         existing_participant = InuitsParticipant.objects.safe_get(
-            id=participant.id, group_admin_id=participant.group_admin_id, email=participant.email
+            id=participant.id,
+            group_admin_id=participant.group_admin_id,
+            email=participant.email,
         )
 
         if existing_participant:
