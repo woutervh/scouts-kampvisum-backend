@@ -4,8 +4,6 @@ from rest_framework import serializers
 
 from apps.groups.models import ScoutsGroupType
 
-from scouts_auth.inuits.serializers.fields import RecursiveSerializerField
-
 
 logger = logging.getLogger(__name__)
 

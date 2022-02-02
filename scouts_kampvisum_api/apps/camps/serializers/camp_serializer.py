@@ -1,35 +1,55 @@
 import logging
 
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from apps.camps.models import Camp
 from apps.camps.serializers import CampYearSerializer
-from apps.groups.serializers import ScoutsSectionSerializer
+from apps.camps.services import CampYearService
 
-from scouts_auth.inuits.mixins import FlattenSerializerMixin
+from apps.groups.serializers import ScoutsSectionSerializer
 
 
 logger = logging.getLogger(__name__)
 
 
-class CampSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
+class CampSerializer(serializers.ModelSerializer):
     """
-    Serializes a Camp object.
+    Serializes a Camp instance from and to the frontend.
     """
 
-    # name = serializers.CharField()
-    # year = CampYearSerializer()
-    # start_date = OptionalDateField()
-    # end_date = OptionalDateField()
-    # sections = SectionSerializer(many=True)
     year = CampYearSerializer()
     sections = ScoutsSectionSerializer(many=True)
+    # sections = serializers.PrimaryKeyRelatedField(
+    #     queryset=ScoutsSection.objects.all(), many=True
+    # )
 
     class Meta:
         model = Camp
         fields = "__all__"
-        # fields = ("name", "year", "start_date", "end_date", "sections")
-        # flatten = [("year", CampYearSerializer)]
+
+    def to_internal_value(self, data: dict) -> dict:
+        logger.debug("CAMP SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        year = data.get("year", None)
+        if not year:
+            year = CampYearService().get_or_create_current_camp_year()
+            data["year"] = year.year
+
+        data = super().to_internal_value(data)
+        logger.debug("CAMP SERIALIZER TO INTERNAL VALUE: %s", data)
+
+        return data
+
+    def validate(self, data: dict) -> dict:
+        logger.debug("CAMP SERIALIZER VALIDATE: %s", data)
+
+        if not data.get("name"):
+            raise ValidationError("A Camp must have a name")
+
+        if not data.get("sections"):
+            raise ValidationError("A Camp must have at least 1 Section attached")
+
+        return data
 
     def create(self, validated_data) -> Camp:
         return Camp(**validated_data)

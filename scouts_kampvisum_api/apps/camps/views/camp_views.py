@@ -11,7 +11,7 @@ from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from apps.camps.models import Camp
-from apps.camps.serializers import CampSerializer, CampAPISerializer
+from apps.camps.serializers import CampSerializer
 from apps.camps.services import CampService
 from apps.camps.filters import CampFilter
 
@@ -31,13 +31,13 @@ class CampViewSet(viewsets.GenericViewSet):
     camp_service = CampService()
 
     @swagger_auto_schema(
-        request_body=CampAPISerializer,
+        request_body=CampSerializer,
         responses={status.HTTP_201_CREATED: CampSerializer},
     )
     def create(self, request):
         logger.debug("CREATE REQUEST DATA: %s", request.data)
 
-        serializer = CampAPISerializer(data=request.data, context={"request": request})
+        serializer = CampSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
@@ -49,21 +49,21 @@ class CampViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: CampAPISerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
     def retrieve(self, request, pk=None):
         instance = self.get_object()
-        serializer = CampAPISerializer(instance, context={"request": request})
+        serializer = CampSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
     @swagger_auto_schema(
-        request_body=CampAPISerializer,
+        request_body=CampSerializer,
         responses={status.HTTP_200_OK: CampSerializer},
     )
     def partial_update(self, request, pk=None):
         camp = self.get_object()
 
-        serializer = CampAPISerializer(
+        serializer = CampSerializer(
             data=request.data, instance=camp, context={"request": request}, partial=True
         )
         serializer.is_valid(raise_exception=True)
@@ -89,16 +89,16 @@ class CampViewSet(viewsets.GenericViewSet):
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: CampAPISerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
     def list(self, request):
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = CampAPISerializer(page, many=True)
+            serializer = CampSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = CampAPISerializer(instances, many=True)
+            serializer = CampSerializer(instances, many=True)
             return Response(serializer.data)
 
     @action(

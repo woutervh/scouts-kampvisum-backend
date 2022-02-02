@@ -260,43 +260,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
-    
-    @swagger_auto_schema(
-        request_body=LinkedLocationCheckSerializer,
-        responses={status.HTTP_200_OK: LinkedLocationCheckSerializer},
-    )
-    def unlink_location(self, request, check_id):
-        logger.debug("LOCATION CHECK UNLINK REQUEST DATA: %s", request.data)
-        instance = self.linked_check_service.get_location_check(check_id)
-
-        if not instance:
-            logger.error(
-                "Can't unlink location: Unknown location check with id {}".format(
-                    check_id
-                )
-            )
-            raise Http404
-
-        serializer = LinkedLocationCheckSerializer(
-            data=request.data,
-            instance=instance,
-            context={"request": request},
-            partial=True,
-        )
-        serializer.is_valid(raise_exception=True)
-
-        validated_data = serializer.validated_data
-        logger.debug("LOCATION CHECK UNLINK VALIDATED DATA: %s", validated_data)
-
-        instance = self.linked_check_service.unlink_location(
-            request, instance, **validated_data
-        )
-
-        output_serializer = LinkedLocationCheckSerializer(
-            instance, context={"request": request}
-        )
-
-        return Response(output_serializer.data, status=status.HTTP_200_OK)
 
     @action(
         detail=False,
@@ -359,43 +322,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         instance = self.linked_check_service.update_camp_location_check(
             instance, **validated_data
-        )
-
-        output_serializer = LinkedCampLocationCheckSerializer(
-            instance, context={"request": request}
-        )
-
-        return Response(output_serializer.data, status=status.HTTP_200_OK)
-
-    @swagger_auto_schema(
-        request_body=LinkedCampLocationCheckSerializer,
-        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer},
-    )
-    def unlink_camp_location(self, request, check_id):
-        logger.debug("CAMP LOCATION CHECK UNLINK REQUEST DATA: %s", request.data)
-        instance = self.linked_check_service.get_camp_location_check(check_id)
-
-        if not instance:
-            logger.error(
-                "Can't unlink location: Unknown camp location check with id {}".format(
-                    check_id
-                )
-            )
-            raise Http404
-
-        serializer = LinkedCampLocationCheckSerializer(
-            data=request.data,
-            instance=instance,
-            context={"request": request},
-            partial=True,
-        )
-        serializer.is_valid(raise_exception=True)
-
-        validated_data = serializer.validated_data
-        logger.debug("CAMP LOCATION CHECK UNLINK VALIDATED DATA: %s", validated_data)
-
-        instance = self.linked_check_service.unlink_camp_location(
-            request, instance, **validated_data
         )
 
         output_serializer = LinkedCampLocationCheckSerializer(

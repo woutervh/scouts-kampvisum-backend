@@ -6,13 +6,11 @@ from apps.camps.serializers import CampSerializer
 from apps.visums.models import CampVisum
 from apps.visums.serializers import LinkedCategorySetSerializer
 
-from scouts_auth.inuits.mixins import FlattenSerializerMixin
-
 
 logger = logging.getLogger(__name__)
 
 
-class CampVisumSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
+class CampVisumSerializer(serializers.ModelSerializer):
 
     camp = CampSerializer()
     category_set = LinkedCategorySetSerializer()
@@ -22,7 +20,9 @@ class CampVisumSerializer(FlattenSerializerMixin, serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.debug("SERIALIZER TO INTERNAL VALUE: %s", data)
+        logger.debug("VISUM SERIALIZER TO INTERNAL VALUE: %s", data)
+
+        data["category_set"] = {}
 
         return super().to_internal_value(data)
 

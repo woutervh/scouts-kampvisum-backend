@@ -8,10 +8,9 @@ from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
-from apps.camps.serializers import CampAPISerializer
 from apps.visums.models import CampVisum
 from apps.visums.serializers import CampVisumSerializer
-from apps.visums.filters import CampVisumAPIFilter
+from apps.visums.filters import CampVisumFilter
 from apps.visums.services import CampVisumService
 
 
@@ -26,7 +25,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     serializer_class = CampVisumSerializer
     queryset = CampVisum.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
-    filterset_class = CampVisumAPIFilter
+    filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()
 
@@ -38,8 +37,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         data = request.data
 
         logger.debug("CAMP VISUM CREATE REQUEST DATA: %s", data)
-        # serializer = CampVisumSerializer(data=data, context={"request": request})
-        serializer = CampAPISerializer(data=data, context={"request": request})
+        serializer = CampVisumSerializer(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data

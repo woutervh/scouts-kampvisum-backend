@@ -24,3 +24,13 @@ class ScoutsSectionManager(models.Manager):
             type(group_admin_id).__name__,
         )
         return self.get(group_admin_id=group_admin_id)
+
+    def safe_get(self, *args, **kwargs):
+        pk = kwargs.get("id", kwargs.get("pk", None))
+        if pk:
+            try:
+                return self.get_queryset().get(pk=pk)
+            except:
+                pass
+
+        return None

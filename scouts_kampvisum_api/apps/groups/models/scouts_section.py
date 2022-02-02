@@ -3,6 +3,7 @@ import logging
 from django.db import models
 
 from apps.groups.models import ScoutsGroupType, ScoutsSectionName
+from apps.groups.managers import ScoutsSectionManager
 
 
 from scouts_auth.inuits.models import AbstractBaseModel
@@ -16,6 +17,8 @@ class ScoutsSection(AbstractBaseModel):
     """
     A model for a scouts section, linked to their scouts group and name.
     """
+
+    objects = ScoutsSectionManager()
 
     group_admin_id = RequiredCharField(max_length=64)
     group_type = models.ForeignKey(ScoutsGroupType, on_delete=models.CASCADE)

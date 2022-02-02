@@ -12,3 +12,6 @@ class LinkedCategorySetSerializer(serializers.ModelSerializer):
     class Meta:
         model = LinkedCategorySet
         fields = "__all__"
+
+    def to_internal_value(self, data: dict) -> dict:
+        return {}
