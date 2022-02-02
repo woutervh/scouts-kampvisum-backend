@@ -152,6 +152,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             active_user=request.user,
             term=search_term,
             group_group_admin_id=group_group_admin_id,
+            include_inactive=include_inactive,
         )
 
         if only_scouts_members:

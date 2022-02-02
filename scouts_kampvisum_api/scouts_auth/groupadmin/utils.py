@@ -49,6 +49,11 @@ class SettingsHelper:
         return attr
 
     @staticmethod
+    def get_activity_epoch(default_value=None):
+        # The "activity epoch" after which a member is deemed a past active member
+        return getattr(settings, "ACTIVITY_EPOCH", 3)
+
+    @staticmethod
     def get_administrator_groups() -> List[str]:
         return settings.KNOWN_ADMIN_GROUPS
 
@@ -59,7 +64,7 @@ class SettingsHelper:
     @staticmethod
     def get_roles() -> List[str]:
         return settings.KNOWN_ROLES
-    
+
     @staticmethod
     def get_section_leader_identifier() -> str:
         return settings.SECTION_LEADER_IDENTIFIER
