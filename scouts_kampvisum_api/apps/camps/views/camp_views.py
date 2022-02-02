@@ -115,16 +115,4 @@ class CampViewSet(viewsets.GenericViewSet):
         for camp in camps:
             years.append(camp.year.year)
 
-        # if camps.count() != 0:
-        # years = list(
-        #     set(
-        #         [
-        #             camp.start_date.year
-        #             for camp in camps
-        #             if camp.start_date is not None
-        #         ]
-        #     )
-        # )
-        # return Response(years)
-
         return Response(list(set(years)))

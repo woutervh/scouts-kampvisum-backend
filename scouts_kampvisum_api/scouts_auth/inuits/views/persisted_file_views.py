@@ -1,13 +1,15 @@
 import logging
 
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from scouts_auth.inuits.models import PersistedFile
+from scouts_auth.inuits.filters import PersistedFileFilter
 from scouts_auth.inuits.services import PersistedFileService
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 
@@ -23,6 +25,8 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
 
     serializer_class = PersistedFileSerializer
     queryset = PersistedFile.objects.all()
+    filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
+    filterset_class = PersistedFileFilter
 
     persisted_file_service = PersistedFileService()
 
@@ -118,7 +122,6 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         """
         Gets all PersistedFile instances (filtered).
         """
-
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 

@@ -1,7 +1,7 @@
 import django_filters
 from django.db.models import Q
 from django.db.models.constants import LOOKUP_SEP
-from scouts_auth.inuits.filters.fields import BaseQueryArrayField
+from scouts_auth.inuits.filters import BaseQueryArrayField
 
 
 class MultipleUUIDFilter(django_filters.BaseCSVFilter, django_filters.UUIDFilter):
@@ -17,7 +17,9 @@ class MultipleUUIDFilter(django_filters.BaseCSVFilter, django_filters.UUIDFilter
     base_field_class = BaseQueryArrayField
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault("help_text", ("A list of uuids given as query array (with or without [])."))
+        kwargs.setdefault(
+            "help_text", ("A list of uuids given as query array (with or without []).")
+        )
         kwargs.setdefault("lookup_expr", "exact")
         super().__init__(*args, **kwargs)
 

@@ -9,7 +9,9 @@ from scouts_auth.inuits.models import AbstractBaseModel
 class CampVisum(AbstractBaseModel):
 
     camp = models.ForeignKey(Camp, on_delete=models.CASCADE)
-    category_set = models.ForeignKey(LinkedCategorySet, on_delete=models.CASCADE)
+    category_set = models.ForeignKey(
+        LinkedCategorySet, on_delete=models.CASCADE, related_name="visum"
+    )
 
     class Meta:
         # ordering = ["camp__sections__name__age_group"]

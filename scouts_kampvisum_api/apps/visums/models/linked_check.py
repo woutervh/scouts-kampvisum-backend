@@ -122,7 +122,7 @@ class LinkedParticipantCheck(LinkedCheck):
 # A check that contains a file
 # ##############################################################################
 class LinkedFileUploadCheck(LinkedCheck):
-    value = models.ManyToManyField(PersistedFile)
+    value = models.ManyToManyField(PersistedFile, related_name="checks")
 
 
 # ##############################################################################

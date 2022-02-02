@@ -36,6 +36,7 @@ from apps.visums.serializers import (
 )
 from apps.visums.services import LinkedCheckService
 
+from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 
 
@@ -588,6 +589,50 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             LinkedFileUploadCheck.objects.filter(
                 Q(parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK)
                 & Q(value__isnull=False)
+            ).distinct()
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"file/search",
+    )
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
+    )
+    def search_files(self, request):
+        term = self.request.GET.get("term", None)
+        group = self.request.GET.get("group", None)
+        if term and not group:
+            raise Http404(
+                "Can only search for files if the group's group admin id is given"
+            )
+
+        if term:
+            instances = (
+                PersistedFile.objects.filter(
+                    Q(
+                        checks__parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK
+                    )
+                    & Q(
+                        checks__sub_category__category__category_set__visum__camp__sections__group_admin_id=group
+                    )
+                )
+                .distinct()
+                .filter(Q(file__icontains=term))
+            )
+
+            page = self.paginate_queryset(instances)
+            if page is not None:
+                serializer = PersistedFileSerializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            else:
+                serializer = PersistedFileSerializer(instances, many=True)
+                return Response(serializer.data)
+
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK
             )
         )
 
