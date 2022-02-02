@@ -1,4 +1,5 @@
 import logging
+import datetime
 
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMemberPersonalData,
@@ -86,6 +87,11 @@ class AbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
             "birth_date": data.pop("geboortedatum", None),
         }
 
+        if validated_data.get("birth_date", None):
+            validated_data["birth_date"] = datetime.datetime.strptime(
+                validated_data.get("birth_date"), "%Y-%m-%d"
+            ).date()
+
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
             logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
@@ -111,6 +117,11 @@ class AbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
         instance.first_name = validated_data.pop("first_name", None)
         instance.last_name = validated_data.pop("last_name", None)
         instance.birth_date = validated_data.pop("birth_date", None)
+
+        if isinstance(instance.birth_date, str):
+            instance.birth_date = datetime.datetime.strptime(
+                instance.birth_date, "%Y-%m-%d"
+            ).date()
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

@@ -130,28 +130,38 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False):
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)
+        min_age = self.request.GET.get("min_age", None)
+        max_age = self.request.GET.get("max_age", None)
+        gender = self.request.GET.get("gender", None)
 
-        if not search_term and not group_group_admin_id:
+        if (
+            not search_term
+            and not group_group_admin_id
+            and not min_age
+            and not max_age
+            and not gender
+        ):
             return self.list_participants(request)
 
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
 
-        if not group_group_admin_id:
-            logger.debug(
-                "Searching for members and non-members with search term %s", search_term
-            )
-        else:
-            logger.debug(
-                "Searching for members and non-members with term %s and group %s",
-                search_term,
-                group_group_admin_id,
-            )
+        logger.debug(
+            "Searching for %s with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s)",
+            search_term,
+            group_group_admin_id,
+            min_age,
+            max_age,
+            gender,
+        )
 
         members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
             active_user=request.user,
             term=search_term,
             group_group_admin_id=group_group_admin_id,
+            min_age=min_age,
+            max_age=max_age,
+            gender=gender,
             include_inactive=include_inactive,
         )
 
@@ -162,11 +172,21 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         else:
             queryset = self.get_queryset().non_members()
             non_members = self.filter_queryset(queryset)
+            logger.debug("%d NON MEMBERS", len(non_members))
             results = [
                 *[InuitsParticipant.from_scouts_member(member) for member in members],
                 *non_members,
             ]
 
-        output_serializer = InuitsParticipantSerializer(results, many=True)
+        page = self.paginate_queryset(results)
 
-        return Response(output_serializer.data)
+        if page is not None:
+            serializer = InuitsParticipantSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = InuitsParticipantSerializer(
+                results, many=True, context={"request": request}
+            )
+            return Response(serializer.data)

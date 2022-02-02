@@ -1,5 +1,5 @@
 from typing import List
-from datetime import date
+import datetime
 
 from django.db import models
 
@@ -51,11 +51,18 @@ class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
         abstract = True
 
     def __init__(
-        self, first_name: str = "", last_name: str = "", birth_date: date = None
+        self,
+        first_name: str = "",
+        last_name: str = "",
+        birth_date: datetime.date = None,
     ):
         self.first_name = first_name
         self.last_name = last_name
-        self.birth_date = birth_date
+
+        if isinstance(birth_date, datetime.date):
+            self.birth_date = birth_date
+        if isinstance(birth_date, str):
+            self.birth_date = datetime.datetime.strptime(birth_date, "%Y-%m-%d").date()
 
         # super().__init__([], {})
 
