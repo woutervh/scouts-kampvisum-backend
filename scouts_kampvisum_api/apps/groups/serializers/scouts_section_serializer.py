@@ -1,7 +1,7 @@
 import logging
 from rest_framework import serializers
 
-from apps.groups.models import ScoutsSection
+from apps.groups.models import ScoutsSection, ScoutsSectionName
 from apps.groups.serializers import (
     ScoutsGroupTypeSerializer,
     ScoutsSectionNameSerializer,
@@ -40,21 +40,19 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         if group_type:
             data["group_type"] = {"group_type": group_type}
 
-        name = data.get("name", None)
-        if name:
-            if isinstance(name, dict):
-                section_name_name = name.get("name")
-                section_name_gender = name.get("gender", Gender.MIXED)
-                section_name_age_group = name.get(
-                    "age_group", AgeGroup.AGE_GROUP_UNKNOWN
-                )
-                data["name"] = {
-                    "name": section_name_name,
-                    "gender": section_name_gender,
-                    "age_group": section_name_age_group,
-                }
-            else:
-                data["name"] = {"name": name}
+        name_data = data.get("name", None)
+        if name_data and isinstance(name_data, dict):
+            name_id = name_data.get("id", None)
+            name = name_data.get("name", None)
+            gender = name_data.get("gender", Gender.MIXED)
+            age_group = name_data.get("age_group", AgeGroup.AGE_GROUP_UNKNOWN)
+
+            data["name"] = {
+                "id": name_id,
+                "name": name,
+                "gender": gender,
+                "age_group": age_group,
+            }
 
         logger.debug("SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
 

@@ -51,7 +51,11 @@ class ScoutsSectionName(AbstractBaseModel):
 
     def natural_key(self):
         logger.debug("NATURAL KEY CALLED")
-        return (self.name,)
+        if not self.gender:
+            self.gender = Gender.UNKNOWN
+        if not self.age_group:
+            self.age_group = AgeGroup.AGE_GROUP_UNKNOWN
+        return (self.name, self.gender, self.age_group)
 
     def __str__(self):
         return "OBJECT ScoutsSectionName: name({}), gender({}), age_group({}), hidden({})".format(

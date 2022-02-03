@@ -37,8 +37,8 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        instance = self.section_name_service.name_create(
-            **input_serializer.validated_data
+        instance = self.section_name_service.get_or_create(
+            request, **input_serializer.validated_data
         )
 
         output_serializer = ScoutsSectionNameSerializer(
@@ -75,7 +75,7 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_instance = self.section_name_service.name_update(
+        updated_instance = self.section_name_service.update_name(
             request, instance=instance, **serializer.validated_data
         )
 

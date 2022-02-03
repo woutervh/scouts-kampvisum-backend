@@ -10,31 +10,31 @@ logger = logging.getLogger(__name__)
 
 
 class ScoutsSectionNameService:
-    def name_get(self, request, name: str) -> ScoutsSectionName:
-        """
-        Retrieves a SectionName instance based on the name.
-        """
-        logger.debug("Retrieving ScoutsSectionName with name %s", name)
-        qs = ScoutsSectionName.objects.filter(name=name).values_list()
-        count = qs.count()
-
-        if count == 0:
-            return None
-        if count == 1:
-            return qs[0]
-
-        return list(qs)
-
-    def name_create(
+    def get_or_create_name(
         self,
         request,
-        name: str,
-        gender=Gender.MIXED,
-        age_group=AgeGroup.AGE_GROUP_UNKNOWN,
+        section_name: ScoutsSectionName = None,
+        name: str = None,
+        gender: Gender = Gender.MIXED,
+        age_group: AgeGroup = AgeGroup.AGE_GROUP_UNKNOWN,
     ) -> ScoutsSectionName:
         """
         Saves a SectionName object to the DB.
         """
+        if section_name and isinstance(section_name, ScoutsSectionName):
+            name = section_name.name
+            gender = section_name.gender
+            age_group = section_name.age_group
+
+            section_name = ScoutsSectionName.objects.safe_get(
+                pk=section_name.id,
+                name=name,
+                gender=gender,
+                age_group=age_group,
+            )
+
+        if section_name:
+            return section_name
 
         instance = ScoutsSectionName(name=name, gender=gender, age_group=age_group)
 
@@ -43,7 +43,7 @@ class ScoutsSectionNameService:
 
         return instance
 
-    def name_update(
+    def update_name(
         self, request, instance: ScoutsSectionName, **fields
     ) -> ScoutsSectionName:
         """

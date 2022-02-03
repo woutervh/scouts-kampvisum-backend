@@ -61,8 +61,19 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def retrieve(self, request, pk=None):
-        type = self.get_object()
-        serializer = InuitsParticipantSerializer(type)
+        instance: InuitsParticipant = self.get_object()
+        serializer = InuitsParticipantSerializer(instance)
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
+    def retrieve_scouts_member(self, request, group_admin_id):
+        scouts_member = self.groupadmin.get_member_info(
+            active_user=request.user, group_admin_id=group_admin_id
+        )
+        serializer = InuitsParticipantSerializer(
+            InuitsParticipant.from_scouts_member(scouts_member)
+        )
 
         return Response(serializer.data)
 
@@ -90,18 +101,6 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         output_serializer = InuitsParticipantSerializer(participant)
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
-
-    @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
-    def list(self, request):
-        participants = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(participants)
-
-        if page is not None:
-            serializer = InuitsParticipantSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = InuitsParticipantSerializer(participants, many=True)
-            return Response(serializer.data)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def list(self, request):
@@ -141,7 +140,10 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             and not max_age
             and not gender
         ):
-            return self.list_participants(request)
+            if only_scouts_members:
+                return Response({})
+            else:
+                return self.list_participants(request)
 
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")

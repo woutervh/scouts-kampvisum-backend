@@ -11,7 +11,7 @@ class Gender(models.TextChoices):
     FEMALE = "F", "Female"
     MIXED = "I", "Mixed"
     MALE = "M", "Male"
-    OTHER = "O", "Other"
+    OTHER = "X", "Other"
     UNKNOWN = "U", "Unknown"
 
 
@@ -29,7 +29,7 @@ class GenderHelper:
             return Gender.MIXED
         if value in ["M", "MALE", "MAN"]:
             return Gender.MALE
-        if value in ["O", "OTHER", "A", "ANDER", "ANDERE"]:
+        if value in ["O", "X", "OTHER", "A", "ANDER", "ANDERE"]:
             return Gender.OTHER
 
         return Gender.UNKNOWN

@@ -34,6 +34,7 @@ class ScoutsSectionService:
         request=None,
         user: settings.AUTH_USER_MODEL = None,
         group_admin_id: str = None,
+        group_type: str = None,
         name: ScoutsSectionName = None,
         hidden: bool = False,
     ) -> ScoutsSection:
@@ -57,9 +58,9 @@ class ScoutsSectionService:
             hidden,
         )
 
-        name_instance = None
-        if not isinstance(name, ScoutsSectionName):
-            name_instance = self.section_name_service.name_get(name=name)
+        name_instance = ScoutsSectionName.objects.safe_get(
+            id=name.id, name=name.name, gender=name.gender, age_group=name.age_group
+        )
 
         logger.debug(
             "Querying existing ScoutsSection instances with group admin id %s and name %s (%s)",
@@ -102,13 +103,13 @@ class ScoutsSectionService:
         if not user:
             user = request.user
 
-        if name is None or not isinstance(name, ScoutsSectionName):
-            name = self.section_name_service.name_create(name=name)
         instance = ScoutsSection()
 
         instance.group_admin_id = group.group_admin_id
         instance.group_type = ScoutsGroupType.objects.get(group_type=group.type)
-        instance.name = name
+        instance.name = self.section_name_service.get_or_create_name(
+            request=request, section_name=name
+        )
         instance.hidden = hidden
 
         instance.full_clean()
@@ -141,44 +142,6 @@ class ScoutsSectionService:
         instance.save()
 
         return instance
-
-    # def section_read(self, request, **fields) -> ScoutsSection:
-    #     """
-    #     Retrieves a Section by uuid or SectionName.
-
-    #     If uuid or name are lists, then lists will be returned.
-    #     If uuid is None, then the group argument must be presented.
-    #     """
-    #     group = fields.get("group", None)
-    #     id = fields.get("id", None)
-    #     name = fields.get("name", None)
-
-    #     logger.debug("SECTION FIELDS: %s", fields)
-
-    #     if id is None and name is None:
-    #         return ScoutsSection.objects.all()
-
-    #     if id is not None and not isinstance(id, dict):
-    #         if isinstance(id, list):
-    #             return list(ScoutsSection.objects.filter(id__in=id).values_list())
-
-    #         if isinstance(id, uuid.UUID):
-    #             return get_object_or_404(ScoutsSection, id=id)
-
-    #     if name is not None and not isinstance(name, dict):
-    #         if isinstance(name, list):
-    #             return list(
-    #                 ScoutsSection.objects.filter(
-    #                     group=group, name__name__in=name
-    #                 ).values_list()
-    #             )
-
-    #         if isinstance(name, str):
-    #             return list(ScoutsSection.objects.filter(group=group, name__name=name))
-
-    #     logger.debug("No Section instances found with the given args")
-
-    #     return None
 
     def setup_default_sections(
         self, request=None, user: settings.AUTH_USER_MODEL = None
@@ -219,35 +182,12 @@ class ScoutsSectionService:
                     logger.debug("Linking section NAME: %s", name.name)
                     created_sections.append(
                         self.section_create_or_update(
-                            request,
-                            user,
-                            group.group_admin_id,
-                            name.name,
-                            name.name.hidden,
+                            request=request,
+                            user=user,
+                            group_admin_id=group.group_admin_id,
+                            name=name.name,
+                            hidden=name.name.hidden,
                         )
                     )
 
         return created_sections
-
-    # def add_section(self, instance: Group, **fields):
-    #     """
-    #     Adds Section instances to a Group.
-    #     """
-    #     logger.debug("FIELDS: %s", fields)
-    #     sections = self.section_service.section_read(group=instance, **fields)
-
-    #     if sections is None or len(sections) == 0:
-    #         section = self.section_service.section_create_or_update(
-    #             group=instance, **fields
-    #         )
-    #     else:
-    #         section = sections[0]
-
-    #     logger.debug("Section to add: %s", section)
-
-    #     instance.sections.add(section)
-
-    #     instance.full_clean()
-    #     instance.save()
-
-    #     return instance

@@ -20,16 +20,16 @@ class ScoutsGroupTypeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.debug("GROUP TYPE TO_INTERNAL_VALUE: %s", data)
+        # logger.debug("GROUP TYPE TO_INTERNAL_VALUE: %s", data)
 
         parent = data.get("parent", None)
         if parent:
             data["parent"] = {"group_type": parent}
 
-        logger.debug("GROUP TYPE TO_INTERNAL_VALUE: %s", data)
+        # logger.debug("GROUP TYPE TO_INTERNAL_VALUE: %s", data)
 
         data = super().to_internal_value(data)
 
-        logger.debug("GROUP TYPE TO_INTERNAL_VALUE: %s", data)
+        # logger.debug("GROUP TYPE TO_INTERNAL_VALUE: %s", data)
 
         return data
