@@ -9,7 +9,7 @@ from apps.visums.models import CampVisum
 logger = logging.getLogger(__name__)
 
 
-class CampVisumAPIFilter(filters.FilterSet):
+class CampVisumFilter(filters.FilterSet):
     class Meta:
         model = CampVisum
         fields = []
@@ -23,18 +23,17 @@ class CampVisumAPIFilter(filters.FilterSet):
 
         if year and group_admin_id:
             logger.debug(
-                "Filtering CampVisum instances with group %s \
-                and year %s",
+                "Filtering CampVisum instances with group %s and year %s",
                 group_admin_id,
                 year,
             )
             return parent.filter(
-                Q(camp__start_date__year=year),
+                Q(camp__year__year=year),
                 Q(camp__sections__group_admin_id=group_admin_id),
             ).distinct()
         if year:
             logger.debug("Filtering CampVisum instances with year %s", year)
-            return parent.filter(camp__start_date__year=year).distinct()
+            return parent.filter(camp__year__year=year).distinct()
         if group_admin_id:
             logger.debug("Filtering CampVisum instances with group %s", group_admin_id)
             result = parent.filter(
@@ -49,9 +48,3 @@ class CampVisumAPIFilter(filters.FilterSet):
 
         logger.debug("Filters for CampVisum not set, returning all instances")
         return parent.all()
-
-
-class CampVisumFilter(filters.FilterSet):
-    class Meta:
-        model = CampVisum
-        fields = []
