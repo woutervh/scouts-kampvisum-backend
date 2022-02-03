@@ -6,10 +6,8 @@ from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
-from apps.camps.models import CampYear
+from apps.camps.models import CampYear, CampType
 from apps.camps.services import CampYearService
-
-from apps.visums.models import CampType
 
 
 logger = logging.getLogger(__name__)

@@ -2,12 +2,13 @@ import logging
 
 from django.db import models
 
+from apps.camps.models import CampType
+
 from apps.visums.managers import CategorySetManager
 from apps.visums.models import (
     CampYearCategorySet,
     CategorySetPriority,
     Category,
-    CampType,
 )
 
 from scouts_auth.inuits.models import AuditedBaseModel

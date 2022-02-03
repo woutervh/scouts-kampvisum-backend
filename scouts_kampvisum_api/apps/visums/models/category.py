@@ -2,10 +2,9 @@ import logging
 
 from django.db import models
 
-from apps.camps.models import CampYear
+from apps.camps.models import CampYear, CampType
 
 from apps.visums.managers import CategoryManager
-from apps.visums.models import CampType
 
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.interfaces import (

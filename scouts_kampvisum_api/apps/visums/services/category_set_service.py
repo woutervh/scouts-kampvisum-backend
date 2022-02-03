@@ -1,10 +1,11 @@
 import logging
 
-from apps.camps.models import Camp, CampYear
+from apps.camps.models import Camp, CampYear, CampType
 from apps.camps.services import CampYearService
+
 from apps.groups.models import ScoutsGroupType
+
 from apps.visums.models import (
-    CampType,
     CampYearCategorySet,
     CategorySet,
     Category,

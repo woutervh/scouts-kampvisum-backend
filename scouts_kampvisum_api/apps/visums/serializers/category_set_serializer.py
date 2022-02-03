@@ -1,9 +1,10 @@
 from rest_framework import serializers
 
+from apps.camps.serializers import CampTypeSerializer
+
 from apps.visums.models import CategorySet
 from apps.visums.serializers import (
     CampYearCategorySetSerializer,
-    CampTypeSerializer,
     CategorySetPrioritySerializer,
     CategorySerializer,
 )

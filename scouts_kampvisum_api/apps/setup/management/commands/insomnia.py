@@ -3,12 +3,11 @@ import logging, json, datetime, uuid
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from apps.camps.models import Camp, CampYear
+from apps.camps.models import Camp, CampYear, CampType
 from apps.groups.models import ScoutsSectionName, ScoutsSection, ScoutsGroupType
 from apps.participants.models import InuitsParticipant
 from apps.participants.services import InuitsParticipantService
 from apps.visums.models import (
-    CampType,
     CampVisum,
     CampYearCategorySet,
     CategorySet,

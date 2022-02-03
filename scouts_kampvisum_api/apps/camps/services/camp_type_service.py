@@ -1,6 +1,6 @@
 import logging
 
-from apps.visums.models import CampType
+from apps.camps.models import CampType
 
 logger = logging.getLogger(__name__)
 

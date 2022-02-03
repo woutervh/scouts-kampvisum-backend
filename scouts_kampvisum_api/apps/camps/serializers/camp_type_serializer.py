@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.visums.models import CampType
+from apps.camps.models import CampType
 
 
 class CampTypeSerializer(serializers.ModelSerializer):

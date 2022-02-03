@@ -1,6 +1,6 @@
 [
     {
-        "model": "visums.CampType",
+        "model": "camps.CampType",
         "fields": {
             "camp_type": "basis",
             "is_base": true,
@@ -10,7 +10,7 @@
         }
     },
     {
-        "model": "visums.CampType",
+        "model": "camps.CampType",
         "fields": {
             "camp_type": "scouts",
             "is_base": true,
@@ -19,7 +19,7 @@
         }
     },
     {
-        "model": "visums.CampType",
+        "model": "camps.CampType",
         "fields": {
             "camp_type": "zeescouts",
             "is_base": true,
@@ -28,7 +28,7 @@
         }
     },
     {
-        "model": "visums.CampType",
+        "model": "camps.CampType",
         "fields": {
             "camp_type": "internationaal_trekkamp",
             "is_base": false,
@@ -37,7 +37,7 @@
         }
     },
     {
-        "model": "visums.CampType",
+        "model": "camps.CampType",
         "fields": {
             "camp_type": "internationaal_zeescoutskamp",
             "is_base": false,

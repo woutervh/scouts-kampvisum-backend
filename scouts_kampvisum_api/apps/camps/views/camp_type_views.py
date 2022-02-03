@@ -9,9 +9,9 @@ from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
-from apps.visums.models import CampType
-from apps.visums.services import CampTypeService
-from apps.visums.serializers import CampTypeSerializer
+from apps.camps.models import CampType
+from apps.camps.services import CampTypeService
+from apps.camps.serializers import CampTypeSerializer
 
 
 logger = logging.getLogger(__name__)

@@ -5,7 +5,8 @@ from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
-from apps.visums.models import CampType, CategorySetPriority, CategorySet, Category
+from apps.camps.models import CampType
+from apps.visums.models import CategorySetPriority, CategorySet, Category
 from apps.visums.services import CampYearCategorySetService
 
 

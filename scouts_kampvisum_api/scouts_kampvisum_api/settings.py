@@ -182,6 +182,7 @@ INSTALLED_APPS = [
     "apps.visums",
     "apps.groups",
     "apps.camps",
+    "apps.deadlines",
     "rest_framework",
     "django_filters",
     "drf_yasg2",
