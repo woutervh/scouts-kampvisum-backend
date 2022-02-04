@@ -65,7 +65,7 @@ class LinkedCheck(AbstractBaseModel):
 # A check that can be checked, unchecked or set as not applicable
 # ##############################################################################
 class LinkedSimpleCheck(LinkedCheck):
-    value = DefaultCharField(choices=CheckState.choices, default=CheckState.UNCHECKED)
+    value = DefaultCharField(choices=CheckState.choices, default=CheckState.EMPTY)
 
 
 # ##############################################################################
