@@ -29,6 +29,7 @@ class InuitsParticipantService:
         )
 
         if existing_participant:
+            logger.debug("Updating existing participant %s", existing_participant.id)
             return self.update(
                 participant=existing_participant,
                 updated_participant=participant,
@@ -36,6 +37,7 @@ class InuitsParticipantService:
                 skip_validation=skip_validation,
             )
         else:
+            logger.debug("Creating participant %s", participant.email)
             return self.create(
                 participant=participant,
                 created_by=user,
@@ -50,6 +52,7 @@ class InuitsParticipantService:
     ) -> InuitsParticipant:
         member_participant = None
         if participant.has_group_admin_id():
+            logger.debug("Looking for participant member with group admin id %s", participant.group_admin_id)
             member_participant = InuitsParticipant.objects.safe_get(
                 group_admin_id=participant.group_admin_id
             )
@@ -84,6 +87,7 @@ class InuitsParticipantService:
         created_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
     ) -> InuitsParticipant:
+        logger.debug("Creating InuitsParticipant with email %s", participant.email)
         # Check if the instance already exists
         if participant.has_id():
             logger.debug("Querying for InuitsParticipant with id %s", participant.id)
@@ -152,6 +156,7 @@ class InuitsParticipantService:
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
     ) -> InuitsParticipant:
+        logger.debug("Updating InuitsParticipant with id %s and group_admin_id %s and e-mail %s", participant.id, participant.group_admin_id, participant.email)
         member = self.create_or_update_member_participant(
             participant=updated_participant, user=updated_by
         )
@@ -159,7 +164,10 @@ class InuitsParticipantService:
             return member
 
         if participant.equals(updated_participant):
+            logger.debug("No differences between existing participant and updated participant")
             return updated_participant
+        
+        logger.debug("Updated: %s", updated_participant)
 
         # Update the InuitsParticipant instance
         participant.group_group_admin_id = (
@@ -234,5 +242,7 @@ class InuitsParticipantService:
 
         participant.full_clean()
         participant.save()
+        
+        logger.debug("InuitsParticipant instance updated (%s)", participant.id)
 
         return participant

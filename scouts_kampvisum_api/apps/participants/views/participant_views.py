@@ -83,7 +83,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     )
     def partial_update(self, request, pk=None):
         participant = self.get_object()
-
+        
+        logger.debug("PARTICIPANT PARTIAL UPDATE REQUEST DATA: %s", request.data)
         serializer = InuitsParticipantSerializer(
             instance=participant,
             data=request.data,
@@ -91,10 +92,13 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             partial=True,
         )
         serializer.is_valid(raise_exception=True)
+        
+        validated_data = serializer.validated_data
+        logger.debug("PARTICIPANT PARTIAL UPDATE VALIDATED DATA: %s", validated_data)
 
         participant = self.service.update(
             participant=participant,
-            updated_participant=serializer.validated_data,
+            updated_participant=validated_data,
             updated_by=request.user,
         )
 

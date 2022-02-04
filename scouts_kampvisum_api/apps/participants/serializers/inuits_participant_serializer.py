@@ -20,6 +20,8 @@ class InuitsParticipantSerializer(serializers.ModelSerializer):
         logger.debug("PARTICIPANT SERIALIZER TO INTERNAL VALUE: %s", data)
         # If the data dict contains a group admin id, forget the rest and load the object from GA
         group_admin_id = data.get("group_admin_id", None)
+        id = data.get("id", None)
+        
         if group_admin_id:
             member: AbstractScoutsMember = GroupAdminMemberService().get_member_info(
                 active_user=self.context.get("request").user,
@@ -30,8 +32,7 @@ class InuitsParticipantSerializer(serializers.ModelSerializer):
                 return InuitsParticipant.from_scouts_member(member)
 
         # If the data dict contains an id, assume it's simple object input
-        id = data.get("id", None)
-        if id:
+        if id and len(data.keys()) == 1:
             instance = InuitsParticipant.objects.safe_get(pk=id)
             if instance:
                 return instance

@@ -39,7 +39,6 @@ class LinkedCheck(AbstractBaseModel):
     def is_checked(self) -> bool:
         if self.should_be_checked():
             value = self.has_value()
-            logger.debug("VALUE: %s", value)
             return value
         return True
         
