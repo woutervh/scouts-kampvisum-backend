@@ -35,6 +35,11 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     parent = CheckSerializer()
     endpoint = serializers.SerializerMethodField()
     value = serializers.SerializerMethodField()
+    # state = serializers.ChoiceField(
+    #     choices=CheckState.choices, default=CheckState.UNCHECKED
+    # )
+    state = serializers.SerializerMethodField()
+    _state = CheckState.UNCHECKED
 
     class Meta:
         model = LinkedCheck
@@ -68,16 +73,24 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
         else:
             value = check.value
-
-        # logger.debug(
-        #     "%s value: %s (%s)",
-        #     type(check).__name__,
-        #     value,
-        #     type(value).__name__,
-        # )
+        
+        self._state = CheckState.CHECKED if check.is_checked() else CheckState.UNCHECKED
 
         return value
 
+    def get_state(self, obj: LinkedCheck):
+        return self._state
+    
+    # def to_representation(self, obj: LinkedCheck) -> dict:
+    #     logger.debug("LINKED CHECK SERIALIZER TO_REPRESENTATION: %s", obj)
+        
+    #     data = super().to_representation(obj)
+        
+    #     logger.debug("LINKED CHECK SERIALIZER TO_REPRESENTATION: %s", data)
+
+    #     data["state"] = obj.is_checked()
+        
+    #     return data
 
 class LinkedSimpleCheckSerializer(LinkedCheckSerializer):
 

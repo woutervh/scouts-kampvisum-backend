@@ -32,6 +32,24 @@ class LinkedCheck(AbstractBaseModel):
 
     class Meta:
         ordering = ["parent__index"]
+    
+    # def has_value(self) -> bool:
+    #     raise NotImplementedError("Subclasses should implement their own has_value method")
+    
+    def is_checked(self) -> bool:
+        if self.should_be_checked():
+            value = self.has_value()
+            logger.debug("VALUE: %s", value)
+            return value
+        return True
+        
+    def should_be_checked(self) -> bool:
+        check_type: CheckType = self.parent.check_type
+
+        if check_type.is_simple_check() or check_type.is_date_check() or check_type.is_duration_check() or check_type.is_location_check() or check_type.is_camp_location_check() or check_type.is_participant_check():
+            return True
+        if check_type.is_file_upload_check() or check_type.is_comment_check():
+            return False
 
     @staticmethod
     def get_concrete_check_type(check: Check):
@@ -66,6 +84,12 @@ class LinkedCheck(AbstractBaseModel):
 # ##############################################################################
 class LinkedSimpleCheck(LinkedCheck):
     value = DefaultCharField(choices=CheckState.choices, default=CheckState.EMPTY)
+    
+    def has_value(self) -> bool:
+        if CheckState.is_checked_or_irrelevant(self.value):
+            return True
+        return False
+        
 
 
 # ##############################################################################
@@ -75,6 +99,11 @@ class LinkedSimpleCheck(LinkedCheck):
 # ##############################################################################
 class LinkedDateCheck(LinkedCheck):
     value = DatetypeAwareDateField(null=True, blank=True)
+    
+    def has_value(self) -> bool:
+        if self.value:
+            return True
+        return False
 
 
 # ##############################################################################
@@ -85,6 +114,11 @@ class LinkedDateCheck(LinkedCheck):
 class LinkedDurationCheck(LinkedCheck):
     start_date = DatetypeAwareDateField(null=True, blank=True)
     end_date = DatetypeAwareDateField(null=True, blank=True)
+    
+    def has_value(self) -> bool:
+        if self.start_date and self.end_date:
+            return True
+        return False
 
 
 # ##############################################################################
@@ -105,6 +139,11 @@ class LinkedLocationCheck(LinkedCheck):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+    
+    def has_value(self) -> bool:
+        if self.locations and self.locations.count() > 0:
+            return True
+        return False
 
 
 # ##############################################################################
@@ -114,6 +153,11 @@ class LinkedLocationCheck(LinkedCheck):
 # ##############################################################################
 class LinkedParticipantCheck(LinkedCheck):
     value = models.ManyToManyField(InuitsParticipant)
+    
+    def has_value(self) -> bool:
+        if len(self.value.all()) > 0:
+            return True
+        return False
 
 
 # ##############################################################################
@@ -123,6 +167,11 @@ class LinkedParticipantCheck(LinkedCheck):
 # ##############################################################################
 class LinkedFileUploadCheck(LinkedCheck):
     value = models.ManyToManyField(PersistedFile, related_name="checks")
+    
+    def has_value(self) -> bool:
+        if self.value:
+            return True
+        return False
 
 
 # ##############################################################################
@@ -132,3 +181,8 @@ class LinkedFileUploadCheck(LinkedCheck):
 # ##############################################################################
 class LinkedCommentCheck(LinkedCheck):
     value = OptionalCharField(max_length=300)
+    
+    def has_value(self) -> bool:
+        if self.value:
+            return True
+        return False

@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.visums.models import LinkedCategory, SubCategory
+from apps.visums.models.enums import CheckState
 
 from scouts_auth.inuits.models import AbstractBaseModel
 
@@ -14,3 +15,9 @@ class LinkedSubCategory(AbstractBaseModel):
 
     class Meta:
         ordering = ["parent__index"]
+    
+    # def is_checked(self) -> CheckState:
+    #     for check in self.checks.all():
+    #         if not check.is_checked():
+    #             return CheckState.UNCHECKED
+    #     return CheckState.CHECKED
