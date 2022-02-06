@@ -11,6 +11,7 @@ APPS=(
 	"groups"
 	"camps"
 	"visums"
+	"deadlines"
 )
 FIXTURES=(
 	"scouts_group_types.json"

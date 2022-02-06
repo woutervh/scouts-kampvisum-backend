@@ -6,3 +6,4 @@ from .check_manager import CheckManager
 from .camp_year_category_set_manager import CampYearCategorySetManager
 from .category_set_priority_manager import CategorySetPriorityManager
 from .category_set_manager import CategorySetManager
+from .visum_manager import CampVisumManager

@@ -50,9 +50,11 @@ class Command(BaseCommand):
                 category_set.camp_year_category_set = camp_year_category_set
                 category_set.camp_type = camp_type
                 category_set.priority = highest_priority
+            
+            category_set.index = camp_type.index
 
-                category_set.full_clean()
-                category_set.save()
+            category_set.full_clean()
+            category_set.save()
 
             categories = Category.objects.get_by_camp_type(camp_type)
             for category in categories:

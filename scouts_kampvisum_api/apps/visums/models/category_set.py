@@ -12,12 +12,13 @@ from apps.visums.models import (
 )
 
 from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.interfaces import Indexable
 
 
 logger = logging.getLogger(__name__)
 
 
-class CategorySet(AuditedBaseModel):
+class CategorySet(Indexable, AuditedBaseModel):
     """
     A list of categories for a certain group type with a certain priority.
     """

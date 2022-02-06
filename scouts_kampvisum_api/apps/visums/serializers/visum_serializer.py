@@ -23,8 +23,14 @@ class CampVisumSerializer(serializers.ModelSerializer):
         logger.debug("VISUM SERIALIZER TO INTERNAL VALUE: %s", data)
 
         data["category_set"] = {}
+        camp_types = data.pop("camp_types", [])
 
-        return super().to_internal_value(data)
+        data = super().to_internal_value(data)
+        
+        data["camp_types"] = camp_types
+        
+        return data
+        
 
     def to_representation(self, data: dict) -> dict:
         # logger.debug("VISUM SERIALIZER TO REPRESENTATION: %s", data)

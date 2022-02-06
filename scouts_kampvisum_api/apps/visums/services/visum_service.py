@@ -50,5 +50,9 @@ class CampVisumService:
 
         instance.full_clean()
         instance.save()
+        
+        # existing_camp_types = instance.category_set.parent.camp_type
+        camp_types = fields.get("camp_types", [])
+        
 
         return instance

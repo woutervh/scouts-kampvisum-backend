@@ -39,6 +39,7 @@ urlpatterns = [
     path("api/", include("apps.groups.urls")),
     path("api/", include("apps.participants.urls")),
     path("api/", include("apps.locations.urls")),
+    path("api/", include("apps.deadlines.urls")),
     path(
         "api/docs/",
         schema_view.with_ui("swagger", cache_timeout=0),

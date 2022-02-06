@@ -5,6 +5,7 @@
             "camp_type": "basis",
             "is_base": true,
             "is_default": true,
+            "index": 0,
             "label": "Basiskamp",
             "explanation": "Basis kamptype, met categorieen die bij elk kamp herhaald worden"
         }
@@ -14,6 +15,7 @@
         "fields": {
             "camp_type": "scouts",
             "is_base": true,
+            "index": 1,
             "label": "Scouts en AKABE",
             "explanation": "Categorieen voor gewone scouts- en akabegroepen"
         }
@@ -23,6 +25,7 @@
         "fields": {
             "camp_type": "zeescouts",
             "is_base": true,
+            "index": 2,
             "label": "Zeescouts",
             "explanation": "Categorieen voor zeescoutsgroepen"
         }
@@ -32,6 +35,7 @@
         "fields": {
             "camp_type": "internationaal_trekkamp",
             "is_base": false,
+            "index": 3,
             "label": "Internationale trekkampen",
             "explanation": "Categorieen voor internationale trekkampen"
         }
@@ -41,6 +45,7 @@
         "fields": {
             "camp_type": "internationaal_zeescoutskamp",
             "is_base": false,
+            "index": 4,
             "label": "Internationale zeescoutskampen",
             "explanation": "Categorieen voor internationale zeescoutskampen"
         }

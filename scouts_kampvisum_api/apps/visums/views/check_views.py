@@ -24,7 +24,7 @@ class CheckViewSet(viewsets.GenericViewSet):
     serializer_class = CheckSerializer
     queryset = Check.objects.all()
 
-    Check_service = CheckService()
+    check_service = CheckService()
 
     @swagger_auto_schema(
         request_body=CheckSerializer,
@@ -43,7 +43,7 @@ class CheckViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("CHECK CREATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.Check_service.camp_create(request, **validated_data)
+        instance = self.check_service.camp_create(request, **validated_data)
 
         output_serializer = CheckSerializer(instance, context={"request": request})
 
@@ -83,7 +83,7 @@ class CheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        updated_instance = self.Check_service.update(
+        updated_instance = self.check_service.update(
             request, instance=instance, **validated_data
         )
 
