@@ -23,7 +23,7 @@ class CampYearSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.debug("CAMP YEAR SERIALIZER TO INTERNAL VALUE: %s", data)
+        # logger.debug("CAMP YEAR SERIALIZER TO INTERNAL VALUE: %s", data)
         if isinstance(data, int):
             year = data
             data = {}
@@ -34,7 +34,7 @@ class CampYearSerializer(serializers.ModelSerializer):
         return data
 
     def validate(self, data):
-        logger.debug("VALIDATING DATA: %s", data)
+        # logger.debug("VALIDATING DATA: %s", data)
         if data["year"] is None:
             raise serializers.ValidationError("Year can't be null")
 

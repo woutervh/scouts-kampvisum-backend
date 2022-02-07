@@ -29,19 +29,19 @@ class CampSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.debug("CAMP SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        # logger.debug("CAMP SERIALIZER TO_INTERNAL_VALUE: %s", data)
         year = data.get("year", None)
         if not year:
             year = CampYearService().get_or_create_current_camp_year()
             data["year"] = year.year
 
         data = super().to_internal_value(data)
-        logger.debug("CAMP SERIALIZER TO INTERNAL VALUE: %s", data)
+        # logger.debug("CAMP SERIALIZER TO INTERNAL VALUE: %s", data)
 
         return data
 
     def validate(self, data: dict) -> dict:
-        logger.debug("CAMP SERIALIZER VALIDATE: %s", data)
+        # logger.debug("CAMP SERIALIZER VALIDATE: %s", data)
 
         if not data.get("name"):
             raise ValidationError("A Camp must have a name")

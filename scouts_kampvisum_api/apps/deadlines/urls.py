@@ -9,13 +9,16 @@ from rest_framework import routers
 
 from apps.deadlines.views import DeadlineViewSet
 
+sub_category_list = DeadlineViewSet.as_view(
+    {"post": "create_sub_category_deadline", "get": "list_sub_category_deadlines"}
+)
 sub_category = DeadlineViewSet.as_view(
     {"get": "retrieve_sub_category_deadline", "patch": "partial_update_sub_category_deadline"}
 )
-sub_category_list = DeadlineViewSet.as_view(
-    {"get": "list_sub_category_deadlines"}
+checks_list = DeadlineViewSet.as_view(
+    {"post": "create_check_deadline", "get": "list_check_deadlines"}
 )
-check = DeadlineViewSet.as_view(
+checks = DeadlineViewSet.as_view(
     {"get": "retrieve_check_deadline", "patch": "partial_update_check_deadline"}
 )
 deadline_dependent = DeadlineViewSet.as_view(
@@ -24,24 +27,24 @@ deadline_dependent = DeadlineViewSet.as_view(
 
 urlpatterns = [
     path(
-        "deadlines/sub_category",
+        "deadlines/sub_category/",
         sub_category_list,
         name="sub_category_list",
     ),
     path(
-        "deadlines/sub_category/<uuid:check_id>",
+        "deadlines/sub_category/<uuid:deadline_id>",
         sub_category,
         name="sub_category",
     ),
     path(
-        "deadlines/check/<uuid:check_id>",
-        check,
-        name="check",
+        "deadlines/checks/",
+        checks_list,
+        name="checks_list",
     ),
     path(
-        "deadlines/deadline_dependent/<uuid:check_id>",
-        deadline_dependent,
-        name="deadline_dependent",
+        "deadlines/checks/<uuid:deadline_id>",
+        checks,
+        name="checks",
     ),
 ]
 

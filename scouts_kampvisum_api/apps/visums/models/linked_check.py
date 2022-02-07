@@ -10,6 +10,7 @@ from apps.visums.models import (
     CheckType,
 )
 from apps.visums.models.enums import CheckState
+from apps.visums.managers import LinkedCheckManager
 
 from scouts_auth.inuits.models import AbstractBaseModel, PersistedFile
 from scouts_auth.inuits.models.fields import (
@@ -24,6 +25,8 @@ logger = logging.getLogger(__name__)
 
 
 class LinkedCheck(AbstractBaseModel):
+    
+    objects = LinkedCheckManager()
 
     parent = models.ForeignKey(Check, on_delete=models.CASCADE)
     sub_category = models.ForeignKey(

@@ -1,8 +1,12 @@
-import logging, uuid
+import logging
 
 from django.http import Http404
+from django.utils import timezone
+
+from apps.visums.models import CampVisum, LinkedSubCategory, LinkedCheck
 
 from apps.deadlines.models import (Deadline, SubCategoryDeadline, CheckDeadline, DeadlineDependentDeadline)
+from apps.deadlines.services import DeadlineDateService
 
 
 logger = logging.getLogger(__name__)
@@ -10,56 +14,97 @@ logger = logging.getLogger(__name__)
 
 class DeadlineService:
     
-    def create_deadline(self, **fields) -> Deadline:
+    deadline_date_service = DeadlineDateService()
+    
+    def create_deadline(self, request, **fields) -> Deadline:
         instance = Deadline()
         
-        instance.visum = fields.get("visum", None)
+        instance.visum = CampVisum.objects.safe_get(id=fields.get("visum", {}).get("id", None))
         instance.name = fields.get("name", None)
         instance.label = fields.get("label", None)
         instance.description = fields.get("description", None)
         instance.explanation = fields.get("explanation", None)
-        instance.is_important = fields.get("is_important", None)
-        instance.due_date = fields.get("due_date", None)
+        instance.is_important = fields.get("is_important", False)
+        instance.due_date = self.deadline_date_service.create_deadline_date(request, **fields.get("due_date", None))
+        instance.created_by = request.user
+        
+        instance.full_clean()
+        instance.save()
+        
+        return instance
 
     def get_deadline(self, deadline_id):
         try:
-            return Deadline.objects.get(linkedcheck_ptr=deadline_id)
+            return Deadline.objects.get(id=deadline_id)
         except Deadline.DoesNotExist:
             logger.error("Deadline with id %s not found", deadline_id)
             raise Http404
         
 
-    def update_deadline(self, instance: Deadline, **data):
+    def update_deadline(self, request, instance: Deadline, **fields):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-        instance.value = data.get("value", None)
+        
+        instance.name = fields.get("name", instance.name)
+        instance.label = fields.get("label", instance.label)
+        instance.description = fields.get("description", instance.description)
+        instance.explanation = fields.get("explanation", instance.description)
+        instance.is_important = fields.get("is_important", instance.is_important)
+        instance.due_date = self.deadline_date_service.update_deadline_date(request, instance.due_date, **fields.get("due_date", None))
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()
 
+        return instance
+    
+    def create_sub_category_deadline(self, request, **fields) -> SubCategoryDeadline:
+        instance = SubCategoryDeadline()
+        
+        instance.visum = CampVisum.objects.safe_get(id=fields.get("visum", {}).get("id", None))
+        instance.name = fields.get("name", None)
+        instance.label = fields.get("label", None)
+        instance.description = fields.get("description", None)
+        instance.explanation = fields.get("explanation", None)
+        instance.is_important = fields.get("is_important", False)
+        instance.due_date = self.deadline_date_service.create_deadline_date(request, **fields.get("due_date", None))
+        instance.deadline_sub_category = LinkedSubCategory.objects.safe_get(id=fields.get("deadline_sub_category", {}).get("id", None))
+        instance.created_by = request.user
+        
+        instance.full_clean()
+        instance.save()
+        
         return instance
 
     def get_sub_category_deadline(self, deadline_id):
         try:
-            return SubCategoryDeadline.objects.get(linkedcheck_ptr=deadline_id)
+            return SubCategoryDeadline.objects.get(deadline_ptr=deadline_id)
         except SubCategoryDeadline.DoesNotExist:
             raise Http404
 
-    def update_check_deadline(self, instance: CheckDeadline, **data):
-        logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
-        )
-        instance.value = data.get("value", None)
-
+    def create_check_deadline(self, request, **fields) -> CheckDeadline:
+        instance = CheckDeadline()
+        
+        instance.visum = CampVisum.objects.safe_get(id=fields.get("visum", {}).get("id", None))
+        instance.name = fields.get("name", None)
+        instance.label = fields.get("label", None)
+        instance.description = fields.get("description", None)
+        instance.explanation = fields.get("explanation", None)
+        instance.is_important = fields.get("is_important", False)
+        instance.due_date = self.deadline_date_service.create_deadline_date(request, **fields.get("due_date", None))
+        instance.deadline_check = LinkedCheck.objects.safe_get(id=fields.get("deadline_check", {}).get("id", None))
+        instance.created_by = request.user
+        
         instance.full_clean()
         instance.save()
-
+        
         return instance
 
     def get_check_deadline(self, deadline_id):
         try:
-            return CheckDeadline.objects.get(linkedcheck_ptr=deadline_id)
+            return CheckDeadline.objects.get(deadline_ptr=deadline_id)
         except CheckDeadline.DoesNotExist:
             raise Http404
 

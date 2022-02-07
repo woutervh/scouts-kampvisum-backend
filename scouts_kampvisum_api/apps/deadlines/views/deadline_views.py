@@ -57,6 +57,35 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         serializer = DeadlineSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
+    
+    @swagger_auto_schema(
+        request_body=DeadlineSerializer,
+        responses={status.HTTP_200_OK: DeadlineSerializer},
+    )
+    def partial_update(self, request, pk):
+        logger.debug("DEADLINE UPDATE REQUEST DATA: %s", request.data)
+        instance: Deadline = self.deadline_service.get_deadline(deadline_id=pk)
+
+        serializer = DeadlineSerializer(
+            instance=instance,
+            data=request.data,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("DEADLINE UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.deadline_service.update_deadline(
+            request, instance, **validated_data
+        )
+
+        output_serializer = DeadlineSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: DeadlineSerializer})
     def list(self, request):
@@ -77,6 +106,29 @@ class DeadlineViewSet(viewsets.GenericViewSet):
                 instances, many=True, context={"request": request}
             )
             return Response(serializer.data)
+    
+    @swagger_auto_schema(
+        request_body=SubCategoryDeadlineSerializer,
+        responses={status.HTTP_201_CREATED: SubCategoryDeadlineSerializer},
+    )
+    def create_sub_category_deadline(self, request):
+        """
+        Creates a new sub_category deadline instance.
+        """
+        logger.debug("SUB CATEGORY DEADLINE CREATE REQUEST DATA: %s", request.data)
+        input_serializer = SubCategoryDeadlineSerializer(
+            data=request.data, context={"request": request}
+        )
+        input_serializer.is_valid(raise_exception=True)
+
+        validated_data = input_serializer.validated_data
+        logger.debug("SUB CATEGORY DEADLINE CREATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.deadline_service.create_sub_category_deadline(request, **validated_data)
+
+        output_serializer = SubCategoryDeadlineSerializer(instance, context={"request": request})
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: SubCategoryDeadlineSerializer})
     def retrieve_sub_category_deadline(self, request, deadline_id=None):
@@ -106,8 +158,8 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("SUB CATEGORY DEADLINE UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.deadline_service.update_sub_category_deadline(
-            instance, **validated_data
+        instance = self.deadline_service.update_deadline(
+            request, instance, **validated_data
         )
 
         output_serializer = SubCategoryDeadlineSerializer(
@@ -116,13 +168,14 @@ class DeadlineViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    # @action(
-    #     detail=False,
-    #     methods=["get"],
-    #     url_path=r"sub_category",
-    # )
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"sub_category"
+    )
     @swagger_auto_schema(responses={status.HTTP_200_OK: SubCategoryDeadlineSerializer})
     def list_sub_category_deadlines(self, request):
+        logger.debug("Listing SubCategoryDeadline instances")
         instances = self.filter_queryset(SubCategoryDeadline.objects.all())
         page = self.paginate_queryset(instances)
 
@@ -136,6 +189,29 @@ class DeadlineViewSet(viewsets.GenericViewSet):
                 instances, many=True, context={"request": request}
             )
             return Response(serializer.data)
+    
+    @swagger_auto_schema(
+        request_body=CheckDeadlineSerializer,
+        responses={status.HTTP_201_CREATED: CheckDeadlineSerializer},
+    )
+    def create_check_deadline(self, request):
+        """
+        Creates a new check deadline instance.
+        """
+        logger.debug("CHECK DEADLINE CREATE REQUEST DATA: %s", request.data)
+        input_serializer = CheckDeadlineSerializer(
+            data=request.data, context={"request": request}
+        )
+        input_serializer.is_valid(raise_exception=True)
+
+        validated_data = input_serializer.validated_data
+        logger.debug("CHECK DEADLINE CREATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.deadline_service.create_check_deadline(request, **validated_data)
+
+        output_serializer = CheckDeadlineSerializer(instance, context={"request": request})
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CheckDeadlineSerializer})
     def retrieve_check_deadline(self, request, deadline_id=None):
@@ -148,7 +224,7 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         request_body=CheckDeadlineSerializer,
         responses={status.HTTP_200_OK: CheckDeadlineSerializer},
     )
-    def partial_update_check__deadline(self, request, deadline_id):
+    def partial_update_check_deadline(self, request, deadline_id):
         logger.debug("CHECK DEADLINE UPDATE REQUEST DATA: %s", request.data)
         instance: CheckDeadline = self.deadline_service.get_check_deadline(
             deadline_id
@@ -165,8 +241,8 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("CHECK DEADLINE UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.deadline_service.update_check_deadline(
-            instance, **validated_data
+        instance = self.deadline_service.update_deadline(
+            request, instance, **validated_data
         )
 
         output_serializer = CheckDeadlineSerializer(
@@ -175,11 +251,6 @@ class DeadlineViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"check",
-    )
     @swagger_auto_schema(responses={status.HTTP_200_OK: CheckDeadlineSerializer})
     def list_check_deadlines(self, request):
         instances = self.filter_queryset(CheckDeadline.objects.all())

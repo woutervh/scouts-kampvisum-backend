@@ -18,6 +18,15 @@ class LinkedSubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = LinkedSubCategory
         exclude = ["category"]
+    
+    def to_internal_value(self, data: dict) -> dict:
+        id = data.get("id", None)
+        if id and len(data.keys()) == 1:
+            sub_category = LinkedSubCategory.objects.safe_get(id=id)
+            if sub_category:
+                return sub_category
+        
+        return super().to_internal_value(data)
         
     def to_representation(self, obj: LinkedSubCategory) -> dict:
         # logger.debug("LINKED CATEGORY TO_REPRESENTATION: %s", obj)

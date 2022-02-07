@@ -28,7 +28,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         if isinstance(data, str):
             instance = ScoutsSection.objects.safe_get(id=data)
@@ -54,11 +54,11 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
                 "age_group": age_group,
             }
 
-        logger.debug("SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         data = super().to_internal_value(data)
 
-        logger.debug("SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         return data
 

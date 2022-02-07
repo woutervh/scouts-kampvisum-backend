@@ -20,7 +20,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.debug("VISUM SERIALIZER TO INTERNAL VALUE: %s", data)
+        # logger.debug("VISUM SERIALIZER TO INTERNAL VALUE: %s", data)
 
         data["category_set"] = {}
         camp_types = data.pop("camp_types", [])

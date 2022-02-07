@@ -80,6 +80,17 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
     def get_state(self, obj: LinkedCheck):
         return self._state
+
+    def to_internal_value(self, data: dict) -> dict:
+        id = data.get("id", None)
+        if id and len(data.keys()) == 1:
+            linked_check = LinkedCheck.objects.safe_get(id=id)
+            if linked_check:
+                check = LinkedCheckService.get_value_type(linked_check)
+                if check:
+                    return check
+        
+        return super().to_internal_value(data)
     
     # def to_representation(self, obj: LinkedCheck) -> dict:
     #     logger.debug("LINKED CHECK SERIALIZER TO_REPRESENTATION: %s", obj)
