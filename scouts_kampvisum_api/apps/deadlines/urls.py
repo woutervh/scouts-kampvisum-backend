@@ -24,6 +24,9 @@ checks = DeadlineViewSet.as_view(
 deadline_dependent = DeadlineViewSet.as_view(
     {"get": "retrieve_deadline_dependent_deadline", "patch": "partial_update_deadline_dependent_deadline"}
 )
+visum = DeadlineViewSet.as_view(
+    {"get": "list_for_visum"}
+)
 
 urlpatterns = [
     path(
@@ -46,6 +49,11 @@ urlpatterns = [
         checks,
         name="checks",
     ),
+    path(
+        "deadlines/visum/<uuid:visum_id>",
+        visum,
+        name="visum"
+    )
 ]
 
 

@@ -10,7 +10,7 @@ from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from apps.deadlines.models import (Deadline, SubCategoryDeadline, CheckDeadline, DeadlineDependentDeadline)
-from apps.deadlines.serializers import (DeadlineSerializer, SubCategoryDeadlineSerializer, CheckDeadlineSerializer, DeadlineDependentDeadlineSerializer)
+from apps.deadlines.serializers import (DeadlineSerializer, SubCategoryDeadlineSerializer, CheckDeadlineSerializer, DeadlineDependentDeadlineSerializer, VisumDeadlineSerializer)
 from apps.deadlines.services import DeadlineService
 
 
@@ -103,6 +103,24 @@ class DeadlineViewSet(viewsets.GenericViewSet):
             return self.get_paginated_response(serializer.data)
         else:
             serializer = DeadlineSerializer(
+                instances, many=True, context={"request": request}
+            )
+            return Response(serializer.data)
+    
+    @swagger_auto_schema(responses={status.HTTP_200_OK: VisumDeadlineSerializer})
+    def list_for_visum(self, request, visum_id):
+        logger.debug("Loading deadlines for visum %s", visum_id)
+        instances = self.filter_queryset(self.deadline_service.list_for_visum(visum=visum_id))
+        
+        page = self.paginate_queryset(instances)
+
+        if page is not None:
+            serializer = VisumDeadlineSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = VisumDeadlineSerializer(
                 instances, many=True, context={"request": request}
             )
             return Response(serializer.data)

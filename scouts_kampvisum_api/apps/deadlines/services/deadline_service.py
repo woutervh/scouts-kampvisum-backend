@@ -1,12 +1,16 @@
 import logging
+from typing import List
 
 from django.http import Http404
 from django.utils import timezone
 
-from apps.visums.models import CampVisum, LinkedSubCategory, LinkedCheck
-
-from apps.deadlines.models import (Deadline, SubCategoryDeadline, CheckDeadline, DeadlineDependentDeadline)
+from apps.deadlines.models import (
+    DefaultDeadline, Deadline, SubCategoryDeadline, CheckDeadline, DeadlineDependentDeadline
+)
+from apps.deadlines.models.enums import DeadlineType
 from apps.deadlines.services import DeadlineDateService
+
+from apps.visums.models import CampVisum, LinkedSubCategory, LinkedCheck
 
 
 logger = logging.getLogger(__name__)
@@ -20,6 +24,7 @@ class DeadlineService:
         instance = Deadline()
         
         instance.visum = CampVisum.objects.safe_get(id=fields.get("visum", {}).get("id", None))
+        instance.deadline_type = DeadlineType.DEADLINE
         instance.name = fields.get("name", None)
         instance.label = fields.get("label", None)
         instance.description = fields.get("description", None)
@@ -64,6 +69,7 @@ class DeadlineService:
         instance = SubCategoryDeadline()
         
         instance.visum = CampVisum.objects.safe_get(id=fields.get("visum", {}).get("id", None))
+        instance.deadline_type = DeadlineType.SUB_CATEGORY
         instance.name = fields.get("name", None)
         instance.label = fields.get("label", None)
         instance.description = fields.get("description", None)
@@ -88,6 +94,7 @@ class DeadlineService:
         instance = CheckDeadline()
         
         instance.visum = CampVisum.objects.safe_get(id=fields.get("visum", {}).get("id", None))
+        instance.deadline_type = DeadlineType.CHECK
         instance.name = fields.get("name", None)
         instance.label = fields.get("label", None)
         instance.description = fields.get("description", None)
@@ -135,3 +142,18 @@ class DeadlineService:
         instance.save()
 
         return instance
+    
+    def list_for_visum(self, visum) -> List[DefaultDeadline]:
+        deadlines: List[DefaultDeadline] = DefaultDeadline.objects.filter(deadline__visum=visum)
+        results = list()
+        
+        for deadline in deadlines:
+            if deadline.is_deadline():
+                results.append(Deadline.objects.get(defaultdeadline_ptr=deadline.id))
+            elif deadline.is_sub_category_deadline():
+                results.append(SubCategoryDeadline.objects.get(defaultdeadline_ptr=deadline.id))
+            elif deadline.is_check_deadline():
+                results.append(CheckDeadline.objects.get(defaultdeadline_ptr=deadline.id))
+        
+        return results
+    

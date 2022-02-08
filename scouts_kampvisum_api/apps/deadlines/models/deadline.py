@@ -1,28 +1,35 @@
 from django.db import models
 
-from apps.deadlines.models import DeadlineDate
+from apps.deadlines.models import DefaultDeadline
+from apps.deadlines.models.enums import DeadlineType
+from apps.deadlines.managers import DeadlineManager
 
 from apps.visums.models import CampVisum, LinkedSubCategory, LinkedCheck
 
-from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import RequiredCharField
-from scouts_auth.inuits.models.interfaces import Describable, Explainable, Translatable
 
-
-class Deadline(Describable, Explainable, Translatable, AuditedBaseModel):
+class Deadline(DefaultDeadline):
+    
+    objects = DeadlineManager()
     
     visum = models.ForeignKey(CampVisum, on_delete=models.CASCADE, related_name="deadlines")
-    name = RequiredCharField()
-    is_important = models.BooleanField(default=False)
-    due_date = DeadlineDate()
     
-    def __str__(self) -> str:
-        return "visum ({}), name ({}), important ({}), label ({}), description ({}), explanation ({})".format(self.visum.id, self.name, self.important, self.label, self.description, self.explanation)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.deadline_type = DeadlineType.DEADLINE
+    
+    def __str__(self):
+        return "visum ({}), {}".format(self.visum.id, super().__str__())
 
 
 class SubCategoryDeadline(Deadline):
     
     deadline_sub_category = models.ForeignKey(LinkedSubCategory, on_delete=models.CASCADE, related_name="deadline")
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.deadline_type = DeadlineType.SUB_CATEGORY
     
     def __str__(self) -> str:
         return "{}, sub_category ({})".format(super().__str__(), self.sub_category)
@@ -33,6 +40,11 @@ class CheckDeadline(Deadline):
     
     def __str__(self) -> str:
         return "{}, check ({})".format(super().__str__(), self.check)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.deadline_type = DeadlineType.CHECK
 
 class DeadlineDependentDeadline(Deadline):
     

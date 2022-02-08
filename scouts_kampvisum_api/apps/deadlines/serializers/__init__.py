@@ -5,3 +5,4 @@ from .deadline_serializer import (
     CheckDeadlineSerializer,
     DeadlineDependentDeadlineSerializer,
 )
+from .visum_deadline_serializer import VisumDeadlineSerializer
