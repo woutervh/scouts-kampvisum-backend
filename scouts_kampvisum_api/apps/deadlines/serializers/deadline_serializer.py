@@ -66,8 +66,8 @@ class SubCategoryDeadlineSerializer(DeadlineSerializer):
     def to_representation(self, obj: SubCategoryDeadline) -> dict:
         data = super().to_representation(obj)
         
-        sub_category = data.pop("deadline_sub_category")
-        data["deadline_sub_category"] = sub_category.get("id")
+        # sub_category = data.pop("deadline_sub_category")
+        # data["deadline_sub_category"] = sub_category.get("id")
         
         return data
         
@@ -88,8 +88,8 @@ class CheckDeadlineSerializer(DeadlineSerializer):
     def to_representation(self, obj: CheckDeadline) -> dict:
         data = super().to_representation(obj)
         
-        check = data.pop("deadline_check")
-        data["deadline_check"] = check.get("id")
+        # check = data.pop("deadline_check")
+        # data["deadline_check"] = check.get("id")
         
         return data
 

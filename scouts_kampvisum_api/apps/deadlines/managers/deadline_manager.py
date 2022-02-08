@@ -26,11 +26,3 @@ class DeadlineManager(models.Manager):
                 pass
 
         return None
-    
-    def list_for_visum(self, *args, **kwargs):
-        visum = kwargs.get("visum", None)
-        
-        if visum:
-            return self.get_queryset().filter(visum=visum)
-        
-        return None
