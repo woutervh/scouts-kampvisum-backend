@@ -82,11 +82,13 @@ class SubCategoryDeadlineSerializer(DeadlineSerializer):
         if category:
             category = LinkedCategory.objects.safe_get(id=category)
             if category:
-                data["category"] = dict()
+                category_data = dict()
 
-                data["category"]["id"] = category.id
-                data["category"]["name"] = category.parent.name
-                data["category"]["label"] = category.parent.label
+                category_data["id"] = category.id
+                category_data["name"] = category.parent.name
+                category_data["label"] = category.parent.label
+
+                data["deadline_sub_category"]["category"] = category_data
 
         return data
 
@@ -113,11 +115,13 @@ class CheckDeadlineSerializer(DeadlineSerializer):
         if check:
             check = LinkedCheck.objects.safe_get(id=check)
             if check:
-                data["category"] = dict()
+                category_data = dict()
 
-                data["category"]["id"] = check.sub_category.category.id
-                data["category"]["name"] = check.sub_category.category.parent.name
-                data["category"]["label"] = check.sub_category.category.parent.label
+                category_data["id"] = check.sub_category.category.id
+                category_data["name"] = check.sub_category.category.parent.name
+                category_data["label"] = check.sub_category.category.parent.label
+
+                data["deadline_check"]["category"] = category_data
 
         return data
 
