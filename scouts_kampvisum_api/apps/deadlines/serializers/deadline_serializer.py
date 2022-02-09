@@ -78,15 +78,15 @@ class SubCategoryDeadlineSerializer(DeadlineSerializer):
 
         # sub_category = data.pop("deadline_sub_category")
         # data["deadline_sub_category"] = sub_category.get("id")
-        category = data.get("deadline_sub_category", {}).get("category", None)
-        if category:
-            category = LinkedCategory.objects.safe_get(id=category)
-            if category:
+        sub_category = data.get("deadline_sub_category", {}).get("id", None)
+        if sub_category:
+            sub_category = LinkedSubCategory.objects.safe_get(id=sub_category)
+            if sub_category:
                 category_data = dict()
 
-                category_data["id"] = category.id
-                category_data["name"] = category.parent.name
-                category_data["label"] = category.parent.label
+                category_data["id"] = sub_category.category.id
+                category_data["name"] = sub_category.category.parent.name
+                category_data["label"] = sub_category.category.parent.label
 
                 data["deadline_sub_category"]["category"] = category_data
 
