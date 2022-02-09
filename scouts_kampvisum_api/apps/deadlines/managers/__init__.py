@@ -1,1 +1,2 @@
+from .default_deadline_manager import DefaultDeadlineManager
 from .deadline_manager import DeadlineManager
