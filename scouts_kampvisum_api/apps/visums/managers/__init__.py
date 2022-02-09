@@ -7,5 +7,6 @@ from .camp_year_category_set_manager import CampYearCategorySetManager
 from .category_set_priority_manager import CategorySetPriorityManager
 from .category_set_manager import CategorySetManager
 from .visum_manager import CampVisumManager
+from .linked_category_manager import LinkedCategoryManager
 from .linked_sub_category_manager import LinkedSubCategoryManager
 from .linked_check_manager import LinkedCheckManager
