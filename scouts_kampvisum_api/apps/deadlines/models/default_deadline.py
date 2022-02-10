@@ -30,10 +30,10 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
         return self.deadline_type == DeadlineType.DEADLINE
 
     def is_sub_category_deadline(self):
-        return self.deadline_type == DeadlineType.SUB_CATEGORY
+        return self.deadline_type == DeadlineType.LINKED_SUB_CATEGORY
 
     def is_check_deadline(self):
-        return self.deadline_type == DeadlineType.CHECK
+        return self.deadline_type == DeadlineType.LINKED_CHECK
 
     def __str__(self) -> str:
         return "name ({}), important ({}), label ({}), description ({}), explanation ({})".format(

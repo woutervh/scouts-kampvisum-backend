@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 class DeadlineType(models.TextChoices):
     # alphabetically ordered
     DEADLINE = "D", "Deadline"
-    CHECK = "C", "Check deadline"
-    SUB_CATEGORY = "S", "SubCategory deadline"
+    LINKED_CHECK = "C", "LinkedCheck deadline"
+    LINKED_SUB_CATEGORY = "S", "LinkedSubCategory deadline"
 
     def parse_deadline_type(value: str = None):
         if not value:
@@ -20,9 +20,15 @@ class DeadlineType(models.TextChoices):
 
         if value in ["D", "DEADLINE"]:
             return DeadlineType.DEADLINE
-        if value in ["C", "CHECK"]:
-            return DeadlineType.CHECK
-        if value in ["S", "SUB_CATEGORY"]:
-            return DeadlineType.SUB_CATEGORY
+        if value in ["C", "CHECK", "LINKED_CHECK", "LINKEDCHECK"]:
+            return DeadlineType.LINKED_CHECK
+        if value in [
+            "S",
+            "SUB_CATEGORY",
+            "SUBCATEGORY",
+            "LINKED_SUB_CATEGORY",
+            "LINKEDSUBCATEGORY",
+        ]:
+            return DeadlineType.LINKED_SUB_CATEGORY
 
         return DeadlineType.DEADLINE

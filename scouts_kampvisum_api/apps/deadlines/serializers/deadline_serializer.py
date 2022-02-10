@@ -5,8 +5,8 @@ from rest_framework import serializers
 
 from apps.deadlines.models import (
     Deadline,
-    SubCategoryDeadline,
-    CheckDeadline,
+    LinkedSubCategoryDeadline,
+    LinkedCheckDeadline,
     DeadlineDependentDeadline,
 )
 from apps.deadlines.models.enums import DeadlineType
@@ -62,29 +62,29 @@ class DeadlineSerializer(serializers.ModelSerializer):
         return data
 
 
-class SubCategoryDeadlineSerializer(DeadlineSerializer):
+class LinkedSubCategoryDeadlineSerializer(DeadlineSerializer):
 
-    deadline_sub_category = LinkedSubCategorySerializer()
+    linked_sub_category = LinkedSubCategorySerializer()
 
     class Meta:
-        model = SubCategoryDeadline
+        model = LinkedSubCategoryDeadline
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
         # logger.debug("SUB CATEGORY DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
-        data["deadline_type"] = DeadlineType.SUB_CATEGORY
+        data["deadline_type"] = DeadlineType.LINKED_SUB_CATEGORY
 
         data = super().to_internal_value(data)
 
         return data
 
-    def to_representation(self, obj: SubCategoryDeadline) -> dict:
+    def to_representation(self, obj: LinkedSubCategoryDeadline) -> dict:
         data = super().to_representation(obj)
 
         # sub_category = data.pop("deadline_sub_category")
         # data["deadline_sub_category"] = sub_category.get("id")
-        sub_category = data.get("deadline_sub_category", {}).get("id", None)
+        sub_category = data.get("linked_sub_category", {}).get("id", None)
         if sub_category:
             sub_category = LinkedSubCategory.objects.safe_get(id=sub_category)
             if sub_category:
@@ -94,32 +94,32 @@ class SubCategoryDeadlineSerializer(DeadlineSerializer):
                 category_data["name"] = sub_category.category.parent.name
                 category_data["label"] = sub_category.category.parent.label
 
-                data["deadline_sub_category"]["category"] = category_data
+                data["linked_sub_category"]["category"] = category_data
 
         return data
 
 
-class CheckDeadlineSerializer(DeadlineSerializer):
+class LinkedCheckDeadlineSerializer(DeadlineSerializer):
 
-    deadline_check = LinkedCheckSerializer()
+    linked_check = LinkedCheckSerializer()
 
     class Meta:
-        model = CheckDeadline
+        model = LinkedCheckDeadline
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        data["deadline_type"] = DeadlineType.CHECK
+        data["deadline_type"] = DeadlineType.LINKED_CHECK
 
         data = super().to_internal_value(data)
 
         return data
 
-    def to_representation(self, obj: CheckDeadline) -> dict:
+    def to_representation(self, obj: LinkedCheckDeadline) -> dict:
         data = super().to_representation(obj)
 
         # check = data.pop("deadline_check")
         # data["deadline_check"] = check.get("id")
-        check = data.get("deadline_check", {}).get("id", None)
+        check = data.get("linked_check", {}).get("id", None)
         if check:
             check = LinkedCheck.objects.safe_get(id=check)
             if check:
@@ -129,7 +129,7 @@ class CheckDeadlineSerializer(DeadlineSerializer):
                 category_data["name"] = check.sub_category.category.parent.name
                 category_data["label"] = check.sub_category.category.parent.label
 
-                data["deadline_check"]["category"] = category_data
+                data["linked_check"]["category"] = category_data
 
         return data
 
