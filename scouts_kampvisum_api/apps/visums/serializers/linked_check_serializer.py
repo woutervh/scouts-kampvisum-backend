@@ -1,5 +1,6 @@
 import logging
 
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from apps.participants.serializers import InuitsParticipantSerializer
@@ -73,7 +74,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
         else:
             value = check.value
-        
+
         self._state = CheckState.CHECKED if check.is_checked() else CheckState.UNCHECKED
 
         return value
@@ -89,19 +90,20 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
                 check = LinkedCheckService.get_value_type(linked_check)
                 if check:
                     return check
-        
+
         return super().to_internal_value(data)
-    
+
     # def to_representation(self, obj: LinkedCheck) -> dict:
     #     logger.debug("LINKED CHECK SERIALIZER TO_REPRESENTATION: %s", obj)
-        
+
     #     data = super().to_representation(obj)
-        
+
     #     logger.debug("LINKED CHECK SERIALIZER TO_REPRESENTATION: %s", data)
 
     #     data["state"] = obj.is_checked()
-        
+
     #     return data
+
 
 class LinkedSimpleCheckSerializer(LinkedCheckSerializer):
 
@@ -145,6 +147,22 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
         data["end_date"] = obj.end_date
 
         return data
+
+    def validate(self, obj: dict) -> dict:
+        start_date = obj.get("start_date", None)
+        end_date = obj.get("end_date", None)
+
+        if not start_date or not end_date:
+            raise ValidationError("Start date and end date are required")
+
+        if start_date > end_date:
+            raise ValidationError(
+                "Start date ({}) must come after end date ({})".format(
+                    start_date, end_date
+                )
+            )
+
+        return obj
 
 
 class LinkedLocationCheckSerializer(LinkedCheckSerializer):

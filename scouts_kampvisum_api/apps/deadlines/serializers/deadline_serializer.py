@@ -9,6 +9,7 @@ from apps.deadlines.models import (
     CheckDeadline,
     DeadlineDependentDeadline,
 )
+from apps.deadlines.models.enums import DeadlineType
 from apps.deadlines.serializers import DeadlineDateSerializer
 
 from apps.visums.models import CampVisum, LinkedCategory, LinkedSubCategory, LinkedCheck
@@ -33,6 +34,8 @@ class DeadlineSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         # logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
+
+        data["deadline_type"] = DeadlineType.DEADLINE
 
         # visum_id = data.get("visum", {}).get("id", None)
         # if not visum_id:
@@ -69,6 +72,9 @@ class SubCategoryDeadlineSerializer(DeadlineSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         # logger.debug("SUB CATEGORY DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
+
+        data["deadline_type"] = DeadlineType.SUB_CATEGORY
+
         data = super().to_internal_value(data)
 
         return data
@@ -102,6 +108,8 @@ class CheckDeadlineSerializer(DeadlineSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
+        data["deadline_type"] = DeadlineType.CHECK
+
         data = super().to_internal_value(data)
 
         return data
