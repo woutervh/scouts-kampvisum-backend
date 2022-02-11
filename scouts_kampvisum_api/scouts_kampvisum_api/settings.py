@@ -376,7 +376,7 @@ OIDC_VERIFY_SSL = env.bool("OIDC_VERIFY_SSL", default=True)
 # see Python requests:
 # https://requests.readthedocs.io/en/master/user/quickstart/#timeouts
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_TIMEOUT
-OIDC_TIMEOUT = env.str("OIDC_TIMEOUT", default=None)
+OIDC_TIMEOUT = env.int("OIDC_TIMEOUT", default=None)
 # Defines a proxy for all requests to the OpenID Connect provider
 # (fetch JWS, retrieve JWT tokens, Userinfo Endpoint). The default is set to
 # None which means the library will not use a proxy and connect directly.
