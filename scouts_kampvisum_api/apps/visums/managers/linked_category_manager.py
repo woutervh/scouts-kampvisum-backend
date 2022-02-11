@@ -6,18 +6,18 @@ from django.db import models
 logger = logging.getLogger(__name__)
 
 
-class LinkedCheckQuerySet(models.QuerySet):
+class LinkedCategoryQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 
-class LinkedCheckManager(models.Manager):
+class LinkedCategoryManager(models.Manager):
     """
-    Loads LinkedCheck instances by their name, not their id.
+    Loads LinkedSubCategory instances by their name, not their id.
     """
 
     def get_queryset(self):
-        return LinkedCheckQuerySet(self.model, using=self._db)
+        return LinkedCategoryQuerySet(self.model, using=self._db)
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))

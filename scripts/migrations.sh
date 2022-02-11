@@ -21,6 +21,14 @@ FIXTURES=(
 	"category_set_priorities.json"
 	"check_types.json"
 )
+COMMANDS=(
+	"setupcampyears"
+	"loadcategories"
+	"loadsubcategories"
+	"loadchecks"
+	"createcategorysets"
+	"loaddefaultdeadlines"
+)
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }
 # SAFE TO ADD CODE BELOW

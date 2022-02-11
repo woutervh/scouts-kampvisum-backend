@@ -1,13 +1,20 @@
+import logging
+
 from django.db import models
 
 from apps.deadlines.models import DeadlineDate
 from apps.deadlines.models.enums import DeadlineType
 from apps.deadlines.managers import DefaultDeadlineManager
 
+from apps.visums.models import SubCategory, Check
+
 
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField, DefaultCharField
 from scouts_auth.inuits.models.interfaces import Describable, Explainable, Translatable
+
+
+logger = logging.getLogger(__name__)
 
 
 class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
@@ -16,24 +23,39 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
 
     name = RequiredCharField()
     is_important = models.BooleanField(default=False)
-    due_date = DeadlineDate()
+    due_date = models.ForeignKey(DeadlineDate, on_delete=models.CASCADE)
     deadline_type = DefaultCharField(
         choices=DeadlineType.choices,
         default=DeadlineType.DEADLINE,
         max_length=1,
     )
+    deadline_sub_category = models.ForeignKey(
+        SubCategory, on_delete=models.CASCADE, null=True
+    )
+    deadline_check = models.ForeignKey(Check, on_delete=models.CASCADE, null=True)
 
     class Meta:
+        ordering = [
+            "due_date__date_year",
+            "due_date__date_month",
+            "due_date__date_day",
+            "is_important",
+            "name",
+        ]
         unique_together = ("name", "deadline_type")
+
+    def natural_key(self):
+        logger.debug("NATURAL KEY CALLED DefaultDeadline")
+        return (self.name, self.deadline_type)
 
     def is_deadline(self):
         return self.deadline_type == DeadlineType.DEADLINE
 
     def is_sub_category_deadline(self):
-        return self.deadline_type == DeadlineType.SUB_CATEGORY
+        return self.deadline_type == DeadlineType.LINKED_SUB_CATEGORY
 
     def is_check_deadline(self):
-        return self.deadline_type == DeadlineType.CHECK
+        return self.deadline_type == DeadlineType.LINKED_CHECK
 
     def __str__(self) -> str:
         return "name ({}), important ({}), label ({}), description ({}), explanation ({})".format(

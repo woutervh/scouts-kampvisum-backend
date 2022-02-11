@@ -23,4 +23,12 @@ class CheckManager(models.Manager):
             type(sub_category).__name__,
         )
 
+        if isinstance(sub_category, list):
+            return self.get(
+                name=name,
+                sub_category__name=sub_category[0],
+                sub_category__category__name=sub_category[1][0],
+                sub_category__category__camp_year__year=sub_category[1][1],
+            )
+
         return self.get(name=name, sub_category=sub_category)
