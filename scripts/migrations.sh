@@ -13,14 +13,14 @@ APPS=(
 	"visums"
 	"deadlines"
 )
-FIXTURES=(
-	"scouts_group_types.json"
-	"scouts_section_names.json"
-	"default_scouts_section_names.json"
-	"camp_types.json"
-	"category_set_priorities.json"
-	"check_types.json"
-)
+# FIXTURES=(
+# 	"scouts_group_types.json"
+# 	"scouts_section_names.json"
+# 	"default_scouts_section_names.json"
+# 	"camp_types.json"
+# 	"category_set_priorities.json"
+# 	"check_types.json"
+# )
 COMMANDS=(
 	"setupcampyears"
 	"loadcategories"
