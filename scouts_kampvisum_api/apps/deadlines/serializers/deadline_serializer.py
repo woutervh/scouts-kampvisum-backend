@@ -12,7 +12,7 @@ from apps.deadlines.models import (
 from apps.deadlines.models.enums import DeadlineType
 from apps.deadlines.serializers import DeadlineDateSerializer
 
-from apps.visums.models import CampVisum, LinkedCategory, LinkedSubCategory, LinkedCheck
+from apps.visums.models import LinkedSubCategory, LinkedCheck
 from apps.visums.serializers import (
     CampVisumSerializer,
     LinkedSubCategorySerializer,

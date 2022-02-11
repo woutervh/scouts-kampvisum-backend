@@ -1,0 +1,47 @@
+[
+    {
+        "model": "deadlines.DefaultDeadline",
+        "fields": {
+            "name": "camp_location",
+            "label": "Kampplaats",
+            "description": "Bevestig je kampplaats",
+            "explanation": "Zorg tijdig voor een kampplaats en vergeet niet het adres en de contactgegevens van de verhuurder in te vullen",
+            "is_important": true,
+            "due_date": {
+                "date_month": 9
+            },
+            "deadline_type": "C",
+            "deadline_check": [
+                "logistics_location_location",
+                [
+                    "locations_map",
+                    [
+                        "logistics",
+                        2022
+                    ]
+                ]
+            ]
+        }
+    },
+    {
+        "model": "deadlines.DefaultDeadline",
+        "fields": {
+            "name": "transport",
+            "label": "Vervoer",
+            "description": "Organiseer het vervoer",
+            "explanation": "Organiseer het vervoer van en naar de kampplaats",
+            "is_important": false,
+            "due_date": {
+                "date_month": 12
+            },
+            "deadline_type": "S",
+            "deadline_sub_category": [
+                "transport",
+                [
+                    "logistics",
+                    2022
+                ]
+            ]
+        }
+    }
+]

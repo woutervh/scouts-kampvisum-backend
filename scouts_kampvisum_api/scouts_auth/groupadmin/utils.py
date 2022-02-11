@@ -54,6 +54,14 @@ class SettingsHelper:
         return getattr(settings, "ACTIVITY_EPOCH", 3)
 
     @staticmethod
+    def get_camp_registration_epoch(default_value=None):
+        # The date after which a new camp registration is considered to be in the next camp year
+        value = getattr(settings, "CAMP_REGISTRATION_EPOCH")
+        month, day = value.split("-")
+
+        return (month, day)
+
+    @staticmethod
     def get_administrator_groups() -> List[str]:
         return settings.KNOWN_ADMIN_GROUPS
 

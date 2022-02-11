@@ -318,6 +318,7 @@ CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 #                                                                              #
 # ############################################################################ #
 ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
+CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "05-01")
 
 
 # ############################################################################ #

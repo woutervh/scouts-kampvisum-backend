@@ -5,6 +5,8 @@ from django.db.models import Q
 
 from apps.visums.models import CampVisum
 
+from apps.camps.services import CampYearService
+
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +22,11 @@ class CampVisumFilter(filters.FilterSet):
 
         group_admin_id = self.request.query_params.get("group", None)
         year = self.request.query_params.get("year", None)
+
+        if not year or year == "undefined":
+            year = CampYearService().get_or_create_current_camp_year()
+
+            year = year.year
 
         if year and group_admin_id:
             logger.debug(

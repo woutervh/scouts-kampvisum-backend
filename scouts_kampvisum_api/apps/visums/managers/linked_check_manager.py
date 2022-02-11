@@ -21,11 +21,11 @@ class LinkedCheckManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
-        
+
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
             except:
                 pass
-        
+
         return None
