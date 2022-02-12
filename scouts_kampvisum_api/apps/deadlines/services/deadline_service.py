@@ -9,10 +9,8 @@ from apps.deadlines.models import (
     Deadline,
     LinkedSubCategoryDeadline,
     LinkedCheckDeadline,
-    DeadlineDependentDeadline,
 )
 from apps.deadlines.models.enums import DeadlineType
-from apps.deadlines.services import DeadlineDateService
 
 from apps.visums.models import CampVisum, LinkedSubCategory, LinkedCheck
 
@@ -21,9 +19,6 @@ logger = logging.getLogger(__name__)
 
 
 class DeadlineService:
-
-    deadline_date_service = DeadlineDateService()
-
     def create_deadline(self, request, **fields) -> Deadline:
         instance = Deadline()
 
@@ -139,25 +134,6 @@ class DeadlineService:
             raise Http404
 
     def update_check_deadline(self, instance: LinkedCheckDeadline, **data):
-        logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
-        )
-        instance.value = data.get("value", None)
-
-        instance.full_clean()
-        instance.save()
-
-        return instance
-
-    def get_deadline_dependent_deadline(self, deadline_id):
-        try:
-            return DeadlineDependentDeadline.objects.get(linkedcheck_ptr=deadline_id)
-        except DeadlineDependentDeadline.DoesNotExist:
-            raise Http404
-
-    def update_deadline_dependent_deadline(
-        self, instance: DeadlineDependentDeadline, **data
-    ):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )

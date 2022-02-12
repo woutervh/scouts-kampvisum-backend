@@ -52,15 +52,3 @@ class LinkedCheckDeadline(Deadline):
 
     def __str__(self) -> str:
         return "{}, linked_check ({})".format(super().__str__(), self.check)
-
-
-class DeadlineDependentDeadline(Deadline):
-
-    deadline_due_after_deadline = models.ForeignKey(
-        Deadline, on_delete=models.CASCADE, related_name="deadline"
-    )
-
-    def __str__(self) -> str:
-        return "{}, due_after_deadline ({})".format(
-            super().__str__(), self.due_after_deadline
-        )

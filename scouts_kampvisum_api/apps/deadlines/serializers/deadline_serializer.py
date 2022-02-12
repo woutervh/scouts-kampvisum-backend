@@ -7,7 +7,6 @@ from apps.deadlines.models import (
     Deadline,
     LinkedSubCategoryDeadline,
     LinkedCheckDeadline,
-    DeadlineDependentDeadline,
 )
 from apps.deadlines.models.enums import DeadlineType
 from apps.deadlines.serializers import DeadlineDateSerializer
@@ -130,19 +129,5 @@ class LinkedCheckDeadlineSerializer(DeadlineSerializer):
                 category_data["label"] = check.sub_category.category.parent.label
 
                 data["linked_check"]["category"] = category_data
-
-        return data
-
-
-class DeadlineDependentDeadlineSerializer(DeadlineSerializer):
-
-    deadline_due_after_deadline = DeadlineSerializer()
-
-    class Meta:
-        model = DeadlineDependentDeadline
-        fields = "__all__"
-
-    def to_internal_value(self, data: dict) -> dict:
-        data = super().to_internal_value(data)
 
         return data

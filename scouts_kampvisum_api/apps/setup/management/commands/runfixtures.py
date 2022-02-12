@@ -1,24 +1,14 @@
-import logging, os, json
+import logging, os
 from pathlib import Path
 
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
-from apps.deadlines.models import DeadlineDate
-from apps.deadlines.services import DeadlineDateService
-
 
 logger = logging.getLogger(__name__)
 
-# FIXTURES=(
-# 	"scouts_group_types.json"
-# 	"scouts_section_names.json"
-# 	"default_scouts_section_names.json"
-# 	"camp_types.json"
-# 	"category_set_priorities.json"
-# 	"check_types.json"
-# )
+
 class Command(BaseCommand):
     help = "Loads all fixtures"
     exception = False

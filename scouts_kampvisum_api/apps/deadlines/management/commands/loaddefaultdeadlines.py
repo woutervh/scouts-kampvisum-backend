@@ -6,7 +6,8 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 from apps.deadlines.models import DeadlineDate
-from apps.deadlines.services import DeadlineDateService
+from apps.deadlines.models.enums import DeadlineType
+from apps.deadlines.services import DefaultDeadlineService
 
 
 logger = logging.getLogger(__name__)
@@ -31,16 +32,47 @@ class Command(BaseCommand):
 
         logger.debug("Loading default deadlines from %s", path)
 
-        date_service = DeadlineDateService()
+        default_deadline_service = DefaultDeadlineService()
 
         with open(path) as f:
             data = json.load(f)
 
             for model in data:
-                due_date: DeadlineDate = date_service.create_deadline_date(
-                    None, **model.get("fields")["due_date"]
+                default_deadline = default_deadline_service.get_or_create(
+                    name=model.get("fields")["name"],
+                    deadline_type=model.get("fields").get(
+                        "deadline_type", DeadlineType.DEADLINE
+                    ),
                 )
-                model.get("fields")["due_date"] = str(due_date.id)
+                model["pk"] = str(default_deadline.id)
+
+                due_date: DeadlineDate = (
+                    default_deadline_service.get_or_create_deadline_date(
+                        default_deadline=default_deadline,
+                        **model.get("fields")["due_date"]
+                    )
+                )
+                # model.get("fields")["due_date"] = [str(default_deadline.id)]
+                model.get("fields").pop("due_date")
+
+                flags = model.get("fields").get("flags", [])
+                if flags:
+                    results = []
+
+                    for flag in flags:
+                        name = flag[0]
+                        label = flag[1] if flag[1] else None
+
+                        results.append(
+                            default_deadline_service.create_flag(
+                                default_deadline=default_deadline,
+                                name=name,
+                                label=label,
+                            )
+                        )
+
+                    # model.get("fields")["flags"] = [str(flag.id) for flag in results]
+                    model.get("fields").pop("flags")
 
                 logger.debug("MODEL: %s", model)
 
@@ -49,4 +81,4 @@ class Command(BaseCommand):
 
         call_command("loaddata", tmp_path)
 
-        os.remove(tmp_path)
+        # os.remove(tmp_path)
