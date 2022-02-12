@@ -2,7 +2,6 @@ import logging
 
 from django.db import models
 
-from apps.deadlines.models import DeadlineDate
 from apps.deadlines.models.enums import DeadlineType
 from apps.deadlines.managers import DefaultDeadlineManager
 
@@ -23,16 +22,13 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
 
     name = RequiredCharField()
     is_important = models.BooleanField(default=False)
-    due_date = models.ForeignKey(DeadlineDate, on_delete=models.CASCADE)
     deadline_type = DefaultCharField(
         choices=DeadlineType.choices,
         default=DeadlineType.DEADLINE,
         max_length=1,
     )
-    deadline_sub_category = models.ForeignKey(
-        SubCategory, on_delete=models.CASCADE, null=True
-    )
-    deadline_check = models.ForeignKey(Check, on_delete=models.CASCADE, null=True)
+    sub_categories = models.ManyToManyField(SubCategory)
+    checks = models.ManyToManyField(Check)
 
     class Meta:
         ordering = [
@@ -54,10 +50,29 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
     def is_sub_category_deadline(self):
         return self.deadline_type == DeadlineType.LINKED_SUB_CATEGORY
 
+    def has_sub_categories(self):
+        return (
+            self.is_sub_category_deadline()
+            and self.sub_categories
+            and len(self.sub_categories) > 0
+        )
+
     def is_check_deadline(self):
         return self.deadline_type == DeadlineType.LINKED_CHECK
 
+    def has_checks(self):
+        return self.is_check_deadline() and self.checks and len(self.checks) > 0
+
+    def has_flags(self):
+        return self.is_deadline() and self.flags and len(self.flags) > 0
+
     def __str__(self) -> str:
-        return "name ({}), important ({}), label ({}), description ({}), explanation ({})".format(
-            self.name, self.important, self.label, self.description, self.explanation
+        return "id ({}), name ({}), deadline_type ({}), is_important ({}), label ({}), description ({}), explanation ({})".format(
+            self.id,
+            self.name,
+            self.deadline_type,
+            self.is_important,
+            self.label,
+            self.description,
+            self.explanation,
         )

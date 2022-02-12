@@ -22,6 +22,7 @@ APPS=(
 # 	"check_types.json"
 # )
 COMMANDS=(
+	"runfixtures"
 	"setupcampyears"
 	"loadcategories"
 	"loadsubcategories"

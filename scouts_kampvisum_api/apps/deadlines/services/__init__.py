@@ -1,2 +1,2 @@
-from .deadline_date_service import DeadlineDateService
+from .default_deadline_service import DefaultDeadlineService
 from .deadline_service import DeadlineService

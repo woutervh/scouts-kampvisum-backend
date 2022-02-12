@@ -13,13 +13,11 @@ from apps.deadlines.models import (
     Deadline,
     LinkedSubCategoryDeadline,
     LinkedCheckDeadline,
-    DeadlineDependentDeadline,
 )
 from apps.deadlines.serializers import (
     DeadlineSerializer,
     LinkedSubCategoryDeadlineSerializer,
     LinkedCheckDeadlineSerializer,
-    DeadlineDependentDeadlineSerializer,
     VisumDeadlineSerializer,
 )
 from apps.deadlines.services import DeadlineService
@@ -308,77 +306,6 @@ class DeadlineViewSet(viewsets.GenericViewSet):
             return self.get_paginated_response(serializer.data)
         else:
             serializer = LinkedCheckDeadlineSerializer(
-                instances, many=True, context={"request": request}
-            )
-            return Response(serializer.data)
-
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: DeadlineDependentDeadlineSerializer}
-    )
-    def retrieve_deadline_dependent_deadline(self, request, deadline_id=None):
-        instance: DeadlineDependentDeadline = (
-            self.deadline_service.get_deadline_dependent_deadline(deadline_id)
-        )
-        serializer = DeadlineDependentDeadlineSerializer(
-            instance, context={"request": request}
-        )
-
-        return Response(serializer.data)
-
-    @swagger_auto_schema(
-        request_body=DeadlineDependentDeadlineSerializer,
-        responses={status.HTTP_200_OK: DeadlineDependentDeadlineSerializer},
-    )
-    def partial_update_deadline_dependent_deadline(self, request, deadline_id):
-        logger.debug(
-            "DEADLINE DEPENDENT DEADLINE UPDATE REQUEST DATA: %s", request.data
-        )
-        instance: DeadlineDependentDeadline = (
-            self.deadline_service.get_deadline_dependent_deadline(deadline_id)
-        )
-
-        serializer = DeadlineDependentDeadlineSerializer(
-            data=request.data,
-            instance=instance,
-            context={"request": request},
-            partial=True,
-        )
-        serializer.is_valid(raise_exception=True)
-
-        validated_data = serializer.validated_data
-        logger.debug(
-            "DEADLINE DEPENDENT DEADLINE UPDATE VALIDATED DATA: %s", validated_data
-        )
-
-        instance = self.deadline_service.update_deadline_dependent_deadline(
-            instance, **validated_data
-        )
-
-        output_serializer = DeadlineDependentDeadlineSerializer(
-            instance, context={"request": request}
-        )
-
-        return Response(output_serializer.data, status=status.HTTP_200_OK)
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path="deadline_dependent",
-    )
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: DeadlineDependentDeadlineSerializer}
-    )
-    def list_sub_category_deadlines(self, request):
-        instances = self.filter_queryset(DeadlineDependentDeadline.objects.all())
-        page = self.paginate_queryset(instances)
-
-        if page is not None:
-            serializer = DeadlineDependentDeadlineSerializer(
-                page, many=True, context={"request": request}
-            )
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = DeadlineDependentDeadlineSerializer(
                 instances, many=True, context={"request": request}
             )
             return Response(serializer.data)

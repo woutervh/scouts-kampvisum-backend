@@ -17,10 +17,18 @@ class DefaultDeadlineManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        name = kwargs.get("name", None)
+        deadline_type = kwargs.get("deadline_type", None)
 
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
+            except:
+                pass
+
+        if name and deadline_type:
+            try:
+                return self.get_queryset().get(name=name, deadline_type=deadline_type)
             except:
                 pass
 
