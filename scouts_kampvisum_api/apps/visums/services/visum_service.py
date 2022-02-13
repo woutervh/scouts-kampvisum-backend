@@ -1,8 +1,11 @@
 import logging
 
+from apps.camps.services import CampService
+
+from apps.deadlines.services import DeadlineService
+
 from apps.visums.models import LinkedCategorySet, CampVisum
 from apps.visums.services import CategorySetService
-from apps.camps.services import CampService
 
 
 logger = logging.getLogger(__name__)
@@ -12,6 +15,7 @@ class CampVisumService:
 
     camp_service = CampService()
     category_set_service = CategorySetService()
+    deadline_service = DeadlineService()
 
     def visum_create(self, request, **data) -> CampVisum:
         logger.debug("Creating Campvisum with data: %s", data)
@@ -35,6 +39,9 @@ class CampVisumService:
         visum.full_clean()
         visum.save()
 
+        logger.debug("Linking default deadline set to visum")
+        self.deadline_service.link_to_visum(request=request, visum=visum)
+
         return visum
 
     def visum_update(self, request, instance: CampVisum, **fields) -> CampVisum:
@@ -50,9 +57,8 @@ class CampVisumService:
 
         instance.full_clean()
         instance.save()
-        
+
         # existing_camp_types = instance.category_set.parent.camp_type
         camp_types = fields.get("camp_types", [])
-        
 
         return instance

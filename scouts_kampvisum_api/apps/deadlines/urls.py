@@ -10,19 +10,25 @@ from rest_framework import routers
 from apps.deadlines.views import DeadlineViewSet
 
 sub_category_list = DeadlineViewSet.as_view(
-    {"post": "create_sub_category_deadline", "get": "list_sub_category_deadlines"}
+    {
+        "post": "create_linked_sub_category_deadline",
+        "get": "list_linked_sub_category_deadlines",
+    }
 )
 sub_category = DeadlineViewSet.as_view(
     {
-        "get": "retrieve_sub_category_deadline",
-        "patch": "partial_update_sub_category_deadline",
+        "get": "retrieve_linked_sub_category_deadline",
+        "patch": "partial_update_linked_sub_category_deadline",
     }
 )
 checks_list = DeadlineViewSet.as_view(
-    {"post": "create_check_deadline", "get": "list_check_deadlines"}
+    {"post": "create_linked_check_deadline", "get": "list_linked_check_deadlines"}
 )
 checks = DeadlineViewSet.as_view(
-    {"get": "retrieve_check_deadline", "patch": "partial_update_check_deadline"}
+    {
+        "get": "retrieve_linked_check_deadline",
+        "patch": "partial_update_linked_check_deadline",
+    }
 )
 visum = DeadlineViewSet.as_view({"get": "list_for_visum"})
 

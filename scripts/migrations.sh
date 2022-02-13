@@ -29,6 +29,7 @@ COMMANDS=(
 	"loadchecks"
 	"createcategorysets"
 	"loaddefaultdeadlines"
+	"createdefaultdeadlinesets"
 )
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }

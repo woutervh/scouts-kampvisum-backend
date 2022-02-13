@@ -16,8 +16,8 @@ class DeadlineFlagManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
-        default_deadline = kwargs.get("default_deadline", None)
-        name = kwargs.get("name", None)
+        parent = kwargs.get("parent", None)
+        deadline = kwargs.get("deadline", None)
 
         if pk:
             try:
@@ -25,11 +25,9 @@ class DeadlineFlagManager(models.Manager):
             except:
                 pass
 
-        if default_deadline and name:
+        if parent and deadline:
             try:
-                return self.get_queryset().get(
-                    default_deadline=default_deadline, name=name
-                )
+                return self.get_queryset().get(parent=parent, deadline=deadline)
             except:
                 pass
 

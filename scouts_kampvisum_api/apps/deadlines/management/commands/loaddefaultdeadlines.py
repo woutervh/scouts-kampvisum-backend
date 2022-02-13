@@ -64,21 +64,23 @@ class Command(BaseCommand):
                         label = flag[1] if flag[1] else None
 
                         results.append(
-                            default_deadline_service.create_flag(
+                            default_deadline_service.get_or_create_default_flag(
                                 default_deadline=default_deadline,
-                                name=name,
-                                label=label,
+                                **{
+                                    "name": name,
+                                    "label": label,
+                                }
                             )
                         )
 
                     # model.get("fields")["flags"] = [str(flag.id) for flag in results]
                     model.get("fields").pop("flags")
 
-                logger.debug("MODEL: %s", model)
+                # logger.debug("MODEL: %s", model)
 
             with open(tmp_path, "w") as o:
                 json.dump(data, o)
 
         call_command("loaddata", tmp_path)
 
-        # os.remove(tmp_path)
+        os.remove(tmp_path)

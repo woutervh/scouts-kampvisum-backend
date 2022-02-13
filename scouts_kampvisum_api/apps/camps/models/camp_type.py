@@ -2,7 +2,7 @@ import logging
 
 from django.db import models
 
-from apps.visums.managers import CampTypeManager
+from apps.camps.managers import CampTypeManager
 
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
@@ -32,5 +32,10 @@ class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
 
     def __str__(self):
         return "OBJECT CampType: camp_type({}), is_base ({}), is_default ({}), index ({}), label ({}), explanation ({})".format(
-            self.camp_type, self.is_base, self.is_default, self.index, self.label, self.explanation
+            self.camp_type,
+            self.is_base,
+            self.is_default,
+            self.index,
+            self.label,
+            self.explanation,
         )

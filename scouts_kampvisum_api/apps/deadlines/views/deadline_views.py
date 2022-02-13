@@ -54,7 +54,9 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("DEADLINE CREATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.deadline_service.create_deadline(request, **validated_data)
+        instance = self.deadline_service.get_or_create_deadline(
+            request, **validated_data
+        )
 
         output_serializer = DeadlineSerializer(instance, context={"request": request})
 
@@ -114,31 +116,11 @@ class DeadlineViewSet(viewsets.GenericViewSet):
             )
             return Response(serializer.data)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: VisumDeadlineSerializer})
-    def list_for_visum(self, request, visum_id):
-        logger.debug("Loading deadlines for visum %s", visum_id)
-        instances = self.filter_queryset(
-            self.deadline_service.list_for_visum(visum=visum_id)
-        )
-
-        page = self.paginate_queryset(instances)
-
-        if page is not None:
-            serializer = VisumDeadlineSerializer(
-                page, many=True, context={"request": request}
-            )
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = VisumDeadlineSerializer(
-                instances, many=True, context={"request": request}
-            )
-            return Response(serializer.data)
-
     @swagger_auto_schema(
         request_body=LinkedSubCategoryDeadlineSerializer,
         responses={status.HTTP_201_CREATED: LinkedSubCategoryDeadlineSerializer},
     )
-    def create_sub_category_deadline(self, request):
+    def create_linked_sub_category_deadline(self, request):
         """
         Creates a new sub_category deadline instance.
         """
@@ -151,7 +133,7 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("SUB CATEGORY DEADLINE CREATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.deadline_service.create_sub_category_deadline(
+        instance = self.deadline_service.get_or_create_linked_sub_category_deadline(
             request, **validated_data
         )
 
@@ -164,9 +146,9 @@ class DeadlineViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: LinkedSubCategoryDeadlineSerializer}
     )
-    def retrieve_sub_category_deadline(self, request, deadline_id=None):
+    def retrieve_linked_sub_category_deadline(self, request, deadline_id=None):
         instance: LinkedSubCategoryDeadline = (
-            self.deadline_service.get_sub_category_deadline(deadline_id)
+            self.deadline_service.get_linked_sub_category_deadline(deadline_id)
         )
         serializer = LinkedSubCategoryDeadlineSerializer(
             instance, context={"request": request}
@@ -181,7 +163,7 @@ class DeadlineViewSet(viewsets.GenericViewSet):
     def partial_update_sub_category_deadline(self, request, deadline_id):
         logger.debug("SUB CATEGORY DEADLINE UPDATE REQUEST DATA: %s", request.data)
         instance: LinkedSubCategoryDeadline = (
-            self.deadline_service.get_sub_category_deadline(deadline_id)
+            self.deadline_service.get_linked_sub_category_deadline(deadline_id)
         )
 
         serializer = LinkedSubCategoryDeadlineSerializer(
@@ -209,7 +191,7 @@ class DeadlineViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: LinkedSubCategoryDeadlineSerializer}
     )
-    def list_sub_category_deadlines(self, request):
+    def list_linked_sub_category_deadlines(self, request):
         logger.debug("Listing SubCategoryDeadline instances")
         instances = self.filter_queryset(LinkedSubCategoryDeadline.objects.all())
         page = self.paginate_queryset(instances)
@@ -229,7 +211,7 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         request_body=LinkedCheckDeadlineSerializer,
         responses={status.HTTP_201_CREATED: LinkedCheckDeadlineSerializer},
     )
-    def create_check_deadline(self, request):
+    def create_linked_check_deadline(self, request):
         """
         Creates a new check deadline instance.
         """
@@ -242,7 +224,7 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("CHECK DEADLINE CREATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.deadline_service.create_check_deadline(
+        instance = self.deadline_service.get_or_create_linked_check_deadline(
             request, **validated_data
         )
 
@@ -253,8 +235,8 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckDeadlineSerializer})
-    def retrieve_check_deadline(self, request, deadline_id=None):
-        instance: LinkedCheckDeadline = self.deadline_service.get_check_deadline(
+    def retrieve_linked_check_deadline(self, request, deadline_id=None):
+        instance: LinkedCheckDeadline = self.deadline_service.get_linked_check_deadline(
             deadline_id
         )
         serializer = LinkedCheckDeadlineSerializer(
@@ -267,9 +249,9 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         request_body=LinkedCheckDeadlineSerializer,
         responses={status.HTTP_200_OK: LinkedCheckDeadlineSerializer},
     )
-    def partial_update_check_deadline(self, request, deadline_id):
+    def partial_update_linked_check_deadline(self, request, deadline_id):
         logger.debug("CHECK DEADLINE UPDATE REQUEST DATA: %s", request.data)
-        instance: LinkedCheckDeadline = self.deadline_service.get_check_deadline(
+        instance: LinkedCheckDeadline = self.deadline_service.get_linked_check_deadline(
             deadline_id
         )
 
@@ -295,7 +277,7 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckDeadlineSerializer})
-    def list_check_deadlines(self, request):
+    def list_linked_check_deadlines(self, request):
         instances = self.filter_queryset(LinkedCheckDeadline.objects.all())
         page = self.paginate_queryset(instances)
 
@@ -306,6 +288,26 @@ class DeadlineViewSet(viewsets.GenericViewSet):
             return self.get_paginated_response(serializer.data)
         else:
             serializer = LinkedCheckDeadlineSerializer(
+                instances, many=True, context={"request": request}
+            )
+            return Response(serializer.data)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: VisumDeadlineSerializer})
+    def list_for_visum(self, request, visum_id):
+        logger.debug("Loading deadlines for visum %s", visum_id)
+        instances = self.filter_queryset(
+            self.deadline_service.list_for_visum(visum=visum_id)
+        )
+
+        page = self.paginate_queryset(instances)
+
+        if page is not None:
+            serializer = VisumDeadlineSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = VisumDeadlineSerializer(
                 instances, many=True, context={"request": request}
             )
             return Response(serializer.data)

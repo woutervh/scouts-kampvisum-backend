@@ -1,4 +1,3 @@
-from .camp_type_manager import CampTypeManager
 from .category_manager import CategoryManager
 from .sub_category_manager import SubCategoryManager
 from .check_type_manager import CheckTypeManager

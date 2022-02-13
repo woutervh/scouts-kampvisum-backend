@@ -1,6 +1,5 @@
 import logging
 
-from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from apps.deadlines.models import (
@@ -9,7 +8,7 @@ from apps.deadlines.models import (
     LinkedCheckDeadline,
 )
 from apps.deadlines.models.enums import DeadlineType
-from apps.deadlines.serializers import DeadlineDateSerializer
+from apps.deadlines.serializers import DefaultDeadlineSerializer, DeadlineDateSerializer
 
 from apps.visums.models import LinkedSubCategory, LinkedCheck
 from apps.visums.serializers import (
@@ -24,8 +23,8 @@ logger = logging.getLogger(__name__)
 
 class DeadlineSerializer(serializers.ModelSerializer):
 
+    parent = DefaultDeadlineSerializer(required=False)
     visum = CampVisumSerializer(required=False)
-    due_date = DeadlineDateSerializer(required=False)
 
     class Meta:
         model = Deadline
@@ -35,20 +34,6 @@ class DeadlineSerializer(serializers.ModelSerializer):
         # logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         data["deadline_type"] = DeadlineType.DEADLINE
-
-        # visum_id = data.get("visum", {}).get("id", None)
-        # if not visum_id:
-        #     raise ValidationError("Visum identifier must be provided")
-
-        # visum = CampVisum.objects.safe_get(id=visum_id)
-        # if not visum:
-        #     raise ValidationError("Invalid id for CampVisum instance: {}".format(visum_id))
-
-        # data["visum"] = CampVisumSerializer(visum).data
-
-        # data = super().to_internal_value(data)
-
-        # logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         return data
 
@@ -63,7 +48,7 @@ class DeadlineSerializer(serializers.ModelSerializer):
 
 class LinkedSubCategoryDeadlineSerializer(DeadlineSerializer):
 
-    linked_sub_category = LinkedSubCategorySerializer()
+    linked_sub_categories = LinkedSubCategorySerializer(many=True)
 
     class Meta:
         model = LinkedSubCategoryDeadline
@@ -81,26 +66,29 @@ class LinkedSubCategoryDeadlineSerializer(DeadlineSerializer):
     def to_representation(self, obj: LinkedSubCategoryDeadline) -> dict:
         data = super().to_representation(obj)
 
-        # sub_category = data.pop("deadline_sub_category")
-        # data["deadline_sub_category"] = sub_category.get("id")
-        sub_category = data.get("linked_sub_category", {}).get("id", None)
-        if sub_category:
-            sub_category = LinkedSubCategory.objects.safe_get(id=sub_category)
-            if sub_category:
-                category_data = dict()
+        linked_sub_categories = data.get("linked_sub_categories", [])
+        results = []
+        for linked_sub_category in linked_sub_categories:
+            id = linked_sub_category.get("id", None)
+            if id:
+                linked_sub_category = LinkedSubCategory.objects.safe_get(id=id)
+                if linked_sub_category:
+                    results.append(
+                        {
+                            "id": linked_sub_category.category.id,
+                            "name": linked_sub_category.category.parent.name,
+                            "label": linked_sub_category.category.parent.label,
+                        }
+                    )
 
-                category_data["id"] = sub_category.category.id
-                category_data["name"] = sub_category.category.parent.name
-                category_data["label"] = sub_category.category.parent.label
-
-                data["linked_sub_category"]["category"] = category_data
+        data["linked_sub_categories"] = results
 
         return data
 
 
 class LinkedCheckDeadlineSerializer(DeadlineSerializer):
 
-    linked_check = LinkedCheckSerializer()
+    linked_checks = LinkedCheckSerializer(many=True)
 
     class Meta:
         model = LinkedCheckDeadline
@@ -116,18 +104,21 @@ class LinkedCheckDeadlineSerializer(DeadlineSerializer):
     def to_representation(self, obj: LinkedCheckDeadline) -> dict:
         data = super().to_representation(obj)
 
-        # check = data.pop("deadline_check")
-        # data["deadline_check"] = check.get("id")
-        check = data.get("linked_check", {}).get("id", None)
-        if check:
-            check = LinkedCheck.objects.safe_get(id=check)
-            if check:
-                category_data = dict()
+        linked_checks = data.get("linked_checks", {})
+        results = []
+        for linked_check in linked_checks:
+            id = linked_check.get("id", None)
+            if id:
+                linked_check = LinkedCheck.objects.safe_get(id=id)
+                if linked_check:
+                    results.append(
+                        {
+                            "id": linked_check.sub_category.category.id,
+                            "name": linked_check.sub_category.category.parent.name,
+                            "label": linked_check.sub_category.category.parent.label,
+                        }
+                    )
 
-                category_data["id"] = check.sub_category.category.id
-                category_data["name"] = check.sub_category.category.parent.name
-                category_data["label"] = check.sub_category.category.parent.label
-
-                data["linked_check"]["category"] = category_data
+        data["linked_checks"] = results
 
         return data

@@ -8,7 +8,10 @@ from apps.deadlines.models import DefaultDeadline
 from apps.deadlines.managers import DeadlineDateManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import OptionalIntegerField
+from scouts_auth.inuits.models.fields import (
+    OptionalIntegerField,
+    DatetypeAwareDateField,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -24,6 +27,7 @@ class DeadlineDate(AbstractBaseModel):
     date_day = OptionalIntegerField()
     date_month = OptionalIntegerField()
     date_year = OptionalIntegerField()
+    calculated_date = DatetypeAwareDateField()
 
     class Meta:
         ordering = ["date_year", "date_month", "date_day"]
