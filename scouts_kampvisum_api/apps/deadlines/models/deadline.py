@@ -6,6 +6,7 @@ from apps.deadlines.managers import (
     DeadlineManager,
     LinkedSubCategoryDeadlineManager,
     LinkedCheckDeadlineManager,
+    MixedDeadlineManager,
 )
 
 from apps.visums.models import CampVisum, LinkedSubCategory, LinkedCheck
@@ -67,6 +68,24 @@ class LinkedCheckDeadline(Deadline):
     def __str__(self) -> str:
         return "{}, linked_checks ({})".format(
             super().__str__(), str(self.linked_checks)
+        )
+
+
+class MixedDeadline(Deadline):
+
+    objects = MixedDeadlineManager()
+
+    linked_sub_categories = models.ManyToManyField(LinkedSubCategory)
+    linked_checks = models.ManyToManyField(LinkedCheck)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.deadline_type = DeadlineType.MIXED
+
+    def __str__(self) -> str:
+        return "{}, linked_sub_categories ({}), linked_checks ({})".format(
+            super().__str__(), str(self.linked_sub_categories), str(self.linked_checks)
         )
 
 

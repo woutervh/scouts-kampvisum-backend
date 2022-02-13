@@ -17,5 +17,6 @@ from .linked_check import (
     LinkedParticipantCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
+    LinkedNumberCheck,
 )
 from .visum import CampVisum

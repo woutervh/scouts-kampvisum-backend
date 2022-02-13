@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 class LinkedCheck(AbstractBaseModel):
-    
+
     objects = LinkedCheckManager()
 
     parent = models.ForeignKey(Check, on_delete=models.CASCADE)
@@ -35,20 +35,28 @@ class LinkedCheck(AbstractBaseModel):
 
     class Meta:
         ordering = ["parent__index"]
-    
+
     # def has_value(self) -> bool:
     #     raise NotImplementedError("Subclasses should implement their own has_value method")
-    
+
     def is_checked(self) -> bool:
         if self.should_be_checked():
             value = self.has_value()
             return value
         return True
-        
+
     def should_be_checked(self) -> bool:
         check_type: CheckType = self.parent.check_type
 
-        if check_type.is_simple_check() or check_type.is_date_check() or check_type.is_duration_check() or check_type.is_location_check() or check_type.is_camp_location_check() or check_type.is_participant_check():
+        if (
+            check_type.is_simple_check()
+            or check_type.is_date_check()
+            or check_type.is_duration_check()
+            or check_type.is_location_check()
+            or check_type.is_camp_location_check()
+            or check_type.is_participant_check()
+            or check_type.is_number_check()
+        ):
             return True
         if check_type.is_file_upload_check() or check_type.is_comment_check():
             return False
@@ -73,6 +81,8 @@ class LinkedCheck(AbstractBaseModel):
             return LinkedFileUploadCheck()
         elif check_type.is_comment_check():
             return LinkedCommentCheck()
+        elif check_type.is_number_check():
+            return LinkedNumberCheck()
         else:
             raise ValidationError(
                 "Check type {} is not recognized".format(check_type.check_type)
@@ -86,12 +96,11 @@ class LinkedCheck(AbstractBaseModel):
 # ##############################################################################
 class LinkedSimpleCheck(LinkedCheck):
     value = DefaultCharField(choices=CheckState.choices, default=CheckState.EMPTY)
-    
+
     def has_value(self) -> bool:
         if CheckState.is_checked_or_irrelevant(self.value):
             return True
         return False
-        
 
 
 # ##############################################################################
@@ -101,7 +110,7 @@ class LinkedSimpleCheck(LinkedCheck):
 # ##############################################################################
 class LinkedDateCheck(LinkedCheck):
     value = DatetypeAwareDateField(null=True, blank=True)
-    
+
     def has_value(self) -> bool:
         if self.value:
             return True
@@ -116,7 +125,7 @@ class LinkedDateCheck(LinkedCheck):
 class LinkedDurationCheck(LinkedCheck):
     start_date = DatetypeAwareDateField(null=True, blank=True)
     end_date = DatetypeAwareDateField(null=True, blank=True)
-    
+
     def has_value(self) -> bool:
         if self.start_date and self.end_date:
             return True
@@ -141,7 +150,7 @@ class LinkedLocationCheck(LinkedCheck):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-    
+
     def has_value(self) -> bool:
         if self.locations and self.locations.count() > 0:
             return True
@@ -155,7 +164,7 @@ class LinkedLocationCheck(LinkedCheck):
 # ##############################################################################
 class LinkedParticipantCheck(LinkedCheck):
     value = models.ManyToManyField(InuitsParticipant)
-    
+
     def has_value(self) -> bool:
         if len(self.value.all()) > 0:
             return True
@@ -169,7 +178,7 @@ class LinkedParticipantCheck(LinkedCheck):
 # ##############################################################################
 class LinkedFileUploadCheck(LinkedCheck):
     value = models.ManyToManyField(PersistedFile, related_name="checks")
-    
+
     def has_value(self) -> bool:
         if self.value:
             return True
@@ -183,7 +192,21 @@ class LinkedFileUploadCheck(LinkedCheck):
 # ##############################################################################
 class LinkedCommentCheck(LinkedCheck):
     value = OptionalCharField(max_length=300)
-    
+
+    def has_value(self) -> bool:
+        if self.value:
+            return True
+        return False
+
+
+# ##############################################################################
+# LinkedNumberCheck
+#
+# A check that contains numbers
+# ##############################################################################
+class LinkedNumberCheck(LinkedCheck):
+    value = OptionalIntegerField()
+
     def has_value(self) -> bool:
         if self.value:
             return True

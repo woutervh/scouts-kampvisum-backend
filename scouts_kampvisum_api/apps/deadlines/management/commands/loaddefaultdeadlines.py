@@ -18,69 +18,71 @@ class Command(BaseCommand):
     exception = False
 
     BASE_PATH = "apps/deadlines/fixtures"
-    FIXTURE = "default_deadlines.json"
-    TMP_FIXTURE = "{}_{}".format("adjusted", FIXTURE)
+    FIXTURES = ["default_deadlines.json", "camp_registration_deadlines.json"]
 
     def handle(self, *args, **kwargs):
         parent_path = Path(settings.BASE_DIR)
 
-        data_path = "{}/{}".format(self.BASE_PATH, self.FIXTURE)
-        path = os.path.join(parent_path, data_path)
+        for FIXTURE in self.FIXTURES:
+            TMP_FIXTURE = "{}_{}".format("adjusted", FIXTURE)
 
-        tmp_data_path = "{}/{}".format(self.BASE_PATH, self.TMP_FIXTURE)
-        tmp_path = os.path.join(parent_path, tmp_data_path)
+            data_path = "{}/{}".format(self.BASE_PATH, FIXTURE)
+            path = os.path.join(parent_path, data_path)
 
-        logger.debug("Loading default deadlines from %s", path)
+            tmp_data_path = "{}/{}".format(self.BASE_PATH, TMP_FIXTURE)
+            tmp_path = os.path.join(parent_path, tmp_data_path)
 
-        default_deadline_service = DefaultDeadlineService()
+            logger.debug("Loading default deadlines from %s", path)
 
-        with open(path) as f:
-            data = json.load(f)
+            default_deadline_service = DefaultDeadlineService()
 
-            for model in data:
-                default_deadline = default_deadline_service.get_or_create(
-                    name=model.get("fields")["name"],
-                    deadline_type=model.get("fields").get(
-                        "deadline_type", DeadlineType.DEADLINE
-                    ),
-                )
-                model["pk"] = str(default_deadline.id)
+            with open(path) as f:
+                data = json.load(f)
 
-                due_date: DeadlineDate = (
-                    default_deadline_service.get_or_create_deadline_date(
-                        default_deadline=default_deadline,
-                        **model.get("fields")["due_date"]
+                for model in data:
+                    default_deadline = default_deadline_service.get_or_create(
+                        name=model.get("fields")["name"],
+                        deadline_type=model.get("fields").get(
+                            "deadline_type", DeadlineType.DEADLINE
+                        ),
                     )
-                )
-                # model.get("fields")["due_date"] = [str(default_deadline.id)]
-                model.get("fields").pop("due_date")
+                    model["pk"] = str(default_deadline.id)
 
-                flags = model.get("fields").get("flags", [])
-                if flags:
-                    results = []
-
-                    for flag in flags:
-                        name = flag[0]
-                        label = flag[1] if flag[1] else None
-
-                        results.append(
-                            default_deadline_service.get_or_create_default_flag(
-                                default_deadline=default_deadline,
-                                **{
-                                    "name": name,
-                                    "label": label,
-                                }
-                            )
+                    due_date: DeadlineDate = (
+                        default_deadline_service.get_or_create_deadline_date(
+                            default_deadline=default_deadline,
+                            **model.get("fields")["due_date"]
                         )
+                    )
+                    # model.get("fields")["due_date"] = [str(default_deadline.id)]
+                    model.get("fields").pop("due_date")
 
-                    # model.get("fields")["flags"] = [str(flag.id) for flag in results]
-                    model.get("fields").pop("flags")
+                    flags = model.get("fields").get("flags", [])
+                    if flags:
+                        results = []
 
-                # logger.debug("MODEL: %s", model)
+                        for flag in flags:
+                            name = flag[0]
+                            label = flag[1] if flag[1] else None
 
-            with open(tmp_path, "w") as o:
-                json.dump(data, o)
+                            results.append(
+                                default_deadline_service.get_or_create_default_flag(
+                                    default_deadline=default_deadline,
+                                    **{
+                                        "name": name,
+                                        "label": label,
+                                    }
+                                )
+                            )
 
-        call_command("loaddata", tmp_path)
+                        # model.get("fields")["flags"] = [str(flag.id) for flag in results]
+                        model.get("fields").pop("flags")
 
-        os.remove(tmp_path)
+                    # logger.debug("MODEL: %s", model)
+
+                with open(tmp_path, "w") as o:
+                    json.dump(data, o)
+
+            call_command("loaddata", tmp_path)
+
+            os.remove(tmp_path)

@@ -52,7 +52,7 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
 
     def has_sub_categories(self):
         return (
-            self.is_sub_category_deadline()
+            (self.is_sub_category_deadline() or self.is_mixed_deadline())
             and self.sub_categories
             and len(self.sub_categories) > 0
         )
@@ -61,7 +61,14 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
         return self.deadline_type == DeadlineType.LINKED_CHECK
 
     def has_checks(self):
-        return self.is_check_deadline() and self.checks and len(self.checks) > 0
+        return (
+            (self.is_check_deadline() or self.is_mixed_deadline())
+            and self.checks
+            and len(self.checks) > 0
+        )
+
+    def is_mixed_deadline(self):
+        return self.deadline_type == DeadlineType.MIXED
 
     def has_flags(self):
         return self.is_deadline() and self.flags and len(self.flags) > 0

@@ -5,6 +5,7 @@ from apps.deadlines.serializers import (
     DeadlineSerializer,
     LinkedSubCategoryDeadlineSerializer,
     LinkedCheckDeadlineSerializer,
+    MixedDeadlineSerializer,
 )
 
 
@@ -26,5 +27,8 @@ class VisumDeadlineSerializer(DeadlineSerializer):
 
         if obj.parent.is_check_deadline():
             return LinkedCheckDeadlineSerializer(instance=obj).data
+
+        if obj.parent.is_mixed_deadline():
+            return MixedDeadlineSerializer(instance=obj).data
 
         return super().to_representation(obj)

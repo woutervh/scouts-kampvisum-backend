@@ -58,6 +58,9 @@ file_upload_check_unlink = LinkedCheckViewSet.as_view(
 comment_check = LinkedCheckViewSet.as_view(
     {"get": "retrieve_comment_check", "patch": "partial_update_comment_check"}
 )
+number_check = LinkedCheckViewSet.as_view(
+    {"get": "retrieve_number_check", "patch": "partial_update_number_check"}
+)
 
 urlpatterns = [
     path("checks/simple/<uuid:check_id>", simple_check, name="simple_check"),
@@ -101,6 +104,11 @@ urlpatterns = [
         "checks/comment/<uuid:check_id>",
         comment_check,
         name="comment_check",
+    ),
+    path(
+        "checks/number/<uuid:check_id>",
+        number_check,
+        name="number_check",
     ),
 ]
 

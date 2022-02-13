@@ -57,7 +57,7 @@ class DefaultDeadlineService:
             default_deadline=default_deadline, name=name
         )
         if instance:
-            return self.update_flag(instance=instance, **fields)
+            return self.update_default_flag(instance=instance, **fields)
 
         instance = DefaultDeadlineFlag()
 

@@ -22,6 +22,7 @@ from apps.visums.models import (
     LinkedParticipantCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
+    LinkedNumberCheck,
 )
 from apps.visums.serializers import (
     LinkedCheckSerializer,
@@ -33,6 +34,7 @@ from apps.visums.serializers import (
     LinkedParticipantCheckSerializer,
     LinkedFileUploadCheckSerializer,
     LinkedCommentCheckSerializer,
+    LinkedNumberCheckSerializer,
 )
 from apps.visums.services import LinkedCheckService
 
@@ -686,6 +688,57 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         return self._list(
             self.get_queryset().filter(
                 parent__check_type__check_type=CheckTypeEndpoint.COMMENT_CHECK
+            )
+        )
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedNumberCheckSerializer})
+    def retrieve_number_check(self, request, check_id=None):
+        instance: LinkedNumberCheck = self.linked_check_service.get_number_check(
+            check_id
+        )
+        serializer = LinkedNumberCheckSerializer(instance, context={"request": request})
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        request_body=LinkedNumberCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedNumberCheckSerializer},
+    )
+    def partial_update_number_check(self, request, check_id):
+        logger.debug("NUMBER CHECK UPDATE REQUEST DATA: %s", request.data)
+        instance = self.linked_check_service.get_number_check(check_id)
+
+        serializer = LinkedNumberCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+        logger.debug("NUMBER CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
+        instance = self.linked_check_service.update_number_check(
+            instance, **validated_data
+        )
+
+        output_serializer = LinkedNumberCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path=r"number",
+    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedNumberCheckSerializer})
+    def list_number_checks(self, request):
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEndpoint.NUMBER_CHECK
             )
         )
 

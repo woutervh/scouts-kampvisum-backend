@@ -25,6 +25,7 @@ from apps.visums.models import (
     LinkedParticipantCheck,
     LinkedCommentCheck,
     LinkedFileUploadCheck,
+    LinkedNumberCheck,
 )
 from scouts_auth.groupadmin.models import ScoutsUser
 from scouts_auth.inuits.models import PersistedFile
@@ -169,6 +170,9 @@ class Command(BaseCommand):
         # CommentCheck
         data["linked_check_comment_first"] = str(LinkedCommentCheck.objects.first().id)
         data["linked_check_comment_last"] = str(LinkedCommentCheck.objects.last().id)
+        # NumberCheck
+        data["linked_check_number_first"] = str(LinkedNumberCheck.objects.first().id)
+        data["linked_check_number_last"] = str(LinkedNumberCheck.objects.last().id)
         # FileUploadCheck
         data["linked_check_file_upload_first"] = str(
             LinkedFileUploadCheck.objects.first().id

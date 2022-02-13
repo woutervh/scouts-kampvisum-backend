@@ -26,6 +26,7 @@ class CheckTypeEndpoint(models.TextChoices):
     PARTICIPANT_CHECK = "ParticipantCheck", "participant"
     COMMENT_CHECK = "CommentCheck", "comment"
     FILE_UPLOAD_CHECK = "FileUploadCheck", "file"
+    NUMBER_CHECK = "NumberCheck", "number"
 
     @staticmethod
     def endpoint_from_type(check_type: str):
@@ -85,6 +86,9 @@ class CheckType(Describable, AbstractBaseModel):
 
     def is_comment_check(self):
         return self.check_type == CheckTypeEndpoint.COMMENT_CHECK
+
+    def is_number_check(self):
+        return self.check_type == CheckTypeEndpoint.NUMBER_CHECK
 
     def __str__(self):
         return "OBJECT CheckType: check_type({})".format(self.check_type)

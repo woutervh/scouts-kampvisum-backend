@@ -1176,6 +1176,23 @@
     {
         "model": "visums.Check",
         "fields": {
+            "name": "participants_members_estimate",
+            "sub_category": [
+                "members",
+                [
+                    "members_leaders",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "NumberCheck"
+            ],
+            "label": "Geschat aantal deelnemers"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
             "name": "participants_members_members",
             "sub_category": [
                 "members",

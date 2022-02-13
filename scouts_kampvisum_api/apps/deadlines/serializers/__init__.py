@@ -5,5 +5,6 @@ from .deadline_serializer import (
     DeadlineSerializer,
     LinkedSubCategoryDeadlineSerializer,
     LinkedCheckDeadlineSerializer,
+    MixedDeadlineSerializer,
 )
 from .visum_deadline_serializer import VisumDeadlineSerializer

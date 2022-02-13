@@ -15,6 +15,7 @@ from apps.visums.models import (
     LinkedParticipantCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
+    LinkedNumberCheck,
 )
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
@@ -252,6 +253,24 @@ class LinkedCheckService:
             raise Http404
 
     def update_comment_check(self, instance: LinkedCommentCheck, **data):
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+        instance.value = data.get("value", None)
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
+
+    def get_number_check(self, check_id):
+        try:
+            return LinkedNumberCheck.objects.get(linkedcheck_ptr=check_id)
+        except LinkedNumberCheck.DoesNotExist:
+            logger.error("LinkedNumberCheck with id %s not found", check_id)
+            raise Http404
+
+    def update_number_check(self, instance: LinkedNumberCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )

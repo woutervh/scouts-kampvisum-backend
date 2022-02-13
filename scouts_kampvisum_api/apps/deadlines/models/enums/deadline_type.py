@@ -11,6 +11,7 @@ class DeadlineType(models.TextChoices):
     DEADLINE = "D", "Deadline"
     LINKED_CHECK = "C", "LinkedCheck deadline"
     LINKED_SUB_CATEGORY = "S", "LinkedSubCategory deadline"
+    MIXED = "M", "Mix of linked checks and sub categories deadline"
 
     def parse_deadline_type(value: str = None):
         if not value:
@@ -20,8 +21,6 @@ class DeadlineType(models.TextChoices):
 
         if value in ["D", "DEADLINE"]:
             return DeadlineType.DEADLINE
-        if value in ["C", "CHECK", "LINKED_CHECK", "LINKEDCHECK"]:
-            return DeadlineType.LINKED_CHECK
         if value in [
             "S",
             "SUB_CATEGORY",
@@ -30,5 +29,9 @@ class DeadlineType(models.TextChoices):
             "LINKEDSUBCATEGORY",
         ]:
             return DeadlineType.LINKED_SUB_CATEGORY
+        if value in ["C", "CHECK", "LINKED_CHECK", "LINKEDCHECK"]:
+            return DeadlineType.LINKED_CHECK
+        if value in ["M", "MIXED"]:
+            return DeadlineType.MIXED
 
         return DeadlineType.DEADLINE

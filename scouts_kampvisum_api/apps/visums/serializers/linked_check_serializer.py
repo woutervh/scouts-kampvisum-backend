@@ -14,6 +14,7 @@ from apps.visums.models import (
     LinkedParticipantCheck,
     LinkedFileUploadCheck,
     LinkedCommentCheck,
+    LinkedNumberCheck,
 )
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CheckSerializer
@@ -25,6 +26,7 @@ from scouts_auth.inuits.serializers.fields import (
     DatetypeAwareDateSerializerField,
     OptionalCharSerializerField,
     RequiredCharSerializerField,
+    OptionalIntegerSerializerField,
 )
 
 
@@ -71,6 +73,8 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
             value = LinkedFileUploadCheckSerializer.get_value(check)
         elif check.parent.check_type.is_comment_check():
             value = LinkedCommentCheckSerializer.get_value(check)
+        elif check.parent.check_type.is_number_check():
+            value = LinkedNumberCheckSerializer.get_value(check)
 
         else:
             value = check.value
@@ -245,5 +249,18 @@ class LinkedCommentCheckSerializer(LinkedCheckSerializer):
 
     @staticmethod
     def get_value(obj: LinkedCommentCheck) -> dict:
+        # logger.debug("hm %s", str(obj))
+        return obj.value
+
+
+class LinkedNumberCheckSerializer(LinkedCheckSerializer):
+    value = OptionalIntegerSerializerField()
+
+    class Meta:
+        model = LinkedNumberCheck
+        fields = "__all__"
+
+    @staticmethod
+    def get_value(obj: LinkedNumberCheck) -> dict:
         # logger.debug("hm %s", str(obj))
         return obj.value

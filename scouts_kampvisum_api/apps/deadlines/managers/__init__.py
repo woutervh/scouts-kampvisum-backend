@@ -6,5 +6,6 @@ from .deadline_manager import (
     DeadlineManager,
     LinkedSubCategoryDeadlineManager,
     LinkedCheckDeadlineManager,
+    MixedDeadlineManager,
 )
 from .deadline_flag_manager import DeadlineFlagManager

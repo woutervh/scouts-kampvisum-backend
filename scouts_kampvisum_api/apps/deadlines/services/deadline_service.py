@@ -4,7 +4,6 @@ from typing import List
 from django.http import Http404
 from django.utils import timezone
 from django.db import transaction
-from django.forms.models import model_to_dict
 
 from apps.deadlines.models import (
     DefaultDeadline,
@@ -15,6 +14,7 @@ from apps.deadlines.models import (
     DeadlineFlag,
     LinkedSubCategoryDeadline,
     LinkedCheckDeadline,
+    MixedDeadline,
     DeadlineFactory,
 )
 from apps.deadlines.models.enums import DeadlineType
@@ -244,6 +244,61 @@ class DeadlineService:
             raise Http404
 
     @transaction.atomic
+    def get_or_create_mixed_deadline(
+        self,
+        request,
+        default_deadline: DefaultDeadline = None,
+        visum: CampVisum = None,
+        **fields
+    ) -> MixedDeadline:
+
+        instance = MixedDeadline.objects.safe_get(parent=default_deadline, visum=visum)
+        if instance:
+            return instance
+
+        # parent = self.get_or_create_deadline(
+        #     request, default_deadline=default_deadline, visum=visum, **fields
+        # )
+        # logger.debug("PARENT: %s", parent)
+
+        instance = MixedDeadline()
+
+        instance.parent = default_deadline
+        instance.visum = visum
+
+        logger.debug(
+            "Creating a %s instance for visum with id %s, with name %s and type %s",
+            "MixedDeadline",
+            visum.id,
+            default_deadline.name,
+            default_deadline.deadline_type,
+        )
+
+        instance.full_clean()
+        instance.save()
+
+        if not (
+            fields
+            and isinstance(fields, dict)
+            and "due_date" in fields
+            and isinstance(fields.get("due_date"), dict)
+        ):
+            fields["due_date"] = dict()
+        due_date: DeadlineDate = (
+            self.default_deadline_service.get_or_create_deadline_date(
+                default_deadline=default_deadline, **fields.get("due_date", None)
+            )
+        )
+
+        return instance
+
+    def get_mixed_deadline(self, deadline_id):
+        try:
+            return MixedDeadline.objects.get(deadline_ptr=deadline_id)
+        except MixedDeadline.DoesNotExist:
+            raise Http404
+
+    @transaction.atomic
     def get_or_create_deadline_flag(
         self, request, deadline: Deadline, default_deadline_flag: DefaultDeadlineFlag
     ) -> DeadlineFlag:
@@ -306,108 +361,171 @@ class DeadlineService:
                 default_deadline=default_deadline
             )
             if default_deadline.is_deadline():
-                logger.debug(
-                    "Setting up Deadline %s (%s) with type %s for visum %s",
-                    default_deadline.name,
-                    default_deadline.id,
-                    default_deadline.deadline_type,
-                    visum.id,
+                self._link_deadline_to_visum(
+                    request, default_deadline, visum, deadline_fields
                 )
-                deadline: Deadline = self.get_or_create_deadline(
-                    request=request,
-                    default_deadline=default_deadline,
-                    visum=visum,
-                    **deadline_fields,
-                )
-                default_flags: List[
-                    DefaultDeadlineFlag
-                ] = default_deadline.default_flags.all()
-                logger.debug(
-                    "Found %d DefaultDeadlineFlag instances for DefaultDeadline %s",
-                    len(default_flags),
-                    default_deadline.name,
-                )
-                for default_flag in default_flags:
-                    flag = self.get_or_create_deadline_flag(
-                        request, deadline=deadline, default_deadline_flag=default_flag
-                    )
-                    deadline.flags.add(flag)
 
             elif default_deadline.is_sub_category_deadline():
-                logger.debug(
-                    "Setting up LinkedSubCategoryDeadline %s (%s) with type %s for visum %s",
-                    default_deadline.name,
-                    default_deadline.id,
-                    default_deadline.deadline_type,
-                    visum.id,
+                self._link_sub_category_deadline_to_visum(
+                    request, default_deadline, visum, deadline_fields
                 )
-                deadline: LinkedSubCategoryDeadline = (
-                    self.get_or_create_linked_sub_category_deadline(
-                        request=request,
-                        default_deadline=default_deadline,
-                        visum=visum,
-                        **deadline_fields,
-                    )
-                )
-                sub_categories: List[
-                    SubCategory
-                ] = default_deadline.sub_categories.all()
-                logger.debug(
-                    "Found %d SubCategory instances linked to DefaultDeadline %s",
-                    len(sub_categories),
-                    default_deadline.name,
-                )
-                for sub_category in sub_categories:
-                    linked_sub_category: LinkedSubCategory = (
-                        LinkedSubCategory.objects.safe_get(
-                            parent=sub_category, visum=visum
-                        )
-                    )
-                    if not linked_sub_category:
-                        raise Http404(
-                            "Unable to find LinkedSubCategory with parent SubCategory id {}".format(
-                                sub_category.id
-                            )
-                        )
-                    deadline.linked_sub_categories.add(linked_sub_category)
             elif default_deadline.is_check_deadline():
-                logger.debug(
-                    "Setting up LinkedCheckDeadline %s (%s) with type %s for visum %s",
-                    default_deadline.name,
-                    default_deadline.id,
-                    default_deadline.deadline_type,
-                    visum.id,
+                self._link_check_deadline_to_visum(
+                    request, default_deadline, visum, deadline_fields
                 )
-                deadline: LinkedCheckDeadline = (
-                    self.get_or_create_linked_check_deadline(
-                        request,
-                        default_deadline=default_deadline,
-                        visum=visum,
-                        **deadline_fields,
-                    )
+            elif default_deadline.is_mixed_deadline():
+                self._link_mixed_deadline_to_visum(
+                    request, default_deadline, visum, deadline_fields
                 )
-
-                checks: List[Check] = default_deadline.checks.all()
-                logger.debug(
-                    "Found %d Check instances linked to DefaultDeadline %s",
-                    len(checks),
-                    default_deadline.name,
-                )
-                for check in checks:
-                    linked_check: LinkedCheck = LinkedCheck.objects.safe_get(
-                        parent=check, visum=visum
-                    )
-                    if not linked_check:
-                        raise Http404(
-                            "Unable to find LinkedCheck with parent Check id {}".format(
-                                check.id
-                            )
-                        )
-                    deadline.linked_checks.add(linked_check)
             else:
                 raise Http404(
                     "Unknown deadline type: {}".format(default_deadline.deadline_type)
                 )
+
+    def _link_deadline_to_visum(
+        self,
+        request,
+        default_deadline: DefaultDeadline,
+        visum: CampVisum,
+        deadline_fields: dict,
+    ):
+        logger.debug(
+            "Setting up Deadline %s (%s) with type %s for visum %s",
+            default_deadline.name,
+            default_deadline.id,
+            default_deadline.deadline_type,
+            visum.id,
+        )
+        deadline: Deadline = self.get_or_create_deadline(
+            request=request,
+            default_deadline=default_deadline,
+            visum=visum,
+            **deadline_fields,
+        )
+        default_flags: List[DefaultDeadlineFlag] = default_deadline.default_flags.all()
+        logger.debug(
+            "Found %d DefaultDeadlineFlag instances for DefaultDeadline %s",
+            len(default_flags),
+            default_deadline.name,
+        )
+        for default_flag in default_flags:
+            flag = self.get_or_create_deadline_flag(
+                request, deadline=deadline, default_deadline_flag=default_flag
+            )
+            deadline.flags.add(flag)
+
+    def _link_sub_category_deadline_to_visum(
+        self,
+        request,
+        default_deadline: DefaultDeadline,
+        visum: CampVisum,
+        deadline_fields: dict,
+    ):
+        logger.debug(
+            "Setting up LinkedSubCategoryDeadline %s (%s) with type %s for visum %s",
+            default_deadline.name,
+            default_deadline.id,
+            default_deadline.deadline_type,
+            visum.id,
+        )
+        deadline: LinkedSubCategoryDeadline = (
+            self.get_or_create_linked_sub_category_deadline(
+                request=request,
+                default_deadline=default_deadline,
+                visum=visum,
+                **deadline_fields,
+            )
+        )
+        self._link_sub_categories_to_deadline(default_deadline, visum, deadline)
+
+    def _link_check_deadline_to_visum(
+        self,
+        request,
+        default_deadline: DefaultDeadline,
+        visum: CampVisum,
+        deadline_fields: dict,
+    ):
+        logger.debug(
+            "Setting up LinkedCheckDeadline %s (%s) with type %s for visum %s",
+            default_deadline.name,
+            default_deadline.id,
+            default_deadline.deadline_type,
+            visum.id,
+        )
+        deadline: LinkedCheckDeadline = self.get_or_create_linked_check_deadline(
+            request,
+            default_deadline=default_deadline,
+            visum=visum,
+            **deadline_fields,
+        )
+
+        self._link_checks_to_deadline(default_deadline, visum, deadline)
+
+    def _link_mixed_deadline_to_visum(
+        self,
+        request,
+        default_deadline: DefaultDeadline,
+        visum: CampVisum,
+        deadline_fields: dict,
+    ):
+        logger.debug(
+            "Setting up MixedDeadline %s (%s) with type %s for visum %s",
+            default_deadline.name,
+            default_deadline.id,
+            default_deadline.deadline_type,
+            visum.id,
+        )
+        deadline: MixedDeadline = self.get_or_create_mixed_deadline(
+            request,
+            default_deadline=default_deadline,
+            visum=visum,
+            **deadline_fields,
+        )
+
+        self._link_sub_categories_to_deadline(default_deadline, visum, deadline)
+        self._link_checks_to_deadline(default_deadline, visum, deadline)
+
+    def _link_sub_categories_to_deadline(
+        self, default_deadline: DefaultDeadline, visum: CampVisum, deadline
+    ):
+        sub_categories: List[SubCategory] = default_deadline.sub_categories.all()
+        logger.debug(
+            "Found %d SubCategory instances linked to DefaultDeadline %s",
+            len(sub_categories),
+            default_deadline.name,
+        )
+        for sub_category in sub_categories:
+            linked_sub_category: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
+                parent=sub_category, visum=visum
+            )
+            if not linked_sub_category:
+                raise Http404(
+                    "Unable to find LinkedSubCategory with parent SubCategory id {}".format(
+                        sub_category.id
+                    )
+                )
+            deadline.linked_sub_categories.add(linked_sub_category)
+
+    def _link_checks_to_deadline(
+        self, default_deadline: DefaultDeadline, visum: CampVisum, deadline
+    ):
+        checks: List[Check] = default_deadline.checks.all()
+        logger.debug(
+            "Found %d Check instances linked to DefaultDeadline %s",
+            len(checks),
+            default_deadline.name,
+        )
+        for check in checks:
+            linked_check: LinkedCheck = LinkedCheck.objects.safe_get(
+                parent=check, visum=visum
+            )
+            if not linked_check:
+                raise Http404(
+                    "Unable to find LinkedCheck with parent Check id {}".format(
+                        check.id
+                    )
+                )
+            deadline.linked_checks.add(linked_check)
 
     def list_for_visum(self, visum: CampVisum) -> List[Deadline]:
         deadlines: List[Deadline] = Deadline.objects.filter(visum=visum)
@@ -424,5 +542,7 @@ class DeadlineService:
                 results.append(
                     LinkedCheckDeadline.objects.get(deadline_ptr=deadline.id)
                 )
+            elif deadline.parent.is_mixed_deadline():
+                results.append(MixedDeadline.objects.get(deadline_ptr=deadline.id))
 
         return results

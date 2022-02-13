@@ -6,6 +6,7 @@ from .deadline import (
     Deadline,
     LinkedSubCategoryDeadline,
     LinkedCheckDeadline,
+    MixedDeadline,
     DeadlineFactory,
 )
 from .deadline_flag import DeadlineFlag

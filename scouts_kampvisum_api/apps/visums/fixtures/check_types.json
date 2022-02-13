@@ -54,5 +54,12 @@
 			"check_type": "CommentCheck",
 			"description": "A check that contains comments"
 		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "NumberCheck",
+			"description": "A check that contains numbers"
+		}
 	}
 ]
