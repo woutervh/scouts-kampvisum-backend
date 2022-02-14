@@ -42,20 +42,14 @@ class InuitsParticipantFilter(FilterSet):
         )
 
     def search_min_age_filter(self, queryset, name, value):
-        logger.debug(
-            "MIN DATE: %s", datetime.datetime.now() - relativedelta(years=value)
-        )
-        return queryset.filter(
-            birth_date__lt=datetime.datetime.now() - relativedelta(years=value)
-        )
+        delta = datetime.datetime.now().date().year - value
+        logger.debug("MIN DATE: %s", delta)
+        return queryset.filter(birth_date__year__lt=delta)
 
     def search_max_age_filter(self, queryset, name, value):
-        logger.debug(
-            "MAX DATE: %s", datetime.datetime.now() - relativedelta(years=value)
-        )
-        return queryset.filter(
-            birth_date__gt=datetime.datetime.now() - relativedelta(years=value)
-        )
+        delta = datetime.datetime.now().date().year - value
+        logger.debug("MAX DATE: %s", delta)
+        return queryset.filter(birth_date__year__gt=delta)
 
     def search_gender_filter(self, queryset, name, value):
         return queryset.filter(gender=GenderHelper.parse_gender(value))

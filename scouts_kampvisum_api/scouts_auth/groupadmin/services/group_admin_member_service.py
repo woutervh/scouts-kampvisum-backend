@@ -179,7 +179,10 @@ class GroupAdminMemberService(GroupAdmin):
             requested_gender = True
 
             if min_age or max_age:
-                delta = relativedelta(datetime.now(), member.birth_date).years
+                # delta = relativedelta(
+                #     datetime.now().date().year, member.birth_date.year
+                # ).years
+                delta = datetime.now().date().year - member.birth_date.year
                 # logger.info(
                 #     "DELTA: %s, min_age: %s, max_age: %s", delta, min_age, max_age
                 # )
