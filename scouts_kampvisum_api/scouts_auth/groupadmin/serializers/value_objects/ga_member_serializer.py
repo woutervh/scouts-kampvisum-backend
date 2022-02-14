@@ -191,6 +191,7 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
             "email": data.pop("email", None),
             "username": data.pop("gebruikersnaam", None),
             "group_admin_id": data.pop("id", None),
+            "inactive_member": False,
             "addresses": AbstractScoutsAddressSerializer(many=True).to_internal_value(
                 data.pop("adressen", [])
             ),
@@ -240,6 +241,7 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
         instance.email = validated_data.pop("email", None)
         instance.username = validated_data.pop("username", None)
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
+        instance.inactive_member = False
         instance.addresses = AbstractScoutsAddressSerializer(many=True).create(
             validated_data.pop("addresses", [])
         )
@@ -285,6 +287,7 @@ class AbstractScoutsMemberSearchFrontendSerializer(NonModelSerializer):
         serialized["birth_date"] = instance.group_admin_data.birth_date
         serialized["membership_number"] = instance.scouts_data.membership_number
         serialized["customer_number"] = instance.scouts_data.customer_number
+        serialized["inactive_member"] = instance.inactive_member
 
         if instance.addresses and len(instance.addresses) > 0:
             address: AbstractScoutsAddress = instance.addresses[0]
@@ -320,6 +323,7 @@ class AbstractScoutsMemberFrontendSerializer(NonModelSerializer):
         serialized["birth_date"] = instance.group_admin_data.birth_date
         serialized["membership_number"] = instance.scouts_data.membership_number
         serialized["customer_number"] = instance.scouts_data.customer_number
+        serialized["inactive_member"] = instance.inactive_member
 
         if instance.addresses and len(instance.addresses) > 0:
             address: AbstractScoutsAddress = instance.addresses[0]

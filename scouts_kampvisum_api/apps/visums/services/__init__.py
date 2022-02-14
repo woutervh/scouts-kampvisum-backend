@@ -4,6 +4,6 @@ from .sub_category_service import SubCategoryService
 from .category_service import CategoryService
 from .category_set_service import CategorySetService
 from .visum_service import CampVisumService
+from .inuits_visum_mail_service import InuitsVisumMailService
 from .change_handler_service import ChangeHandlerService
 from .linked_check_service import LinkedCheckService
-from .inuits_visum_mail_service import InuitsVisumMailService

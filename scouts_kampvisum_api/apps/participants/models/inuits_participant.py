@@ -17,6 +17,7 @@ class InuitsParticipant(InuitsPerson):
     group_admin_id = GroupAdminIdField(null=True)
     is_member = models.BooleanField(default=False)
     comment = OptionalCharField(max_length=300)
+    inactive_member = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["first_name", "last_name", "birth_date", "group_group_admin_id"]
@@ -46,16 +47,18 @@ class InuitsParticipant(InuitsPerson):
             and self.group_admin_id == updated_participant.group_group_admin_id
             and self.is_member == updated_participant.is_member
             and self.comment == updated_participant.comment
+            and self.inactive_member == updated_participant.inactive_member
         )
 
     def __str__(self):
-        return "id ({}), is_member ({}), group_group_admin_id ({}), group_admin_id ({}), {}, comment ({})".format(
+        return "id ({}), is_member ({}), group_group_admin_id ({}), group_admin_id ({}), {}, comment ({}), inactive_member ({})".format(
             self.id,
             self.is_member,
             self.group_group_admin_id,
             self.group_admin_id,
             self.person_to_str(),
             self.comment,
+            self.inactive_member,
         )
 
     @staticmethod
@@ -99,5 +102,6 @@ class InuitsParticipant(InuitsPerson):
         participant.city = scouts_member.city if scouts_member.city else ""
         participant.group_group_admin_id = ""
         participant.comment = ""
+        participant.inactive_member = scouts_member.inactive_member
 
         return participant

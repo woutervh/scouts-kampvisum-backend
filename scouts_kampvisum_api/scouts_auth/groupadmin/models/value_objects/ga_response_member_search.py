@@ -1,7 +1,10 @@
 from typing import List
 from datetime import date
 
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsResponse, AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import (
+    AbstractScoutsResponse,
+    AbstractScoutsLink,
+)
 
 from scouts_auth.inuits.models import AbstractNonModel, Gender
 
@@ -15,6 +18,7 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
     email: str
     phone_number: str
     gender: Gender
+    inactive_member: bool
     links: List[AbstractScoutsLink]
 
     class Meta:
@@ -28,6 +32,7 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
         birth_date: date = None,
         email: str = "",
         phone_number: str = "",
+        inactive_member: bool = False,
         links: List[AbstractScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
@@ -36,10 +41,11 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
         self.birth_date = birth_date
         self.email = email
         self.phone_number = phone_number
+        self.inactive_member = inactive_member
         self.links = links if links else []
 
     def __str__(self):
-        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone_number({}), gender ({}), links({})".format(
+        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone_number({}), gender ({}), inactive_member ({}), links({})".format(
             self.group_admin_id,
             self.first_name,
             self.last_name,
@@ -47,6 +53,7 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
             self.email,
             self.phone_number,
             str(self.gender),
+            self.inactive_member,
             ", ".join(str(link) for link in self.links),
         )
 
@@ -74,4 +81,6 @@ class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
         super().__init__(count, total, offset, filter_criterium, criteria, links)
 
     def __str__(self):
-        return ("members: ({}), " + super().__str__()).format(", ".join(str(member) for member in self.members))
+        return ("members: ({}), " + super().__str__()).format(
+            ", ".join(str(member) for member in self.members)
+        )

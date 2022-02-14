@@ -146,6 +146,7 @@ class GroupAdminMemberService(GroupAdmin):
                         was_active = True
 
                         if include_inactive:
+                            member.inactive_member = True
                             results.append(member)
 
             # The member is still active

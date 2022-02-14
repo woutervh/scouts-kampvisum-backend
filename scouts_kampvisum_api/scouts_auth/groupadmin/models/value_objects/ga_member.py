@@ -100,6 +100,7 @@ class AbstractScoutsMember(AbstractNonModel):
     email: str
     username: str
     group_admin_id: str
+    _inactive_member: bool = False
     addresses: List[AbstractScoutsAddress]
     contacts: List[AbstractScoutsContact]
     functions: List[AbstractScoutsFunction]
@@ -118,6 +119,7 @@ class AbstractScoutsMember(AbstractNonModel):
         email: str = "",
         username: str = "",
         group_admin_id: str = "",
+        inactive_member: bool = False,
         addresses: List[AbstractScoutsAddress] = None,
         contacts: List[AbstractScoutsContact] = None,
         functions: List[AbstractScoutsFunction] = None,
@@ -131,6 +133,7 @@ class AbstractScoutsMember(AbstractNonModel):
         self.email = email
         self.username = username
         self.group_admin_id = group_admin_id
+        self._inactive_member = inactive_member
         self.addresses = addresses if addresses else []
         self.contacts = contacts if contacts else []
         self.functions = functions if functions else []
@@ -203,6 +206,14 @@ class AbstractScoutsMember(AbstractNonModel):
     def city(self):
         return self.address.city
 
+    @property
+    def inactive_member(self):
+        return self._inactive_member
+
+    @inactive_member.setter
+    def inactive_member(self, value: bool):
+        self._inactive_member = value
+
     def __str__(self):
         return (
             self.personal_data.__str__()
@@ -210,11 +221,12 @@ class AbstractScoutsMember(AbstractNonModel):
             + self.group_admin_data.__str__()
             + ", "
             + self.scouts_data.__str__()
-            + ", email({}), username({}), group_admin_id({}), addresses({}), contacts({}), functions({}), groups({}), group_specific_fields ({}), links({})"
+            + ", email({}), username({}), group_admin_id({}), inactive_member ({}), addresses({}), contacts({}), functions({}), groups({}), group_specific_fields ({}), links({})"
         ).format(
             self.email,
             self.username,
             self.group_admin_id,
+            self.inactive_member,
             ", ".join(str(address) for address in self.addresses),
             ", ".join(str(contact) for contact in self.contacts),
             ", ".join(str(function) for function in self.functions),
@@ -226,6 +238,7 @@ class AbstractScoutsMember(AbstractNonModel):
     def to_search_member(self) -> AbstractScoutsMemberSearchMember:
         member = AbstractScoutsMemberSearchMember(
             group_admin_id=self.group_admin_id,
+            inactive_member=self.inactive_member,
             first_name=self.group_admin_data.first_name,
             last_name=self.group_admin_data.last_name,
             birth_date=self.group_admin_data.birth_date,
