@@ -78,7 +78,6 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
             value = LinkedCommentCheckSerializer.get_value(check)
         elif check.parent.check_type.is_number_check():
             value = LinkedNumberCheckSerializer.get_value(check)
-
         else:
             value = check.value
 
@@ -99,17 +98,6 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
                     return check
 
         return super().to_internal_value(data)
-
-    # def to_representation(self, obj: LinkedCheck) -> dict:
-    #     logger.debug("LINKED CHECK SERIALIZER TO_REPRESENTATION: %s", obj)
-
-    #     data = super().to_representation(obj)
-
-    #     logger.debug("LINKED CHECK SERIALIZER TO_REPRESENTATION: %s", data)
-
-    #     data["state"] = obj.is_checked()
-
-    #     return data
 
 
 class LinkedSimpleCheckSerializer(LinkedCheckSerializer):

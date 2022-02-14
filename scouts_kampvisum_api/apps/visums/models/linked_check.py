@@ -145,8 +145,6 @@ class LinkedLocationCheck(LinkedCheck):
     is_camp_location = models.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs):
-        self.is_camp_location = kwargs.pop("is_camp_location", False)
-
         super().__init__(*args, **kwargs)
 
     def has_value(self) -> bool:

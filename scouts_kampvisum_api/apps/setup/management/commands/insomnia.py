@@ -134,17 +134,17 @@ class Command(BaseCommand):
         data["linked_check_duration_last"] = str(LinkedDurationCheck.objects.last().id)
         # LocationCheck
         data["linked_check_location_first"] = str(
-            LinkedLocationCheck.objects.filter(value__is_camp_location=False).first().id
+            LinkedLocationCheck.objects.filter(is_camp_location=False).first().id
         )
         data["linked_check_location_last"] = str(
-            LinkedLocationCheck.objects.filter(value__is_camp_location=False).last().id
+            LinkedLocationCheck.objects.filter(is_camp_location=False).last().id
         )
         # CampLocationCheck
         data["linked_check_camp_location_first"] = str(
-            LinkedLocationCheck.objects.filter(value__is_camp_location=True).first().id
+            LinkedLocationCheck.objects.filter(is_camp_location=True).first().id
         )
         data["linked_check_camp_location_last"] = str(
-            LinkedLocationCheck.objects.filter(value__is_camp_location=True).last().id
+            LinkedLocationCheck.objects.filter(is_camp_location=True).last().id
         )
         # MemberCheck
         data["linked_check_member_first"] = str(

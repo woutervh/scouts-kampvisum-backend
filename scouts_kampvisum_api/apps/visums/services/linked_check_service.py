@@ -124,10 +124,15 @@ class LinkedCheckService:
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
 
+        instance.is_camp_location = is_camp_location
+
+        instance.full_clean()
+        instance.save()
+
         locations = data.get("value", [])
         for location in locations:
-            self.location_service.update_linked_location(
-                instance=instance, is_camp_location=is_camp_location, **location
+            self.location_service.create_or_update_linked_location(
+                check=instance, is_camp_location=is_camp_location, **location
             )
 
         return instance

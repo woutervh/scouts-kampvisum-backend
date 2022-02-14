@@ -12,41 +12,77 @@ logger = logging.getLogger(__name__)
 
 
 class CampLocationService:
-    def update_linked_location(
-        self, instance: LinkedLocationCheck, is_camp_location: bool = False, **data
+    def create_or_update_linked_location(
+        self, check: LinkedLocationCheck, is_camp_location: bool = False, **data
     ):
         linked_location: LinkedLocation = LinkedLocation.objects.safe_get(
             id=data.get("id", None)
         )
 
         if linked_location:
-            linked_location.name = data.get("name", None)
-            linked_location.contact_name = data.get("contact_name", None)
-            linked_location.contact_phone = data.get("contact_phone", None)
-            linked_location.contact_email = data.get("contact_email", None)
-            linked_location.is_camp_location = is_camp_location
-            linked_location.center_latitude = data.get("center_latitude", None)
-            linked_location.center_longitude = data.get("center_longitude", None)
-            linked_location.zoom = data.get("zoom", None)
+            linked_location = self._update_linked_location(
+                instance=linked_location, is_camp_location=is_camp_location, **data
+            )
+        else:
+            linked_location = self._create_linked_location(
+                is_camp_location=is_camp_location, **data
+            )
 
-            linked_location.full_clean()
-            linked_location.save()
+            check.value.add(linked_location)
 
-            existing_locations = [
-                location.id for location in linked_location.locations.all()
-            ]
-            locations = data.get("locations", [])
-            posted_locations = [
-                uuid.UUID(location.get("id"))
-                for location in locations
-                if location.get("id", None)
-            ]
+        existing_locations = [
+            location.id for location in linked_location.locations.all()
+        ]
+        locations = data.get("locations", [])
+        posted_locations = [
+            uuid.UUID(location.get("id"))
+            for location in locations
+            if location.get("id", None)
+        ]
 
-            for location in existing_locations:
-                if not location in posted_locations:
-                    CampLocation.objects.get(pk=location).delete()
-            for location in locations:
-                self.location_service.create_or_update(instance=instance, data=location)
+        for location in existing_locations:
+            if not location in posted_locations:
+                CampLocation.objects.get(pk=location).delete()
+        for location in locations:
+            self.create_or_update(instance=linked_location, data=location)
+
+    def _create_linked_location(
+        self, is_camp_location: bool = False, **data
+    ) -> LinkedLocation:
+        linked_location = LinkedLocation()
+
+        linked_location.name = data.get("name", None)
+        linked_location.contact_name = data.get("contact_name", None)
+        linked_location.contact_phone = data.get("contact_phone", None)
+        linked_location.contact_email = data.get("contact_email", None)
+        linked_location.is_camp_location = is_camp_location
+        linked_location.center_latitude = data.get("center_latitude", None)
+        linked_location.center_longitude = data.get("center_longitude", None)
+        linked_location.zoom = data.get("zoom", None)
+
+        linked_location.full_clean()
+        linked_location.save()
+
+        return linked_location
+
+    def _update_linked_location(
+        self, instance: LinkedLocation, is_camp_location: bool = False, **data
+    ) -> LinkedLocation:
+        instance.name = data.get("name", instance.name)
+        instance.contact_name = data.get("contact_name", instance.contact_name)
+        instance.contact_phone = data.get("contact_phone", instance.contact_phone)
+        instance.contact_email = data.get("contact_email", instance.contact_email)
+        instance.is_camp_location = is_camp_location
+        instance.center_latitude = data.get("center_latitude", instance.center_latitude)
+        instance.center_longitude = data.get(
+            "center_longitude", instance.center_longitude
+        )
+        instance.zoom = data.get("zoom", None)
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
 
     def create_or_update(
         self, instance: LinkedLocationCheck, data: dict
@@ -66,19 +102,17 @@ class CampLocationService:
         else:
             return self.create(instance, **data)
 
-    def create(self, instance: LinkedLocationCheck, **data) -> CampLocation:
+    def create(self, instance: LinkedLocation, **data) -> CampLocation:
         logger.debug("LOCATION SERVICE CREATE DATA: %s", data)
+
         latitude = data.get("latitude", None)
         longitude = data.get("longitude", None)
         name = data.get("name", None)
-        logger.debug("NAME: %s", name)
-
-        logger.debug("LATITUDE: %s - LONGITUDE: %s", latitude, longitude)
 
         location = CampLocation()
 
         location.location_check = instance
-        location.name = data.get("name", None)
+        location.name = name
         location.address = data.get("address", None)
         location.is_main_location = data.get("is_main_location", False)
         location.latitude = latitude
@@ -92,7 +126,7 @@ class CampLocationService:
         return location
 
     def update(
-        self, instance: LinkedLocationCheck, location: CampLocation, **data
+        self, instance: LinkedLocation, location: CampLocation, **data
     ) -> CampLocation:
         logger.debug("LOCATION SERVICE UPDATE DATA: %s", data)
 
@@ -110,7 +144,7 @@ class CampLocationService:
 
         return location
 
-    def remove(self, instance: LinkedLocationCheck, location: CampLocation):
+    def remove(self, instance: LinkedLocation, location: CampLocation):
         logger.debug(
             "Removing camp location %s from location check %s", location.id, instance.id
         )
