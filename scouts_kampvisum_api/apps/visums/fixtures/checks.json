@@ -986,23 +986,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_leaders_main",
-            "sub_category": [
-                "leaders",
-                [
-                    "members_leaders",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "21-jarige verantwoordelijke"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "participants_leaders_responsible",
             "sub_category": [
                 "leaders",
@@ -1032,6 +1015,23 @@
                 "ParticipantCheck"
             ],
             "label": "Contactgegevens 2de kampverantwoordelijke"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_leaders_21_year_old",
+            "sub_category": [
+                "leaders",
+                [
+                    "members_leaders",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "ParticipantCheck"
+            ],
+            "label": "21-jarige verantwoordelijke"
         }
     },
     {
