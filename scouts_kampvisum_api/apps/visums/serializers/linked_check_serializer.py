@@ -1,10 +1,13 @@
 import logging
+from typing import List
 
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from apps.participants.serializers import InuitsParticipantSerializer
-from apps.locations.serializers import CampLocationSerializer
+
+from apps.locations.serializers import LinkedLocationSerializer
+
 from apps.visums.models import (
     LinkedCheck,
     LinkedSimpleCheck,
@@ -170,50 +173,27 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedLocationCheckSerializer(LinkedCheckSerializer):
-
-    name = OptionalCharSerializerField()
-    contact_name = OptionalCharSerializerField()
-    contact_phone = OptionalCharSerializerField()
-    contact_email = OptionalCharSerializerField()
-    locations = CampLocationSerializer(many=True)
+    value = LinkedLocationSerializer(many=True)
 
     class Meta:
         model = LinkedLocationCheck
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedLocationCheck) -> dict:
-        # logger.debug("LOCATION SERIALIZER DATA: %s", str(obj))
-        data = dict()
-
-        data["id"] = obj.id
-        data["name"] = obj.name
-        data["contact_name"] = obj.contact_name
-        data["contact_phone"] = obj.contact_phone
-        data["contact_email"] = obj.contact_email
-        data["center_latitude"] = obj.center_latitude
-        data["center_longitude"] = obj.center_longitude
-        data["zoom"] = obj.zoom
-        data["locations"] = CampLocationSerializer(obj.locations, many=True).data
-
-        return data
+    def get_value(obj: LinkedLocationCheck) -> List[dict]:
+        return LinkedLocationSerializer(obj.value, many=True).data
 
 
 class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
-    locations = CampLocationSerializer(many=True)
+    value = LinkedLocationSerializer(many=True)
 
     class Meta:
         model = LinkedLocationCheck
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedLocationCheck) -> dict:
-        data = LinkedLocationCheckSerializer().get_value(obj)
-
-        data["locations"] = CampLocationSerializer(obj.locations, many=True).data
-        data["is_camp_location"] = True
-
-        return data
+    def get_value(obj: LinkedLocationCheck) -> List[dict]:
+        return LinkedLocationCheckSerializer().get_value(obj)
 
 
 class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
@@ -224,7 +204,7 @@ class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedParticipantCheck) -> dict:
+    def get_value(obj: LinkedParticipantCheck) -> List[dict]:
         return InuitsParticipantSerializer(obj.value, many=True).data
 
 

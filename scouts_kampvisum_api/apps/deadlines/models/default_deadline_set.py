@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 
 from apps.camps.models import CampYear, CampType
@@ -6,6 +8,9 @@ from apps.deadlines.models import DefaultDeadline
 from apps.deadlines.managers import DefaultDeadlineSetManager
 
 from scouts_auth.inuits.models import AuditedBaseModel
+
+
+logger = logging.getLogger(__name__)
 
 
 class DefaultDeadlineSet(AuditedBaseModel):
@@ -22,3 +27,7 @@ class DefaultDeadlineSet(AuditedBaseModel):
 
     class Meta:
         unique_together = ("camp_year", "camp_type")
+
+    def natural_key(self):
+        logger.debug("NATURAL KEY CALLED DefaultDeadlineSet")
+        return (self.camp_year, self.camp_type)

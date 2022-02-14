@@ -1,8 +1,10 @@
 import logging
+import uuid
 
 from django.http import Http404
 
-from apps.locations.models import CampLocation
+from apps.locations.models import LinkedLocation, CampLocation
+
 from apps.visums.models import LinkedLocationCheck
 
 
@@ -10,6 +12,42 @@ logger = logging.getLogger(__name__)
 
 
 class CampLocationService:
+    def update_linked_location(
+        self, instance: LinkedLocationCheck, is_camp_location: bool = False, **data
+    ):
+        linked_location: LinkedLocation = LinkedLocation.objects.safe_get(
+            id=data.get("id", None)
+        )
+
+        if linked_location:
+            linked_location.name = data.get("name", None)
+            linked_location.contact_name = data.get("contact_name", None)
+            linked_location.contact_phone = data.get("contact_phone", None)
+            linked_location.contact_email = data.get("contact_email", None)
+            linked_location.is_camp_location = is_camp_location
+            linked_location.center_latitude = data.get("center_latitude", None)
+            linked_location.center_longitude = data.get("center_longitude", None)
+            linked_location.zoom = data.get("zoom", None)
+
+            linked_location.full_clean()
+            linked_location.save()
+
+            existing_locations = [
+                location.id for location in linked_location.locations.all()
+            ]
+            locations = data.get("locations", [])
+            posted_locations = [
+                uuid.UUID(location.get("id"))
+                for location in locations
+                if location.get("id", None)
+            ]
+
+            for location in existing_locations:
+                if not location in posted_locations:
+                    CampLocation.objects.get(pk=location).delete()
+            for location in locations:
+                self.location_service.create_or_update(instance=instance, data=location)
+
     def create_or_update(
         self, instance: LinkedLocationCheck, data: dict
     ) -> CampLocation:

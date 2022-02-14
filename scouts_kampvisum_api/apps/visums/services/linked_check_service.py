@@ -123,31 +123,12 @@ class LinkedCheckService:
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-        instance.name = data.get("name", None)
-        instance.contact_name = data.get("contact_name", None)
-        instance.contact_phone = data.get("contact_phone", None)
-        instance.contact_email = data.get("contact_email", None)
-        instance.is_camp_location = is_camp_location
-        instance.center_latitude = data.get("center_latitude", None)
-        instance.center_longitude = data.get("center_longitude", None)
-        instance.zoom = data.get("zoom", None)
 
-        instance.full_clean()
-        instance.save()
-
-        existing_locations = [location.id for location in instance.locations.all()]
-        locations = data.get("locations", [])
-        posted_locations = [
-            uuid.UUID(location.get("id"))
-            for location in locations
-            if location.get("id", None)
-        ]
-
-        for location in existing_locations:
-            if not location in posted_locations:
-                CampLocation.objects.get(pk=location).delete()
+        locations = data.get("value", [])
         for location in locations:
-            self.location_service.create_or_update(instance=instance, data=location)
+            self.location_service.update_linked_location(
+                instance=instance, is_camp_location=is_camp_location, **location
+            )
 
         return instance
 

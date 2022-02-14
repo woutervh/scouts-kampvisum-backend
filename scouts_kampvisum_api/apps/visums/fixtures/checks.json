@@ -254,6 +254,7 @@
             "check_type": [
                 "CampLocationCheck"
             ],
+            "is_multiple": true,
             "label": "Gegevens kampplaats en verhuurder"
         }
     },

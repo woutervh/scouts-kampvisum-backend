@@ -3,7 +3,10 @@ import logging
 from django.db import models
 from django.core.exceptions import ValidationError
 
+from apps.locations.models import LinkedLocation
+
 from apps.participants.models import InuitsParticipant
+
 from apps.visums.models import (
     LinkedSubCategory,
     Check,
@@ -138,21 +141,16 @@ class LinkedDurationCheck(LinkedCheck):
 # A check that contains a geo-coordinate and contact details
 # ##############################################################################
 class LinkedLocationCheck(LinkedCheck):
-    name = OptionalCharField(max_length=64)
-    contact_name = OptionalCharField(max_length=128)
-    contact_phone = OptionalCharField(max_length=64)
-    contact_email = OptionalCharField(max_length=128)
-    # locations linked through CampLocation object, related_name is 'locations'
+    value = models.ManyToManyField(LinkedLocation)
     is_camp_location = models.BooleanField(default=False)
-    center_latitude = models.FloatField(null=True, blank=True)
-    center_longitude = models.FloatField(null=True, blank=True)
-    zoom = OptionalIntegerField()
 
     def __init__(self, *args, **kwargs):
+        self.is_camp_location = kwargs.pop("is_camp_location", False)
+
         super().__init__(*args, **kwargs)
 
     def has_value(self) -> bool:
-        if self.locations and self.locations.count() > 0:
+        if self.value and self.value.count() > 0:
             return True
         return False
 

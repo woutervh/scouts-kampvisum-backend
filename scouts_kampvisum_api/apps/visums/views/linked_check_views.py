@@ -287,7 +287,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         return self._list(
             LinkedLocationCheck.objects.filter(
                 Q(parent__check_type__check_type=CheckTypeEndpoint.LOCATION_CHECK)
-                & Q(locations__isnull=False)
+                & Q(value__locations__isnull=False)
             )
         )
 
@@ -359,11 +359,11 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_linked_camp_location_checks(self, request):
         return self._list(
             LinkedLocationCheck.objects.filter(
-                Q(is_camp_location=False)
+                Q(value__is_camp_location=True)
                 & Q(
                     parent__check_type__check_type=CheckTypeEndpoint.CAMP_LOCATION_CHECK
                 )
-                & Q(locations__isnull=False)
+                & Q(value__locations__isnull=False)
             )
         )
 
