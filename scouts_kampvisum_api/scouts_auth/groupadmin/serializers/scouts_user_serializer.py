@@ -21,6 +21,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "group_admin_id": group.group_admin_id,
                 "name": group.name,
                 "full_name": group.full_name,
+                "type": group.type,
             }
             for group in obj.scouts_groups
         ]
