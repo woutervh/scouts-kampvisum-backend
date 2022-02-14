@@ -1057,6 +1057,23 @@
     {
         "model": "visums.Check",
         "fields": {
+            "name": "participants_leaders_estimate",
+            "sub_category": [
+                "members",
+                [
+                    "members_leaders",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "NumberCheck"
+            ],
+            "label": "Geschat aantal leden"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
             "name": "participants_leaders_comments",
             "sub_category": [
                 "leaders",
@@ -1104,6 +1121,23 @@
             ],
             "is_multiple": true,
             "label": "Lijst van fourage"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "participants_cooks_estimate",
+            "sub_category": [
+                "members",
+                [
+                    "members_leaders",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "NumberCheck"
+            ],
+            "label": "Geschat aantal fouriers"
         }
     },
     {
@@ -1188,7 +1222,7 @@
             "check_type": [
                 "NumberCheck"
             ],
-            "label": "Geschat aantal deelnemers"
+            "label": "Geschat aantal leden"
         }
     },
     {
