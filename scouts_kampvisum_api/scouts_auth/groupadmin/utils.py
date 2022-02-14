@@ -1,7 +1,9 @@
 import logging
+import datetime
 from typing import List
 
 from django.conf import settings
+from django.utils import timezone
 
 
 logger = logging.getLogger(__name__)
@@ -59,7 +61,27 @@ class SettingsHelper:
         value = getattr(settings, "CAMP_REGISTRATION_EPOCH")
         month, day = value.split("-")
 
-        return (month, day)
+        return (int(month), int(day))
+
+    @staticmethod
+    def get_camp_registration_epoch_date(default_value=None):
+        month, day = SettingsHelper.get_camp_registration_epoch(default_value)
+
+        return datetime.datetime(timezone.now().date().year, month, day).date()
+
+    @staticmethod
+    def get_responsibility_epoch(default_value=None):
+        # A setting that determines when the camp responsibles have to take extra action if a responsible person changes.
+        value = getattr(settings, "RESPONSIBILITY_EPOCH")
+        month, day = value.split("-")
+
+        return (int(month), int(day))
+
+    @staticmethod
+    def get_responsibility_epoch_date(default_value=None):
+        month, day = SettingsHelper.get_responsibility_epoch(default_value)
+
+        return datetime.datetime(timezone.now().date().year, month, day).date()
 
     @staticmethod
     def get_administrator_groups() -> List[str]:

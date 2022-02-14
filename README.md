@@ -17,6 +17,8 @@
 This is used for instance in filtering member searches on the groupadmin.  
 `CAMP_REGISTRATION_EPOCH`  
 :  Default 05-01 (MM-DD). A setting that determines when in the course of the year a newly registered camp should be considered to be part of the next camp year, instead of the current one.  
+`RESPONSIBILITY_EPOCH`
+:  Default 04-01 (MM-DD). A setting that determines when the camp responsibles have to take extra action if a responsible person changes.
 `IS_ACCEPTANCE`  
 :  If True and DEBUG=True, then emails will be sent to the debug address.  
 `DEBUG`  

@@ -1,11 +1,13 @@
-import logging, uuid
+import logging
 
 from django.http import Http404
+from django.core.exceptions import ValidationError
 
 from apps.participants.models import InuitsParticipant
 from apps.participants.services import InuitsParticipantService
-from apps.locations.models import CampLocation
+
 from apps.locations.services import CampLocationService
+
 from apps.visums.models import (
     LinkedCheck,
     LinkedSimpleCheck,
@@ -17,8 +19,8 @@ from apps.visums.models import (
     LinkedCommentCheck,
     LinkedNumberCheck,
 )
+from apps.visums.services import ChangeHandlerService
 
-from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.services import PersistedFileService
@@ -33,6 +35,7 @@ class LinkedCheckService:
     persisted_file_service = PersistedFileService()
     participant_service = InuitsParticipantService()
     groupadmin = GroupAdminMemberService()
+    change_handler_service = ChangeHandlerService()
 
     @staticmethod
     def get_value_type(check: LinkedCheck):
@@ -42,6 +45,14 @@ class LinkedCheckService:
         # logger.debug("CONCRETE CHECK: %s", check)
 
         return check
+
+    def notify_change(self, instance: LinkedCheck, data_changed: bool = False):
+        if data_changed and instance.parent.has_change_handler():
+            getattr(self.change_handler_service, instance.parent.change_handler)(
+                instance=instance
+            )
+
+        return instance
 
     def get_simple_check(self, check_id):
         try:
@@ -59,7 +70,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return instance
+        return self.notify_change(instance)
 
     def get_date_check(self, check_id):
         try:
@@ -76,7 +87,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return instance
+        return self.notify_change(instance)
 
     def get_duration_check(self, check_id):
         try:
@@ -95,7 +106,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return instance
+        return self.notify_change(instance)
 
     def get_location_check(self, check_id):
         try:
@@ -135,7 +146,7 @@ class LinkedCheckService:
                 check=instance, is_camp_location=is_camp_location, **location
             )
 
-        return instance
+        return self.notify_change(instance)
 
     def get_participant_check(self, check_id):
         try:
@@ -151,11 +162,29 @@ class LinkedCheckService:
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
+        data_changed = False
 
         participants = data.get("value", [])
         if not participants or len(participants) == 0:
             logger.error("Empty participant list")
-            raise Http404
+            raise ValidationError("Empty participant list")
+
+        if not instance.parent.is_multiple:
+            if len(participants) != 1:
+                logger.error("This participant list can have only one participant")
+                raise ValidationError(
+                    "This participant list is limited to 1 participant, {} given as data, {} present on object".format(
+                        len(participants), instance.value.count()
+                    )
+                )
+            existing_participants = instance.value.all()
+            for existing_participant in existing_participants:
+                self.unlink_participant(
+                    request=request,
+                    instance=instance,
+                    participant_id=existing_participant.id,
+                )
+            data_changed = True
 
         for participant in participants:
             logger.debug("participant: %s", participant)
@@ -166,7 +195,7 @@ class LinkedCheckService:
 
             instance.value.add(participant)
 
-        return instance
+        return self.notify_change(instance=instance, data_changed=data_changed)
 
     def unlink_participant(
         self, request, instance: LinkedParticipantCheck, participant_id, **data
@@ -187,7 +216,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return instance
+        return self.notify_change(instance)
 
     def get_file_upload_check(self, check_id):
         try:
@@ -210,7 +239,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return instance
+        return self.notify_change(instance)
 
     def unlink_file(
         self, request, instance: LinkedFileUploadCheck, persisted_file_id, **data
@@ -229,7 +258,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return instance
+        return self.notify_change(instance)
 
     def get_comment_check(self, check_id):
         try:
@@ -247,7 +276,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return instance
+        return self.notify_change(instance)
 
     def get_number_check(self, check_id):
         try:
@@ -265,4 +294,4 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return instance
+        return self.notify_change(instance)

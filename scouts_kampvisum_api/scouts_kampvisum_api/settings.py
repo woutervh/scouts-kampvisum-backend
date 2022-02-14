@@ -319,6 +319,7 @@ CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 # ############################################################################ #
 ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
 CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "05-01")
+RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-01")
 
 
 # ############################################################################ #
@@ -557,7 +558,7 @@ if USE_S3_STORAGE:
 # ############################################################################ #
 
 
-# EMAIL RESOURCES: TEMPLATES ETC.
+# EMAIL RESOURCES
 RESOURCES_PATH = env.str("RESOURCES_PATH")
 RESOURCES_MAIL_TEMPLATE_PATH = RESOURCES_PATH + env.str("RESOURCES_MAIL_TEMPLATE_PATH")
 RESOURCES_MAIL_TEMPLATE_START = RESOURCES_MAIL_TEMPLATE_PATH + env.str(
@@ -567,31 +568,46 @@ RESOURCES_MAIL_TEMPLATE_END = RESOURCES_MAIL_TEMPLATE_PATH + env.str(
     "RESOURCES_MAIL_TEMPLATE_END"
 )
 
-
-# EMAIL PROVIDERS: DJANGO OR SENDINBLUE
+# EMAIL
+EMAIL_DEBUG_RECIPIENT = env.str("EMAIL_DEBUG_RECIPIENT")
+# We are going to use anymail which maps multiple providers like sendinblue with default django mailing code
+# For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
 def setup_mail():
+    global USE_SENDINBLUE
     global EMAIL_BACKEND
     global ANYMAIL
+    global EMAIL_TEMPLATE
+    global EMAIL_FROM
 
-    if USE_SEND_IN_BLUE:
-        EMAIL_BACKEND = env.str("SEND_IN_BLUE_BACKEND")
-        ANYMAIL["SENDINBLUE_API_KEY"] = env.str("SEND_IN_BLUE_API_KEY")
+    if USE_SENDINBLUE:
+        API_KEY = env.str("SENDINBLUE_API_KEY")
+        if DEBUG:
+            API_KEY = env.str("SENDINBLUE_API_KEY_DEBUG", API_KEY)
+
+        EMAIL_BACKEND = env.str("SENDINBLUE_BACKEND")
+        ANYMAIL["SENDINBLUE_API_KEY"] = API_KEY
+        ANYMAIL["SENDINBLUE_TEMPLATE_ID"] = env.str("SENDINBLUE_TEMPLATE_ID")
+        EMAIL_TEMPLATE = ANYMAIL["SENDINBLUE_TEMPLATE_ID"]
+    else:
+        EMAIL_TEMPLATE = None
+
+    FROM_LIST = env.str("EMAIL_FROM", None)
+    if FROM_LIST:
+        EMAIL_FROM = FROM_LIST.split(",")
 
 
 # DJANGO MAIL SETTINGS
 EMAIL_BACKEND = env.str("EMAIL_BACKEND")
 EMAIL_URL = env.str("EMAIL_URL")
 EMAIL_SENDER = env.str("EMAIL_SENDER")
-EMAIL_RECIPIENTS = env.str("EMAIL_RECIPIENTS")
+EMAIL_RECIPIENTS = env.str("EMAIL_RECIPIENTS", EMAIL_DEBUG_RECIPIENT)
 EMAIL_HOST = env.str("EMAIL_HOST")
 EMAIL_PORT = env.str("EMAIL_PORT")
-
-
-# SEND_IN_BLUE EMAIL SETTINGS
-USE_SEND_IN_BLUE = env.bool("USE_SEND_IN_BLUE", False)
-
-
-# SCOUTS VERZEKERINGEN EMAIL SETTINGS
+# SENDINBLUE EMAIL SETTINGS
+USE_SENDINBLUE = env.bool("USE_SENDINBLUE", False)
+# SCOUTS KAMPVISUM EMAIL SETTINGS
+EMAIL_FROM = None
+EMAIL_TEMPLATE = None
 TMP_FOLDER = RESOURCES_PATH + "temp"
 ANYMAIL = {}
 

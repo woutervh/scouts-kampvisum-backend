@@ -998,6 +998,7 @@
             "check_type": [
                 "ParticipantCheck"
             ],
+            "change_handler": "change_camp_responsible",
             "label": "Contactgegevens kampverantwoordelijke"
         }
     },
