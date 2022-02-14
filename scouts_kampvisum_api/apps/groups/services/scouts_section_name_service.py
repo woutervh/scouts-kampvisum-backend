@@ -2,7 +2,7 @@ import logging
 
 from apps.groups.models import ScoutsSectionName
 
-from scouts_auth.groupadmin.scouts import AgeGroup
+# from scouts_auth.groupadmin.scouts import AgeGroup
 from scouts_auth.inuits.models import Gender
 
 
@@ -16,7 +16,8 @@ class ScoutsSectionNameService:
         section_name: ScoutsSectionName = None,
         name: str = None,
         gender: Gender = Gender.MIXED,
-        age_group: AgeGroup = AgeGroup.AGE_GROUP_UNKNOWN,
+        # age_group: AgeGroup = AgeGroup.AGE_GROUP_UNKNOWN,
+        age_group: int = 0,
     ) -> ScoutsSectionName:
         """
         Saves a SectionName object to the DB.

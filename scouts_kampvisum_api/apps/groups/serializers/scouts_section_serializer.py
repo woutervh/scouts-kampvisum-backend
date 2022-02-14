@@ -7,7 +7,7 @@ from apps.groups.serializers import (
     ScoutsSectionNameSerializer,
 )
 
-from scouts_auth.groupadmin.scouts import AgeGroup
+# from scouts_auth.groupadmin.scouts import AgeGroup
 from scouts_auth.inuits.models.enums import Gender
 
 
@@ -45,7 +45,8 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
             name_id = name_data.get("id", None)
             name = name_data.get("name", None)
             gender = name_data.get("gender", Gender.MIXED)
-            age_group = name_data.get("age_group", AgeGroup.AGE_GROUP_UNKNOWN)
+            # age_group = name_data.get("age_group", AgeGroup.AGE_GROUP_UNKNOWN)
+            age_group = name_data.get("age_group", 0)
 
             data["name"] = {
                 "id": name_id,
