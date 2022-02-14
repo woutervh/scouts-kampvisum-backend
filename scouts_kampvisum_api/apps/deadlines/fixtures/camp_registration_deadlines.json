@@ -1,0 +1,58 @@
+[
+    {
+        "model": "deadlines.DefaultDeadline",
+        "fields": {
+            "name": "camp_registration",
+            "label": "Kampregistratie",
+            "description": "Zorg dat alle basis-informatie voorhanden is voor de kampregistratie",
+            "explanation": "Is je kampregistratie ingevuld, ben je te bereiken bij een noodgeval (ongeval, problemen op het thuisfront, natuurrampen, gezondheidsrisico's of andere onvoorziene omstandigheden) ? De mensen die de noodlijn van Scouts en Gidsen Vlaanderen opvolgen kunnen je zo bereiken.",
+            "is_important": true,
+            "due_date": {
+                "date_day": 1,
+                "date_month": 3
+            },
+            "deadline_type": "M",
+            "sub_categories": [
+                [
+                    "date",
+                    [
+                        "planning",
+                        2022
+                    ]
+                ]
+            ],
+            "checks": [
+                [
+                    "logistics_location_location",
+                    [
+                        "locations_map",
+                        [
+                            "logistics",
+                            2022
+                        ]
+                    ]
+                ],
+                [
+                    "participants_members_estimate",
+                    [
+                        "members",
+                        [
+                            "members_leaders",
+                            2022
+                        ]
+                    ]
+                ],
+                [
+                    "participants_leaders_responsible",
+                    [
+                        "leaders",
+                        [
+                            "members_leaders",
+                            2022
+                        ]
+                    ]
+                ]
+            ]
+        }
+    }
+]
