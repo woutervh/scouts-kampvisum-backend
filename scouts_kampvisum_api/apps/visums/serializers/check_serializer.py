@@ -12,4 +12,4 @@ class CheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = Check
         # fields = "__all__"
-        exclude = ["sub_category"]
+        exclude = ["sub_category", "change_handler"]
