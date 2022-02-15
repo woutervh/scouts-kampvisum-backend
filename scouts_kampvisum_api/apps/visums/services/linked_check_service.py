@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from apps.participants.models import InuitsParticipant
 from apps.participants.services import InuitsParticipantService
 
+from apps.locations.models import LinkedLocation
 from apps.locations.services import CampLocationService
 
 from apps.visums.models import (
@@ -140,10 +141,23 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
+        logger.debug("DATA: %s", data)
+
         locations = data.get("locations", [])
         for location in locations:
+            linked_location = None
+            location_data = {}
+
+            if isinstance(location, LinkedLocation):
+                linked_location = location
+            else:
+                location_data = location
+
             self.location_service.create_or_update_linked_location(
-                check=instance, is_camp_location=is_camp_location, **location
+                instance=linked_location,
+                check=instance,
+                is_camp_location=is_camp_location,
+                **location_data
             )
 
         return self.notify_change(instance)

@@ -24,8 +24,9 @@ class LinkedLocationManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
 
         if pk:
-            obj = self.safe_get_by_id(pk)
-            if obj:
-                return obj
+            try:
+                return self.get_queryset().get(pk=pk)
+            except:
+                pass
 
         return None

@@ -11,7 +11,7 @@ class CampLocation(AbstractBaseModel):
 
     objects = CampLocationManager()
 
-    location_check = models.ForeignKey(
+    location = models.ForeignKey(
         LinkedLocation, on_delete=models.CASCADE, related_name="locations"
     )
     name = OptionalCharField(max_length=64)

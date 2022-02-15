@@ -20,6 +20,19 @@ class LinkedLocationSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         logger.debug("LINKED LOCATION SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
+        id = data.get("id", None)
+        if id:
+            instance = LinkedLocation.objects.safe_get(id=id)
+            if instance:
+                return instance
+
         data = super().to_internal_value(data)
+
+        return data
+
+    def to_representation(self, obj: LinkedLocation) -> dict:
+        data = super().to_representation(obj)
+
+        logger.debug("LINKED LOCATION TO_REPRESENTATION: %s", data)
 
         return data
