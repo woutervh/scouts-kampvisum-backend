@@ -116,7 +116,7 @@ class LinkedSubCategoryDeadlineSerializer(DeadlineSerializer):
 
     def to_representation(self, obj: LinkedSubCategoryDeadline) -> dict:
         data = super().to_representation(obj)
-        logger.debug("LINKED SUB CATEGORY DEADELINE: %s", data)
+        # logger.debug("LINKED SUB CATEGORY DEADELINE: %s", data)
 
         data["linked_sub_categories"] = self._parse_sub_categories(
             data.get("linked_sub_categories", [])
