@@ -47,6 +47,50 @@ class DeadlineSerializer(serializers.ModelSerializer):
 
         return data
 
+    def _parse_sub_categories(self, linked_sub_categories: list) -> list:
+        results = []
+        for linked_sub_category in linked_sub_categories:
+            id = linked_sub_category.get("id", None)
+            if id:
+                instance = LinkedSubCategory.objects.safe_get(id=id)
+                if instance:
+                    results.append(
+                        {
+                            "id": instance.id,
+                            "name": instance.parent.name,
+                            "label": instance.parent.label,
+                            "category_id": instance.category.id,
+                            "category_name": instance.category.parent.name,
+                            "category_label": instance.category.parent.label,
+                            "state": linked_sub_category.get(
+                                "state", CheckState.UNCHECKED
+                            ),
+                        }
+                    )
+
+        return results
+
+    def _parse_checks(self, linked_checks: list) -> list:
+        results = []
+        for linked_check in linked_checks:
+            id = linked_check.get("id", None)
+            if id:
+                instance = LinkedCheck.objects.safe_get(id=id)
+                if instance:
+                    results.append(
+                        {
+                            "id": instance.id,
+                            "name": instance.parent.name,
+                            "label": instance.parent.label,
+                            "category_id": instance.sub_category.category.id,
+                            "category_name": instance.sub_category.category.parent.name,
+                            "category_label": instance.sub_category.category.parent.label,
+                            "state": linked_check.get("state", CheckState.UNCHECKED),
+                        }
+                    )
+
+        return results
+
 
 class LinkedSubCategoryDeadlineSerializer(DeadlineSerializer):
 
@@ -68,25 +112,10 @@ class LinkedSubCategoryDeadlineSerializer(DeadlineSerializer):
     def to_representation(self, obj: LinkedSubCategoryDeadline) -> dict:
         data = super().to_representation(obj)
         logger.debug("LINKED SUB CATEGORY DEADELINE: %s", data)
-        linked_sub_categories = data.get("linked_sub_categories", [])
-        results = []
-        for linked_sub_category in linked_sub_categories:
-            id = linked_sub_category.get("id", None)
-            if id:
-                instance = LinkedSubCategory.objects.safe_get(id=id)
-                if instance:
-                    results.append(
-                        {
-                            "id": instance.category.id,
-                            "name": instance.category.parent.name,
-                            "label": instance.category.parent.label,
-                            "state": linked_sub_category.get(
-                                "state", CheckState.UNCHECKED
-                            ),
-                        }
-                    )
 
-        data["linked_sub_categories"] = results
+        data["linked_sub_categories"] = self._parse_sub_categories(
+            data.get("linked_sub_categories", [])
+        )
 
         return data
 
@@ -109,23 +138,7 @@ class LinkedCheckDeadlineSerializer(DeadlineSerializer):
     def to_representation(self, obj: LinkedCheckDeadline) -> dict:
         data = super().to_representation(obj)
 
-        linked_checks = data.get("linked_checks", {})
-        results = []
-        for linked_check in linked_checks:
-            id = linked_check.get("id", None)
-            if id:
-                instance = LinkedCheck.objects.safe_get(id=id)
-                if instance:
-                    results.append(
-                        {
-                            "id": instance.sub_category.category.id,
-                            "name": instance.sub_category.category.parent.name,
-                            "label": instance.sub_category.category.parent.label,
-                            "state": linked_check.get("state", CheckState.UNCHECKED),
-                        }
-                    )
-
-        data["linked_checks"] = results
+        data["linked_checks"] = self._parse_checks(data.get("linked_checks", []))
 
         return data
 
@@ -149,42 +162,9 @@ class MixedDeadlineSerializer(DeadlineSerializer):
     def to_representation(self, obj: LinkedCheckDeadline) -> dict:
         data = super().to_representation(obj)
 
-        linked_sub_categories = data.get("linked_sub_categories", [])
-        results = []
-        for linked_sub_category in linked_sub_categories:
-            id = linked_sub_category.get("id", None)
-            if id:
-                instance = LinkedSubCategory.objects.safe_get(id=id)
-                if instance:
-                    results.append(
-                        {
-                            "id": instance.category.id,
-                            "name": instance.category.parent.name,
-                            "label": instance.category.parent.label,
-                            "state": linked_sub_category.get(
-                                "state", CheckState.UNCHECKED
-                            ),
-                        }
-                    )
-
-        data["linked_sub_categories"] = results
-
-        linked_checks = data.get("linked_checks", {})
-        results = []
-        for linked_check in linked_checks:
-            id = linked_check.get("id", None)
-            if id:
-                instance = LinkedCheck.objects.safe_get(id=id)
-                if instance:
-                    results.append(
-                        {
-                            "id": instance.sub_category.category.id,
-                            "name": instance.sub_category.category.parent.name,
-                            "label": instance.sub_category.category.parent.label,
-                            "state": linked_check.get("state", CheckState.UNCHECKED),
-                        }
-                    )
-
-        data["linked_checks"] = results
+        data["linked_sub_categories"] = self._parse_sub_categories(
+            data.get("linked_sub_categories", [])
+        )
+        data["linked_checks"] = self._parse_checks(data.get("linked_checks", []))
 
         return data
