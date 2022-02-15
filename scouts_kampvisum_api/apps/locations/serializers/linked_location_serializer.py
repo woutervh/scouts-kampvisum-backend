@@ -21,7 +21,7 @@ class LinkedLocationSerializer(serializers.ModelSerializer):
         logger.debug("LINKED LOCATION SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         id = data.get("id", None)
-        if id and len(data.keys() == 1):
+        if id and len(data.keys()) == 1:
             instance = LinkedLocation.objects.safe_get(id=id)
             if instance:
                 return instance
