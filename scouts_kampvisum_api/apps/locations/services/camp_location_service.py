@@ -29,13 +29,13 @@ class CampLocationService:
                         linked_location.id
                     )
                 )
+            linked_location_provided = True
         else:
             linked_location: LinkedLocation = LinkedLocation.objects.safe_get(
                 id=data.get("id", None)
             )
 
         if linked_location:
-            linked_location_provided = True
             linked_location = self._update_linked_location(
                 instance=linked_location, is_camp_location=is_camp_location, **data
             )
