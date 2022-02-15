@@ -116,8 +116,10 @@ class LinkedCheckService:
             logger.error("LinkedLocationCheck with id %s not found", check_id)
             raise Http404
 
-    def update_location_check(self, instance: LinkedLocationCheck, **data):
-        return self._update_location(instance=instance, is_camp_location=False, **data)
+    def update_location_check(self, request, instance: LinkedLocationCheck, **data):
+        return self._update_location(
+            request=request, instance=instance, is_camp_location=False, **data
+        )
 
     def get_camp_location_check(self, check_id):
         try:
@@ -126,11 +128,15 @@ class LinkedCheckService:
             logger.error("LinkedCampLocationCheck with id %s not found", check_id)
             raise Http404
 
-    def update_camp_location_check(self, instance: LinkedLocationCheck, **data):
-        return self._update_location(instance=instance, is_camp_location=True, **data)
+    def update_camp_location_check(
+        self, request, instance: LinkedLocationCheck, **data
+    ):
+        return self._update_location(
+            request=request, instance=instance, is_camp_location=True, **data
+        )
 
     def _update_location(
-        self, instance: LinkedLocationCheck, is_camp_location=False, **data
+        self, request, instance: LinkedLocationCheck, is_camp_location=False, **data
     ):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
@@ -154,6 +160,7 @@ class LinkedCheckService:
                 location_data = location
 
             self.location_service.create_or_update_linked_location(
+                request=request,
                 instance=linked_location,
                 check=instance,
                 is_camp_location=is_camp_location,

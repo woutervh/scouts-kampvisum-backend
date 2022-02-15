@@ -1,7 +1,9 @@
 import logging
+
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
-from apps.groups.models import ScoutsSection, ScoutsSectionName
+from apps.groups.models import ScoutsSection
 from apps.groups.serializers import (
     ScoutsGroupTypeSerializer,
     ScoutsSectionNameSerializer,
@@ -33,10 +35,14 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         if isinstance(data, str):
             instance = ScoutsSection.objects.safe_get(id=data)
 
-            logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", instance)
+            # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", instance)
 
-            if instance:
-                return instance
+            if not instance:
+                raise ValidationError(
+                    "Unable to locate scouts section with id {}".format(data)
+                )
+
+            return instance
 
         group_type = data.get("group_type", None)
         if group_type:

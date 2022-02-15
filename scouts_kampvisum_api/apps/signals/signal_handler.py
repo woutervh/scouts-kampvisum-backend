@@ -61,20 +61,22 @@ class SignalHandler:
         section_service = ScoutsSectionService()
 
         if not user.fully_loaded:
+            logger.debug
             logger.debug(
                 "SIGNAL handling for 'authenticated' -> Loading additional user groups"
             )
             user = authorization_service.load_user_scouts_groups(user)
+
             logger.debug(
                 "SIGNAL handling for 'authenticated' -> Loading scouts functions"
             )
             user = authorization_service.load_user_functions(user)
+
+            logger.debug("Settings up sections for user groups")
+            section_service.setup_default_sections(user=user)
         user.fully_loaded = True
 
         logger.debug(user.to_descriptive_string())
-
-        logger.debug("Settings up sections for user groups")
-        section_service.setup_default_sections(user=user)
 
         return user
 

@@ -1,9 +1,8 @@
-import logging, warnings, uuid
+import logging, warnings
 from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.shortcuts import get_object_or_404
 
 from apps.groups.models import (
     DefaultScoutsSectionName,
@@ -156,7 +155,9 @@ class ScoutsSectionService:
         created_sections = list()
 
         for group in groups:
-            logger.debug("Linking sections to GROUP: %s (%s)", group, group.name)
+            logger.debug(
+                "Linking sections to GROUP: %s (%s)", group.group_admin_id, group.name
+            )
 
             sections = ScoutsSection.objects.all().filter(
                 group_admin_id=group.group_admin_id

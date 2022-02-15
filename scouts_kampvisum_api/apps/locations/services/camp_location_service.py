@@ -2,6 +2,7 @@ import logging
 import uuid
 
 from django.core.exceptions import ValidationError
+from django.db import transaction
 
 from apps.locations.models import LinkedLocation, CampLocation
 
@@ -12,13 +13,16 @@ logger = logging.getLogger(__name__)
 
 
 class CampLocationService:
+    @transaction.atomic
     def create_or_update_linked_location(
         self,
+        request,
         check: LinkedLocationCheck,
         instance: LinkedLocation = None,
         is_camp_location: bool = False,
         **data
     ):
+        linked_location = None
         linked_location_provided = False
         if instance:
             linked_location = LinkedLocation.objects.safe_get(id=instance.id)
@@ -30,17 +34,26 @@ class CampLocationService:
                 )
             linked_location_provided = True
         else:
-            linked_location: LinkedLocation = LinkedLocation.objects.safe_get(
-                id=data.get("id", None)
-            )
+            id = data.get("id", None)
+            if id:
+                linked_location: LinkedLocation = LinkedLocation.objects.safe_get(id=id)
+                if not linked_location:
+                    raise ValidationError(
+                        "Unable to find LinkedLocation instance with id {}".format(
+                            linked_location.id
+                        )
+                    )
 
         if linked_location:
             linked_location = self._update_linked_location(
-                instance=linked_location, is_camp_location=is_camp_location, **data
+                request=request,
+                instance=linked_location,
+                is_camp_location=is_camp_location,
+                **data
             )
         else:
             linked_location = self._create_linked_location(
-                is_camp_location=is_camp_location, **data
+                request=request, is_camp_location=is_camp_location, **data
             )
 
             check.locations.add(linked_location)
@@ -76,12 +89,16 @@ class CampLocationService:
                 if not location in posted_locations:
                     CampLocation.objects.get(pk=location).delete()
             for location in locations:
-                self.create_or_update(
-                    instance=linked_location, check=check, data=location
+                self.create_or_update_camp_location(
+                    request=request,
+                    instance=linked_location,
+                    check=check,
+                    data=location,
                 )
 
+    @transaction.atomic
     def _create_linked_location(
-        self, is_camp_location: bool = False, **data
+        self, request, is_camp_location: bool = False, **data
     ) -> LinkedLocation:
         instance = LinkedLocation()
 
@@ -95,14 +112,16 @@ class CampLocationService:
         instance.center_latitude = data.get("center_latitude", None)
         instance.center_longitude = data.get("center_longitude", None)
         instance.zoom = data.get("zoom", None)
+        instance.created_by = request.user
 
         instance.full_clean()
         instance.save()
 
         return instance
 
+    @transaction.atomic
     def _update_linked_location(
-        self, instance: LinkedLocation, is_camp_location: bool = False, **data
+        self, request, instance: LinkedLocation, is_camp_location: bool = False, **data
     ) -> LinkedLocation:
         instance.name = data.get("name", instance.name)
         instance.contact_name = data.get("contact_name", instance.contact_name)
@@ -114,14 +133,16 @@ class CampLocationService:
             "center_longitude", instance.center_longitude
         )
         instance.zoom = data.get("zoom", None)
+        instance.updated_by = request.user
 
         instance.full_clean()
         instance.save()
 
         return instance
 
-    def create_or_update(
-        self, instance: LinkedLocation, check: LinkedLocationCheck, data: dict
+    @transaction.atomic
+    def create_or_update_camp_location(
+        self, request, instance: LinkedLocation, check: LinkedLocationCheck, data: dict
     ) -> CampLocation:
         logger.debug("CREATE OR UPDATE CAMPLOCATION DATA: %s", data)
         id = data.get("id", None)
@@ -135,11 +156,16 @@ class CampLocationService:
                     )
                 )
 
-            return self.update(instance=location, location=instance, **data)
+            return self.update_camp_location(
+                request=request, instance=location, location=instance, **data
+            )
         else:
-            return self.create(location=instance, **data)
+            return self.create_camp_location(request=request, location=instance, **data)
 
-    def create(self, location: LinkedLocation, **data) -> CampLocation:
+    @transaction.atomic
+    def create_camp_location(
+        self, request, location: LinkedLocation, **data
+    ) -> CampLocation:
         logger.debug("LOCATION SERVICE CREATE DATA: %s", data)
 
         instance = CampLocation()
@@ -150,6 +176,7 @@ class CampLocationService:
         instance.is_main_location = data.get("is_main_location", False)
         instance.latitude = data.get("latitude", None)
         instance.longitude = data.get("longitude", None)
+        instance.created_by = request.user
 
         instance.full_clean()
         instance.save()
@@ -158,8 +185,9 @@ class CampLocationService:
 
         return instance
 
-    def update(
-        self, instance: CampLocation, location: LinkedLocation, **data
+    @transaction.atomic
+    def update_camp_location(
+        self, request, instance: CampLocation, location: LinkedLocation, **data
     ) -> CampLocation:
         logger.debug("LOCATION SERVICE UPDATE DATA: %s", data)
 
@@ -171,13 +199,15 @@ class CampLocationService:
         )
         instance.latitude = data.get("latitude", instance.latitude)
         instance.longitude = data.get("longitude", instance.longitude)
+        instance.updated_by = request.user
 
         instance.full_clean()
         instance.save()
 
         return instance
 
-    def remove(self, instance: LinkedLocation, location: CampLocation):
+    @transaction.atomic
+    def remove_camp_location(self, instance: LinkedLocation, location: CampLocation):
         logger.debug(
             "Removing camp location %s from location check %s", location.id, instance.id
         )

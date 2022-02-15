@@ -255,7 +255,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_location_check(
-            instance, **validated_data
+            request=request, instance=instance, **validated_data
         )
 
         output_serializer = LinkedLocationCheckSerializer(
@@ -324,7 +324,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_camp_location_check(
-            instance, **validated_data
+            request=request, instance=instance, **validated_data
         )
 
         output_serializer = LinkedCampLocationCheckSerializer(

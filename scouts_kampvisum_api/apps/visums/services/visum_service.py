@@ -1,5 +1,6 @@
 import logging
 
+from apps.camps.models import CampType
 from apps.camps.services import CampService
 
 from apps.deadlines.services import DeadlineService
@@ -26,9 +27,13 @@ class CampVisumService:
         logger.debug("Creating camp with name '%s'", camp_name)
         camp = self.camp_service.camp_create(request, **camp_data)
 
+        camp_types = data.get("camp_types")
+
         logger.debug("Linking category set to visum")
         category_set: LinkedCategorySet = (
-            self.category_set_service.get_linked_category_set(request, camp)
+            self.category_set_service.get_linked_category_set(
+                request=request, camp_types=camp_types, camp=camp
+            )
         )
 
         visum = CampVisum()

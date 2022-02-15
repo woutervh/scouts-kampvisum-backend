@@ -1,20 +1,16 @@
 import logging
+from typing import List
 
 from apps.camps.models import Camp, CampYear, CampType
-from apps.camps.services import CampYearService
 
 from apps.groups.models import ScoutsGroupType
 
 from apps.visums.models import (
-    CampYearCategorySet,
     CategorySet,
-    Category,
-    CategorySetPriority,
     LinkedCategorySet,
 )
 from apps.visums.services import CampYearCategorySetService, CategoryService
 
-from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -31,19 +27,21 @@ class CategorySetService:
     group_admin = GroupAdmin()
 
     def get_default_category_set(
-        self, request, camp_year: CampYear, camp_type: CampType = None
+        self, request, camp_year: CampYear, camp_types: List[str] = None
     ) -> CategorySet:
-        if camp_type is None:
+        if camp_types is None or len(camp_types) == 0:
             logger.warn("No camp type given, getting default CampType instance")
-            camp_type = CampType.objects.get_default()
+            camp_types = [CampType.objects.get_default()]
+        else:
+            camp_types = [CampType.objects.get(name=name) for name in camp_types]
 
         logger.debug(
-            "Looking for category sets for camp year %s and camp type %s",
+            "Looking for category sets for camp year %s and camp types %s",
             camp_year.to_simple_str(),
-            camp_type.camp_type,
+            ",".join(instance.camp_type for instance in camp_types),
         )
         qs = CategorySet.objects.filter(
-            camp_year_category_set__camp_year=camp_year, camp_type=camp_type
+            camp_year_category_set__camp_year=camp_year, camp_type__in=camp_types
         )
 
         if qs.count() > 0:
@@ -59,8 +57,12 @@ class CategorySetService:
 
         return False
 
-    def get_linked_category_set(self, request, camp: Camp) -> LinkedCategorySet:
-        category_set = self.get_default_category_set(request, camp_year=camp.year)
+    def get_linked_category_set(
+        self, request, camp_types: List[str], camp: Camp
+    ) -> LinkedCategorySet:
+        category_set = self.get_default_category_set(
+            request=request, camp_types=camp_types, camp_year=camp.year
+        )
 
         linked_category_set = LinkedCategorySet()
 
