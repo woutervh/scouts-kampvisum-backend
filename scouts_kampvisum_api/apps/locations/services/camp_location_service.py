@@ -2,7 +2,6 @@ import logging
 import uuid
 
 from django.core.exceptions import ValidationError
-from django.http import Http404
 
 from apps.locations.models import LinkedLocation, CampLocation
 
@@ -155,7 +154,7 @@ class CampLocationService:
         instance.full_clean()
         instance.save()
 
-        # logger.debug("LOCATON: %s", str(location))
+        # logger.debug("LOCATION: %s", str(location))
 
         return instance
 
