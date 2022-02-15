@@ -28,6 +28,8 @@ class LinkedLocationSerializer(serializers.ModelSerializer):
 
         data = super().to_internal_value(data)
 
+        data["id"] = id
+
         return data
 
     def to_representation(self, obj: LinkedLocation) -> dict:
