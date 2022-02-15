@@ -20,6 +20,7 @@ class CampLocationService:
         is_camp_location: bool = False,
         **data
     ):
+        linked_location_provided = False
         if instance:
             linked_location = LinkedLocation.objects.safe_get(id=instance.id)
             if not linked_location:
@@ -34,6 +35,7 @@ class CampLocationService:
             )
 
         if linked_location:
+            linked_location_provided = True
             linked_location = self._update_linked_location(
                 instance=linked_location, is_camp_location=is_camp_location, **data
             )
@@ -44,8 +46,16 @@ class CampLocationService:
 
             check.locations.add(linked_location)
 
-        check.center_latitude = linked_location.center_latitude
-        check.center_longitude = linked_location.center_longitude
+        check.center_latitude = (
+            linked_location.center_latitude
+            if linked_location.center_latitude
+            else check.center_latitude
+        )
+        check.center_longitude = (
+            linked_location.center_longitude
+            if linked_location.center_longitude
+            else check.center_longitude
+        )
         check.zoom = linked_location.zoom if linked_location.zoom else check.zoom
 
         check.full_clean()
@@ -55,18 +65,21 @@ class CampLocationService:
             location.id for location in linked_location.locations.all()
         ]
         logger.debug("LINKED LOCATION CREATE OR UPDATE DATA: %s", data)
-        locations = data.get("locations", [])
-        posted_locations = [
-            uuid.UUID(location.get("id"))
-            for location in locations
-            if location.get("id", None)
-        ]
 
-        for location in existing_locations:
-            if not location in posted_locations:
-                CampLocation.objects.get(pk=location).delete()
-        for location in locations:
-            self.create_or_update(instance=linked_location, check=check, data=location)
+        if not linked_location_provided:
+            locations = data.get("locations", [])
+            posted_locations = [
+                uuid.UUID(location.get("id"))
+                for location in locations
+                if location.get("id", None)
+            ]
+            for location in existing_locations:
+                if not location in posted_locations:
+                    CampLocation.objects.get(pk=location).delete()
+            for location in locations:
+                self.create_or_update(
+                    instance=linked_location, check=check, data=location
+                )
 
     def _create_linked_location(
         self, is_camp_location: bool = False, **data
