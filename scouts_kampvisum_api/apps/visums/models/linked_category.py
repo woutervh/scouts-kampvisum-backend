@@ -24,3 +24,7 @@ class LinkedCategory(AbstractBaseModel):
             if not sub_category.is_checked():
                 return CheckState.UNCHECKED
         return CheckState.CHECKED
+
+    @property
+    def readable_name(self):
+        return "{}".format(self.parent.name)

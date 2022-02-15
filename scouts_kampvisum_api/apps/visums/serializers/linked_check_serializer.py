@@ -27,7 +27,7 @@ from apps.visums.urls import LinkedCheckEndpointFactory
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 from scouts_auth.inuits.serializers.fields import (
     DatetypeAwareDateSerializerField,
-    OptionalCharSerializerField,
+    DefaultIntegerSerializerField,
     RequiredCharSerializerField,
     OptionalIntegerSerializerField,
 )
@@ -99,9 +99,15 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
         return super().to_internal_value(data)
 
+    def to_representation(self, obj: LinkedCheck) -> dict:
+        data = super().to_representation(obj)
+
+        data["readable_name"] = obj.readable_name
+
+        return data
+
 
 class LinkedSimpleCheckSerializer(LinkedCheckSerializer):
-
     value = serializers.ChoiceField(
         choices=CheckState.choices, default=CheckState.UNCHECKED
     )
@@ -161,7 +167,7 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedLocationCheckSerializer(LinkedCheckSerializer):
-    value = LinkedLocationSerializer(many=True)
+    locations = LinkedLocationSerializer(many=True)
 
     class Meta:
         model = LinkedLocationCheck
@@ -169,11 +175,19 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
 
     @staticmethod
     def get_value(obj: LinkedLocationCheck) -> List[dict]:
-        return LinkedLocationSerializer(obj.value, many=True).data
+        data = dict()
+
+        data["is_camp_location"] = False
+        data["center_latitude"] = obj.center_latitude
+        data["center_longitude"] = obj.center_longitude
+        data["zoom"] = obj.zoom
+        data["locations"] = LinkedLocationSerializer(obj.locations, many=True).data
+
+        return data
 
 
 class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
-    value = LinkedLocationSerializer(many=True)
+    locations = LinkedLocationSerializer(many=True)
 
     class Meta:
         model = LinkedLocationCheck
@@ -181,7 +195,11 @@ class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
 
     @staticmethod
     def get_value(obj: LinkedLocationCheck) -> List[dict]:
-        return LinkedLocationCheckSerializer().get_value(obj)
+        data = LinkedLocationCheckSerializer().get_value(obj)
+
+        data["is_camp_location"] = True
+
+        return data
 
 
 class LinkedParticipantCheckSerializer(LinkedCheckSerializer):

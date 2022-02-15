@@ -20,9 +20,6 @@ class CampSerializer(serializers.ModelSerializer):
 
     year = CampYearSerializer()
     sections = ScoutsSectionSerializer(many=True)
-    # sections = serializers.PrimaryKeyRelatedField(
-    #     queryset=ScoutsSection.objects.all(), many=True
-    # )
 
     class Meta:
         model = Camp

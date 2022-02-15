@@ -9,9 +9,16 @@ from scouts_auth.inuits.models import AbstractBaseModel
 class LinkedCategorySet(AbstractBaseModel):
 
     parent = models.ForeignKey(CategorySet, on_delete=models.CASCADE)
-    
+
     def is_checked(self) -> CheckState:
         for category in self.categories.all():
             if not category.is_checked():
                 return CheckState.UNCHECKED
         return CheckState.CHECKED
+
+    @property
+    def readable_name(self):
+        return "{} {}".format(
+            self.parent.camp_year_category_set.camp_year.year,
+            self.parent.camp_type.camp_type,
+        )

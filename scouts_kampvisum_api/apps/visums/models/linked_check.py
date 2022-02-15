@@ -92,6 +92,10 @@ class LinkedCheck(AbstractBaseModel):
                 "Check type {} is not recognized".format(check_type.check_type)
             )
 
+    @property
+    def readable_name(self):
+        return "{}".format(self.parent.name)
+
 
 # ##############################################################################
 # LinkedSimpleCheck
@@ -142,17 +146,18 @@ class LinkedDurationCheck(LinkedCheck):
 # A check that contains a geo-coordinate and contact details
 # ##############################################################################
 class LinkedLocationCheck(LinkedCheck):
-    value = models.ManyToManyField(LinkedLocation)
     is_camp_location = models.BooleanField(default=False)
     center_latitude = models.FloatField(null=True, blank=True, default=50.4956754)
     center_longitude = models.FloatField(null=True, blank=True, default=3.3452037)
     zoom = DefaultIntegerField(default=7)
 
+    locations = models.ManyToManyField(LinkedLocation)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     def has_value(self) -> bool:
-        if self.value and self.value.count() > 0:
+        if self.locations and self.locations.count() > 0:
             return True
         return False
 

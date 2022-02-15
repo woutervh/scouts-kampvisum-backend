@@ -32,9 +32,11 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
 
         if isinstance(data, str):
             instance = ScoutsSection.objects.safe_get(id=data)
+
             logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", instance)
 
-            return instance
+            if instance:
+                return instance
 
         group_type = data.get("group_type", None)
         if group_type:

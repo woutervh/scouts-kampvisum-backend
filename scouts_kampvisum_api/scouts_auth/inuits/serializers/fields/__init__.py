@@ -10,6 +10,7 @@ from .fields import (
     DefaultCharSerializerField,
     RequiredCharSerializerField,
     OptionalIntegerSerializerField,
+    DefaultIntegerSerializerField,
     RequiredIntegerSerializerField,
     OptionalChoiceSerializerField,
     RequiredYearSerializerField,

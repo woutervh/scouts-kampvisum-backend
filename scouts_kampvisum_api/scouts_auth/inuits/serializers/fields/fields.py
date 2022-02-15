@@ -78,6 +78,26 @@ class OptionalIntegerSerializerField(serializers.IntegerField):
         super().__init__(*args, **kwargs)
 
 
+class DefaultIntegerSerializerField(serializers.CharField):
+    """
+    Initializes a serializers.IntegerField as optional with a default.
+
+    This is equivalent to setting a serializers.IntegerField as such:
+    some_default_integer_field = serializers.IntegerField(
+        required=False, allow_blank=True, allow_null=True, default=<some_default_value>
+    )
+    If max_length is not specified, it is set to 128.
+
+    @see https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.Field.null
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs["required"] = False
+        kwargs["allow_blank"] = True
+        kwargs["allow_null"] = True
+        super().__init__(*args, **kwargs)
+
+
 class RequiredIntegerSerializerField(serializers.IntegerField):
     """
     Initializes a serializers.IntegerField that is required.

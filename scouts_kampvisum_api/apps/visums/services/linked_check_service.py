@@ -140,7 +140,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        locations = data.get("value", [])
+        locations = data.get("locations", [])
         for location in locations:
             self.location_service.create_or_update_linked_location(
                 check=instance, is_camp_location=is_camp_location, **location

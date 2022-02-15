@@ -24,15 +24,17 @@ class LinkedCategorySetSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj: LinkedCategorySet) -> dict:
         # logger.debug("LINKED CATEGORY SET SERIALIZER TO_REPRESENTATION: %s", obj)
-        
+
         data = super().to_representation(obj)
-        
+
         # logger.debug("LINKED CATEGORY SET SERIALIZER TO_REPRESENTATION: %s", data)
-        
+
         data["state"] = CheckState.CHECKED
         for category in data.get("categories", []):
             if CheckState.is_unchecked(category.get("state", CheckState.UNCHECKED)):
                 data["state"] = CheckState.UNCHECKED
                 break
-        
+
+        data["readable_name"] = obj.readable_name
+
         return data

@@ -8,7 +8,7 @@ from scouts_auth.inuits.models import AbstractBaseModel
 
 
 class LinkedSubCategory(AbstractBaseModel):
-    
+
     objects = LinkedSubCategoryManager()
 
     parent = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
@@ -18,9 +18,13 @@ class LinkedSubCategory(AbstractBaseModel):
 
     class Meta:
         ordering = ["parent__index"]
-    
+
     # def is_checked(self) -> CheckState:
     #     for check in self.checks.all():
     #         if not check.is_checked():
     #             return CheckState.UNCHECKED
     #     return CheckState.CHECKED
+
+    @property
+    def readable_name(self):
+        return "{}".format(self.parent.name)
