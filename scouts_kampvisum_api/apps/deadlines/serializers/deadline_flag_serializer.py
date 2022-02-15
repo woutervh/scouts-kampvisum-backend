@@ -1,9 +1,13 @@
 from rest_framework import serializers
 
-from apps.deadlines.models import DefaultDeadlineFlag
+from apps.deadlines.models import DeadlineFlag
+from apps.deadlines.serializers import DefaultDeadlineFlagSerializer
 
 
-class DefaultDeadlineFlagSerializer(serializers.ModelSerializer):
+class DeadlineFlagSerializer(serializers.ModelSerializer):
+
+    parent = DefaultDeadlineFlagSerializer()
+
     class Meta:
-        model = DefaultDeadlineFlag
+        model = DeadlineFlag
         exclude = ["deadline"]

@@ -9,7 +9,7 @@ from apps.deadlines.models import (
     MixedDeadline,
 )
 from apps.deadlines.models.enums import DeadlineType
-from apps.deadlines.serializers import DefaultDeadlineSerializer
+from apps.deadlines.serializers import DefaultDeadlineSerializer, DeadlineFlagSerializer
 
 from apps.visums.models import LinkedSubCategory, LinkedCheck
 from apps.visums.models.enums import CheckState
@@ -27,6 +27,7 @@ class DeadlineSerializer(serializers.ModelSerializer):
 
     parent = DefaultDeadlineSerializer(required=False)
     visum = CampVisumSerializer(required=False)
+    flags = DeadlineFlagSerializer(many=True)
 
     class Meta:
         model = Deadline
@@ -59,9 +60,11 @@ class DeadlineSerializer(serializers.ModelSerializer):
                             "id": instance.id,
                             "name": instance.parent.name,
                             "label": instance.parent.label,
-                            "category_id": instance.category.id,
-                            "category_name": instance.category.parent.name,
-                            "category_label": instance.category.parent.label,
+                            "category": {
+                                "id": instance.category.id,
+                                "name": instance.category.parent.name,
+                                "label": instance.category.parent.label,
+                            },
                             "state": linked_sub_category.get(
                                 "state", CheckState.UNCHECKED
                             ),
@@ -82,9 +85,11 @@ class DeadlineSerializer(serializers.ModelSerializer):
                             "id": instance.id,
                             "name": instance.parent.name,
                             "label": instance.parent.label,
-                            "category_id": instance.sub_category.category.id,
-                            "category_name": instance.sub_category.category.parent.name,
-                            "category_label": instance.sub_category.category.parent.label,
+                            "category": {
+                                "id": instance.sub_category.category.id,
+                                "name": instance.sub_category.category.parent.name,
+                                "label": instance.sub_category.category.parent.label,
+                            },
                             "state": linked_check.get("state", CheckState.UNCHECKED),
                         }
                     )
