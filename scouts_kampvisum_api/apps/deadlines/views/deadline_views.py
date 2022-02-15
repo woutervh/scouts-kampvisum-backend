@@ -295,10 +295,10 @@ class DeadlineViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: VisumDeadlineSerializer})
     def list_for_visum(self, request, visum_id):
         logger.debug("Loading deadlines for visum %s", visum_id)
+
         instances = self.filter_queryset(
             self.deadline_service.list_for_visum(visum=visum_id)
         )
-
         page = self.paginate_queryset(instances)
 
         if page is not None:

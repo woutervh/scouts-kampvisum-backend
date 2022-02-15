@@ -8,6 +8,7 @@ from apps.deadlines.serializers import (
     DefaultDeadlineFlagSerializer,
 )
 
+from apps.visums.models.enums import CheckState
 from apps.visums.serializers import SubCategorySerializer, CheckSerializer
 
 

@@ -8,6 +8,7 @@ from apps.deadlines.serializers import (
     MixedDeadlineSerializer,
 )
 
+from apps.visums.models.enums import CheckState
 
 logger = logging.getLogger(__name__)
 
@@ -20,15 +21,33 @@ class VisumDeadlineSerializer(DeadlineSerializer):
     def to_representation(self, obj: Deadline) -> dict:
 
         if obj.parent.is_deadline():
-            return DeadlineSerializer(instance=obj).data
+            data = DeadlineSerializer(instance=obj).data
+        elif obj.parent.is_sub_category_deadline():
+            data = LinkedSubCategoryDeadlineSerializer(instance=obj).data
+        elif obj.parent.is_check_deadline():
+            data = LinkedCheckDeadlineSerializer(instance=obj).data
+        elif obj.parent.is_mixed_deadline():
+            data = MixedDeadlineSerializer(instance=obj).data
+        else:
+            data = super().to_representation(obj)
 
-        if obj.parent.is_sub_category_deadline():
-            return LinkedSubCategoryDeadlineSerializer(instance=obj).data
+        sub_category_state = CheckState.CHECKED
+        for sub_category in data.get("linked_sub_categories", []):
+            if CheckState.is_unchecked(sub_category.get("state", CheckState.UNCHECKED)):
+                sub_category_state = CheckState.UNCHECKED
+                break
 
-        if obj.parent.is_check_deadline():
-            return LinkedCheckDeadlineSerializer(instance=obj).data
+        check_state = CheckState.CHECKED
+        for check in data.get("linked_checks", []):
+            if CheckState.is_unchecked(check.get("state", CheckState.UNCHECKED)):
+                check_state = CheckState.UNCHECKED
+                break
 
-        if obj.parent.is_mixed_deadline():
-            return MixedDeadlineSerializer(instance=obj).data
+        data["state"] = (
+            CheckState.CHECKED
+            if sub_category_state == CheckState.CHECKED
+            and check_state == CheckState.CHECKED
+            else CheckState.UNCHECKED
+        )
 
-        return super().to_representation(obj)
+        return data

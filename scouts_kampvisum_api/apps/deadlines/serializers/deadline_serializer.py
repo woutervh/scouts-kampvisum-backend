@@ -9,9 +9,10 @@ from apps.deadlines.models import (
     MixedDeadline,
 )
 from apps.deadlines.models.enums import DeadlineType
-from apps.deadlines.serializers import DefaultDeadlineSerializer, DeadlineDateSerializer
+from apps.deadlines.serializers import DefaultDeadlineSerializer
 
 from apps.visums.models import LinkedSubCategory, LinkedCheck
+from apps.visums.models.enums import CheckState
 from apps.visums.serializers import (
     CampVisumSerializer,
     LinkedSubCategorySerializer,
@@ -66,19 +67,22 @@ class LinkedSubCategoryDeadlineSerializer(DeadlineSerializer):
 
     def to_representation(self, obj: LinkedSubCategoryDeadline) -> dict:
         data = super().to_representation(obj)
-
+        logger.debug("LINKED SUB CATEGORY DEADELINE: %s", data)
         linked_sub_categories = data.get("linked_sub_categories", [])
         results = []
         for linked_sub_category in linked_sub_categories:
             id = linked_sub_category.get("id", None)
             if id:
-                linked_sub_category = LinkedSubCategory.objects.safe_get(id=id)
-                if linked_sub_category:
+                instance = LinkedSubCategory.objects.safe_get(id=id)
+                if instance:
                     results.append(
                         {
-                            "id": linked_sub_category.category.id,
-                            "name": linked_sub_category.category.parent.name,
-                            "label": linked_sub_category.category.parent.label,
+                            "id": instance.category.id,
+                            "name": instance.category.parent.name,
+                            "label": instance.category.parent.label,
+                            "state": linked_sub_category.get(
+                                "state", CheckState.UNCHECKED
+                            ),
                         }
                     )
 
@@ -110,13 +114,14 @@ class LinkedCheckDeadlineSerializer(DeadlineSerializer):
         for linked_check in linked_checks:
             id = linked_check.get("id", None)
             if id:
-                linked_check = LinkedCheck.objects.safe_get(id=id)
-                if linked_check:
+                instance = LinkedCheck.objects.safe_get(id=id)
+                if instance:
                     results.append(
                         {
-                            "id": linked_check.sub_category.category.id,
-                            "name": linked_check.sub_category.category.parent.name,
-                            "label": linked_check.sub_category.category.parent.label,
+                            "id": instance.sub_category.category.id,
+                            "name": instance.sub_category.category.parent.name,
+                            "label": instance.sub_category.category.parent.label,
+                            "state": linked_check.get("state", CheckState.UNCHECKED),
                         }
                     )
 
@@ -149,13 +154,16 @@ class MixedDeadlineSerializer(DeadlineSerializer):
         for linked_sub_category in linked_sub_categories:
             id = linked_sub_category.get("id", None)
             if id:
-                linked_sub_category = LinkedSubCategory.objects.safe_get(id=id)
-                if linked_sub_category:
+                instance = LinkedSubCategory.objects.safe_get(id=id)
+                if instance:
                     results.append(
                         {
-                            "id": linked_sub_category.category.id,
-                            "name": linked_sub_category.category.parent.name,
-                            "label": linked_sub_category.category.parent.label,
+                            "id": instance.category.id,
+                            "name": instance.category.parent.name,
+                            "label": instance.category.parent.label,
+                            "state": linked_sub_category.get(
+                                "state", CheckState.UNCHECKED
+                            ),
                         }
                     )
 
@@ -166,13 +174,14 @@ class MixedDeadlineSerializer(DeadlineSerializer):
         for linked_check in linked_checks:
             id = linked_check.get("id", None)
             if id:
-                linked_check = LinkedCheck.objects.safe_get(id=id)
-                if linked_check:
+                instance = LinkedCheck.objects.safe_get(id=id)
+                if instance:
                     results.append(
                         {
-                            "id": linked_check.sub_category.category.id,
-                            "name": linked_check.sub_category.category.parent.name,
-                            "label": linked_check.sub_category.category.parent.label,
+                            "id": instance.sub_category.category.id,
+                            "name": instance.sub_category.category.parent.name,
+                            "label": instance.sub_category.category.parent.label,
+                            "state": linked_check.get("state", CheckState.UNCHECKED),
                         }
                     )
 
