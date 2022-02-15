@@ -6,7 +6,7 @@
             "label": "Kampplaats",
             "description": "Bevestig je kampplaats",
             "explanation": "Zorg tijdig voor een kampplaats en vergeet niet het adres en de contactgegevens van de verhuurder in te vullen",
-            "is_important": true,
+            "is_important": false,
             "due_date": {
                 "date_month": 9
             },
@@ -79,7 +79,7 @@
             "label": "Bosaanvraag",
             "description": "Vraag de nodige bosvergunningen aan",
             "explanation": "Het ANB moet een vergunning afleveren voor het kamperen in een bos. Vraag dit tijdig aan.",
-            "is_important": true,
+            "is_important": false,
             "due_date": {
                 "date_month": 5
             },
