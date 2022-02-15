@@ -15,6 +15,7 @@ class CampLocationService:
     def create_or_update_linked_location(
         self, check: LinkedLocationCheck, is_camp_location: bool = False, **data
     ):
+        logger.debug("CAMP LOCATION SERVICE DATA: %s", data)
         linked_location: LinkedLocation = LinkedLocation.objects.safe_get(
             id=data.get("id", None)
         )
@@ -29,6 +30,13 @@ class CampLocationService:
             )
 
             check.value.add(linked_location)
+
+        check.center_latitude = linked_location.center_latitude
+        check.center_longitude = linked_location.center_longitude
+        check.zoom = linked_location.zoom
+
+        check.full_clean()
+        check.save()
 
         existing_locations = [
             location.id for location in linked_location.locations.all()
@@ -49,21 +57,23 @@ class CampLocationService:
     def _create_linked_location(
         self, is_camp_location: bool = False, **data
     ) -> LinkedLocation:
-        linked_location = LinkedLocation()
+        instance = LinkedLocation()
 
-        linked_location.name = data.get("name", None)
-        linked_location.contact_name = data.get("contact_name", None)
-        linked_location.contact_phone = data.get("contact_phone", None)
-        linked_location.contact_email = data.get("contact_email", None)
-        linked_location.is_camp_location = is_camp_location
-        linked_location.center_latitude = data.get("center_latitude", None)
-        linked_location.center_longitude = data.get("center_longitude", None)
-        linked_location.zoom = data.get("zoom", None)
+        logger.debug("LINKED LOCATION DATA: %s", data)
 
-        linked_location.full_clean()
-        linked_location.save()
+        instance.name = data.get("name", None)
+        instance.contact_name = data.get("contact_name", None)
+        instance.contact_phone = data.get("contact_phone", None)
+        instance.contact_email = data.get("contact_email", None)
+        instance.is_camp_location = is_camp_location
+        instance.center_latitude = data.get("center_latitude", None)
+        instance.center_longitude = data.get("center_longitude", None)
+        instance.zoom = data.get("zoom", None)
 
-        return linked_location
+        instance.full_clean()
+        instance.save()
+
+        return instance
 
     def _update_linked_location(
         self, instance: LinkedLocation, is_camp_location: bool = False, **data
