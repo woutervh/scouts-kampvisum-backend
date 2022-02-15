@@ -29,7 +29,7 @@ class CampLocationService:
                 is_camp_location=is_camp_location, **data
             )
 
-            check.value.add(linked_location)
+            check.locations.add(linked_location)
 
         check.center_latitude = linked_location.center_latitude
         check.center_longitude = linked_location.center_longitude

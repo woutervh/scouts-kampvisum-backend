@@ -177,7 +177,7 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
     def get_value(obj: LinkedLocationCheck) -> List[dict]:
         data = dict()
 
-        data["is_camp_location"] = False
+        # data["is_camp_location"] = False
         data["center_latitude"] = obj.center_latitude
         data["center_longitude"] = obj.center_longitude
         data["zoom"] = obj.zoom
