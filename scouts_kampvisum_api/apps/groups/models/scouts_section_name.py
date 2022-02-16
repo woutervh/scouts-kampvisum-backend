@@ -47,8 +47,13 @@ class ScoutsSectionName(AbstractBaseModel):
     hidden = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ("name", "gender", "age_group")
         ordering = ["age_group"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "gender", "age_group"],
+                name="unique_name_gender_and_age_group",
+            )
+        ]
 
     def natural_key(self):
         logger.debug("NATURAL KEY CALLED")

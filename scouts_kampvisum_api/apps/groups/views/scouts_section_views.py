@@ -1,10 +1,12 @@
 import logging
 from typing import List
 
+from django.http.response import HttpResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from apps.groups.models import ScoutsSection
 from apps.groups.serializers import ScoutsSectionSerializer
@@ -57,6 +59,51 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         serializer = ScoutsSectionSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
+
+    @swagger_auto_schema(
+        request_body=ScoutsSectionSerializer,
+        responses={status.HTTP_200_OK: ScoutsSectionSerializer},
+    )
+    def partial_update(self, request, pk=None):
+        """
+        Updates an existing ScoutsSection object.
+        """
+        instance = ScoutsSection.objects.safe_get(pk=pk, raise_error=True)
+
+        serializer = ScoutsSectionSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        updated_instance = self.section_service.update_section(
+            request, instance=instance, **serializer.validated_data
+        )
+
+        output_serializer = ScoutsSectionSerializer(
+            updated_instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
+    )
+    def delete(self, request, pk=None):
+        """
+        Deletes a ScoutsSection instance by uuid
+        """
+        instance = ScoutsSection.objects.get(pk=pk)
+
+        if not instance:
+            logger.error("No Section found with id '%s'", pk)
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+        instance.delete()
+
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
     def list(self, request):

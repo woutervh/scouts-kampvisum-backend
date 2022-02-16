@@ -27,6 +27,7 @@ class ScoutsSectionNameManager(models.Manager):
         name = kwargs.get("name", None)
         gender = kwargs.get("gender", None)
         age_group = kwargs.get("age_group", None)
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
@@ -42,4 +43,10 @@ class ScoutsSectionNameManager(models.Manager):
             except:
                 pass
 
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate ScoutsSectionName instance with the provided params: (id: {}, (name: {}, gender: {}, age_group: {}))".format(
+                    pk, name, gender, age_group
+                )
+            )
         return None

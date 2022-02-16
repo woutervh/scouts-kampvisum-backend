@@ -45,15 +45,31 @@ class ScoutsSectionNameService:
         return instance
 
     def update_name(
-        self, request, instance: ScoutsSectionName, **fields
+        self,
+        request,
+        instance: ScoutsSectionName,
+        updated_instance: ScoutsSectionName = None,
+        **fields
     ) -> ScoutsSectionName:
         """
         Updates an existing SectionName object in the DB.
         """
 
-        instance.name = fields.get("name", instance.name)
-        instance.gender = fields.get("gender", instance.gender)
-        instance.age_group = fields.get("age_group", instance.age_group)
+        instance.name = (
+            updated_instance.name
+            if updated_instance
+            else fields.get("name", instance.name)
+        )
+        instance.gender = (
+            updated_instance.gender
+            if updated_instance
+            else fields.get("gender", instance.gender)
+        )
+        instance.age_group = (
+            updated_instance.age_group
+            if updated_instance
+            else fields.get("age_group", instance.age_group)
+        )
 
         instance.full_clean()
         instance.save()

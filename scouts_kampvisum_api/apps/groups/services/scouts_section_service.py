@@ -116,6 +116,29 @@ class ScoutsSectionService:
 
         return instance
 
+    def update_section(self, request, instance: ScoutsSection, **data) -> ScoutsSection:
+        # logger.debug("SCOUTS SECTION SERVICE UPDATE DATA: %s", data)
+        group_admin_id = data.get("group_admin_id", instance.group_admin_id)
+        name = self.section_name_service.update_name(
+            request,
+            instance=ScoutsSectionName.objects.safe_get(
+                id=data.get("name").id, raise_error=True
+            ),
+            updated_instance=data.get("name"),
+        )
+        instance = ScoutsSection.objects.safe_get(
+            group_admin_id=group_admin_id, name=name
+        )
+        instance.group_admin_id = group_admin_id
+        instance.name = name
+        instance.hidden = data.get("hidden", instance.hidden)
+        logger.debug("ok")
+        instance.full_clean()
+        instance.save()
+        logger.debug("hm")
+
+        return instance
+
     def _section_update(
         self,
         request=None,

@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -27,10 +28,26 @@ class ScoutsSectionManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        group_admin_id = kwargs.get("group_admin_id", None)
+        name = kwargs.get("name", None)
+        raise_error = kwargs.get("raise_error", False)
+
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
             except:
                 pass
 
+        if group_admin_id and name:
+            try:
+                return self.get_queryset().get(group_admin_id=group_admin_id, name=name)
+            except:
+                pass
+
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate ScoutsSection instance with the provided params: (pk: ({}))".format(
+                    pk
+                )
+            )
         return None

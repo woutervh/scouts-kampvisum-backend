@@ -85,22 +85,6 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionNameSerializer})
-    def list(self, request):
-        """
-        Retrieves a list of all existing ScoutsSectionName instances.
-        """
-
-        instances = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(instances)
-
-        if page is not None:
-            serializer = ScoutsSectionNameSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = ScoutsSectionNameSerializer(instances, many=True)
-            return Response(serializer.data)
-
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
@@ -117,3 +101,19 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         instance.delete()
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionNameSerializer})
+    def list(self, request):
+        """
+        Retrieves a list of all existing ScoutsSectionName instances.
+        """
+
+        instances = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(instances)
+
+        if page is not None:
+            serializer = ScoutsSectionNameSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = ScoutsSectionNameSerializer(instances, many=True)
+            return Response(serializer.data)

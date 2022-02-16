@@ -3,7 +3,7 @@ import logging
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
-from apps.groups.models import ScoutsSection
+from apps.groups.models import ScoutsSection, ScoutsSectionName
 from apps.groups.serializers import (
     ScoutsGroupTypeSerializer,
     ScoutsSectionNameSerializer,
@@ -33,38 +33,13 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         if isinstance(data, str):
-            instance = ScoutsSection.objects.safe_get(id=data)
-
-            # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", instance)
-
-            if not instance:
-                raise ValidationError(
-                    "Unable to locate scouts section with id {}".format(data)
-                )
-
-            return instance
+            return ScoutsSection.objects.safe_get(id=data, raise_error=True)
 
         group_type = data.get("group_type", None)
         if group_type:
             data["group_type"] = {"group_type": group_type}
 
-        name_data = data.get("name", None)
-        if name_data and isinstance(name_data, dict):
-            name_id = name_data.get("id", None)
-            name = name_data.get("name", None)
-            gender = name_data.get("gender", Gender.MIXED)
-            # age_group = name_data.get("age_group", AgeGroup.AGE_GROUP_UNKNOWN)
-            age_group = name_data.get("age_group", 0)
-
-            data["name"] = {
-                "id": name_id,
-                "name": name,
-                "gender": gender,
-                "age_group": age_group,
-            }
-
         # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
-
         data = super().to_internal_value(data)
 
         # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
