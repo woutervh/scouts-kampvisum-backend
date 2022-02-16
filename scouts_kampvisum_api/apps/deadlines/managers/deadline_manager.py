@@ -1,8 +1,7 @@
 import logging
 
 from django.db import models
-from django.db.models import Q
-from django.conf import settings
+from django.core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +19,7 @@ class DeadlineManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         parent = kwargs.get("parent", None)
         visum = kwargs.get("visum", None)
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
@@ -33,6 +33,12 @@ class DeadlineManager(models.Manager):
             except:
                 pass
 
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate Deadline instance with provided params (pk: {}, (parent: {}, visum: {}))".format(
+                    pk, parent, visum
+                )
+            )
         return None
 
 
@@ -49,6 +55,7 @@ class LinkedSubCategoryDeadlineManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         parent = kwargs.get("parent", None)
         visum = kwargs.get("visum", None)
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
@@ -61,6 +68,13 @@ class LinkedSubCategoryDeadlineManager(models.Manager):
                 return self.get_queryset().get(parent=parent, visum=visum)
             except:
                 pass
+
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate LinkedSubCategoryDeadline instance with provided params (pk: {}, (parent: {}, visum: {}))".format(
+                    pk, parent, visum
+                )
+            )
 
         return None
 
@@ -78,6 +92,7 @@ class LinkedCheckDeadlineManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         parent = kwargs.get("parent", None)
         visum = kwargs.get("visum", None)
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
@@ -90,6 +105,13 @@ class LinkedCheckDeadlineManager(models.Manager):
                 return self.get_queryset().get(parent=parent, visum=visum)
             except:
                 pass
+
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate LinkedCheckDeadline instance with provided params (pk: {}, (parent: {}, visum: {}))".format(
+                    pk, parent, visum
+                )
+            )
 
         return None
 
@@ -107,6 +129,7 @@ class MixedDeadlineManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         parent = kwargs.get("parent", None)
         visum = kwargs.get("visum", None)
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
@@ -119,5 +142,12 @@ class MixedDeadlineManager(models.Manager):
                 return self.get_queryset().get(parent=parent, visum=visum)
             except:
                 pass
+
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate MixedDeadline instance with provided params (pk: {}, (parent: {}, visum: {}))".format(
+                    pk, parent, visum
+                )
+            )
 
         return None

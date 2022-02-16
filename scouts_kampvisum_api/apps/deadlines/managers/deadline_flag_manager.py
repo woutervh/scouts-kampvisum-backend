@@ -1,6 +1,7 @@
 import logging
 
 from django.db import models
+from django.core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ class DeadlineFlagManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         parent = kwargs.get("parent", None)
         deadline = kwargs.get("deadline", None)
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
@@ -31,4 +33,10 @@ class DeadlineFlagManager(models.Manager):
             except:
                 pass
 
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate DeadlineFlag instance with provided params (id: {}, (parent: {}, deadline: {})".format(
+                    pk, parent, deadline
+                )
+            )
         return None

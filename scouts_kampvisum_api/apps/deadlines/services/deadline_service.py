@@ -332,6 +332,22 @@ class DeadlineService:
         return instance
 
     @transaction.atomic
+    def update_deadline_flag(
+        self, request, instance: DeadlineFlag, **data
+    ) -> DeadlineFlag:
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+
+        instance.flag = data.get("flag", instance.flag)
+        instance.updated_by = request.user
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
+
+    @transaction.atomic
     def link_to_visum(self, request, visum: CampVisum):
         camp_year = visum.category_set.parent.camp_year_category_set.camp_year
         camp_type = visum.category_set.parent.camp_type

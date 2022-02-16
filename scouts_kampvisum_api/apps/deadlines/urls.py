@@ -30,7 +30,22 @@ checks = DeadlineViewSet.as_view(
         "patch": "partial_update_linked_check_deadline",
     }
 )
+mixed_list = DeadlineViewSet.as_view(
+    {"post": "create_mixed_deadline", "get": "list_mixed_deadlines"}
+)
+mixed = DeadlineViewSet.as_view(
+    {
+        "get": "retrieve_mixed_deadline",
+        "patch": "partial_update_mixed_deadline",
+    }
+)
 visum = DeadlineViewSet.as_view({"get": "list_for_visum"})
+flags = DeadlineViewSet.as_view(
+    {
+        "get": "partial_update_deadline_flag",
+        "patch": "partial_update_deadline_flag",
+    }
+)
 
 urlpatterns = [
     path(
@@ -53,7 +68,18 @@ urlpatterns = [
         checks,
         name="checks",
     ),
+    path(
+        "deadlines/mixed/",
+        mixed_list,
+        name="mixed_list",
+    ),
+    path(
+        "deadlines/mixed/<uuid:deadline_id>",
+        mixed,
+        name="mixed",
+    ),
     path("deadlines/visum/<uuid:visum_id>", visum, name="visum"),
+    path("deadlines/flags/<uuid:deadline_flag_id>", flags, name="flags"),
 ]
 
 
