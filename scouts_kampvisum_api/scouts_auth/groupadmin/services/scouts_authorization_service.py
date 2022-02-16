@@ -7,7 +7,7 @@ from scouts_auth.auth.services import AuthorizationService
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsFunction
 from scouts_auth.groupadmin.services import GroupAdminMemberService
-from scouts_auth.groupadmin.utils import SettingsHelper
+from scouts_auth.groupadmin.settings import GroupadminSettings
 
 from scouts_auth.inuits.utils import GlobalSettingsUtil
 
@@ -37,12 +37,22 @@ class ScoutsAuthorizationService(AuthorizationService):
     DISTRICT_COMMISSIONER = "role_district_commissioner"
     ADMINISTRATOR = "role_administrator"
 
-    known_roles = [USER, SECTION_LEADER, GROUP_LEADER, DISTRICT_COMMISSIONER, ADMINISTRATOR]
+    known_roles = [
+        USER,
+        SECTION_LEADER,
+        GROUP_LEADER,
+        DISTRICT_COMMISSIONER,
+        ADMINISTRATOR,
+    ]
 
     service = GroupAdminMemberService()
 
-    def load_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        scouts_groups: List[AbstractScoutsGroup] = self.service.get_groups(active_user=user).scouts_groups
+    def load_user_scouts_groups(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> settings.AUTH_USER_MODEL:
+        scouts_groups: List[AbstractScoutsGroup] = self.service.get_groups(
+            active_user=user
+        ).scouts_groups
 
         user.scouts_groups = scouts_groups
 
@@ -50,7 +60,9 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         return user
 
-    def update_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
+    def update_user_scouts_groups(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> settings.AUTH_USER_MODEL:
         """
         Updates the authenticated user with the groups he/she belongs to.
 
@@ -63,16 +75,20 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         return user
 
-    def update_user_authorizations(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
+    def update_user_authorizations(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> settings.AUTH_USER_MODEL:
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
             user = self.add_user_as_admin(user)
 
         if user.has_role_district_commissioner():
-            user = self.add_user_to_group(user, ScoutsAuthorizationService.DISTRICT_COMMISSIONER)
+            user = self.add_user_to_group(
+                user, ScoutsAuthorizationService.DISTRICT_COMMISSIONER
+            )
 
-        if SettingsHelper.is_debug():
-            test_groups = SettingsHelper.get_test_groups()
+        if GroupadminSettings.is_debug():
+            test_groups = GroupadminSettings.get_test_groups()
             if any(group in user.get_group_names() for group in test_groups):
                 logger.debug(
                     "User %s is member of a test group and DEBUG is set to True, adding user as administrator",
@@ -83,10 +99,14 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         return user
 
-    def add_user_as_admin(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
+    def add_user_as_admin(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> settings.AUTH_USER_MODEL:
         return self.add_user_to_group(user, ScoutsAuthorizationService.ADMINISTRATOR)
 
-    def add_user_to_group(self, user: settings.AUTH_USER_MODEL, role: str) -> settings.AUTH_USER_MODEL:
+    def add_user_to_group(
+        self, user: settings.AUTH_USER_MODEL, role: str
+    ) -> settings.AUTH_USER_MODEL:
         if role not in self.known_roles:
             raise ValueError("Role " + role + " is not a known scouts role")
 
@@ -94,18 +114,27 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         return user
 
-    def load_user_functions(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        functions: List[AbstractScoutsFunction] = self.service.get_functions(active_user=user).functions
+    def load_user_functions(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> settings.AUTH_USER_MODEL:
+        functions: List[AbstractScoutsFunction] = self.service.get_functions(
+            active_user=user
+        ).functions
         for user_function in user.functions:
             for function in functions:
                 if function.group_admin_id == user_function.function:
                     for grouping in function.groupings:
-                        if grouping.name == SettingsHelper.get_section_leader_identifier():
+                        if (
+                            grouping.name
+                            == GroupadminSettings.get_section_leader_identifier()
+                        ):
                             logger.debug(
                                 "Setting user as section leader for group %s",
                                 user_function.scouts_group.group_admin_id,
                             )
-                            user_function.groups_section_leader[user_function.scouts_group.group_admin_id] = True
+                            user_function.groups_section_leader[
+                                user_function.scouts_group.group_admin_id
+                            ] = True
 
         user.full_clean()
         user.save()

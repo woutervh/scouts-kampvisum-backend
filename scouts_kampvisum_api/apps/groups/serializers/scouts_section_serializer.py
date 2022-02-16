@@ -1,16 +1,12 @@
 import logging
 
-from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
-from apps.groups.models import ScoutsSection, ScoutsSectionName
+from apps.groups.models import ScoutsSection
 from apps.groups.serializers import (
     ScoutsGroupTypeSerializer,
     ScoutsSectionNameSerializer,
 )
-
-# from scouts_auth.groupadmin.scouts import AgeGroup
-from scouts_auth.inuits.models.enums import Gender
 
 
 logger = logging.getLogger(__name__)

@@ -12,7 +12,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsLink,
     AbstractScoutsGroup,
 )
-from scouts_auth.groupadmin.utils import SettingsHelper
+from scouts_auth.groupadmin.settings import GroupadminSettings
 
 from scouts_auth.inuits.models import Gender
 from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
@@ -131,7 +131,7 @@ class ScoutsUser(User):
         """
         if any(
             name in self.get_group_names()
-            for name in SettingsHelper.get_administrator_groups()
+            for name in GroupadminSettings.get_administrator_groups()
         ):
             self.is_administrator = True
         return self.is_administrator

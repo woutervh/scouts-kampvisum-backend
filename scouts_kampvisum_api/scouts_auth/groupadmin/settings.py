@@ -9,7 +9,7 @@ from django.utils import timezone
 logger = logging.getLogger(__name__)
 
 
-class SettingsHelper:
+class GroupadminSettings:
     """Convenience class with static methods to easily distinguish what settings are required for dependent packages."""
 
     @staticmethod
@@ -51,6 +51,10 @@ class SettingsHelper:
         return attr
 
     @staticmethod
+    def include_inactive_members_in_search(default_value=False):
+        pass
+
+    @staticmethod
     def get_activity_epoch(default_value=None):
         # The "activity epoch" after which a member is deemed a past active member
         return getattr(settings, "ACTIVITY_EPOCH", 3)
@@ -65,7 +69,7 @@ class SettingsHelper:
 
     @staticmethod
     def get_camp_registration_epoch_date(default_value=None):
-        month, day = SettingsHelper.get_camp_registration_epoch(default_value)
+        month, day = GroupadminSettings.get_camp_registration_epoch(default_value)
 
         return datetime.datetime(timezone.now().date().year, month, day).date()
 
@@ -79,7 +83,7 @@ class SettingsHelper:
 
     @staticmethod
     def get_responsibility_epoch_date(default_value=None):
-        month, day = SettingsHelper.get_responsibility_epoch(default_value)
+        month, day = GroupadminSettings.get_responsibility_epoch(default_value)
 
         return datetime.datetime(timezone.now().date().year, month, day).date()
 

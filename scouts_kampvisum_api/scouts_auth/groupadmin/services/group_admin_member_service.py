@@ -1,7 +1,6 @@
 import logging
 from typing import List
 from datetime import date, datetime, timedelta
-from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 
@@ -10,7 +9,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsMemberSearchResponse,
 )
 from scouts_auth.groupadmin.services import GroupAdmin
-from scouts_auth.groupadmin.utils import SettingsHelper
+from scouts_auth.groupadmin.settings import GroupadminSettings
 from scouts_auth.inuits.models import GenderHelper
 
 
@@ -110,7 +109,7 @@ class GroupAdminMemberService(GroupAdmin):
         results = []
         # The "activity epoch" after which a member is deemed a past active member
         activity_epoch = self._calculate_activity_epoch(
-            datetime.now(), SettingsHelper.get_activity_epoch()
+            datetime.now(), GroupadminSettings.get_activity_epoch()
         )
 
         for partial_member in response.members:

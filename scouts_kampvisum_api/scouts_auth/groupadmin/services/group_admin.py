@@ -2,7 +2,6 @@ import logging, requests
 
 from django.conf import settings
 from django.http import Http404
-from rest_framework import status
 
 # from drf_yasg2.utils import swagger_auto_schema
 
@@ -28,7 +27,7 @@ from scouts_auth.groupadmin.serializers import (
     AbstractScoutsMemberFrontendSerializer,
 )
 
-from scouts_auth.groupadmin.utils import SettingsHelper
+from scouts_auth.groupadmin.settings import GroupadminSettings
 
 
 logger = logging.getLogger(__name__)
@@ -37,32 +36,36 @@ logger = logging.getLogger(__name__)
 class GroupAdmin:
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/
-    url_allowed_calls = SettingsHelper.get_group_admin_allowed_calls_endpoint() + "/"
-    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep
-    url_groups = SettingsHelper.get_group_admin_group_endpoint()
-    url_groups_vga = SettingsHelper.get_group_admin_group_endpoint() + "/vga"
-    url_group = SettingsHelper.get_group_admin_group_endpoint() + "/{}"
-    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep={group_group_admin_id_start_fragment}
-    url_functions = SettingsHelper.get_group_admin_functions_endpoint()
-    url_functions_for_group = (
-        SettingsHelper.get_group_admin_functions_endpoint() + "?groep={}"
+    url_allowed_calls = (
+        GroupadminSettings.get_group_admin_allowed_calls_endpoint() + "/"
     )
-    url_function = SettingsHelper.get_group_admin_functions_endpoint() + "/{}"
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep
+    url_groups = GroupadminSettings.get_group_admin_group_endpoint()
+    url_groups_vga = GroupadminSettings.get_group_admin_group_endpoint() + "/vga"
+    url_group = GroupadminSettings.get_group_admin_group_endpoint() + "/{}"
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep={group_group_admin_id_start_fragment}
+    url_functions = GroupadminSettings.get_group_admin_functions_endpoint()
+    url_functions_for_group = (
+        GroupadminSettings.get_group_admin_functions_endpoint() + "?groep={}"
+    )
+    url_function = GroupadminSettings.get_group_admin_functions_endpoint() + "/{}"
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
-    url_member_profile = SettingsHelper.get_group_admin_profile_endpoint()
+    url_member_profile = GroupadminSettings.get_group_admin_profile_endpoint()
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst
-    url_member_list = SettingsHelper.get_group_admin_member_list_endpoint()
+    url_member_list = GroupadminSettings.get_group_admin_member_list_endpoint()
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}
-    url_member_info = SettingsHelper.get_group_admin_member_detail_endpoint() + "/{}"
+    url_member_info = (
+        GroupadminSettings.get_group_admin_member_detail_endpoint() + "/{}"
+    )
     url_member_medical_flash_card = (
-        SettingsHelper.get_group_admin_member_detail_endpoint() + "/steekkaart"
+        GroupadminSettings.get_group_admin_member_detail_endpoint() + "/steekkaart"
     )
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/zoeken?query={query}
     url_member_search = (
-        SettingsHelper.get_group_admin_member_search_endpoint() + "?query={}"
+        GroupadminSettings.get_group_admin_member_search_endpoint() + "?query={}"
     )
     url_member_search_similar = (
-        SettingsHelper.get_group_admin_member_search_endpoint()
+        GroupadminSettings.get_group_admin_member_search_endpoint()
         + "/gelijkaardig?voornaam={}&achternaam={}"
     )
 

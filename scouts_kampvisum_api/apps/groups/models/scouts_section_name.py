@@ -5,7 +5,6 @@ from safedelete.models import HARD_DELETE
 
 from apps.groups.managers import ScoutsSectionNameManager
 
-# from scouts_auth.groupadmin.scouts import AgeGroup
 from scouts_auth.inuits.models import AbstractBaseModel, Gender
 from scouts_auth.inuits.models.fields import (
     RequiredCharField,
@@ -40,9 +39,6 @@ class ScoutsSectionName(AbstractBaseModel):
         default=Gender.UNKNOWN,
         max_length=1,
     )
-    # age_group = DefaultIntegerField(
-    #     choices=AgeGroup.choices, default=AgeGroup.AGE_GROUP_UNKNOWN
-    # )
     age_group = DefaultIntegerField(default=0)
     hidden = models.BooleanField(default=False)
 
@@ -60,7 +56,6 @@ class ScoutsSectionName(AbstractBaseModel):
         if not self.gender:
             self.gender = Gender.UNKNOWN
         if not self.age_group:
-            # self.age_group = AgeGroup.AGE_GROUP_UNKNOWN
             self.age_group = 0
         return (self.name, self.gender, self.age_group)
 

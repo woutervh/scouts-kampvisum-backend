@@ -317,6 +317,8 @@ CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 # SCOUTS                                                                       #
 #                                                                              #
 # ############################################################################ #
+SCOUTS_YEAR_START = env.str("SCOUTS_YEAR_END", "09-01")
+SCOUTS_YEAR_END = env.str("SCOUTS_YEAR_END", "09-01")
 ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
 CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "05-01")
 RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-01")
