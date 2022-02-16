@@ -43,10 +43,17 @@ class VisumDeadlineSerializer(DeadlineSerializer):
                 check_state = CheckState.UNCHECKED
                 break
 
+        flag_state = CheckState.CHECKED
+        for flag in data.get("flags", []):
+            if not flag:
+                flag_state = CheckState.UNCHECKED
+                break
+
         data["state"] = (
             CheckState.CHECKED
             if sub_category_state == CheckState.CHECKED
             and check_state == CheckState.CHECKED
+            and flag_state == CheckState.CHECKED
             else CheckState.UNCHECKED
         )
 
