@@ -14,5 +14,7 @@ from .django_shorthand_model_fields import (
     OptionalDateTimeField,
     ListField,
     OptionalForeignKey,
+    OptionalEmailField,
+    RequiredEmailField,
 )
 from .simple_choice_field import SimpleChoiceField

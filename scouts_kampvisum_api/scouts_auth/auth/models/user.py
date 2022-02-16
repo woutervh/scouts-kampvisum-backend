@@ -1,10 +1,11 @@
 import logging, uuid
-from datetime import datetime
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
+
+from scouts_auth.inuits.models.fields import OptionalEmailField
 
 
 logger = logging.getLogger(__name__)
@@ -14,7 +15,9 @@ class User(AbstractUser):
     #
     # PRIMARY KEY (uuid)
     #
-    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
+    id = models.UUIDField(
+        primary_key=True, editable=False, default=uuid.uuid4, unique=True
+    )
 
     #
     # Fields inherited from django.contrib.auth.models.AbstractUser
@@ -30,7 +33,7 @@ class User(AbstractUser):
     )
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
-    email = models.EmailField(blank=True)
+    email = OptionalEmailField(blank=True)
     is_staff = models.BooleanField(
         default=False,
         help_text="Designates whether the user can log into this admin site.",
@@ -88,7 +91,9 @@ class User(AbstractUser):
             str(self.date_joined),
             str(self.last_login),
             str(self.is_superuser),
-            ", ".join(self.groups) if self.groups and isinstance(self.groups, list) else "[]",
+            ", ".join(self.groups)
+            if self.groups and isinstance(self.groups, list)
+            else "[]",
             "[]",
             # ", ".join((permission.codename + "(" + permission.name + ")") for permission in self.user_permissions),
         )

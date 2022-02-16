@@ -8,6 +8,7 @@ from scouts_auth.inuits.models.fields import DatetypeAwareDateField
 
 
 DEFAULT_CHAR_FIELD_LENGTH = 128
+DEFAULT_EMAIL_FIELD_LENGTH = 254
 
 
 class OptionalCharField(models.CharField):
@@ -181,31 +182,6 @@ class RequiredIntegerField(models.IntegerField):
         super().__init__(*args, **kwargs)
 
 
-class OptionalEmailField(OptionalCharField):
-    """
-    Initializes a models.EmailField as optional.
-
-    This is equivalent to setting a models.EmailField as such:
-    some_optional_email_field = models.EmailField(
-        blank=True,
-    )
-    If a default value is passed, it is discarded.
-
-    @see https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.Field.null
-    """
-
-    def __init__(self, *args, **kwargs):
-        if "default" in kwargs:
-            default_value = kwargs.pop("default", None)
-            if default_value is not None and len(default_value.strip()) > 0:
-                warning = "A default value '{}' was passed to {} and was discarded. Use models.EmailField if this field needs a default.".format(
-                    default_value, self.__class__.__name__
-                )
-                warnings.warn(warning)
-        kwargs["blank"] = True
-        super().__init__(*args, **kwargs)
-
-
 class OptionalDateField(DatetypeAwareDateField):
     """
     Initializes a models.DateField as optional.
@@ -332,4 +308,47 @@ class OptionalForeignKey(models.ForeignKey):
     def __init__(self, *args, **kwargs):
         kwargs["blank"] = True
         kwargs["null"] = True
+        super().__init__(*args, **kwargs)
+
+
+class OptionalEmailField(models.EmailField):
+    """
+    Initializes a models.EmailField as optional.
+
+    This is equivalent to setting a models.EmailField as such:
+    some_optional_email_field = models.EmailField(
+        blank=True,
+    )
+    If a default value is passed, it is discarded.
+    If max_length is not specified, it is set to 254.
+
+    @see https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.Field.null
+    """
+
+    def __init__(self, *args, **kwargs):
+        if "max_length" not in kwargs:
+            kwargs["max_length"] = DEFAULT_EMAIL_FIELD_LENGTH
+        kwargs["blank"] = True
+        kwargs["null"] = True
+        kwargs["default"] = ""
+        super().__init__(*args, **kwargs)
+
+
+class RequiredEmailField(models.EmailField):
+    """
+    Initializes a models.CharField as required.
+
+    This is equivalent to setting a models.CharField as such:
+    some_required_char_field = models.CharField(
+        blank=False,
+    )
+
+    @see https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.Field.null
+    """
+
+    def __init__(self, *args, **kwargs):
+        if "max_length" not in kwargs:
+            kwargs["max_length"] = DEFAULT_EMAIL_FIELD_LENGTH
+        kwargs["blank"] = False
+        kwargs["null"] = False
         super().__init__(*args, **kwargs)
