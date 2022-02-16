@@ -126,16 +126,17 @@ class ScoutsSectionService:
             ),
             updated_instance=data.get("name"),
         )
+
         instance = ScoutsSection.objects.safe_get(
-            group_admin_id=group_admin_id, name=name
+            id=instance.id, group_admin_id=group_admin_id, name=name
         )
+
         instance.group_admin_id = group_admin_id
         instance.name = name
         instance.hidden = data.get("hidden", instance.hidden)
-        logger.debug("ok")
+
         instance.full_clean()
         instance.save()
-        logger.debug("hm")
 
         return instance
 
