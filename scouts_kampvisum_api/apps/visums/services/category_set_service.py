@@ -12,6 +12,7 @@ from apps.visums.models import (
 from apps.visums.services import CampYearCategorySetService, CategoryService
 
 from scouts_auth.groupadmin.services import GroupAdmin
+from scouts_auth.inuits.utils import ListUtils
 
 
 logger = logging.getLogger(__name__)
@@ -29,11 +30,16 @@ class CategorySetService:
     def get_default_category_set(
         self, request, camp_year: CampYear, camp_types: List[str] = None
     ) -> CategorySet:
+        default_camp_type = [CampType.objects.get_default()]
+
         if camp_types is None or len(camp_types) == 0:
             logger.warn("No camp type given, getting default CampType instance")
-            camp_types = [CampType.objects.get_default()]
+            camp_types = default_camp_type
         else:
-            camp_types = [CampType.objects.get(name=name) for name in camp_types]
+            camp_types = ListUtils.concatenate_unique_lists(
+                default_camp_type,
+                [CampType.objects.get(name=name) for name in camp_types],
+            )
 
         logger.debug(
             "Looking for category sets for camp year %s and camp types %s",

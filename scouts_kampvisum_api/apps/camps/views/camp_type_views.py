@@ -3,15 +3,14 @@ import logging
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from apps.camps.models import CampType
 from apps.camps.services import CampTypeService
 from apps.camps.serializers import CampTypeSerializer
+from apps.camps.filters import CampTypeFilter
 
 
 logger = logging.getLogger(__name__)
@@ -23,7 +22,8 @@ class CampTypeViewSet(viewsets.GenericViewSet):
     """
 
     serializer_class = CampTypeSerializer
-    queryset = CampType.objects.all()
+    filterset_class = CampTypeFilter
+    queryset = CampType.objects.all().selectable()
 
     camp_type_service = CampTypeService()
 

@@ -10,6 +10,9 @@ class CampTypeQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def selectable(self, *args, **kwargs):
+        return self.filter(is_default=False)
+
 
 class CampTypeManager(models.Manager):
     """
