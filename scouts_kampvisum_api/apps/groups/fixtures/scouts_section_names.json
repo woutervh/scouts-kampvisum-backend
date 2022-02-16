@@ -4,7 +4,7 @@
 		"fields": {
 			"name": "kapoenen",
 			"gender": "M",
-			"age_group": 10
+			"age_group": 6
 		}
 	},
 	{
@@ -12,7 +12,7 @@
 		"fields": {
 			"name": "elfjes",
 			"gender": "F",
-			"age_group": 10
+			"age_group": 6
 		}
 	},
 	{
@@ -20,7 +20,7 @@
 		"fields": {
 			"name": "zeehondjes",
 			"gender": "I",
-			"age_group": 10
+			"age_group": 6
 		}
 	},
 	{
@@ -28,7 +28,7 @@
 		"fields": {
 			"name": "welpen",
 			"gender": "M",
-			"age_group": 20
+			"age_group": 9
 		}
 	},
 	{
@@ -36,7 +36,7 @@
 		"fields": {
 			"name": "kabouters",
 			"gender": "F",
-			"age_group": 20
+			"age_group": 9
 		}
 	},
 	{
@@ -44,7 +44,7 @@
 		"fields": {
 			"name": "zeewelpen",
 			"gender": "I",
-			"age_group": 20
+			"age_group": 9
 		}
 	},
 	{
@@ -52,7 +52,7 @@
 		"fields": {
 			"name": "wouters",
 			"gender": "I",
-			"age_group": 20
+			"age_group": 9
 		}
 	},
 	{
@@ -60,7 +60,7 @@
 		"fields": {
 			"name": "kawellen",
 			"gender": "I",
-			"age_group": 20
+			"age_group": 9
 		}
 	},
 	{
@@ -68,7 +68,7 @@
 		"fields": {
 			"name": "jongverkenners",
 			"gender": "M",
-			"age_group": 30
+			"age_group": 11
 		}
 	},
 	{
@@ -76,7 +76,7 @@
 		"fields": {
 			"name": "jonggidsen",
 			"gender": "F",
-			"age_group": 30
+			"age_group": 11
 		}
 	},
 	{
@@ -84,7 +84,7 @@
 		"fields": {
 			"name": "scheepsmakkers",
 			"gender": "I",
-			"age_group": 30
+			"age_group": 11
 		}
 	},
 	{
@@ -92,7 +92,7 @@
 		"fields": {
 			"name": "jonggivers",
 			"gender": "I",
-			"age_group": 30
+			"age_group": 11
 		}
 	},
 	{
@@ -100,7 +100,7 @@
 		"fields": {
 			"name": "verkenners",
 			"gender": "M",
-			"age_group": 40
+			"age_group": 14
 		}
 	},
 	{
@@ -108,7 +108,7 @@
 		"fields": {
 			"name": "gidsen",
 			"gender": "F",
-			"age_group": 40
+			"age_group": 14
 		}
 	},
 	{
@@ -116,7 +116,7 @@
 		"fields": {
 			"name": "zeeverkenners",
 			"gender": "I",
-			"age_group": 40
+			"age_group": 14
 		}
 	},
 	{
@@ -124,7 +124,7 @@
 		"fields": {
 			"name": "givers",
 			"gender": "I",
-			"age_group": 40
+			"age_group": 14
 		}
 	},
 	{
@@ -132,7 +132,7 @@
 		"fields": {
 			"name": "jins",
 			"gender": "I",
-			"age_group": 50
+			"age_group": 17
 		}
 	},
 	{
@@ -140,7 +140,7 @@
 		"fields": {
 			"name": "loodsen",
 			"gender": "I",
-			"age_group": 50
+			"age_group": 17
 		}
 	},
 	{
