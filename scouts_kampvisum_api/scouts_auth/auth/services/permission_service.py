@@ -4,7 +4,7 @@ from typing import List
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ObjectDoesNotExist
 
-from scouts_auth.auth.utils import SettingsHelper
+from scouts_auth.auth.settings import OIDCSettings
 
 
 logger = logging.getLogger(__name__)
@@ -23,8 +23,8 @@ class PermissionService:
         # After a makemigrations and migrate, you can then specify the particular permissions that apply in the viewset
         import importlib.resources as pkg_resources
 
-        roles_package = SettingsHelper.get_authorization_roles_config_package()
-        roles_yaml = SettingsHelper.get_authorization_roles_config_yaml()
+        roles_package = OIDCSettings.get_authorization_roles_config_package()
+        roles_yaml = OIDCSettings.get_authorization_roles_config_yaml()
 
         logger.debug(
             "SCOUTS_AUTH: importing roles and permissions from %s/%s",
@@ -42,9 +42,13 @@ class PermissionService:
                 group: Group = Group.objects.get_or_create(name=group_name)[0]
                 group_permissions = group.permissions.all()
 
-                permissions = self._purge_group_permissions(group, group_permissions, permissions)
+                permissions = self._purge_group_permissions(
+                    group, group_permissions, permissions
+                )
 
-                logger.debug("Adding %d PERMISSIONS to group %s", len(permissions), group_name)
+                logger.debug(
+                    "Adding %d PERMISSIONS to group %s", len(permissions), group_name
+                )
                 for permission in permissions:
                     self._add_permission_by_name(
                         group,
@@ -70,7 +74,11 @@ class PermissionService:
         for permission in permissions:
             permission_parts = permission.split(".")
             parsed_permissions.append(
-                {"permission": permission, "codename": permission_parts[1], "app_label": permission_parts[0]}
+                {
+                    "permission": permission,
+                    "codename": permission_parts[1],
+                    "app_label": permission_parts[0],
+                }
             )
 
         # Remove group permissions that have been revoked and keep only new permissions
@@ -80,7 +88,8 @@ class PermissionService:
             for parsed_permission in parsed_permissions:
                 if (
                     parsed_permission.get("codename") == group_permission.codename
-                    and parsed_permission.get("app_label") == group_permission.content_type.app_label
+                    and parsed_permission.get("app_label")
+                    == group_permission.content_type.app_label
                 ):
                     # The group already has this permission, remove it from the list
                     remove_permissions.append(parsed_permission)
@@ -103,11 +112,18 @@ class PermissionService:
         # Return a list of permissions
         return parsed_permissions
 
-    def _add_permission_by_name(self, group: Group, permission: str, codename: str, app_label: str):
+    def _add_permission_by_name(
+        self, group: Group, permission: str, codename: str, app_label: str
+    ):
         try:
-            permission = Permission.objects.get(codename=codename, content_type__app_label=app_label)
+            permission = Permission.objects.get(
+                codename=codename, content_type__app_label=app_label
+            )
             group.permissions.add(permission)
         except ObjectDoesNotExist:
             logger.error(
-                "Permission %s with codename %s doesn't exist for app_label %s", permission, codename, app_label
+                "Permission %s with codename %s doesn't exist for app_label %s",
+                permission,
+                codename,
+                app_label,
             )

@@ -11,7 +11,7 @@ from django.contrib.auth.models import Group
 from rest_framework import exceptions
 
 from scouts_auth.auth.models import User
-from scouts_auth.auth.utils import SettingsHelper
+from scouts_auth.auth.settings import OIDCSettings
 from scouts_auth.auth.signals import ScoutsAuthSignalSender
 
 
@@ -35,7 +35,7 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         )
 
         user_response = requests.get(
-            SettingsHelper.get_oidc_op_user_endpoint(),
+            OIDCSettings.get_oidc_op_user_endpoint(),
             headers={"Authorization": "Bearer {0}".format(access_token)},
             verify=self.get_settings("OIDC_VERIFY_SSL", True),
             timeout=self.get_settings("OIDC_TIMEOUT", None),

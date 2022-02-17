@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django.conf import settings
 
-from scouts_auth.auth.utils import SettingsHelper
+from scouts_auth.auth.settings import OIDCSettings
 from scouts_auth.auth.signals import ScoutsAuthSignalSender
 from scouts_auth.groupadmin.services import GroupAdmin
 
@@ -13,9 +13,9 @@ logger = logging.getLogger(__name__)
 
 class OIDCService:
 
-    oidc_endpoint = SettingsHelper.get_oidc_op_token_endpoint()
-    oidc_rp_client_id = SettingsHelper.get_oidc_rp_client_id()
-    oidc_rp_client_secret = SettingsHelper.get_oidc_rp_client_secret()
+    oidc_endpoint = OIDCSettings.get_oidc_op_token_endpoint()
+    oidc_rp_client_id = OIDCSettings.get_oidc_rp_client_id()
+    oidc_rp_client_secret = OIDCSettings.get_oidc_rp_client_secret()
 
     service = GroupAdmin()
 
@@ -31,7 +31,9 @@ class OIDCService:
 
         return self.service.post(self.oidc_endpoint, payload)
 
-    def get_tokens_by_refresh_token(self, user: settings.AUTH_USER_MODEL, refresh_token: str) -> dict:
+    def get_tokens_by_refresh_token(
+        self, user: settings.AUTH_USER_MODEL, refresh_token: str
+    ) -> dict:
         payload = {
             "refresh_token": refresh_token,
             "grant_type": "refresh_token",
