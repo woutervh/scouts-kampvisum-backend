@@ -21,7 +21,6 @@ class ScoutsSection(AbstractBaseModel):
     objects = ScoutsSectionManager()
 
     group_admin_id = RequiredCharField(max_length=64)
-    group_type = models.ForeignKey(ScoutsGroupType, on_delete=models.CASCADE)
     name = models.ForeignKey(ScoutsSectionName, on_delete=models.DO_NOTHING)
     hidden = models.BooleanField(default=False)
 

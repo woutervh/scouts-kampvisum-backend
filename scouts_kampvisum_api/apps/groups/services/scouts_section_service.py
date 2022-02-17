@@ -33,7 +33,6 @@ class ScoutsSectionService:
         request=None,
         user: settings.AUTH_USER_MODEL = None,
         group_admin_id: str = None,
-        group_type: str = None,
         name: ScoutsSectionName = None,
         hidden: bool = False,
     ) -> ScoutsSection:
@@ -104,8 +103,7 @@ class ScoutsSectionService:
 
         instance = ScoutsSection()
 
-        instance.group_admin_id = group.group_admin_id
-        instance.group_type = ScoutsGroupType.objects.get(group_type=group.type)
+        instance.group_group_admin_id = group.group_admin_id
         instance.name = self.section_name_service.get_or_create_name(
             request=request, section_name=name
         )
@@ -189,10 +187,7 @@ class ScoutsSectionService:
 
             # @TODO update if necessary
             logger.debug(
-                "Found %d SECTIONS to link to group %s with type %s",
-                sections.count(),
-                group.name,
-                group.type,
+                "Found %d SECTIONS to link to group %ss", sections.count(), group.name
             )
             if sections.count() == 0:
                 group_type = ScoutsGroupType.objects.get(group_type=group.type)

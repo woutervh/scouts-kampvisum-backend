@@ -17,7 +17,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
     Serializes a ScoutsSection object for use in camp visum views.
     """
 
-    group_type = ScoutsGroupTypeSerializer()
+    # group_type = ScoutsGroupTypeSerializer()
     name = ScoutsSectionNameSerializer()
     hidden = serializers.BooleanField(default=False)
 
@@ -31,11 +31,6 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         if isinstance(data, str):
             return ScoutsSection.objects.safe_get(id=data, raise_error=True)
 
-        group_type = data.get("group_type", None)
-        if group_type:
-            data["group_type"] = {"group_type": group_type}
-
-        # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
         data = super().to_internal_value(data)
 
         # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
