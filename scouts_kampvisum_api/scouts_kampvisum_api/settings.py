@@ -128,6 +128,11 @@ LOGGING = {
             "level": LOGGING_LEVEL_ROOT,
             "propagate": False,
         },
+        "scouts_auth.groupadmin": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
         "apps": {
             "handlers": ["console"],
             "level": LOGGING_LEVEL,
@@ -319,6 +324,9 @@ CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 # ############################################################################ #
 SCOUTS_YEAR_START = env.str("SCOUTS_YEAR_END", "09-01")
 SCOUTS_YEAR_END = env.str("SCOUTS_YEAR_END", "09-01")
+INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool(
+    "INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", False
+)
 ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
 CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "05-01")
 RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-01")

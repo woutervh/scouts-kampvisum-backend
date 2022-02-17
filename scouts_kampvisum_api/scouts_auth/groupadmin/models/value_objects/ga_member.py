@@ -35,7 +35,8 @@ class AbstractScoutsMemberPersonalData(AbstractNonModel):
         )
         self.phone_number = phone_number
 
-        # super().__init__([], {})
+    def has_gender(self):
+        return self.gender and GenderHelper.parse_gender(self.gender) != Gender.UNKNOWN
 
     def __str__(self):
         return "gender({}), phone_number({})".format(self.gender, self.phone_number)
@@ -151,6 +152,9 @@ class AbstractScoutsMember(AbstractNonModel):
     @property
     def gender(self):
         return self.personal_data.gender
+
+    def has_gender(self):
+        return self.personal_data.has_gender()
 
     @property
     def phone_number(self):

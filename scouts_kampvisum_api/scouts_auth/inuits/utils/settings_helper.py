@@ -14,6 +14,18 @@ class SettingsHelper:
         )
 
     @staticmethod
+    def get_bool(attribute_name: str, attribute_default_value: bool = False) -> bool:
+        return bool(
+            SettingsHelper.get_attribute(attribute_name, attribute_default_value)
+        )
+
+    @staticmethod
+    def get_int(attribute_name: str, attribute_default_value: int = -1) -> int:
+        return int(
+            SettingsHelper.get_attribute(attribute_name, attribute_default_value)
+        )
+
+    @staticmethod
     def get_list(attribute_name: str, attribute_default_value: str = None) -> list:
         value = SettingsHelper.get_attribute(attribute_name, attribute_default_value)
 
@@ -24,10 +36,4 @@ class SettingsHelper:
 
         raise ValidationError(
             "Expected a list, but got a {}".format(type(value).__class__.__name__)
-        )
-
-    @staticmethod
-    def get_bool(attribute_name: str, attribute_default_value: bool = False) -> bool:
-        return bool(
-            SettingsHelper.get_attribute(attribute_name, attribute_default_value)
         )

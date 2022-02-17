@@ -3,7 +3,6 @@ import logging
 from typing import List
 
 from django.core.exceptions import ValidationError
-from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
@@ -16,8 +15,8 @@ from apps.participants.filters import InuitsParticipantFilter
 from apps.participants.services import InuitsParticipantService
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
-from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
 from scouts_auth.groupadmin.services import GroupAdminMemberService
+from scouts_auth.groupadmin.settings import GroupadminSettings
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +107,10 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def list(self, request):
-        return self._list(request=request)
+        return self._list(
+            request=request,
+            include_inactive=GroupadminSettings.include_inactive_members_in_search(),
+        )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def list_participants(self, request):
@@ -118,13 +120,6 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         output_serializer = InuitsParticipantSerializer(participants, many=True)
 
         return Response(output_serializer.data)
-
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: InuitsParticipantSerializer},
-    )
-    @action(methods=["get"], detail=False, url_path="/inactive")
-    def list_with_previous_members(self, request):
-        return self._list(request=request, include_inactive=True)
 
     @action(methods=["get"], detail=False)
     def list_scouts_members(self, request):
@@ -153,12 +148,14 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             raise ValidationError("Url param 'term' is a required filter")
 
         logger.debug(
-            "Searching for %s with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s)",
+            "Searching for %s with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s), include_inactive (%s), only_scouts_members(%s)",
             search_term,
             group_group_admin_id,
             min_age,
             max_age,
             gender,
+            include_inactive,
+            only_scouts_members,
         )
 
         members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
