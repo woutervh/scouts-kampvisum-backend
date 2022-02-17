@@ -1060,7 +1060,7 @@
         "fields": {
             "name": "participants_leaders_estimate",
             "sub_category": [
-                "members",
+                "leaders",
                 [
                     "members_leaders",
                     2022
@@ -1129,7 +1129,7 @@
         "fields": {
             "name": "participants_cooks_estimate",
             "sub_category": [
-                "members",
+                "cooks",
                 [
                     "members_leaders",
                     2022
