@@ -17,6 +17,5 @@ class CampVisum(AbstractBaseModel):
         LinkedCategorySet, on_delete=models.CASCADE, related_name="visum"
     )
 
-    class Meta:
-        # ordering = ["camp__sections__name__age_group"]
-        pass
+    # class Meta:
+    #     ordering = ["camp__sections__name__age_group"]

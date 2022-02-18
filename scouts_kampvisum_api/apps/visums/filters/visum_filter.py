@@ -1,4 +1,4 @@
-import logging, uuid
+import logging
 
 from django_filters import rest_framework as filters
 from django.db.models import Q
@@ -40,7 +40,7 @@ class CampVisumFilter(filters.FilterSet):
                     Q(camp__sections__group_group_admin_id=group_admin_id),
                 )
                 # .order_by("camp__sections__name__age_group")
-                # .distinct("camp__pk")
+                # .distinct("camp__sections__name__age_group")
                 .distinct()
             )
         if year:
@@ -48,7 +48,7 @@ class CampVisumFilter(filters.FilterSet):
             return (
                 parent.filter(camp__year__year=year)
                 # .order_by("camp__sections__name__age_group")
-                # .distinct("camp__pk")
+                # .distinct("camp__sections__name__age_group")
                 .distinct()
             )
         if group_admin_id:
@@ -56,7 +56,7 @@ class CampVisumFilter(filters.FilterSet):
             result = (
                 parent.filter(Q(camp__sections__group_group_admin_id=group_admin_id))
                 # .order_by("camp__sections__name__age_group")
-                # .distinct("camp__pk")
+                # .distinct("camp__sections__name__age_group")
                 .distinct()
             )
             logger.debug(
