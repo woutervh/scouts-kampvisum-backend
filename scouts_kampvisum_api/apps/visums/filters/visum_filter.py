@@ -39,25 +39,25 @@ class CampVisumFilter(filters.FilterSet):
                     Q(camp__year__year=year),
                     Q(camp__sections__group_group_admin_id=group_admin_id),
                 )
+                # .order_by("camp__sections__name__age_group")
+                # .distinct("camp__pk")
                 .distinct()
-                .order_by("camp__sections__name__age_group")
-                .distinct("camp__pk")
             )
         if year:
             logger.debug("Filtering CampVisum instances with year %s", year)
             return (
                 parent.filter(camp__year__year=year)
+                # .order_by("camp__sections__name__age_group")
+                # .distinct("camp__pk")
                 .distinct()
-                .order_by("camp__sections__name__age_group")
-                .distinct("camp__pk")
             )
         if group_admin_id:
             logger.debug("Filtering CampVisum instances with group %s", group_admin_id)
             result = (
                 parent.filter(Q(camp__sections__group_group_admin_id=group_admin_id))
+                # .order_by("camp__sections__name__age_group")
+                # .distinct("camp__pk")
                 .distinct()
-                .order_by("camp__sections__name__age_group")
-                .distinct("camp__pk")
             )
             logger.debug(
                 "Found %d CampVisum instances for group %s",
