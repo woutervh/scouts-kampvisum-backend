@@ -4,6 +4,7 @@ from typing import List
 from django.http import Http404
 from django.utils import timezone
 from django.db import transaction
+from django.core.exceptions import ValidationError
 
 from apps.deadlines.models import (
     DefaultDeadline,
@@ -548,17 +549,18 @@ class DeadlineService:
         results = list()
 
         for deadline in deadlines:
-            if deadline.parent.is_deadline():
-                results.append(Deadline.objects.get(id=deadline.id))
-            elif deadline.parent.is_sub_category_deadline():
-                results.append(
-                    LinkedSubCategoryDeadline.objects.get(deadline_ptr=deadline.id)
-                )
-            elif deadline.parent.is_check_deadline():
-                results.append(
-                    LinkedCheckDeadline.objects.get(deadline_ptr=deadline.id)
-                )
-            elif deadline.parent.is_mixed_deadline():
-                results.append(MixedDeadline.objects.get(deadline_ptr=deadline.id))
+            results.append(self.get_visum_deadline(deadline=deadline))
 
         return results
+
+    def get_visum_deadline(self, deadline: Deadline) -> Deadline:
+        if deadline.parent.is_deadline():
+            return Deadline.objects.get(id=deadline.id)
+        elif deadline.parent.is_sub_category_deadline():
+            return LinkedSubCategoryDeadline.objects.get(deadline_ptr=deadline.id)
+        elif deadline.parent.is_check_deadline():
+            return LinkedCheckDeadline.objects.get(deadline_ptr=deadline.id)
+        elif deadline.parent.is_mixed_deadline():
+            return MixedDeadline.objects.get(deadline_ptr=deadline.id)
+        else:
+            raise ValidationError("Invalid deadline %s".format(deadline))

@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from django.core.exceptions import ValidationError
 from django_filters import rest_framework as filters
@@ -398,8 +399,8 @@ class DeadlineViewSet(viewsets.GenericViewSet):
             return Response(serializer.data)
 
     @swagger_auto_schema(
-        request_body=LinkedCheckDeadlineSerializer,
-        responses={status.HTTP_200_OK: LinkedCheckDeadlineSerializer},
+        request_body=DeadlineFlagSerializer,
+        responses={status.HTTP_200_OK: VisumDeadlineSerializer},
     )
     def partial_update_deadline_flag(self, request, deadline_flag_id):
         logger.debug("DEADLINE FLAG UPDATE REQUEST DATA: %s", request.data)
@@ -418,12 +419,13 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("DEADLINE FLAG UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.deadline_service.update_deadline_flag(
+        instance: DeadlineFlag = self.deadline_service.update_deadline_flag(
             request, instance, **validated_data
         )
 
-        output_serializer = DeadlineFlagSerializer(
-            instance, context={"request": request}
+        instance: Deadline = self.deadline_service.get_visum_deadline(
+            deadline=instance.deadline
         )
+        serializer = VisumDeadlineSerializer(instance, context={"request": request})
 
-        return Response(output_serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data)
