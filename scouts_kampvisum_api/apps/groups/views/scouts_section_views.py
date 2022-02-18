@@ -132,7 +132,9 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
     def list_by_group(self, request, group_admin_id):
-        instances = ScoutsSection.objects.all().filter(group_admin_id=group_admin_id)
+        instances = ScoutsSection.objects.all().filter(
+            group_group_admin_id=group_admin_id
+        )
         page = self.paginate_queryset(instances)
 
         if page is not None:

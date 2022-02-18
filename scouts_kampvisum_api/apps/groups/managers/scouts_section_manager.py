@@ -17,18 +17,18 @@ class ScoutsSectionManager(models.Manager):
     def get_queryset(self):
         return ScoutsSectionQuerySet(self.model, using=self._db)
 
-    def get_by_natural_key(self, group_admin_id):
+    def get_by_natural_key(self, group_group_admin_id):
         logger.debug(
             "GET BY NATURAL KEY %s: (group_admin_id: %s (%s))",
             "ScoutsSection",
-            group_admin_id,
-            type(group_admin_id).__name__,
+            group_group_admin_id,
+            type(group_group_admin_id).__name__,
         )
-        return self.get(group_admin_id=group_admin_id)
+        return self.get(group_group_admin_id=group_group_admin_id)
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
-        group_admin_id = kwargs.get("group_admin_id", None)
+        group_group_admin_id = kwargs.get("group_group_admin_id", None)
         name = kwargs.get("name", None)
         raise_error = kwargs.get("raise_error", False)
 
@@ -38,16 +38,18 @@ class ScoutsSectionManager(models.Manager):
             except:
                 pass
 
-        if group_admin_id and name:
+        if group_group_admin_id and name:
             try:
-                return self.get_queryset().get(group_admin_id=group_admin_id, name=name)
+                return self.get_queryset().get(
+                    group_group_admin_id=group_group_admin_id, name=name
+                )
             except:
                 pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate ScoutsSection instance with the provided params: (pk: ({}))".format(
-                    pk
+                "Unable to locate ScoutsSection instance with the provided params: (pk: ({}), (group_group_admin_id: ({}), name ({})))".format(
+                    pk, group_group_admin_id, name=name
                 )
             )
         return None

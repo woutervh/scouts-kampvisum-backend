@@ -45,7 +45,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
             return data
 
         if not data.get("id"):
-            if not data.get("group_admin_id") and data.get("name"):
+            if not data.get("group_group_admin_id") and data.get("name"):
                 raise serializers.ValidationError(
                     "A ScoutsSection can only be identified by either a uuid or the combination of a name and the group's group admin id"
                 )

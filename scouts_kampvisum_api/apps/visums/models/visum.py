@@ -9,7 +9,7 @@ from scouts_auth.inuits.models import AbstractBaseModel
 
 
 class CampVisum(AbstractBaseModel):
-    
+
     objects = CampVisumManager()
 
     camp = models.ForeignKey(Camp, on_delete=models.CASCADE)
@@ -18,5 +18,4 @@ class CampVisum(AbstractBaseModel):
     )
 
     class Meta:
-        # ordering = ["camp__sections__name__age_group"]
-        pass
+        ordering = ["camp__sections__name__age_group"]

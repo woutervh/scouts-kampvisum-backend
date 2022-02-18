@@ -2,7 +2,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "date",
+			"name": "planning_date",
 			"category": [
 				"planning",
 				2022
@@ -18,7 +18,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "activities",
+			"name": "planning_activities",
 			"category": [
 				"planning",
 				2022
@@ -34,7 +34,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "menu",
+			"name": "planning_menu",
 			"category": [
 				"planning",
 				2022
@@ -50,7 +50,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "locations_map",
+			"name": "logistics_locations",
 			"category": [
 				"logistics",
 				2022
@@ -60,29 +60,13 @@
 					"basis"
 				]
 			],
-			"label": "Locatie(s) - kaartje"
+			"label": "Locaties"
 		}
 	},
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "locations_info",
-			"category": [
-				"logistics",
-				2022
-			],
-			"camp_types": [
-				[
-					"basis"
-				]
-			],
-			"label": "Locatie(s) - info"
-		}
-	},
-	{
-		"model": "visums.SubCategory",
-		"fields": {
-			"name": "transport",
+			"name": "logistics_transport",
 			"category": [
 				"logistics",
 				2022
@@ -98,7 +82,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "material",
+			"name": "logistics_material",
 			"category": [
 				"logistics",
 				2022
@@ -114,7 +98,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "parents",
+			"name": "communication_agreements_parents",
 			"category": [
 				"communication_agreements",
 				2022
@@ -130,7 +114,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "agreements",
+			"name": "communication_agreements_agreements",
 			"category": [
 				"communication_agreements",
 				2022
@@ -146,7 +130,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "insurance",
+			"name": "safety_insurance",
 			"category": [
 				"safety",
 				2022
@@ -164,7 +148,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "healthcare",
+			"name": "safety_healthcare",
 			"category": [
 				"safety",
 				2022
@@ -180,7 +164,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "leaders",
+			"name": "members_leaders_responsible",
 			"category": [
 				"members_leaders",
 				2022
@@ -190,13 +174,29 @@
 					"basis"
 				]
 			],
-			"label": "Leiding"
+			"label": "Verantwoordelijke"
 		}
 	},
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "cooks",
+			"name": "members_leaders_leaders",
+			"category": [
+				"members_leaders",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Kampleiding"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "members_leaders_cooks",
 			"category": [
 				"members_leaders",
 				2022
@@ -212,7 +212,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "members",
+			"name": "members_leaders_members",
 			"category": [
 				"members_leaders",
 				2022
@@ -228,7 +228,7 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
-			"name": "budget",
+			"name": "budget_budget",
 			"category": [
 				"budget",
 				2022

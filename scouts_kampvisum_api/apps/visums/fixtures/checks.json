@@ -4,7 +4,7 @@
         "fields": {
             "name": "planning_date_members",
             "sub_category": [
-                "date",
+                "planning_date",
                 [
                     "planning",
                     2022
@@ -22,7 +22,7 @@
         "fields": {
             "name": "planning_date_leaders",
             "sub_category": [
-                "date",
+                "planning_date",
                 [
                     "planning",
                     2022
@@ -39,7 +39,7 @@
         "fields": {
             "name": "planning_date_comments",
             "sub_category": [
-                "date",
+                "planning_date",
                 [
                     "planning",
                     2022
@@ -56,7 +56,7 @@
         "fields": {
             "name": "planning_activities_camp",
             "sub_category": [
-                "activities",
+                "planning_activities",
                 [
                     "planning",
                     2022
@@ -73,7 +73,7 @@
         "fields": {
             "name": "planning_activities_rain",
             "sub_category": [
-                "activities",
+                "planning_activities",
                 [
                     "planning",
                     2022
@@ -90,7 +90,7 @@
         "fields": {
             "name": "planning_activities_heat",
             "sub_category": [
-                "activities",
+                "planning_activities",
                 [
                     "planning",
                     2022
@@ -107,7 +107,7 @@
         "fields": {
             "name": "planning_activities_totemisation",
             "sub_category": [
-                "activities",
+                "planning_activities",
                 [
                     "planning",
                     2022
@@ -124,7 +124,7 @@
         "fields": {
             "name": "planning_activities_night_activity",
             "sub_category": [
-                "activities",
+                "planning_activities",
                 [
                     "planning",
                     2022
@@ -141,7 +141,7 @@
         "fields": {
             "name": "planning_activities_comments",
             "sub_category": [
-                "activities",
+                "planning_activities",
                 [
                     "planning",
                     2022
@@ -158,7 +158,7 @@
         "fields": {
             "name": "planning_activities_upload_general_planning",
             "sub_category": [
-                "activities",
+                "planning_activities",
                 [
                     "planning",
                     2022
@@ -176,7 +176,7 @@
         "fields": {
             "name": "planning_menu_balanced_diet",
             "sub_category": [
-                "menu",
+                "planning_menu",
                 [
                     "planning",
                     2022
@@ -193,7 +193,7 @@
         "fields": {
             "name": "planning_menu_vegetarian_diet",
             "sub_category": [
-                "menu",
+                "planning_menu",
                 [
                     "planning",
                     2022
@@ -210,7 +210,7 @@
         "fields": {
             "name": "planning_menu_comments",
             "sub_category": [
-                "menu",
+                "planning_menu",
                 [
                     "planning",
                     2022
@@ -227,7 +227,7 @@
         "fields": {
             "name": "planning_menu_upload",
             "sub_category": [
-                "menu",
+                "planning_menu",
                 [
                     "planning",
                     2022
@@ -243,9 +243,97 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "logistics_location_location",
+            "name": "logistics_locations_water",
             "sub_category": [
-                "locations_map",
+                "logistics_locations",
+                [
+                    "logistics",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Attest water",
+            "explanation": "Water dat niet uit de kraan of aangekochte flessen komt (bronwater, regenputten, ...) moet gecontroleerd worden. De eigenaar moet hier zelf een attest voor aanvragen. Het is ook zeer belangrijk om na te gaan waarvoor de waterslangen nog gebruikt worden. Als een boer bijvoorbeeld door het jaar zijn sproeistoffen door deze slangen jaagt, spreekt het voor zich dat die niet voor drinkwater geschikt zijn, behalve indien deze chemisch ontsmet zijn. Vermijd ook stilstaand water (bv. wanneer de waterslang de hele dag in de zon ligt)."
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_locations_toilets",
+            "sub_category": [
+                "logistics_locations",
+                [
+                    "logistics",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "HUDO, chemische toiletten, afvalzakken",
+            "explanation": "In Vlaanderen en Wallonië bestaat er geen overkoepelende reglementering rond het graven van HUDO’s, maar verschillende gemeentebesturen en/of eigenaars van kampeerweides verbieden het wel. Als je een HUDO graaft, tracht dit dan zo ecologisch mogelijk te doen. Belangrijk is dat je de HUDO minstens op een afstand van 70 meter van beken en andere watertjes uitgraaft. Voorzie een vuilniszak voor maandverband e.a. In de Oostkantons mogen er geen putten gegraven worden voor HUDO’s. Dat wil zeggen dat je verplicht bent om op een kampeerweide gebruik te maken van chemische toiletten. Check vooraf bij de verhuurder van de kampeerweide of hij chemische toiletten voorziet, zoniet zal je er zelf voor moeten zorgen. Ook GFT-putten (groente-, fruit- en tuinafval) zijn verboden. Gebruik daarvoor de gereglementeerde afvalzakken of de composthoop van de kampuitbater. www.opkamp.be > regelgeving > hudo"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_locations_fire",
+            "sub_category": [
+                "logistics_locations",
+                [
+                    "logistics",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Machtigingen vuur maken",
+            "explanation": "In Vlaanderen mag je geen vuur maken op minder dan 25 meter van huizen, bossen, heide, boomgaarden, hagen, graan en stro. Voor een kampvuur kan je wel een uitzondering krijgen, maar dan moet je minstens 35 dagen voor je kamp een machtiging aanvragen bij het Agentschap voor Natuur en Bos. De Waalse regelgeving voorziet geen machtiging als je korter bij het bos een vuur wil maken. Informeer je ook steeds over de reglementering van je kampgemeente; deze kan strenger zijn dan de 25-meterregel (wat vaak het geval is in de Oostkantons). Ook rook verspreiden over de openbare weg is verboden."
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_locations_electricity",
+            "sub_category": [
+                "logistics_locations",
+                [
+                    "logistics",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Electriciteit"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_locations_store",
+            "sub_category": [
+                "logistics_locations",
+                [
+                    "logistics",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Winkel in de buurt"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_locations_location",
+            "sub_category": [
+                "logistics_locations",
                 [
                     "logistics",
                     2022
@@ -263,7 +351,7 @@
         "fields": {
             "name": "logistics_location_comments",
             "sub_category": [
-                "locations_map",
+                "logistics_locations",
                 [
                     "logistics",
                     2022
@@ -280,7 +368,7 @@
         "fields": {
             "name": "logistics_location_contract",
             "sub_category": [
-                "locations_map",
+                "logistics_locations",
                 [
                     "logistics",
                     2022
@@ -296,114 +384,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "logistics_info_water",
-            "sub_category": [
-                "locations_info",
-                [
-                    "logistics",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Attest water",
-            "explanation": "Water dat niet uit de kraan of aangekochte flessen komt (bronwater, regenputten, ...) moet gecontroleerd worden. De eigenaar moet hier zelf een attest voor aanvragen. Het is ook zeer belangrijk om na te gaan waarvoor de waterslangen nog gebruikt worden. Als een boer bijvoorbeeld door het jaar zijn sproeistoffen door deze slangen jaagt, spreekt het voor zich dat die niet voor drinkwater geschikt zijn, behalve indien deze chemisch ontsmet zijn. Vermijd ook stilstaand water (bv. wanneer de waterslang de hele dag in de zon ligt)."
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "logistics_info_toilets",
-            "sub_category": [
-                "locations_info",
-                [
-                    "logistics",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "HUDO, chemische toiletten, afvalzakken",
-            "explanation": "In Vlaanderen en Wallonië bestaat er geen overkoepelende reglementering rond het graven van HUDO’s, maar verschillende gemeentebesturen en/of eigenaars van kampeerweides verbieden het wel. Als je een HUDO graaft, tracht dit dan zo ecologisch mogelijk te doen. Belangrijk is dat je de HUDO minstens op een afstand van 70 meter van beken en andere watertjes uitgraaft. Voorzie een vuilniszak voor maandverband e.a. In de Oostkantons mogen er geen putten gegraven worden voor HUDO’s. Dat wil zeggen dat je verplicht bent om op een kampeerweide gebruik te maken van chemische toiletten. Check vooraf bij de verhuurder van de kampeerweide of hij chemische toiletten voorziet, zoniet zal je er zelf voor moeten zorgen. Ook GFT-putten (groente-, fruit- en tuinafval) zijn verboden. Gebruik daarvoor de gereglementeerde afvalzakken of de composthoop van de kampuitbater. www.opkamp.be > regelgeving > hudo"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "logistics_info_fire",
-            "sub_category": [
-                "locations_info",
-                [
-                    "logistics",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Machtigingen vuur maken",
-            "explanation": "In Vlaanderen mag je geen vuur maken op minder dan 25 meter van huizen, bossen, heide, boomgaarden, hagen, graan en stro. Voor een kampvuur kan je wel een uitzondering krijgen, maar dan moet je minstens 35 dagen voor je kamp een machtiging aanvragen bij het Agentschap voor Natuur en Bos. De Waalse regelgeving voorziet geen machtiging als je korter bij het bos een vuur wil maken. Informeer je ook steeds over de reglementering van je kampgemeente; deze kan strenger zijn dan de 25-meterregel (wat vaak het geval is in de Oostkantons). Ook rook verspreiden over de openbare weg is verboden."
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "logistics_info_electricity",
-            "sub_category": [
-                "locations_info",
-                [
-                    "logistics",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Electriciteit"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "logistics_info_store",
-            "sub_category": [
-                "locations_info",
-                [
-                    "logistics",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Winkel in de buurt"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "logistics_info_comments",
-            "sub_category": [
-                "locations_info",
-                [
-                    "logistics",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "logistics_transport_members",
             "sub_category": [
-                "transport",
+                "logistics_transport",
                 [
                     "logistics",
                     2022
@@ -420,7 +403,7 @@
         "fields": {
             "name": "logistics_transport_leaders",
             "sub_category": [
-                "transport",
+                "logistics_transport",
                 [
                     "logistics",
                     2022
@@ -437,7 +420,7 @@
         "fields": {
             "name": "logistics_transport_materials",
             "sub_category": [
-                "transport",
+                "logistics_transport",
                 [
                     "logistics",
                     2022
@@ -454,7 +437,7 @@
         "fields": {
             "name": "logistics_transport_comments",
             "sub_category": [
-                "transport",
+                "logistics_transport",
                 [
                     "logistics",
                     2022
@@ -471,7 +454,7 @@
         "fields": {
             "name": "logistics_transport_upload",
             "sub_category": [
-                "transport",
+                "logistics_transport",
                 [
                     "logistics",
                     2022
@@ -489,7 +472,7 @@
         "fields": {
             "name": "logistics_materials_checked",
             "sub_category": [
-                "material",
+                "logistics_material",
                 [
                     "logistics",
                     2022
@@ -506,7 +489,7 @@
         "fields": {
             "name": "logistics_materials_comments",
             "sub_category": [
-                "material",
+                "logistics_material",
                 [
                     "logistics",
                     2022
@@ -523,7 +506,7 @@
         "fields": {
             "name": "logistics_materials_upload",
             "sub_category": [
-                "material",
+                "logistics_material",
                 [
                     "logistics",
                     2022
@@ -539,9 +522,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_parents_ombudsman",
+            "name": "communication_agreements_parents_ombudsman",
             "sub_category": [
-                "parents",
+                "communication_agreements_parents",
                 [
                     "communication_agreements",
                     2022
@@ -556,26 +539,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_parents_ombudsman_contact",
+            "name": "communication_agreements_parents_informed",
             "sub_category": [
-                "parents",
-                [
-                    "communication_agreements",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "ParticipantCheck"
-            ],
-            "label": "Naam aanspreekpunt"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "communication_parents_informed",
-            "sub_category": [
-                "parents",
+                "communication_agreements_parents",
                 [
                     "communication_agreements",
                     2022
@@ -590,9 +556,26 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_parents_comments",
+            "name": "communication_agreements_parents_ombudsman_contact",
             "sub_category": [
-                "parents",
+                "communication_agreements_parents",
+                [
+                    "communication_agreements",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "ParticipantCheck"
+            ],
+            "label": "Naam aanspreekpunt"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_agreements_parents_comments",
+            "sub_category": [
+                "communication_agreements_parents",
                 [
                     "communication_agreements",
                     2022
@@ -607,9 +590,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_parents_brochure",
+            "name": "communication_agreements_parents_brochure",
             "sub_category": [
-                "parents",
+                "communication_agreements_parents",
                 [
                     "communication_agreements",
                     2022
@@ -625,9 +608,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_agreements_rules",
+            "name": "communication_agreements_agreements_rules",
             "sub_category": [
-                "agreements",
+                "communication_agreements_agreements",
                 [
                     "communication_agreements",
                     2022
@@ -642,9 +625,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_agreements_smoking",
+            "name": "communication_agreements_agreements_smoking",
             "sub_category": [
-                "agreements",
+                "communication_agreements_agreements",
                 [
                     "communication_agreements",
                     2022
@@ -659,9 +642,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_agreements_sexuality",
+            "name": "communication_agreements_agreements_sexuality",
             "sub_category": [
-                "agreements",
+                "communication_agreements_agreements",
                 [
                     "communication_agreements",
                     2022
@@ -676,9 +659,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_agreements_alcohol",
+            "name": "communication_agreements_agreements_alcohol",
             "sub_category": [
-                "agreements",
+                "communication_agreements_agreements",
                 [
                     "communication_agreements",
                     2022
@@ -693,9 +676,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_agreements_parents",
+            "name": "communication_agreements_agreements_parents",
             "sub_category": [
-                "agreements",
+                "communication_agreements_agreements",
                 [
                     "communication_agreements",
                     2022
@@ -710,9 +693,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_agreements_comments",
+            "name": "communication_agreements_agreements_comments",
             "sub_category": [
-                "agreements",
+                "communication_agreements_agreements",
                 [
                     "communication_agreements",
                     2022
@@ -727,9 +710,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_agreements_upload",
+            "name": "communication_agreements_agreements_upload",
             "sub_category": [
-                "agreements",
+                "communication_agreements_agreements",
                 [
                     "communication_agreements",
                     2022
@@ -745,27 +728,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "safety_insurance_upload",
-            "sub_category": [
-                "insurance",
-                [
-                    "safety",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "FileUploadCheck"
-            ],
-            "is_multiple": true,
-            "label": "Upload hier je verzekeringsdocumenten"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "safety_insurance_members",
             "sub_category": [
-                "insurance",
+                "safety_insurance",
                 [
                     "safety",
                     2022
@@ -782,7 +747,7 @@
         "fields": {
             "name": "safety_insurance_non_members",
             "sub_category": [
-                "insurance",
+                "safety_insurance",
                 [
                     "safety",
                     2022
@@ -799,7 +764,7 @@
         "fields": {
             "name": "safety_insurance_cars",
             "sub_category": [
-                "insurance",
+                "safety_insurance",
                 [
                     "safety",
                     2022
@@ -816,7 +781,7 @@
         "fields": {
             "name": "safety_insurance_materials",
             "sub_category": [
-                "insurance",
+                "safety_insurance",
                 [
                     "safety",
                     2022
@@ -833,7 +798,7 @@
         "fields": {
             "name": "safety_insurance_comments",
             "sub_category": [
-                "insurance",
+                "safety_insurance",
                 [
                     "safety",
                     2022
@@ -850,7 +815,7 @@
         "fields": {
             "name": "safety_insurance_upload",
             "sub_category": [
-                "insurance",
+                "safety_insurance",
                 [
                     "safety",
                     2022
@@ -860,7 +825,7 @@
                 "FileUploadCheck"
             ],
             "is_multiple": true,
-            "label": "Laad hier je verzekeringsdocumenten op"
+            "label": "Upload hier je verzekeringsdocumenten"
         }
     },
     {
@@ -868,7 +833,7 @@
         "fields": {
             "name": "safety_healthcare_gp",
             "sub_category": [
-                "healthcare",
+                "safety_healthcare",
                 [
                     "safety",
                     2022
@@ -885,7 +850,7 @@
         "fields": {
             "name": "safety_healthcare_pharmacy",
             "sub_category": [
-                "healthcare",
+                "safety_healthcare",
                 [
                     "safety",
                     2022
@@ -902,7 +867,7 @@
         "fields": {
             "name": "safety_healthcare_hospital",
             "sub_category": [
-                "healthcare",
+                "safety_healthcare",
                 [
                     "safety",
                     2022
@@ -919,7 +884,7 @@
         "fields": {
             "name": "safety_healthcare_hospital_ehbo",
             "sub_category": [
-                "healthcare",
+                "safety_healthcare",
                 [
                     "safety",
                     2022
@@ -937,7 +902,7 @@
         "fields": {
             "name": "safety_healthcare_gp_pharmacy_hospital_location",
             "sub_category": [
-                "healthcare",
+                "safety_healthcare",
                 [
                     "safety",
                     2022
@@ -954,7 +919,7 @@
         "fields": {
             "name": "safety_healthcare_comments",
             "sub_category": [
-                "healthcare",
+                "safety_healthcare",
                 [
                     "safety",
                     2022
@@ -971,7 +936,7 @@
         "fields": {
             "name": "safety_healthcare_hospital_emergency_contact",
             "sub_category": [
-                "healthcare",
+                "safety_healthcare",
                 [
                     "safety",
                     2022
@@ -987,9 +952,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_leaders_responsible",
+            "name": "members_leaders_responsible_main",
             "sub_category": [
-                "leaders",
+                "members_leaders_responsible",
                 [
                     "members_leaders",
                     2022
@@ -1005,9 +970,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_leaders_responsible_2",
+            "name": "members_leaders_responsible_adjunct",
             "sub_category": [
-                "leaders",
+                "members_leaders_responsible",
                 [
                     "members_leaders",
                     2022
@@ -1022,9 +987,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_leaders_21_year_old",
+            "name": "members_leaders_responsible_21_year_old",
             "sub_category": [
-                "leaders",
+                "members_leaders_responsible",
                 [
                     "members_leaders",
                     2022
@@ -1039,9 +1004,26 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_leaders_leaders",
+            "name": "members_leaders_leaders_estimate",
             "sub_category": [
-                "leaders",
+                "members_leaders_leaders",
+                [
+                    "members_leaders",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "NumberCheck"
+            ],
+            "label": "Geschat aantal leden"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "members_leaders_leaders",
+            "sub_category": [
+                "members_leaders_leaders",
                 [
                     "members_leaders",
                     2022
@@ -1058,26 +1040,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_leaders_estimate",
+            "name": "members_leaders_leaders_comments",
             "sub_category": [
-                "leaders",
-                [
-                    "members_leaders",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "NumberCheck"
-            ],
-            "label": "Geschat aantal leden"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "participants_leaders_comments",
-            "sub_category": [
-                "leaders",
+                "members_leaders_leaders",
                 [
                     "members_leaders",
                     2022
@@ -1092,9 +1057,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_cooks_sufficient",
+            "name": "members_leaders_cooks_sufficient",
             "sub_category": [
-                "cooks",
+                "members_leaders_cooks",
                 [
                     "members_leaders",
                     2022
@@ -1109,9 +1074,26 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_cooks_cooks",
+            "name": "members_leaders_cooks_estimate",
             "sub_category": [
-                "cooks",
+                "members_leaders_cooks",
+                [
+                    "members_leaders",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "NumberCheck"
+            ],
+            "label": "Geschat aantal fouriers"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "members_leaders_cooks_cooks",
+            "sub_category": [
+                "members_leaders_cooks",
                 [
                     "members_leaders",
                     2022
@@ -1127,26 +1109,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_cooks_estimate",
+            "name": "members_leaders_cooks_comments",
             "sub_category": [
-                "cooks",
-                [
-                    "members_leaders",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "NumberCheck"
-            ],
-            "label": "Geschat aantal fouriers"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "participants_cooks_comments",
-            "sub_category": [
-                "cooks",
+                "members_leaders_cooks",
                 [
                     "members_leaders",
                     2022
@@ -1161,9 +1126,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_members_medical_info",
+            "name": "members_leaders_members_medical_info",
             "sub_category": [
-                "members",
+                "members_leaders_members",
                 [
                     "members_leaders",
                     2022
@@ -1178,9 +1143,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_members_id",
+            "name": "members_leaders_members_id",
             "sub_category": [
-                "members",
+                "members_leaders_members",
                 [
                     "members_leaders",
                     2022
@@ -1195,9 +1160,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_members_payment",
+            "name": "members_leaders_members_payment",
             "sub_category": [
-                "members",
+                "members_leaders_members",
                 [
                     "members_leaders",
                     2022
@@ -1212,9 +1177,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_members_estimate",
+            "name": "members_leaders_members_estimate",
             "sub_category": [
-                "members",
+                "members_leaders_members",
                 [
                     "members_leaders",
                     2022
@@ -1229,9 +1194,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_members_members",
+            "name": "members_leaders_members_members",
             "sub_category": [
-                "members",
+                "members_leaders_members",
                 [
                     "members_leaders",
                     2022
@@ -1248,9 +1213,9 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "participants_members_comments",
+            "name": "members_leaders_members_comments",
             "sub_category": [
-                "members",
+                "members_leaders_members",
                 [
                     "members_leaders",
                     2022
@@ -1267,7 +1232,7 @@
         "fields": {
             "name": "budget_budget_balanced",
             "sub_category": [
-                "budget",
+                "budget_budget",
                 [
                     "budget",
                     2022
@@ -1284,7 +1249,7 @@
         "fields": {
             "name": "budget_budget_leaders",
             "sub_category": [
-                "budget",
+                "budget_budget",
                 [
                     "budget",
                     2022
@@ -1301,7 +1266,7 @@
         "fields": {
             "name": "budget_budget_members",
             "sub_category": [
-                "budget",
+                "budget_budget",
                 [
                     "budget",
                     2022
@@ -1318,7 +1283,7 @@
         "fields": {
             "name": "budget_budget_comments",
             "sub_category": [
-                "budget",
+                "budget_budget",
                 [
                     "budget",
                     2022
@@ -1335,7 +1300,7 @@
         "fields": {
             "name": "budget_budget_upload",
             "sub_category": [
-                "budget",
+                "budget_budget",
                 [
                     "budget",
                     2022

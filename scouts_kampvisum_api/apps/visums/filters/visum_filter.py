@@ -36,7 +36,7 @@ class CampVisumFilter(filters.FilterSet):
             )
             return parent.filter(
                 Q(camp__year__year=year),
-                Q(camp__sections__group_admin_id=group_admin_id),
+                Q(camp__sections__group_group_admin_id=group_admin_id),
             ).distinct()
         if year:
             logger.debug("Filtering CampVisum instances with year %s", year)
@@ -44,7 +44,7 @@ class CampVisumFilter(filters.FilterSet):
         if group_admin_id:
             logger.debug("Filtering CampVisum instances with group %s", group_admin_id)
             result = parent.filter(
-                Q(camp__sections__group_admin_id=group_admin_id)
+                Q(camp__sections__group_group_admin_id=group_admin_id)
             ).distinct()
             logger.debug(
                 "Found %d CampVisum instances for group %s",

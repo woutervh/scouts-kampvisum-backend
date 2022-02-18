@@ -27,19 +27,26 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         user = self.merge_member_data(user, member, claims)
 
         logger.debug(
-            "AUTHENTICATION: Created a user with username %s from member %s", user.username, member.group_admin_id
+            "SCOUTS OIDC AUTHENTICATION: Created a user with username %s from member %s",
+            user.username,
+            member.group_admin_id,
         )
 
         return user
 
-    def update_user(self, user: settings.AUTH_USER_MODEL, claims: dict) -> settings.AUTH_USER_MODEL:
+    def update_user(
+        self, user: settings.AUTH_USER_MODEL, claims: dict
+    ) -> settings.AUTH_USER_MODEL:
         """
         Update existing user with new claims if necessary, save, and return the updated user object.
         """
         member: AbstractScoutsMember = self.load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self.merge_member_data(user, member, claims)
 
-        logger.debug("AUTHENTICATION: Updated a user with username %s ", user.username)
+        logger.debug(
+            "SCOUTS OIDC AUTHENTICATION: Updated a user with username %s ",
+            user.username,
+        )
 
         return user
 
@@ -71,15 +78,18 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         user.links = member.links
 
         user.access_token = claims.get("access_token")
-        user = self.map_user_with_claims(user)
+        user = self.map_user_with_claims(user=user)
 
         user.full_clean()
         user.save()
 
         return user
 
-    def map_user_with_claims(self, user: settings.AUTH_USER_MODEL, claims: dict = None) -> settings.AUTH_USER_MODEL:
+    def map_user_with_claims(
+        self, user: settings.AUTH_USER_MODEL, claims: dict = None
+    ) -> settings.AUTH_USER_MODEL:
         """
         Override the mapping in InuitsOIDCAuthenticationBackend to handle scouts-specific data.
         """
-        return self.authorization_service.update_user_authorizations(user)
+        logger.debug("SCOUTS OIDC AUTHENTICATION: mapping user with claims")
+        return self.authorization_service.update_user_authorizations(user=user)

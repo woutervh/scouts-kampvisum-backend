@@ -6,8 +6,14 @@ from django.dispatch import receiver
 
 from apps.groups.services import ScoutsSectionService
 
-from scouts_auth.auth.signals import ScoutsAuthSignalSender, app_ready, authenticated
+from scouts_auth.auth.signals import (
+    ScoutsAuthSignalSender,
+    app_ready,
+    authenticated,
+    refreshed,
+)
 from scouts_auth.auth.services import PermissionService
+from scouts_auth.auth.user import OIDCUserHelper
 
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
@@ -56,11 +62,12 @@ class SignalHandler:
         logger.debug(
             "SIGNAL received: 'authenticated' from %s", ScoutsAuthSignalSender.sender
         )
+        logger.debug("AUTHENTICATED USER: %s (%s)", user.username, type(user).__name__)
 
         authorization_service = ScoutsAuthorizationService()
         section_service = ScoutsSectionService()
 
-        if not user.fully_loaded:
+        if OIDCUserHelper.requires_data_loading(user=user):
             logger.debug
             logger.debug(
                 "SIGNAL handling for 'authenticated' -> Loading additional user groups"
@@ -72,13 +79,26 @@ class SignalHandler:
             )
             user = authorization_service.load_user_functions(user)
 
-            logger.debug("Settings up sections for user groups")
+            logger.debug(
+                "SIGNAL handling for 'authenticated' -> Setting up sections for user's groups"
+            )
             section_service.setup_default_sections(user=user)
-        user.fully_loaded = True
 
         logger.debug(user.to_descriptive_string())
 
         return user
+
+    @staticmethod
+    @receiver(
+        refreshed,
+        sender=ScoutsAuthSignalSender.sender,
+        dispatch_uid=ScoutsAuthSignalSender.refreshed_uid,
+    )
+    def handle_refreshed(user: settings.AUTH_USER_MODEL, **kwargs):
+        logger.debug(
+            "SIGNAL received: 'refreshed' from %s", ScoutsAuthSignalSender.sender
+        )
+        logger.debug("REFRESHED USER: %s (%s)", user.username, type(user).__name__)
 
     @staticmethod
     def _is_initial_db_ready() -> bool:

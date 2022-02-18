@@ -26,13 +26,6 @@ class Camp(AuditedBaseModel):
     class Meta:
         ordering = ["start_date"]
 
-    def get_group_type(self):
-        """
-        Convenience method for getting the group type from the sections
-        """
-        for section in self.sections.all():
-            return section.group.type
-
     def __str__(self):
         return "OBJECT Camp: year({}), name({}), start_date({}), end_date({}), sections({})".format(
             str(self.year),

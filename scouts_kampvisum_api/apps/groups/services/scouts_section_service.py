@@ -32,7 +32,7 @@ class ScoutsSectionService:
         self,
         request=None,
         user: settings.AUTH_USER_MODEL = None,
-        group_admin_id: str = None,
+        group_group_admin_id: str = None,
         name: ScoutsSectionName = None,
         hidden: bool = False,
     ) -> ScoutsSection:
@@ -43,11 +43,13 @@ class ScoutsSectionService:
             user = request.user
 
         scouts_group = self.group_admin.get_group(
-            active_user=user, group_group_admin_id=group_admin_id
+            active_user=user, group_group_admin_id=group_group_admin_id
         )
         if not scouts_group:
             raise ValidationError(
-                "Invalid group admin id {} for scouts group".format(group_admin_id)
+                "Invalid group admin id {} for scouts group".format(
+                    group_group_admin_id
+                )
             )
         logger.debug(
             "GROUP ('%s'), NAME ('%s'), HIDDEN: %s",
@@ -68,11 +70,11 @@ class ScoutsSectionService:
         )
         if name_instance is None:
             qs = ScoutsSection.objects.filter(
-                group_admin_id=scouts_group.group_admin_id, name__name=name
+                group_group_admin_id=scouts_group.group_admin_id, name__name=name
             )
         else:
             qs = ScoutsSection.objects.filter(
-                group_admin_id=scouts_group.group_admin_id, name=name
+                group_group_admin_id=scouts_group.group_admin_id, name=name
             )
         count = qs.count()
 
@@ -116,7 +118,9 @@ class ScoutsSectionService:
 
     def update_section(self, request, instance: ScoutsSection, **data) -> ScoutsSection:
         # logger.debug("SCOUTS SECTION SERVICE UPDATE DATA: %s", data)
-        group_admin_id = data.get("group_admin_id", instance.group_admin_id)
+        group_group_admin_id = data.get(
+            "group_group_admin_id", instance.group_group_admin_id
+        )
         name = self.section_name_service.update_name(
             request,
             instance=ScoutsSectionName.objects.safe_get(
@@ -126,10 +130,10 @@ class ScoutsSectionService:
         )
 
         instance = ScoutsSection.objects.safe_get(
-            id=instance.id, group_admin_id=group_admin_id, name=name
+            id=instance.id, group_group_admin_id=group_group_admin_id, name=name
         )
 
-        instance.group_admin_id = group_admin_id
+        instance.group_group_admin_id = group_group_admin_id
         instance.name = name
         instance.hidden = data.get("hidden", instance.hidden)
 
@@ -155,7 +159,7 @@ class ScoutsSectionService:
 
         logger.debug("Updating Section with name '%s'", instance.name.name)
 
-        instance.group_admin_id = group.group_admin_id
+        instance.group_group_admin_id = group.group_admin_id
         instance.name = name
         instance.hidden = hidden
 
@@ -182,7 +186,7 @@ class ScoutsSectionService:
             )
 
             sections = ScoutsSection.objects.all().filter(
-                group_admin_id=group.group_admin_id
+                group_group_admin_id=group.group_admin_id
             )
 
             # @TODO update if necessary
@@ -204,7 +208,7 @@ class ScoutsSectionService:
                         self.section_create_or_update(
                             request=request,
                             user=user,
-                            group_admin_id=group.group_admin_id,
+                            group_group_admin_id=group.group_admin_id,
                             name=name.name,
                             hidden=name.name.hidden,
                         )

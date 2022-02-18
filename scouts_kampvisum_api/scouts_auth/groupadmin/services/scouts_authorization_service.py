@@ -78,6 +78,9 @@ class ScoutsAuthorizationService(AuthorizationService):
     def update_user_authorizations(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
+        logger.debug(
+            "SCOUTS AUTHORIZATION: updating user authorizations for %s", user.username
+        )
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
             user = self.add_user_as_admin(user)
@@ -120,6 +123,13 @@ class ScoutsAuthorizationService(AuthorizationService):
         functions: List[AbstractScoutsFunction] = self.service.get_functions(
             active_user=user
         ).functions
+
+        logger.debug(
+            "SCOUTS AUTHORIZATION SERVICE: Found %d function(s) for user %s",
+            len(functions),
+            user.username,
+        )
+
         for user_function in user.functions:
             for function in functions:
                 if function.group_admin_id == user_function.function:

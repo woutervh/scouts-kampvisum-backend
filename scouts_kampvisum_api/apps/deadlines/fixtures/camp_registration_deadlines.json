@@ -14,7 +14,7 @@
             "deadline_type": "M",
             "sub_categories": [
                 [
-                    "date",
+                    "planning_date",
                     [
                         "planning",
                         2022
@@ -23,9 +23,9 @@
             ],
             "checks": [
                 [
-                    "logistics_location_location",
+                    "logistics_locations_location",
                     [
-                        "locations_map",
+                        "logistics_locations",
                         [
                             "logistics",
                             2022
@@ -33,9 +33,9 @@
                     ]
                 ],
                 [
-                    "participants_members_estimate",
+                    "members_leaders_responsible_main",
                     [
-                        "members",
+                        "members_leaders_responsible",
                         [
                             "members_leaders",
                             2022
@@ -43,9 +43,29 @@
                     ]
                 ],
                 [
-                    "participants_leaders_responsible",
+                    "members_leaders_leaders_estimate",
                     [
-                        "leaders",
+                        "members_leaders_leaders",
+                        [
+                            "members_leaders",
+                            2022
+                        ]
+                    ]
+                ],
+                [
+                    "members_leaders_cooks_estimate",
+                    [
+                        "members_leaders_cooks",
+                        [
+                            "members_leaders",
+                            2022
+                        ]
+                    ]
+                ],
+                [
+                    "members_leaders_members_estimate",
+                    [
+                        "members_leaders_members",
                         [
                             "members_leaders",
                             2022

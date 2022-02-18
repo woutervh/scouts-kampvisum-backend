@@ -37,7 +37,9 @@ class CampVisumSerializer(serializers.ModelSerializer):
         data = super().to_representation(data)
 
         data["group_group_admin_id"] = (
-            data.get("camp", {}).get("sections", [])[0].get("group_admin_id", None)
+            data.get("camp", {})
+            .get("sections", [])[0]
+            .get("group_group_admin_id", None)
         )
         # logger.debug("VISUM SERIALIZER TO REPRESENTATION: %s", data)
 

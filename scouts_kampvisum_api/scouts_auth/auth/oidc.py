@@ -118,7 +118,7 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
             result = super().authenticate(request)
 
             if result is None:
-                logger.error("SCOUTS-AUTH: Authentication failed")
+                logger.error("SCOUTS-AUTH: Authentication failed, refresh required")
 
                 return None
 

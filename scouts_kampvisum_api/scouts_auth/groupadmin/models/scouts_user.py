@@ -65,8 +65,6 @@ class ScoutsUser(User):
     is_administrator = False
     is_district_commissioner = False
 
-    is_fully_loaded = False
-
     @property
     def fully_loaded(self) -> bool:
         return self.is_fully_loaded
@@ -158,7 +156,7 @@ class ScoutsUser(User):
 
     def to_descriptive_string(self):
         return (
-            "{:<24}: {}\n"  # title
+            "{}\n"
             "{:<24}: {}\n"  # username
             "{:<24}: {}\n"  # first_name
             "{:<24}: {}\n"  # last_name
@@ -179,8 +177,7 @@ class ScoutsUser(User):
             "{:<24}: {}\n"  # group leader
             "{:<24}: {}\n"  # section leader
         ).format(
-            "USER INFO FOR",
-            self.username,
+            "USER INFO",
             "username",
             self.username,
             "first_name",

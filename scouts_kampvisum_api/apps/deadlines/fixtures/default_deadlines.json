@@ -13,9 +13,9 @@
             "deadline_type": "C",
             "checks": [
                 [
-                    "logistics_location_location",
+                    "logistics_locations_location",
                     [
-                        "locations_map",
+                        "logistics_locations",
                         [
                             "logistics",
                             2022
@@ -39,7 +39,7 @@
             "deadline_type": "S",
             "sub_categories": [
                 [
-                    "transport",
+                    "logistics_transport",
                     [
                         "logistics",
                         2022
