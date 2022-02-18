@@ -18,4 +18,5 @@ class CampVisum(AbstractBaseModel):
     )
 
     class Meta:
-        ordering = ["camp__sections__name__age_group"]
+        # ordering = ["camp__sections__name__age_group"]
+        pass

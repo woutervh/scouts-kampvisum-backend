@@ -617,7 +617,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                         checks__parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK
                     )
                     & Q(
-                        checks__sub_category__category__category_set__visum__camp__sections__group_admin_id=group
+                        checks__sub_category__category__category_set__visum__camp__sections__group_group_admin_id=group
                     )
                 )
                 .distinct()

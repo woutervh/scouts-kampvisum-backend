@@ -27,7 +27,8 @@ class CampTypeFilter(filters.FilterSet):
                 year,
             )
             return parent.filter(
-                Q(start_date__year=year), Q(sections__group_admin_id=group_admin_id)
+                Q(start_date__year=year),
+                Q(sections__group_group_admin_id=group_admin_id),
             ).distinct()
 
         if year:
@@ -36,7 +37,9 @@ class CampTypeFilter(filters.FilterSet):
 
         if group_admin_id:
             logger.debug("Filtering Camp instances with group %s", group_admin_id)
-            return parent.filter(sections__group_admin_id=group_admin_id).distinct()
+            return parent.filter(
+                sections__group_group_admin_id=group_admin_id
+            ).distinct()
 
         logger.debug("Filters for Camp not set, returning all instances")
         return parent.all()
