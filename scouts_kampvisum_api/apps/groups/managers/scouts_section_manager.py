@@ -49,7 +49,7 @@ class ScoutsSectionManager(models.Manager):
         if raise_error:
             raise ValidationError(
                 "Unable to locate ScoutsSection instance with the provided params: (pk: ({}), (group_group_admin_id: ({}), name ({})))".format(
-                    pk, group_group_admin_id, name=name
+                    pk, group_group_admin_id, name
                 )
             )
         return None
