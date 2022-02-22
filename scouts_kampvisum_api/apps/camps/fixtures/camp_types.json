@@ -39,15 +39,5 @@
             "label": "Internationale trekkampen",
             "explanation": "Categorieen voor internationale trekkampen"
         }
-    },
-    {
-        "model": "camps.CampType",
-        "fields": {
-            "camp_type": "internationaal_zeescoutskamp",
-            "is_base": false,
-            "index": 4,
-            "label": "Internationale zeescoutskampen",
-            "explanation": "Categorieen voor internationale zeescoutskampen"
-        }
     }
 ]

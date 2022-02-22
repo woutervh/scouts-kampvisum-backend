@@ -164,6 +164,22 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
+			"name": "safety_foreign_rules",
+			"category": [
+				"safety",
+				2022
+			],
+			"camp_types": [
+				[
+					"internationaal_trekkamp"
+				]
+			],
+			"label": "Regels land van bestemming"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
 			"name": "members_leaders_responsible",
 			"category": [
 				"members_leaders",
@@ -239,6 +255,22 @@
 				]
 			],
 			"label": "Begroting"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "budget_banccard",
+			"category": [
+				"budget",
+				2022
+			],
+			"camp_types": [
+				[
+					"internationaal_trekkamp"
+				]
+			],
+			"label": "Bankkaart"
 		}
 	}
 ]
