@@ -1,8 +1,10 @@
 import logging
+import jwt
 
 from django.conf import settings
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
+from scouts_auth.auth.settings import OIDCSettings
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
@@ -20,10 +22,19 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Create and return a new user object.
         """
-        logger.debug("CREATE USER CLAIMS: %s", claims)
+        username = None
+        access_token = claims.get("access_token", None)
+        if access_token:
+            decoded = jwt.decode(
+                access_token,
+                algorithms=["RS256"],
+                verify=False,
+                options={"verify_signature": False},
+            )
+            username = decoded.get("preferred_username", None)
         member: AbstractScoutsMember = self.load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self.UserModel.objects.create_user(
-            username=member.username, email=member.email
+            username=username if username else member.username, email=member.email
         )
         user = self.merge_member_data(user, member, claims)
 
