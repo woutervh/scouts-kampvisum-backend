@@ -20,6 +20,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Create and return a new user object.
         """
+        logger.debug("CREATE USER CLAIMS: %s", claims)
         member: AbstractScoutsMember = self.load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self.UserModel.objects.create_user(
             username=member.username, email=member.email
