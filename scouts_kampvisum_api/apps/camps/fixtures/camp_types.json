@@ -33,11 +33,11 @@
     {
         "model": "camps.CampType",
         "fields": {
-            "camp_type": "internationaal_kamp",
+            "camp_type": "buitenlands_kamp",
             "is_base": false,
             "index": 3,
-            "label": "Internationale kampen",
-            "explanation": "Categorieen voor internationale kampen"
+            "label": "Buitenlandse kampen",
+            "explanation": "Categorieen voor buitenlandse kampen"
         }
     }
 ]
