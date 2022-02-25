@@ -10,7 +10,12 @@ logger = logging.getLogger(__name__)
 
 
 def validate_uploaded_file(value):
-    max_file_size = StorageSettings.get_max_file_size()
+    if value._size > StorageSettings.get_max_file_size():
+        raise ValidationError(
+            "File size ({}) exceeds max file size defined in {}",
+            value._size,
+            StorageSettings.FILE_UPLOAD_MAX_SIZE,
+        )
     configured_allowed_extensions: List[
         str
     ] = StorageSettings.get_allowed_file_extensions()
