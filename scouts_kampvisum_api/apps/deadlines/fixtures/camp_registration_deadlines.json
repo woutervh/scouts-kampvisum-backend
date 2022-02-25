@@ -19,6 +19,13 @@
                         "planning",
                         2022
                     ]
+                ],
+                [
+                    "members_leaders_estimates",
+                    [
+                        "members_leaders",
+                        2022
+                    ]
                 ]
             ],
             "checks": [
@@ -28,36 +35,6 @@
                         "logistics_locations",
                         [
                             "logistics",
-                            2022
-                        ]
-                    ]
-                ],
-                [
-                    "members_leaders_leaders_estimate",
-                    [
-                        "members_leaders_leaders",
-                        [
-                            "members_leaders",
-                            2022
-                        ]
-                    ]
-                ],
-                [
-                    "members_leaders_cooks_estimate",
-                    [
-                        "members_leaders_cooks",
-                        [
-                            "members_leaders",
-                            2022
-                        ]
-                    ]
-                ],
-                [
-                    "members_leaders_members_estimate",
-                    [
-                        "members_leaders_members",
-                        [
-                            "members_leaders",
                             2022
                         ]
                     ]
