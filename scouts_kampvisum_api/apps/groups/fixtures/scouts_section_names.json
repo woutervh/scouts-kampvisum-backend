@@ -50,14 +50,6 @@
 	{
 		"model": "groups.ScoutsSectionName",
 		"fields": {
-			"name": "wouters",
-			"gender": "I",
-			"age_group": 9
-		}
-	},
-	{
-		"model": "groups.ScoutsSectionName",
-		"fields": {
 			"name": "kabouters en welpen",
 			"gender": "I",
 			"age_group": 9
