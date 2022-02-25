@@ -58,7 +58,7 @@
 	{
 		"model": "groups.ScoutsSectionName",
 		"fields": {
-			"name": "kawellen",
+			"name": "kabouters en welpen",
 			"gender": "I",
 			"age_group": 9
 		}
