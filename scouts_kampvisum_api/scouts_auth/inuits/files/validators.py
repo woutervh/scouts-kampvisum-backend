@@ -9,7 +9,8 @@ from scouts_auth.inuits.files import StorageSettings
 logger = logging.getLogger(__name__)
 
 
-def validate_file_extension(value):
+def validate_uploaded_file(value):
+    max_file_size = StorageSettings.get_max_file_size()
     configured_allowed_extensions: List[
         str
     ] = StorageSettings.get_allowed_file_extensions()

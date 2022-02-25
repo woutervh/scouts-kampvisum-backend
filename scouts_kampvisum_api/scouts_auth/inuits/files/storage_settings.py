@@ -8,6 +8,7 @@ class StorageSettings(SettingsHelper):
 
     S3_STORAGE_SERVICE = "scouts_auth.inuits.files.aws.S3StorageService"
     FILE_UPLOAD_ALLOWED_EXTENSIONS = "FILE_UPLOAD_ALLOWED_EXTENSIONS"
+    FILE_UPLOAD_MAX_SIZE = "FILE_UPLOAD_MAX_SIZE"
 
     @staticmethod
     def get_default_storage():
@@ -36,3 +37,7 @@ class StorageSettings(SettingsHelper):
     @staticmethod
     def get_allowed_file_extensions() -> list:
         return StorageSettings.get_list(StorageSettings.FILE_UPLOAD_ALLOWED_EXTENSIONS)
+
+    @staticmethod
+    def get_max_file_size() -> int:
+        return StorageSettings.get_int(StorageSettings.FILE_UPLOAD_MAX_SIZE)
