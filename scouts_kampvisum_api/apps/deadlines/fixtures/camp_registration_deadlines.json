@@ -38,6 +38,26 @@
                             2022
                         ]
                     ]
+                ],
+                [
+                    "members_leaders_responsible_main",
+                    [
+                        "members_leaders_responsible",
+                        [
+                            "members_leaders",
+                            2022
+                        ]
+                    ]
+                ],
+                [
+                    "members_leaders_responsible_adjunct",
+                    [
+                        "members_leaders_responsible",
+                        [
+                            "members_leaders",
+                            2022
+                        ]
+                    ]
                 ]
             ]
         }
