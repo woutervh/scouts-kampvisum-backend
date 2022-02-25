@@ -18,6 +18,7 @@ from apps.visums.models import (
     LinkedFileUploadCheck,
     LinkedCommentCheck,
     LinkedNumberCheck,
+    CheckTypeEnum,
 )
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CheckSerializer

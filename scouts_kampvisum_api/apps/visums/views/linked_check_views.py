@@ -4,16 +4,14 @@ from typing import List
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
-from django.http import Http404
+from django.core.exceptions import ValidationError
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
-from apps.participants.models import InuitsParticipant
-
 from apps.visums.models import (
-    CheckTypeEndpoint,
+    CheckTypeEnum,
     LinkedCheck,
     LinkedSimpleCheck,
     LinkedDateCheck,
@@ -118,7 +116,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_simple_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.SIMPLE_CHECK
+                parent__check_type__check_type=CheckTypeEnum.SIMPLE_CHECK
             )
         )
 
@@ -167,7 +165,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_date_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.DATE_CHECK
+                parent__check_type__check_type=CheckTypeEnum.DATE_CHECK
             )
         )
 
@@ -220,7 +218,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_duration_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.DURATION_CHECK
+                parent__check_type__check_type=CheckTypeEnum.DURATION_CHECK
             )
         )
 
@@ -273,7 +271,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_location_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.LOCATION_CHECK
+                parent__check_type__check_type=CheckTypeEnum.LOCATION_CHECK
             )
         )
 
@@ -286,7 +284,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_linked_location_checks(self, request):
         return self._list(
             LinkedLocationCheck.objects.filter(
-                Q(parent__check_type__check_type=CheckTypeEndpoint.LOCATION_CHECK)
+                Q(parent__check_type__check_type=CheckTypeEnum.LOCATION_CHECK)
                 & Q(value__locations__isnull=False)
             )
         )
@@ -344,7 +342,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_camp_location_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.CAMP_LOCATION_CHECK
+                parent__check_type__check_type=CheckTypeEnum.CAMP_LOCATION_CHECK
             )
         )
 
@@ -360,9 +358,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         return self._list(
             LinkedLocationCheck.objects.filter(
                 Q(value__is_camp_location=True)
-                & Q(
-                    parent__check_type__check_type=CheckTypeEndpoint.CAMP_LOCATION_CHECK
-                )
+                & Q(parent__check_type__check_type=CheckTypeEnum.CAMP_LOCATION_CHECK)
                 & Q(value__locations__isnull=False)
             )
         )
@@ -419,11 +415,14 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         if not instance:
             logger.error(
+                "Can't unlink participant: Unknown participant check with id {}",
+                check_id,
+            )
+            raise ValidationError(
                 "Can't unlink participant: Unknown participant check with id {}".format(
                     check_id
                 )
             )
-            raise Http404
 
         serializer = LinkedParticipantCheckSerializer(
             data=request.data,
@@ -457,7 +456,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_participant_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.PARTICIPANT_CHECK
+                parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_CHECK
             )
         )
 
@@ -472,7 +471,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_linked_participant_checks(self, request):
         return self._list(
             LinkedParticipantCheck.objects.filter(
-                Q(parent__check_type__check_type=CheckTypeEndpoint.PARTICIPANT_CHECK)
+                Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_CHECK)
                 & Q(value__isnull=False)
             ).distinct()
         )
@@ -502,7 +501,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         files = request.data.get("value", [])
         if not files or len(files) == 0:
-            raise Http404("Can't link an empty list of files")
+            raise ValidationError("Can't link an empty list of files")
 
         serializer = PersistedFileSerializer(
             data=files, context={"request": request}, many=True
@@ -537,10 +536,10 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance = self.linked_check_service.get_file_upload_check(check_id)
 
         if not instance:
-            logger.error(
+            logger.error("Can't unlink file: Unknown file check with id {}", check_id)
+            raise ValidationError(
                 "Can't unlink file: Unknown file check with id {}".format(check_id)
             )
-            raise Http404
 
         serializer = LinkedFileUploadCheckSerializer(
             data=request.data,
@@ -574,7 +573,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_file_upload_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK
+                parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK
             )
         )
 
@@ -589,7 +588,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_linked_files(self, request):
         return self._list(
             LinkedFileUploadCheck.objects.filter(
-                Q(parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK)
+                Q(parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK)
                 & Q(value__isnull=False)
             ).distinct()
         )
@@ -606,7 +605,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         term = self.request.GET.get("term", None)
         group = self.request.GET.get("group", None)
         if term and not group:
-            raise Http404(
+            raise ValidationError(
                 "Can only search for files if the group's group admin id is given"
             )
 
@@ -614,7 +613,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             instances = (
                 PersistedFile.objects.filter(
                     Q(
-                        checks__parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK
+                        checks__parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK
                     )
                     & Q(
                         checks__sub_category__category__category_set__visum__camp__sections__group_group_admin_id=group
@@ -634,7 +633,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.FILE_UPLOAD_CHECK
+                parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK
             )
         )
 
@@ -687,7 +686,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_comment_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.COMMENT_CHECK
+                parent__check_type__check_type=CheckTypeEnum.COMMENT_CHECK
             )
         )
 
@@ -738,7 +737,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_number_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEndpoint.NUMBER_CHECK
+                parent__check_type__check_type=CheckTypeEnum.NUMBER_CHECK
             )
         )
 

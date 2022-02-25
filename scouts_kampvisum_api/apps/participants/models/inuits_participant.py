@@ -1,13 +1,14 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
+from apps.participants.models.enums import ParticipantType
 from apps.participants.managers import InuitsParticipantManager
 
 from scouts_auth.groupadmin.scouts import GroupAdminIdField
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 
 from scouts_auth.inuits.models import InuitsPerson, GenderHelper
-from scouts_auth.inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import OptionalCharField, DefaultCharField
 
 
 class InuitsParticipant(InuitsPerson):
@@ -18,6 +19,11 @@ class InuitsParticipant(InuitsPerson):
     is_member = models.BooleanField(default=False)
     comment = OptionalCharField(max_length=300)
     inactive_member = models.BooleanField(default=False)
+    participant_type = DefaultCharField(
+        choices=ParticipantType.choices,
+        default=ParticipantType.PARTICIPANT,
+        max_length=1,
+    )
 
     class Meta:
         ordering = ["first_name", "last_name", "birth_date", "group_group_admin_id"]
@@ -48,10 +54,11 @@ class InuitsParticipant(InuitsPerson):
             and self.is_member == updated_participant.is_member
             and self.comment == updated_participant.comment
             and self.inactive_member == updated_participant.inactive_member
+            and self.participant_type == updated_participant.participant_type
         )
 
     def __str__(self):
-        return "id ({}), is_member ({}), group_group_admin_id ({}), group_admin_id ({}), {}, comment ({}), inactive_member ({})".format(
+        return "id ({}), is_member ({}), group_group_admin_id ({}), group_admin_id ({}), {}, comment ({}), inactive_member ({}), participant_type ({})".format(
             self.id,
             self.is_member,
             self.group_group_admin_id,
@@ -59,6 +66,7 @@ class InuitsParticipant(InuitsPerson):
             self.person_to_str(),
             self.comment,
             self.inactive_member,
+            self.participant_type,
         )
 
     @staticmethod

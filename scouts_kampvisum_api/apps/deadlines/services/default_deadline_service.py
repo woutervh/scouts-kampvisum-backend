@@ -2,8 +2,8 @@ import logging
 import datetime
 
 from django.db import transaction
-from django.http import Http404
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 from apps.deadlines.models import DefaultDeadline, DeadlineDate, DefaultDeadlineFlag
 from apps.deadlines.models.enums import DeadlineType
@@ -51,7 +51,7 @@ class DefaultDeadlineService:
 
         name = fields.get("name", None)
         if not name:
-            raise Http404("A default deadline flag requires a name, None given")
+            raise ValidationError("A default deadline flag requires a name, None given")
 
         instance = DefaultDeadlineFlag.objects.safe_get(
             default_deadline=default_deadline, name=name

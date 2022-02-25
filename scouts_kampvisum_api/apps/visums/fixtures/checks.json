@@ -1054,7 +1054,7 @@
                 ]
             ],
             "check_type": [
-                "ParticipantCheck"
+                "ParticipantResponsibleCheck"
             ],
             "change_handler": "change_camp_responsible",
             "label": "Contactgegevens kampverantwoordelijke"
@@ -1072,7 +1072,7 @@
                 ]
             ],
             "check_type": [
-                "ParticipantCheck"
+                "ParticipantResponsibleCheck"
             ],
             "label": "Contactgegevens 2de kampverantwoordelijke"
         }
@@ -1089,7 +1089,7 @@
                 ]
             ],
             "check_type": [
-                "ParticipantCheck"
+                "ParticipantAdultCheck"
             ],
             "label": "21-jarige verantwoordelijke"
         }
@@ -1123,7 +1123,7 @@
                 ]
             ],
             "check_type": [
-                "ParticipantCheck"
+                "ParticipantLeaderCheck"
             ],
             "is_multiple": true,
             "is_member": true,
@@ -1193,7 +1193,7 @@
                 ]
             ],
             "check_type": [
-                "ParticipantCheck"
+                "ParticipantCookCheck"
             ],
             "is_multiple": true,
             "label": "Lijst van fourage"
@@ -1297,7 +1297,7 @@
                 ]
             ],
             "check_type": [
-                "ParticipantCheck"
+                "ParticipantMemberCheck"
             ],
             "is_multiple": true,
             "is_member": true,

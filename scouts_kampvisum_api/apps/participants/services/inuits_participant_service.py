@@ -1,6 +1,5 @@
 import logging
 
-from django.http import Http404
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
@@ -52,7 +51,10 @@ class InuitsParticipantService:
     ) -> InuitsParticipant:
         member_participant = None
         if participant.has_group_admin_id():
-            logger.debug("Looking for participant member with group admin id %s", participant.group_admin_id)
+            logger.debug(
+                "Looking for participant member with group admin id %s",
+                participant.group_admin_id,
+            )
             member_participant = InuitsParticipant.objects.safe_get(
                 group_admin_id=participant.group_admin_id
             )
@@ -61,7 +63,7 @@ class InuitsParticipantService:
             )
 
             if not scouts_member:
-                raise Http404(
+                raise ValidationError(
                     "Invalid group admin id for member: {}".format(
                         participant.group_admin_id
                     )
@@ -156,7 +158,12 @@ class InuitsParticipantService:
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
     ) -> InuitsParticipant:
-        logger.debug("Updating InuitsParticipant with id %s and group_admin_id %s and e-mail %s", participant.id, participant.group_admin_id, participant.email)
+        logger.debug(
+            "Updating InuitsParticipant with id %s and group_admin_id %s and e-mail %s",
+            participant.id,
+            participant.group_admin_id,
+            participant.email,
+        )
         member = self.create_or_update_member_participant(
             participant=updated_participant, user=updated_by
         )
@@ -164,9 +171,11 @@ class InuitsParticipantService:
             return member
 
         if participant.equals(updated_participant):
-            logger.debug("No differences between existing participant and updated participant")
+            logger.debug(
+                "No differences between existing participant and updated participant"
+            )
             return updated_participant
-        
+
         logger.debug("Updated: %s", updated_participant)
 
         # Update the InuitsParticipant instance
@@ -242,7 +251,7 @@ class InuitsParticipantService:
 
         participant.full_clean()
         participant.save()
-        
+
         logger.debug("InuitsParticipant instance updated (%s)", participant.id)
 
         return participant

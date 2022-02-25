@@ -44,6 +44,41 @@
 	{
 		"model": "visums.CheckType",
 		"fields": {
+			"check_type": "ParticipantMemberCheck",
+			"description": "A check that selects members"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantCookCheck",
+			"description": "A check that selects cooks"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantLeaderCheck",
+			"description": "A check that selects leaders"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantResponsibleCheck",
+			"description": "A check that selects responsibles"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantAdultCheck",
+			"description": "A check that selects 21-year-olds"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
 			"check_type": "FileUploadCheck",
 			"description": "A check that contains a file"
 		}

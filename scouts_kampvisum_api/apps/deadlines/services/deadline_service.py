@@ -1,7 +1,6 @@
 import logging
 from typing import List
 
-from django.http import Http404
 from django.utils import timezone
 from django.db import transaction
 from django.core.exceptions import ValidationError
@@ -106,7 +105,7 @@ class DeadlineService:
             return Deadline.objects.get(id=deadline_id)
         except Deadline.DoesNotExist:
             logger.error("Deadline with id %s not found", deadline_id)
-            raise Http404
+            raise ValidationError("Deadline with id {} not found".format(deadline_id))
 
     def update_deadline(self, request, instance: Deadline, **fields):
         logger.debug(
@@ -185,7 +184,9 @@ class DeadlineService:
         try:
             return LinkedSubCategoryDeadline.objects.get(deadline_ptr=deadline_id)
         except LinkedSubCategoryDeadline.DoesNotExist:
-            raise Http404
+            raise ValidationError(
+                "LinkedSubCategoryDeadline with id {} not found".format(deadline_id)
+            )
 
     @transaction.atomic
     def get_or_create_linked_check_deadline(
@@ -242,7 +243,9 @@ class DeadlineService:
         try:
             return LinkedCheckDeadline.objects.get(deadline_ptr=deadline_id)
         except LinkedCheckDeadline.DoesNotExist:
-            raise Http404
+            raise ValidationError(
+                "LinkedCheckDeadline with id {} not found", deadline_id
+            )
 
     @transaction.atomic
     def get_or_create_mixed_deadline(
@@ -297,7 +300,9 @@ class DeadlineService:
         try:
             return MixedDeadline.objects.get(deadline_ptr=deadline_id)
         except MixedDeadline.DoesNotExist:
-            raise Http404
+            raise ValidationError(
+                "MixedDeadline with id {} not found".format(deadline_id)
+            )
 
     @transaction.atomic
     def get_or_create_deadline_flag(
@@ -357,7 +362,7 @@ class DeadlineService:
             camp_year=camp_year, camp_type=camp_type
         )
         if not default_deadline_set:
-            raise Http404(
+            raise ValidationError(
                 "Unable to find default deadline set for camp year {} and camp type {}".format(
                     camp_year.year, camp_type.camp_type
                 )
@@ -395,7 +400,7 @@ class DeadlineService:
                     request, default_deadline, visum, deadline_fields
                 )
             else:
-                raise Http404(
+                raise ValidationError(
                     "Unknown deadline type: {}".format(default_deadline.deadline_type)
                 )
 
@@ -516,7 +521,7 @@ class DeadlineService:
                 parent=sub_category, visum=visum
             )
             if not linked_sub_category:
-                raise Http404(
+                raise ValidationError(
                     "Unable to find LinkedSubCategory with parent SubCategory id {}".format(
                         sub_category.id
                     )
@@ -537,7 +542,7 @@ class DeadlineService:
                 parent=check, visum=visum
             )
             if not linked_check:
-                raise Http404(
+                raise ValidationError(
                     "Unable to find LinkedCheck with parent Check id {}".format(
                         check.id
                     )

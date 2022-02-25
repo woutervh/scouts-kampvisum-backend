@@ -1,4 +1,3 @@
-from asyncio.format_helpers import _format_callback_source
 import logging
 from typing import List
 
@@ -13,6 +12,8 @@ from apps.participants.models import InuitsParticipant
 from apps.participants.serializers import InuitsParticipantSerializer
 from apps.participants.filters import InuitsParticipantFilter
 from apps.participants.services import InuitsParticipantService
+
+from apps.visums.models import LinkedCheck
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
@@ -126,18 +127,15 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         return self._list(request=request, only_scouts_members=True)
 
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False):
+        check = self.request.GET.get("check", None)
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)
         min_age = self.request.GET.get("min_age", None)
         max_age = self.request.GET.get("max_age", None)
         gender = self.request.GET.get("gender", None)
 
-        if (
-            not search_term
-            and not group_group_admin_id
-            and not min_age
-            and not max_age
-            and not gender
+        if not (
+            check or search_term or group_group_admin_id or min_age or max_age or gender
         ):
             if only_scouts_members:
                 return Response({})
@@ -147,9 +145,36 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
 
+        as_members = "participants"
+        if check:
+            check: LinkedCheck = LinkedCheck.get_concrete_check_type_by_id(check)
+
+            find_members = False
+            find_cooks = False
+            find_leaders = False
+            find_responsibles = False
+            find_adults = False
+
+            if check.parent.check_type.is_participant_member_check():
+                find_members = True
+                as_members = "members"
+            elif check.parent.check_type.is_participant_cook_check():
+                find_cooks = True
+                as_members = "cooks"
+            elif check.parent.check_type.is_participant_leader_check():
+                find_leaders = True
+                as_members = "leaders"
+            elif check.parent.check_type.is_participant_responsible_check():
+                find_responsibles = True
+                as_members = "responsibles"
+            elif check.parent.check_type.is_participant_adult_check():
+                find_adults = True
+                as_members = "adults"
+
         logger.debug(
-            "Searching for %s with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s), include_inactive (%s), only_scouts_members(%s)",
+            "Searching for %s (as %s) with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s), include_inactive (%s), only_scouts_members(%s)",
             search_term,
+            as_members,
             group_group_admin_id,
             min_age,
             max_age,

@@ -1,6 +1,9 @@
 import logging
+from typing import List
 
 from apps.camps.models import CampType
+
+from scouts_auth.inuits.utils import ListUtils
 
 logger = logging.getLogger(__name__)
 
@@ -31,3 +34,17 @@ class CampTypeService:
         instance.save()
 
         return instance
+
+    def load_camp_types(self, camp_types: List[str] = None) -> List[CampType]:
+        default_camp_type = [CampType.objects.get_default()]
+
+        if camp_types is None or len(camp_types) == 0:
+            logger.warn("No camp type given, getting default CampType instance")
+            camp_types = default_camp_type
+        else:
+            camp_types = ListUtils.concatenate_unique_lists(
+                default_camp_type,
+                [CampType.objects.get(name=name) for name in camp_types],
+            )
+
+        return camp_types

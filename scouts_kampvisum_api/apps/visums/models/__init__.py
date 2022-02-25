@@ -2,7 +2,7 @@ from .camp_year_category_set import CampYearCategorySet
 from .category_set_priority import CategorySetPriority
 from .category import Category
 from .sub_category import SubCategory
-from .check_type import CheckType, CheckTypeEndpoint
+from .check_type import CheckType, CheckTypeEnum
 from .check import Check
 from .category_set import CategorySet
 from .linked_category_set import LinkedCategorySet

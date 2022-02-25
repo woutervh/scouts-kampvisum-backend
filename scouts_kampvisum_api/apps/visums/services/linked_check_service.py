@@ -1,6 +1,5 @@
 import logging
 
-from django.http import Http404
 from django.core.exceptions import ValidationError
 
 from apps.participants.models import InuitsParticipant
@@ -60,7 +59,9 @@ class LinkedCheckService:
             return LinkedSimpleCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedSimpleCheck.DoesNotExist:
             logger.error("LinkedSimpleCheck with id %s not found", check_id)
-            raise Http404
+            raise ValidationError(
+                "LinkedSimplecheck with id {} not found".format(check_id)
+            )
 
     def update_simple_check(self, instance: LinkedSimpleCheck, **data):
         logger.debug(
@@ -77,7 +78,9 @@ class LinkedCheckService:
         try:
             return LinkedDateCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedDateCheck.DoesNotExist:
-            raise Http404
+            raise ValidationError(
+                "LinkedDateCheck with id {} not found".format(check_id)
+            )
 
     def update_date_check(self, instance: LinkedDateCheck, **data):
         logger.debug(
@@ -95,7 +98,9 @@ class LinkedCheckService:
             return LinkedDurationCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedDurationCheck.DoesNotExist:
             logger.error("LinkedDurationCheck with id %s not found", check_id)
-            raise Http404
+            raise ValidationError(
+                "LinkedDurationCheck with id {} not found".format(check_id)
+            )
 
     def update_duration_check(self, instance: LinkedDurationCheck, **data):
         logger.debug(
@@ -114,7 +119,9 @@ class LinkedCheckService:
             return LinkedLocationCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedLocationCheck.DoesNotExist:
             logger.error("LinkedLocationCheck with id %s not found", check_id)
-            raise Http404
+            raise ValidationError(
+                "LinkedLocationCheck with id {} not found".format(check_id)
+            )
 
     def update_location_check(self, request, instance: LinkedLocationCheck, **data):
         return self._update_location(
@@ -126,7 +133,9 @@ class LinkedCheckService:
             return LinkedLocationCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedLocationCheck.DoesNotExist:
             logger.error("LinkedCampLocationCheck with id %s not found", check_id)
-            raise Http404
+            raise ValidationError(
+                "LinkedCampLocatonCheck with id {} not found".format(check_id)
+            )
 
     def update_camp_location_check(
         self, request, instance: LinkedLocationCheck, **data
@@ -174,7 +183,9 @@ class LinkedCheckService:
             return LinkedParticipantCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedParticipantCheck.DoesNotExist:
             logger.error("LinkedParticipantCheck with id %s not found", check_id)
-            raise Http404
+            raise ValidationError(
+                "LinkedParticipantCheck with id {} not found".format(check_id)
+            )
 
     # @TODO make all transactions atomary
     def update_participant_check(
@@ -230,7 +241,9 @@ class LinkedCheckService:
 
         participant = InuitsParticipant.objects.safe_get(id=participant_id)
         if not participant:
-            raise Http404("Unknown participant with id {}".format(participant_id))
+            raise ValidationError(
+                "Unknown participant with id {}".format(participant_id)
+            )
 
         instance.value.remove(participant)
 
@@ -244,7 +257,9 @@ class LinkedCheckService:
             return LinkedFileUploadCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedFileUploadCheck.DoesNotExist:
             logger.error("LinkedFileUploadCheck with id %s not found", check_id)
-            raise Http404
+            raise ValidationError(
+                "LinkedFileUploadCheck with id {} not found".format(check_id)
+            )
 
     def update_file_upload_check(self, instance: LinkedFileUploadCheck, files: list):
         logger.debug(
@@ -252,7 +267,7 @@ class LinkedCheckService:
         )
 
         if not files or len(files) == 0:
-            raise Http404("Can't link an empty list of files")
+            raise ValidationError("Can't link an empty list of files")
 
         for file in files:
             instance.value.add(file)
@@ -272,7 +287,7 @@ class LinkedCheckService:
 
         file = PersistedFile.objects.safe_get(id=persisted_file_id)
         if not file:
-            raise Http404("Unknown file with id {}".format(persisted_file_id))
+            raise ValidationError("Unknown file with id {}".format(persisted_file_id))
 
         instance.value.remove(file)
 
@@ -286,7 +301,9 @@ class LinkedCheckService:
             return LinkedCommentCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedCommentCheck.DoesNotExist:
             logger.error("LinkedCommentCheck with id %s not found", check_id)
-            raise Http404
+            raise ValidationError(
+                "LinkedCommentCheck with id {} not found".format(check_id)
+            )
 
     def update_comment_check(self, instance: LinkedCommentCheck, **data):
         logger.debug(
@@ -304,7 +321,9 @@ class LinkedCheckService:
             return LinkedNumberCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedNumberCheck.DoesNotExist:
             logger.error("LinkedNumberCheck with id %s not found", check_id)
-            raise Http404
+            raise ValidationError(
+                "LinkedNumberCheck with id {} not found".format(check_id)
+            )
 
     def update_number_check(self, instance: LinkedNumberCheck, **data):
         logger.debug(

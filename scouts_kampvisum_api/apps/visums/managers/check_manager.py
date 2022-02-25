@@ -13,6 +13,17 @@ class CheckManager(models.Manager):
     This is useful for defining fixtures.
     """
 
+    def safe_get(self, *args, **kwargs):
+        pk = kwargs.get("id", kwargs.get("pk", None))
+
+        if pk:
+            try:
+                return self.get_queryset().get(pk=pk)
+            except:
+                pass
+
+        return None
+
     def get_by_natural_key(self, name, sub_category):
         logger.debug(
             "GET BY NATURAL KEY %s: (name: %s (%s), sub_category: %s (%s))",

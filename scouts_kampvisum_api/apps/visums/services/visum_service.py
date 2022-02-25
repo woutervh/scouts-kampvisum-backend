@@ -31,7 +31,7 @@ class CampVisumService:
 
         logger.debug("Linking category set to visum")
         category_set: LinkedCategorySet = (
-            self.category_set_service.get_linked_category_set(
+            self.category_set_service.create_linked_category_set(
                 request=request, camp_types=camp_types, camp=camp
             )
         )

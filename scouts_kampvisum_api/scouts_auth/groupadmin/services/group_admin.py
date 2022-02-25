@@ -77,7 +77,11 @@ class GroupAdmin:
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
-                raise Http404
+                raise Http404(
+                    "404 - Unable to post to endpoint {} with payload {}".format(
+                        endpoint, payload
+                    )
+                )
             raise error
 
         return response.json()
@@ -95,7 +99,9 @@ class GroupAdmin:
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
-                raise Http404
+                raise Http404(
+                    "404 GET - Unable to get data from endpoint {}".format(endpoint)
+                )
             raise error
 
         return response.json()

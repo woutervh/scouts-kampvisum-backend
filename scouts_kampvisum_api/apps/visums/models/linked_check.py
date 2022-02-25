@@ -66,6 +66,10 @@ class LinkedCheck(AbstractBaseModel):
             return False
 
     @staticmethod
+    def get_concrete_check_type_by_id(check_id):
+        return LinkedCheck.get_concrete_check_type(Check.objects.safe_get(pk=check_id))
+
+    @staticmethod
     def get_concrete_check_type(check: Check):
         check_type: CheckType = check.check_type
 
@@ -79,6 +83,16 @@ class LinkedCheck(AbstractBaseModel):
             return LinkedLocationCheck()
         elif check_type.is_camp_location_check():
             return LinkedLocationCheck(is_camp_location=True)
+        elif check_type.is_participant_adult_check():
+            return LinkedParticipantAdultCheck()
+        elif check_type.is_participant_responsible_check():
+            return LinkedParticipantResponsibleCheck()
+        elif check_type.is_participant_leader_check():
+            return LinkedParticipantLeaderCheck()
+        elif check_type.is_participant_cook_check():
+            return LinkedParticipantCookCheck()
+        elif check_type.is_participant_member_check():
+            return LinkedParticipantMemberCheck()
         elif check_type.is_participant_check():
             return LinkedParticipantCheck()
         elif check_type.is_file_upload_check():
@@ -174,6 +188,56 @@ class LinkedParticipantCheck(LinkedCheck):
         if len(self.value.all()) > 0:
             return True
         return False
+
+
+# ##############################################################################
+# LinkedParticipantMemberCheck
+#
+# A check that selects members
+# ##############################################################################
+class LinkedParticipantMemberCheck(LinkedParticipantCheck):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+# ##############################################################################
+# LinkedParticipantCookCheck
+#
+# A check that selects cooks
+# ##############################################################################
+class LinkedParticipantCookCheck(LinkedParticipantCheck):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+# ##############################################################################
+# LinkedParticipantLeaderCheck
+#
+# A check that selects leaders
+# ##############################################################################
+class LinkedParticipantLeaderCheck(LinkedParticipantCheck):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+# ##############################################################################
+# LinkedParticipantResponsibleCheck
+#
+# A check that selects responsibles
+# ##############################################################################
+class LinkedParticipantResponsibleCheck(LinkedParticipantCheck):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+# ##############################################################################
+# LinkedParticipantResponsibleCheck
+#
+# A check that selects 21-year-olds
+# ##############################################################################
+class LinkedParticipantAdultCheck(LinkedParticipantCheck):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 # ##############################################################################
