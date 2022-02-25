@@ -1099,7 +1099,41 @@
         "fields": {
             "name": "members_leaders_leaders_estimate",
             "sub_category": [
-                "members_leaders_leaders",
+                "members_leaders_estimates",
+                [
+                    "members_leaders",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "NumberCheck"
+            ],
+            "label": "Geschat aantal leden"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "members_leaders_cooks_estimate",
+            "sub_category": [
+                "members_leaders_estimates",
+                [
+                    "members_leaders",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "NumberCheck"
+            ],
+            "label": "Geschat aantal fouriers"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "members_leaders_members_estimate",
+            "sub_category": [
+                "members_leaders_estimates",
                 [
                     "members_leaders",
                     2022
@@ -1162,23 +1196,6 @@
                 "SimpleCheck"
             ],
             "label": "Voldoende fouriers"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "members_leaders_cooks_estimate",
-            "sub_category": [
-                "members_leaders_cooks",
-                [
-                    "members_leaders",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "NumberCheck"
-            ],
-            "label": "Geschat aantal fouriers"
         }
     },
     {
@@ -1266,23 +1283,6 @@
                 "SimpleCheck"
             ],
             "label": "Leden betaald"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "members_leaders_members_estimate",
-            "sub_category": [
-                "members_leaders_members",
-                [
-                    "members_leaders",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "NumberCheck"
-            ],
-            "label": "Geschat aantal leden"
         }
     },
     {

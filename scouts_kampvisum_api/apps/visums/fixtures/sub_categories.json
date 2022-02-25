@@ -196,6 +196,22 @@
 	{
 		"model": "visums.SubCategory",
 		"fields": {
+			"name": "members_leaders_estimates",
+			"category": [
+				"members_leaders",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Geschat aantal deelnemers"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
 			"name": "members_leaders_leaders",
 			"category": [
 				"members_leaders",
