@@ -3,14 +3,16 @@ from typing import List
 
 from django.db.models import Q
 
-from apps.groups.models import DefaultScoutsSectionName
+from apps.groups.models import DefaultScoutsSectionName, ScoutsGroupType
 
 
 logger = logging.getLogger(__name__)
 
 
 class DefaultScoutsSectionNameService:
-    def load_for_type(self, request, group_type: str) -> List[DefaultScoutsSectionName]:
+    def load_for_type(
+        self, request, group_type: ScoutsGroupType
+    ) -> List[DefaultScoutsSectionName]:
         """
         Loads default names based on group type or the parent group type.
         """
@@ -19,12 +21,12 @@ class DefaultScoutsSectionNameService:
             group_type.group_type,
         )
         types = DefaultScoutsSectionName.objects.filter(
-            group_type__group_type=group_type
+            group_type=group_type
         ).distinct()
 
         if not types or types.count() == 0:
             types = DefaultScoutsSectionName.objects.filter(
-                group_type__parent__group_type=group_type
+                group_type__parent=group_type
             ).distinct()
 
         return types
