@@ -18,6 +18,13 @@ class DefaultScoutsSectionNameService:
             "Loading DefaultScoutsSectionName instances for type '%s'",
             group_type.group_type,
         )
-        return DefaultScoutsSectionName.objects.filter(
-            Q(group_type=group_type) | Q(group_type__parent=group_type)
+        types = DefaultScoutsSectionName.objects.filter(
+            group_type__group_type=group_type
         ).distinct()
+
+        if not types or types.count() == 0:
+            types = DefaultScoutsSectionName.objects.filter(
+                group_type__parent__group_type=group_type
+            ).distinct()
+
+        return types
