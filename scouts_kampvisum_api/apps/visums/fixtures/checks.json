@@ -1028,6 +1028,24 @@
     {
         "model": "visums.Check",
         "fields": {
+            "name": "safety_foreign_rules_european_insurance_card",
+            "sub_category": [
+                "safety_foreign_rules",
+                [
+                    "safety",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Europese ziekteverzekeringskaart",
+            "explanation": ""
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
             "name": "safety_foreign_rules_comments",
             "sub_category": [
                 "safety_foreign_rules",
