@@ -1,4 +1,4 @@
-import logging, uuid
+import logging
 
 from django_filters import rest_framework as filters
 from django.db.models import Q

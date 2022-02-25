@@ -1,16 +1,20 @@
-import django_filters
+from django_filters import rest_framework as filters
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 
 
-class ScoutsGroupFilter(django_filters.FilterSet):
+class ScoutsGroupFilter(filters.FilterSet):
 
-    group = django_filters.CharFilter(method="search_group")
+    group = filters.CharFilter(method="search_group")
 
     class Meta:
         model = AbstractScoutsGroup
-        fields = "__all__"
+        fields = []
+
+    @property
+    def qs(self):
+        return super().qs
 
     def search_group(self, queryset, name, value):
-
-        return ()
+        # return self.qs.all()
+        return []

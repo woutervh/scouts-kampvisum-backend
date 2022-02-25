@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class ScoutsSectionViewSet(viewsets.GenericViewSet):
 
     serializer_class = ScoutsSectionSerializer
-    queryset = ScoutsSection.objects.all()
+    queryset = ScoutsSection.objects.all().filter(hidden=False)
 
     section_service = ScoutsSectionService()
 
@@ -133,7 +133,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
     def list_by_group(self, request, group_admin_id):
         instances = ScoutsSection.objects.all().filter(
-            group_group_admin_id=group_admin_id
+            group_group_admin_id=group_admin_id, hidden=False
         )
         page = self.paginate_queryset(instances)
 

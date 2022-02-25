@@ -9,6 +9,7 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 from apps.groups.models import ScoutsSectionName
 from apps.groups.services import ScoutsSectionNameService
 from apps.groups.serializers import ScoutsSectionNameSerializer
+from apps.groups.filters import ScoutsSectionFilter
 
 
 logger = logging.getLogger(__name__)
@@ -21,6 +22,7 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
 
     serializer_class = ScoutsSectionNameSerializer
     queryset = ScoutsSectionName.objects.all()
+    filterset_class = ScoutsSectionFilter()
 
     section_name_service = ScoutsSectionNameService()
 
