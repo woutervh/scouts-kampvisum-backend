@@ -16,10 +16,14 @@ class ScoutsSectionNameManager(models.Manager):
 
     def get_by_natural_key(self, name, gender, age_group):
         logger.debug(
-            "GET BY NATURAL KEY %s: (name: %s (%s))",
+            "GET BY NATURAL KEY %s: (name: %s (%s), gender: %s (%s), age_group: %s (%s))",
             "ScoutsSectionName",
             name,
             type(name).__name__,
+            gender,
+            type(gender).__name__,
+            age_group,
+            type(age_group).__name__,
         )
         return self.get(name=name, gender=gender, age_group=age_group)
 

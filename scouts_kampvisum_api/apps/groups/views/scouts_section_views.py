@@ -125,6 +125,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
             )
             return Response(serializer.data)
 
+    # @TODO in filter
     @action(
         detail=False,
         methods=["get"],

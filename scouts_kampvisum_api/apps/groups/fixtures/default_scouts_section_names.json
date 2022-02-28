@@ -19,19 +19,6 @@
 				"Groep"
 			],
 			"name": [
-				"elfjes",
-				"F",
-				6
-			]
-		}
-	},
-	{
-		"model": "groups.DefaultScoutsSectionName",
-		"fields": {
-			"group_type": [
-				"Groep"
-			],
-			"name": [
 				"welpen",
 				"M",
 				9
@@ -47,19 +34,6 @@
 			"name": [
 				"kabouters",
 				"F",
-				9
-			]
-		}
-	},
-	{
-		"model": "groups.DefaultScoutsSectionName",
-		"fields": {
-			"group_type": [
-				"Groep"
-			],
-			"name": [
-				"wouters",
-				"I",
 				9
 			]
 		}
@@ -267,7 +241,7 @@
 			],
 			"name": [
 				"kapoenen",
-				"M",
+				"I",
 				6
 			]
 		}
@@ -279,8 +253,8 @@
 				"Test"
 			],
 			"name": [
-				"welpen",
-				"M",
+				"kabouters en welpen",
+				"I",
 				9
 			]
 		}

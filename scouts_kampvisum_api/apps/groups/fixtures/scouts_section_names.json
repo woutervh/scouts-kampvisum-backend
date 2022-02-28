@@ -10,7 +10,7 @@
 	{
 		"model": "groups.ScoutsSectionName",
 		"fields": {
-			"name": "elfjes",
+			"name": "kapoenen",
 			"gender": "F",
 			"age_group": 6
 		}
@@ -18,7 +18,7 @@
 	{
 		"model": "groups.ScoutsSectionName",
 		"fields": {
-			"name": "zeehondjes",
+			"name": "kapoenen",
 			"gender": "I",
 			"age_group": 6
 		}
@@ -36,14 +36,6 @@
 		"fields": {
 			"name": "kabouters",
 			"gender": "F",
-			"age_group": 9
-		}
-	},
-	{
-		"model": "groups.ScoutsSectionName",
-		"fields": {
-			"name": "zeewelpen",
-			"gender": "I",
 			"age_group": 9
 		}
 	},
@@ -74,14 +66,6 @@
 	{
 		"model": "groups.ScoutsSectionName",
 		"fields": {
-			"name": "scheepsmakkers",
-			"gender": "I",
-			"age_group": 11
-		}
-	},
-	{
-		"model": "groups.ScoutsSectionName",
-		"fields": {
 			"name": "jonggivers",
 			"gender": "I",
 			"age_group": 11
@@ -106,14 +90,6 @@
 	{
 		"model": "groups.ScoutsSectionName",
 		"fields": {
-			"name": "zeeverkenners",
-			"gender": "I",
-			"age_group": 14
-		}
-	},
-	{
-		"model": "groups.ScoutsSectionName",
-		"fields": {
 			"name": "givers",
 			"gender": "I",
 			"age_group": 14
@@ -125,6 +101,38 @@
 			"name": "jins",
 			"gender": "I",
 			"age_group": 17
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "zeehondjes",
+			"gender": "I",
+			"age_group": 6
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "zeewelpen",
+			"gender": "I",
+			"age_group": 9
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "scheepsmakkers",
+			"gender": "I",
+			"age_group": 11
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "zeeverkenners",
+			"gender": "I",
+			"age_group": 14
 		}
 	},
 	{
