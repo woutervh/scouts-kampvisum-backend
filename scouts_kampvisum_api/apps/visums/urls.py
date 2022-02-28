@@ -13,6 +13,7 @@ from apps.visums.views import (
     CategorySetViewSet,
     CampVisumViewSet,
     LinkedCheckViewSet,
+    LinkedCategoryViewSet,
 )
 
 simple_check = LinkedCheckViewSet.as_view(
@@ -119,6 +120,7 @@ router.register(r"categories", CategoryViewSet, "categories")
 router.register(r"sub_categories", SubCategoryViewSet, "sub_categories")
 router.register(r"category_sets", CategorySetViewSet, "category_sets")
 router.register(r"visums", CampVisumViewSet, "visums")
+router.register(r"visums_categories", LinkedCategoryViewSet, "categories")
 router.register(r"checks", LinkedCheckViewSet, "checks")
 
 urlpatterns += router.urls
