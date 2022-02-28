@@ -12,6 +12,7 @@ from apps.participants.models import InuitsParticipant
 from apps.participants.serializers import InuitsParticipantSerializer
 from apps.participants.filters import InuitsParticipantFilter
 from apps.participants.services import InuitsParticipantService
+from apps.participants.pagination import InuitsParticipantPagination
 
 from apps.visums.models import LinkedCheck
 
@@ -23,6 +24,8 @@ logger = logging.getLogger(__name__)
 
 
 class ParticipantViewSet(viewsets.GenericViewSet):
+
+    pagination_class = InuitsParticipantPagination
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = InuitsParticipantFilter
@@ -126,6 +129,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def list_scouts_members(self, request):
         return self._list(request=request, only_scouts_members=True)
 
+    # @TODO sort by name etc
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False):
         check = self.request.GET.get("check", None)
         search_term = self.request.GET.get("term", None)

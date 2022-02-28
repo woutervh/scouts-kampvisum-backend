@@ -319,6 +319,17 @@ CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 
 # ############################################################################ #
 #                                                                              #
+# PAGINATION                                                                   #
+#                                                                              #
+# ############################################################################ #
+DEFAULT_PAGINATION_RESULTS = env.int("DEFAULT_PAGINATION_RESULTS", 10)
+DEFAULT_PAGINATION_MAX_RESULTS = env.int("DEFAULT_PAGINATION_MAX_RESULTS", 1000)
+PARTICIPANT_PAGINATION_RESULTS = env.int("PARTICIPANT_PAGINATION_RESULTS", 20)
+PARTICIPANT_PAGINATION_MAX_RESULTS = env.int("PARTICIPANT_PAGINATION_MAX_RESULTS", 1000)
+
+
+# ############################################################################ #
+#                                                                              #
 # SCOUTS                                                                       #
 #                                                                              #
 # ############################################################################ #
