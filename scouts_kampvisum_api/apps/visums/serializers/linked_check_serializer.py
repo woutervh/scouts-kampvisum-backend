@@ -67,6 +67,16 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
             value = LinkedLocationCheckSerializer.get_value(check)
         elif check.parent.check_type.is_camp_location_check():
             value = LinkedCampLocationCheckSerializer.get_value(check)
+        elif check.parent.check_type.is_participant_member_check():
+            value = LinkedParticipantMemberCheckSerializer.get_value(check)
+        elif check.parent.check_type.is_participant_cook_check():
+            value = LinkedParticipantCookCheckSerializer.get_value(check)
+        elif check.parent.check_type.is_participant_leader_check():
+            value = LinkedParticipantLeaderCheckSerializer.get_value(check)
+        elif check.parent.check_type.is_participant_responsible_check():
+            value = LinkedParticipantResponsibleCheckSerializer.get_value(check)
+        elif check.parent.check_type.is_participant_adult_check():
+            value = LinkedParticipantAdultCheckSerializer.get_value(check)
         elif check.parent.check_type.is_participant_check():
             value = LinkedParticipantCheckSerializer.get_value(check)
         elif check.parent.check_type.is_file_upload_check():

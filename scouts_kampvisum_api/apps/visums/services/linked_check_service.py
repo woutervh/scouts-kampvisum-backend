@@ -180,7 +180,7 @@ class LinkedCheckService:
                 instance=linked_location,
                 check=instance,
                 is_camp_location=is_camp_location,
-                **location_data
+                **location_data,
             )
 
         return self.notify_change(instance)
@@ -203,36 +203,36 @@ class LinkedCheckService:
         )
         data_changed = False
 
-        participants = data.get("participants", [])
-        if not participants or len(participants) == 0:
+        visum_participants = data.get("participants", [])
+        if not visum_participants or len(visum_participants) == 0:
             logger.error("Empty participant list")
             raise ValidationError("Empty participant list")
 
         if not instance.parent.is_multiple:
-            if len(participants) != 1:
+            if len(visum_participants) != 1:
                 logger.error("This participant list can have only one participant")
                 raise ValidationError(
                     "This participant list is limited to 1 participant, {} given as data, {} present on object".format(
-                        len(participants), instance.participants.count()
+                        len(visum_participants), instance.participants.count()
                     )
                 )
-            existing_participants = instance.participants.all()
-            for existing_participant in existing_participants:
+            existing_visum_participants = instance.participants.all()
+            for existing_visum_participant in existing_visum_participants:
                 self.unlink_participant(
                     request=request,
                     instance=instance,
-                    participant_id=existing_participant.id,
+                    participant_id=existing_visum_participant.id,
                 )
             data_changed = True
 
-        for participant in participants:
-            participant = self.participant_service.create_or_update(
-                participant=participant,
-                participant_type=instance.participant_check_type,
+        for visum_participant in visum_participants:
+            visum_participant = self.participant_service.create_or_update(
                 user=request.user,
+                participant_type=instance.participant_check_type,
+                **visum_participant,
             )
 
-            instance.participants.add(participant)
+            instance.participants.add(visum_participant)
 
         return self.notify_change(instance=instance, data_changed=data_changed)
 

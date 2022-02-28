@@ -1,13 +1,12 @@
 import logging
 
+from django.db import transaction
 from django.conf import settings
-from django.core.exceptions import ValidationError
 
-from apps.participants.models import InuitsParticipant, VisumParticipant
+from apps.participants.models import VisumParticipant
 from apps.participants.models.enums import ParticipantType
 from apps.participants.models.enums import PaymentStatus
-
-from scouts_auth.groupadmin.services import GroupAdmin
+from apps.participants.services import InuitsParticipantService
 
 
 logger = logging.getLogger(__name__)
@@ -15,160 +14,106 @@ logger = logging.getLogger(__name__)
 
 class VisumParticipantService:
 
-    groupadmin = GroupAdmin()
+    participant_service = InuitsParticipantService()
 
+    @transaction.atomic
     def create_or_update(
         self,
         user: settings.AUTH_USER_MODEL,
-        participant: VisumParticipant,
         participant_type: ParticipantType = ParticipantType.PARTICIPANT,
         skip_validation: bool = False,
+        **fields: dict,
     ) -> VisumParticipant:
-        existing_participant = VisumParticipant.objects.safe_get(id=participant.id)
+        visum_participant = VisumParticipant(**fields)
+        existing_visum_participant = VisumParticipant.objects.safe_get(
+            id=fields.get("id", None)
+        )
 
-        if existing_participant:
-            logger.debug("Updating existing participant %s", existing_participant.id)
+        if existing_visum_participant:
+            logger.debug(
+                "Updating existing visum participant %s", existing_visum_participant.id
+            )
             return self.update_visum_participant(
-                participant=existing_participant,
-                updated_participant=participant,
+                visum_participant=existing_visum_participant,
+                updated_visum_participant=visum_participant,
                 updated_by=user,
                 skip_validation=skip_validation,
             )
         else:
-            logger.debug("Creating participant %s", participant.participant.email)
+            logger.debug(
+                "Creating visum participant %s", visum_participant.participant.email
+            )
             return self.create_visum_participant(
-                participant=participant,
+                visum_participant=visum_participant,
                 participant_type=participant_type,
                 created_by=user,
                 skip_validation=skip_validation,
             )
 
-    def create_or_update_member_participant(
-        self,
-        user: settings.AUTH_USER_MODEL,
-        participant: VisumParticipant,
-        participant_type: ParticipantType = ParticipantType.PARTICIPANT,
-        instance: VisumParticipant = None,
-    ) -> VisumParticipant:
-        """Creates a local representation of a scouts member."""
-        member_participant = None
-        if participant.participant.has_group_admin_id():
-            group_admin_id = participant.participant.group_admin_id
-            logger.debug(
-                "Looking for participant member with group admin id %s",
-                group_admin_id,
-            )
-            member_participant = VisumParticipant.objects.safe_get(
-                participant__group_admin_id=group_admin_id
-            )
-            scouts_member = self.groupadmin.get_member_info(
-                active_user=user, group_admin_id=group_admin_id
-            )
-
-            if not scouts_member:
-                raise ValidationError(
-                    "Invalid group admin id for member: {}".format(group_admin_id)
-                )
-
-            member_participant = VisumParticipant()
-
-            member_participant.participant_type = participant_type
-            member_participant.participant = InuitsParticipant.from_scouts_member(
-                scouts_member=scouts_member, member_participant=member_participant
-            )
-            member_participant.payment_status = PaymentStatus.NOT_PAYED
-
-            member_participant.is_member = True
-            member_participant.group_group_admin_id = None
-            member_participant.comment = participant.comment
-            member_participant.created_by = user
-
-            member_participant.full_clean()
-            member_participant.save()
-
-        return member_participant
-
+    @transaction.atomic
     def create_visum_participant(
         self,
         created_by: settings.AUTH_USER_MODEL,
-        participant: VisumParticipant,
+        visum_participant: VisumParticipant,
         participant_type: ParticipantType = ParticipantType.PARTICIPANT,
         skip_validation: bool = False,
     ) -> VisumParticipant:
-        logger.debug("Creating VisumParticipant with email %s", participant.email)
+        logger.debug(
+            "Creating VisumParticipant with email %s",
+            visum_participant.participant.email,
+        )
         # Check if the instance already exists
-        if participant.has_id():
-            logger.debug("Querying for VisumParticipant with id %s", participant.id)
-            object = VisumParticipant.objects.safe_get(pk=participant.id)
+        if visum_participant.has_id():
+            logger.debug(
+                "Querying for VisumParticipant with id %s", visum_participant.id
+            )
+            object = VisumParticipant.objects.safe_get(pk=visum_participant.id)
             if object:
                 logger.debug(
                     "Found VisumParticipant with id %s, not creating",
-                    participant.id,
+                    visum_participant.id,
                 )
-                return participant
+                return visum_participant
 
         logger.debug(
             "Creating VisumParticipant with name %s %s and group admin id %s for group %s",
-            participant.participant.first_name,
-            participant.participant.last_name,
-            participant.participant.group_admin_id,
-            participant.participant.group_group_admin_id,
+            visum_participant.participant.first_name,
+            visum_participant.participant.last_name,
+            visum_participant.participant.group_admin_id,
+            visum_participant.participant.group_group_admin_id,
         )
 
-        member = self.create_or_update_member_participant(
-            participant=participant, participant_type=participant_type, user=created_by
+        participant = self.participant_service.create_or_update(
+            participant=visum_participant.participant,
+            user=created_by,
+            skip_validation=skip_validation,
         )
-        if member:
-            return member
 
-        if not skip_validation:
-            if not self.groupadmin.validate_group(
-                active_user=created_by,
-                group_group_admin_id=participant.group_group_admin_id,
-            ):
-                raise ValidationError(
-                    "Invalid group admin id for group: {}".format(
-                        participant.group_group_admin_id
-                    )
-                )
+        visum_participant = VisumParticipant()
 
-        participant = VisumParticipant(
-            group_admin_id=None,
-            is_member=False,
-            group_group_admin_id=participant.group_group_admin_id,
-            first_name=participant.first_name,
-            last_name=participant.last_name,
-            phone_number=participant.phone_number,
-            cell_number=participant.cell_number,
-            email=participant.email,
-            birth_date=participant.birth_date,
-            gender=participant.gender,
-            street=participant.street,
-            number=participant.number,
-            letter_box=participant.letter_box,
-            postal_code=participant.postal_code,
-            city=participant.city,
-            comment=participant.comment,
-            created_by=created_by,
-        )
-        participant.full_clean()
-        participant.save()
+        visum_participant.participant_type = participant_type
+        visum_participant.payment_status = visum_participant.payment_status
+        visum_participant.participant = participant
 
-        return participant
+        visum_participant.full_clean()
+        visum_participant.save()
 
-    def update(
+        return visum_participant
+
+    @transaction.atomic
+    def update_visum_participant(
         self,
         *,
-        participant: VisumParticipant,
-        updated_participant: VisumParticipant,
+        visum_participant: VisumParticipant,
+        updated_visum_participant: VisumParticipant,
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
     ) -> VisumParticipant:
         logger.debug(
             "Updating VisumParticipant with id %s and group_admin_id %s and e-mail %s",
-            participant.id,
-            participant.group_admin_id,
-            participant.email,
+            visum_participant.id,
+            visum_participant.group_admin_id,
+            visum_participant.email,
         )
         member = self.create_or_update_member_participant(
             participant=updated_participant, user=updated_by
@@ -262,6 +207,7 @@ class VisumParticipantService:
 
         return participant
 
+    @transaction.atomic
     def toggle_payment_status(self, participant_id):
         participant: VisumParticipant = VisumParticipant.objects.safe_get(
             id=participant_id, raise_error=True

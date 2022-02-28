@@ -27,9 +27,3 @@ class VisumParticipantSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         data = super().to_internal_value(data)
         return data
-
-    def validate(self, data: dict) -> dict:
-        if isinstance(data, VisumParticipant):
-            return data
-
-        return VisumParticipant(**data)
