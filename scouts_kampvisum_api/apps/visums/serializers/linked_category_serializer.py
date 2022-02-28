@@ -34,4 +34,12 @@ class LinkedCategorySerializer(serializers.ModelSerializer):
 
         data["readable_name"] = obj.readable_name
 
+        data["camp"] = {}
+        data["visum"] = {}
+
+        visum = obj.category_set.visum.first()
+
+        data["camp"]["name"] = visum.camp.name
+        data["visum"]["id"] = visum.id
+
         return data
