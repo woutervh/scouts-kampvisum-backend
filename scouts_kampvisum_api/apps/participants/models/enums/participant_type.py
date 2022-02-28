@@ -17,8 +17,11 @@ class ParticipantType(models.TextChoices):
     ADULT = "A", "adult"
 
     @staticmethod
-    def endpoint_from_type(check_type: str):
+    def parse_participant_type(participant_type: str = None):
+        if not participant_type:
+            return ParticipantType.PARTICIPANT
+
         for option in ParticipantType.choices:
-            if option[0] == check_type:
-                return option[1]
+            if option[0] == participant_type:
+                return option
         return None

@@ -48,6 +48,19 @@ class ScoutsSectionNameManager(models.Manager):
             except:
                 pass
 
+        if name and gender:
+            results = list(self.get_queryset().all().filter(name=name, gender=gender))
+
+            if len(results) == 1:
+                return results[0]
+
+            if len(results) > 1:
+                raise ValidationError(
+                    "ScoutsSectionName instances were found ({}) with name {} and gender {}, but age_group is required to return a single result".format(
+                        len(results), name, gender
+                    )
+                )
+
         if raise_error:
             raise ValidationError(
                 "Unable to locate ScoutsSectionName instance with the provided params: (id: {}, (name: {}, gender: {}, age_group: {}))".format(

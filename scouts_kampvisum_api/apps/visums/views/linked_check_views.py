@@ -363,12 +363,35 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             )
         )
 
+    def _get_and_validate_participant_check(self, check_id=None):
+        if not check_id:
+            raise ValidationError(
+                "Can't execute ParticipantCheck CRUD without a check id"
+            )
+
+        instance: LinkedParticipantCheck = (
+            self.linked_check_service.get_participant_check(check_id)
+        )
+
+        if not instance:
+            logger.error(
+                "Can't unlink participant: Unknown participant check with id {}",
+                check_id,
+            )
+            raise ValidationError(
+                "Can't unlink participant: Unknown participant check with id {}".format(
+                    check_id
+                )
+            )
+
+        return instance
+
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
     )
     def retrieve_participant_check(self, request, check_id=None):
-        instance: LinkedParticipantCheck = (
-            self.linked_check_service.get_participant_check(check_id)
+        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
+            check_id=check_id
         )
         serializer = LinkedParticipantCheckSerializer(
             instance, context={"request": request}
@@ -382,7 +405,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     def partial_update_participant_check(self, request, check_id):
         logger.debug("PARTICIPANT CHECK UPDATE REQUEST DATA: %s", request.data)
-        instance = self.linked_check_service.get_participant_check(check_id)
+        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
+            check_id=check_id
+        )
 
         serializer = LinkedParticipantCheckSerializer(
             data=request.data,
@@ -409,20 +434,34 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         request_body=LinkedParticipantCheckSerializer,
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
     )
+    def partial_update_participant_check_payment_status(
+        self, request, check_id, participant_id
+    ):
+        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
+            check_id=check_id
+        )
+
+        instance = (
+            self.linked_check_service.update_participant_check_toggle_payment_status(
+                request=request, instance=instance
+            )
+        )
+
+        output_serializer = LinkedParticipantCheckSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=LinkedParticipantCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
+    )
     def unlink_participant(self, request, check_id, participant_id):
         logger.debug("PARTICIPANT CHECK UNLINK REQUEST DATA: %s", request.data)
-        instance = self.linked_check_service.get_participant_check(check_id)
-
-        if not instance:
-            logger.error(
-                "Can't unlink participant: Unknown participant check with id {}",
-                check_id,
-            )
-            raise ValidationError(
-                "Can't unlink participant: Unknown participant check with id {}".format(
-                    check_id
-                )
-            )
+        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
+            check_id=check_id
+        )
 
         serializer = LinkedParticipantCheckSerializer(
             data=request.data,

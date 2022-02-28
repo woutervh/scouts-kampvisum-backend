@@ -1,9 +1,11 @@
 import logging
 
 from django.core.exceptions import ValidationError
+from django.db import transaction
 
-from apps.participants.models import InuitsParticipant
-from apps.participants.services import InuitsParticipantService
+from apps.participants.models import VisumParticipant
+from apps.participants.models.enums import ParticipantType
+from apps.participants.services import VisumParticipantService
 
 from apps.locations.models import LinkedLocation
 from apps.locations.services import CampLocationService
@@ -33,7 +35,7 @@ class LinkedCheckService:
 
     location_service = CampLocationService()
     persisted_file_service = PersistedFileService()
-    participant_service = InuitsParticipantService()
+    participant_service = VisumParticipantService()
     groupadmin = GroupAdminMemberService()
     change_handler_service = ChangeHandlerService()
 
@@ -42,7 +44,6 @@ class LinkedCheckService:
         concrete_type = LinkedCheck.get_concrete_check_type(check.parent)
 
         check = concrete_type.__class__.objects.get(linkedcheck_ptr=check.id)
-        # logger.debug("CONCRETE CHECK: %s", check)
 
         return check
 
@@ -63,6 +64,7 @@ class LinkedCheckService:
                 "LinkedSimplecheck with id {} not found".format(check_id)
             )
 
+    @transaction.atomic
     def update_simple_check(self, instance: LinkedSimpleCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
@@ -82,6 +84,7 @@ class LinkedCheckService:
                 "LinkedDateCheck with id {} not found".format(check_id)
             )
 
+    @transaction.atomic
     def update_date_check(self, instance: LinkedDateCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
@@ -102,6 +105,7 @@ class LinkedCheckService:
                 "LinkedDurationCheck with id {} not found".format(check_id)
             )
 
+    @transaction.atomic
     def update_duration_check(self, instance: LinkedDurationCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
@@ -123,6 +127,7 @@ class LinkedCheckService:
                 "LinkedLocationCheck with id {} not found".format(check_id)
             )
 
+    @transaction.atomic
     def update_location_check(self, request, instance: LinkedLocationCheck, **data):
         return self._update_location(
             request=request, instance=instance, is_camp_location=False, **data
@@ -137,6 +142,7 @@ class LinkedCheckService:
                 "LinkedCampLocatonCheck with id {} not found".format(check_id)
             )
 
+    @transaction.atomic
     def update_camp_location_check(
         self, request, instance: LinkedLocationCheck, **data
     ):
@@ -144,6 +150,7 @@ class LinkedCheckService:
             request=request, instance=instance, is_camp_location=True, **data
         )
 
+    @transaction.atomic
     def _update_location(
         self, request, instance: LinkedLocationCheck, is_camp_location=False, **data
     ):
@@ -187,7 +194,7 @@ class LinkedCheckService:
                 "LinkedParticipantCheck with id {} not found".format(check_id)
             )
 
-    # @TODO make all transactions atomary
+    @transaction.atomic
     def update_participant_check(
         self, request, instance: LinkedParticipantCheck, **data
     ):
@@ -196,7 +203,7 @@ class LinkedCheckService:
         )
         data_changed = False
 
-        participants = data.get("value", [])
+        participants = data.get("participants", [])
         if not participants or len(participants) == 0:
             logger.error("Empty participant list")
             raise ValidationError("Empty participant list")
@@ -206,10 +213,10 @@ class LinkedCheckService:
                 logger.error("This participant list can have only one participant")
                 raise ValidationError(
                     "This participant list is limited to 1 participant, {} given as data, {} present on object".format(
-                        len(participants), instance.value.count()
+                        len(participants), instance.participants.count()
                     )
                 )
-            existing_participants = instance.value.all()
+            existing_participants = instance.participants.all()
             for existing_participant in existing_participants:
                 self.unlink_participant(
                     request=request,
@@ -219,16 +226,28 @@ class LinkedCheckService:
             data_changed = True
 
         for participant in participants:
-            logger.debug("participant: %s", participant)
-
             participant = self.participant_service.create_or_update(
-                participant=participant, user=request.user
+                participant=participant,
+                participant_type=instance.participant_check_type,
+                user=request.user,
             )
 
-            instance.value.add(participant)
+            instance.participants.add(participant)
 
         return self.notify_change(instance=instance, data_changed=data_changed)
 
+    @transaction.atomic
+    def update_participant_check_toggle_payment_status(
+        self, request, instance: LinkedParticipantCheck, participant_id
+    ) -> LinkedParticipantCheck:
+        logger.debug(
+            "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+        self.participant_service.toggle_payment_status(participant_id)
+
+        return self.notify_change(instance=instance)
+
+    @transaction.atomic
     def unlink_participant(
         self, request, instance: LinkedParticipantCheck, participant_id, **data
     ):
@@ -239,7 +258,7 @@ class LinkedCheckService:
         )
         logger.debug("DATA: %s", data)
 
-        participant = InuitsParticipant.objects.safe_get(id=participant_id)
+        participant = VisumParticipant.objects.safe_get(id=participant_id)
         if not participant:
             raise ValidationError(
                 "Unknown participant with id {}".format(participant_id)
@@ -261,6 +280,7 @@ class LinkedCheckService:
                 "LinkedFileUploadCheck with id {} not found".format(check_id)
             )
 
+    @transaction.atomic
     def update_file_upload_check(self, instance: LinkedFileUploadCheck, files: list):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
@@ -277,6 +297,7 @@ class LinkedCheckService:
 
         return self.notify_change(instance)
 
+    @transaction.atomic
     def unlink_file(
         self, request, instance: LinkedFileUploadCheck, persisted_file_id, **data
     ):
@@ -305,6 +326,7 @@ class LinkedCheckService:
                 "LinkedCommentCheck with id {} not found".format(check_id)
             )
 
+    @transaction.atomic
     def update_comment_check(self, instance: LinkedCommentCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
@@ -325,6 +347,7 @@ class LinkedCheckService:
                 "LinkedNumberCheck with id {} not found".format(check_id)
             )
 
+    @transaction.atomic
     def update_number_check(self, instance: LinkedNumberCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id

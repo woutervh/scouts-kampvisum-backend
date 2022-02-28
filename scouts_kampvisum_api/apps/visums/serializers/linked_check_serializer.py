@@ -4,7 +4,8 @@ from typing import List
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
-from apps.participants.serializers import InuitsParticipantSerializer
+from apps.participants.models.enums import ParticipantType
+from apps.participants.serializers import VisumParticipantSerializer
 
 from apps.locations.serializers import LinkedLocationSerializer
 
@@ -18,7 +19,6 @@ from apps.visums.models import (
     LinkedFileUploadCheck,
     LinkedCommentCheck,
     LinkedNumberCheck,
-    CheckTypeEnum,
 )
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CheckSerializer
@@ -28,7 +28,6 @@ from apps.visums.urls import LinkedCheckEndpointFactory
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 from scouts_auth.inuits.serializers.fields import (
     DatetypeAwareDateSerializerField,
-    DefaultIntegerSerializerField,
     RequiredCharSerializerField,
     OptionalIntegerSerializerField,
 )
@@ -42,9 +41,6 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     parent = CheckSerializer()
     endpoint = serializers.SerializerMethodField()
     value = serializers.SerializerMethodField()
-    # state = serializers.ChoiceField(
-    #     choices=CheckState.choices, default=CheckState.UNCHECKED
-    # )
     state = serializers.SerializerMethodField()
     _state = CheckState.UNCHECKED
 
@@ -204,7 +200,10 @@ class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
-    value = InuitsParticipantSerializer(many=True)
+    participant_check_type = serializers.ChoiceField(
+        choices=ParticipantType.choices, default=ParticipantType.PARTICIPANT
+    )
+    participants = VisumParticipantSerializer(many=True)
 
     class Meta:
         model = LinkedParticipantCheck
@@ -212,7 +211,99 @@ class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
 
     @staticmethod
     def get_value(obj: LinkedParticipantCheck) -> List[dict]:
-        return InuitsParticipantSerializer(obj.value, many=True).data
+        data = {}
+
+        data["participant_check_type"] = obj.participant_check_type
+        data["participants"] = VisumParticipantSerializer(
+            obj.participants.all(), many=True
+        ).data
+
+        return data
+
+
+class LinkedParticipantMemberCheckSerializer(LinkedCheckSerializer):
+
+    participants = VisumParticipantSerializer(many=True)
+
+    class Meta:
+        model = LinkedParticipantCheck
+        fields = "__all__"
+
+    @staticmethod
+    def get_value(obj: LinkedParticipantCheck) -> List[dict]:
+        data = LinkedParticipantCheckSerializer().get_value(obj)
+
+        data["participant_check_type"] = ParticipantType.MEMBER
+
+        return data
+
+
+class LinkedParticipantCookCheckSerializer(LinkedCheckSerializer):
+
+    participants = VisumParticipantSerializer(many=True)
+
+    class Meta:
+        model = LinkedParticipantCheck
+        fields = "__all__"
+
+    @staticmethod
+    def get_value(obj: LinkedParticipantCheck) -> List[dict]:
+        data = LinkedParticipantCheckSerializer().get_value(obj)
+
+        data["participant_check_type"] = ParticipantType.COOK
+
+        return data
+
+
+class LinkedParticipantLeaderCheckSerializer(LinkedCheckSerializer):
+
+    participants = VisumParticipantSerializer(many=True)
+
+    class Meta:
+        model = LinkedParticipantCheck
+        fields = "__all__"
+
+    @staticmethod
+    def get_value(obj: LinkedParticipantCheck) -> List[dict]:
+        data = LinkedParticipantCheckSerializer().get_value(obj)
+
+        data["participant_check_type"] = ParticipantType.LEADER
+
+        return data
+
+
+class LinkedParticipantResponsibleCheckSerializer(LinkedCheckSerializer):
+
+    participants = VisumParticipantSerializer(many=True)
+
+    class Meta:
+        model = LinkedParticipantCheck
+        fields = "__all__"
+
+    @staticmethod
+    def get_value(obj: LinkedParticipantCheck) -> List[dict]:
+        data = LinkedParticipantCheckSerializer().get_value(obj)
+
+        data["participant_check_type"] = ParticipantType.RESPONSIBLE
+
+        return data
+
+
+class LinkedParticipantAdultCheckSerializer(LinkedCheckSerializer):
+
+    participants = VisumParticipantSerializer(many=True)
+
+    class Meta:
+        model = LinkedParticipantCheck
+        fields = "__all__"
+
+    @staticmethod
+    def get_value(obj: LinkedParticipantCheck) -> List[dict]:
+        data = LinkedParticipantCheckSerializer().get_value(obj)
+
+        data["participant_check_type"] = ParticipantType.ADULT
+
+        return data
 
 
 class LinkedFileUploadCheckSerializer(LinkedCheckSerializer):

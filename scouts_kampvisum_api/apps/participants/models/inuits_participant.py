@@ -1,14 +1,13 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from apps.participants.models.enums import ParticipantType
 from apps.participants.managers import InuitsParticipantManager
 
 from scouts_auth.groupadmin.scouts import GroupAdminIdField
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 
 from scouts_auth.inuits.models import InuitsPerson, GenderHelper
-from scouts_auth.inuits.models.fields import OptionalCharField, DefaultCharField
+from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class InuitsParticipant(InuitsPerson):
@@ -19,11 +18,6 @@ class InuitsParticipant(InuitsPerson):
     is_member = models.BooleanField(default=False)
     comment = OptionalCharField(max_length=300)
     inactive_member = models.BooleanField(default=False)
-    participant_type = DefaultCharField(
-        choices=ParticipantType.choices,
-        default=ParticipantType.PARTICIPANT,
-        max_length=1,
-    )
 
     class Meta:
         ordering = ["first_name", "last_name", "birth_date", "group_group_admin_id"]
@@ -40,7 +34,7 @@ class InuitsParticipant(InuitsPerson):
     def exists(self) -> bool:
         return InuitsParticipant.objects.exists(self.id)
 
-    def equals(self, updated_participant):
+    def equals_participant(self, updated_participant):
         if updated_participant is None:
             return False
 
@@ -58,7 +52,7 @@ class InuitsParticipant(InuitsPerson):
         )
 
     def __str__(self):
-        return "id ({}), is_member ({}), group_group_admin_id ({}), group_admin_id ({}), {}, comment ({}), inactive_member ({}), participant_type ({})".format(
+        return "id ({}), is_member ({}), group_group_admin_id ({}), group_admin_id ({}), {}, comment ({}), inactive_member ({})".format(
             self.id,
             self.is_member,
             self.group_group_admin_id,
@@ -66,7 +60,6 @@ class InuitsParticipant(InuitsPerson):
             self.person_to_str(),
             self.comment,
             self.inactive_member,
-            self.participant_type,
         )
 
     @staticmethod

@@ -5,7 +5,8 @@ from django.core.exceptions import ValidationError
 
 from apps.locations.models import LinkedLocation
 
-from apps.participants.models import InuitsParticipant
+from apps.participants.models import VisumParticipant
+from apps.participants.models.enums import ParticipantType
 
 from apps.visums.models import (
     LinkedSubCategory,
@@ -84,17 +85,21 @@ class LinkedCheck(AbstractBaseModel):
         elif check_type.is_camp_location_check():
             return LinkedLocationCheck(is_camp_location=True)
         elif check_type.is_participant_adult_check():
-            return LinkedParticipantAdultCheck()
+            return LinkedParticipantCheck(participant_check_type=ParticipantType.ADULT)
         elif check_type.is_participant_responsible_check():
-            return LinkedParticipantResponsibleCheck()
+            return LinkedParticipantCheck(
+                participant_check_type=ParticipantType.RESPONSIBLE
+            )
         elif check_type.is_participant_leader_check():
-            return LinkedParticipantLeaderCheck()
+            return LinkedParticipantCheck(participant_check_type=ParticipantType.LEADER)
         elif check_type.is_participant_cook_check():
-            return LinkedParticipantCookCheck()
+            return LinkedParticipantCheck(participant_check_type=ParticipantType.COOK)
         elif check_type.is_participant_member_check():
-            return LinkedParticipantMemberCheck()
+            return LinkedParticipantCheck(participant_check_type=ParticipantType.MEMBER)
         elif check_type.is_participant_check():
-            return LinkedParticipantCheck()
+            return LinkedParticipantCheck(
+                participant_check_type=ParticipantType.PARTICIPANT
+            )
         elif check_type.is_file_upload_check():
             return LinkedFileUploadCheck()
         elif check_type.is_comment_check():
@@ -182,62 +187,24 @@ class LinkedLocationCheck(LinkedCheck):
 # A check that selects members and non-members
 # ##############################################################################
 class LinkedParticipantCheck(LinkedCheck):
-    value = models.ManyToManyField(InuitsParticipant)
+    participant_check_type = DefaultCharField(
+        choices=ParticipantType.choices,
+        default=ParticipantType.PARTICIPANT,
+        max_length=1,
+    )
+    participants = models.ManyToManyField(VisumParticipant, related_name="checks")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.participant_check_type = kwargs.get(
+            "participant_check_type", ParticipantType.PARTICIPANT
+        )
 
     def has_value(self) -> bool:
-        if len(self.value.all()) > 0:
+        if len(self.participants.all()) > 0:
             return True
         return False
-
-
-# ##############################################################################
-# LinkedParticipantMemberCheck
-#
-# A check that selects members
-# ##############################################################################
-class LinkedParticipantMemberCheck(LinkedParticipantCheck):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-# ##############################################################################
-# LinkedParticipantCookCheck
-#
-# A check that selects cooks
-# ##############################################################################
-class LinkedParticipantCookCheck(LinkedParticipantCheck):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-# ##############################################################################
-# LinkedParticipantLeaderCheck
-#
-# A check that selects leaders
-# ##############################################################################
-class LinkedParticipantLeaderCheck(LinkedParticipantCheck):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-# ##############################################################################
-# LinkedParticipantResponsibleCheck
-#
-# A check that selects responsibles
-# ##############################################################################
-class LinkedParticipantResponsibleCheck(LinkedParticipantCheck):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-# ##############################################################################
-# LinkedParticipantResponsibleCheck
-#
-# A check that selects 21-year-olds
-# ##############################################################################
-class LinkedParticipantAdultCheck(LinkedParticipantCheck):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
 
 # ##############################################################################

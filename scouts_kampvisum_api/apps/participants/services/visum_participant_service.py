@@ -1,9 +1,11 @@
 import logging
 
 from django.conf import settings
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 
-from apps.participants.models import InuitsParticipant
+from apps.participants.models import InuitsParticipant, VisumParticipant
+from apps.participants.models.enums import ParticipantType
+from apps.participants.models.enums import PaymentStatus
 
 from scouts_auth.groupadmin.services import GroupAdmin
 
@@ -11,67 +13,70 @@ from scouts_auth.groupadmin.services import GroupAdmin
 logger = logging.getLogger(__name__)
 
 
-class InuitsParticipantService:
+class VisumParticipantService:
 
     groupadmin = GroupAdmin()
 
     def create_or_update(
         self,
-        participant: InuitsParticipant,
         user: settings.AUTH_USER_MODEL,
+        participant: VisumParticipant,
+        participant_type: ParticipantType = ParticipantType.PARTICIPANT,
         skip_validation: bool = False,
-    ):
-        existing_participant = InuitsParticipant.objects.safe_get(
-            id=participant.id,
-            group_admin_id=participant.group_admin_id,
-            email=participant.email,
-        )
+    ) -> VisumParticipant:
+        existing_participant = VisumParticipant.objects.safe_get(id=participant.id)
 
         if existing_participant:
             logger.debug("Updating existing participant %s", existing_participant.id)
-            return self.update(
+            return self.update_visum_participant(
                 participant=existing_participant,
                 updated_participant=participant,
                 updated_by=user,
                 skip_validation=skip_validation,
             )
         else:
-            logger.debug("Creating participant %s", participant.email)
-            return self.create(
+            logger.debug("Creating participant %s", participant.participant.email)
+            return self.create_visum_participant(
                 participant=participant,
+                participant_type=participant_type,
                 created_by=user,
                 skip_validation=skip_validation,
             )
 
     def create_or_update_member_participant(
         self,
-        participant: InuitsParticipant,
         user: settings.AUTH_USER_MODEL,
-        instance: InuitsParticipant = None,
-    ) -> InuitsParticipant:
+        participant: VisumParticipant,
+        participant_type: ParticipantType = ParticipantType.PARTICIPANT,
+        instance: VisumParticipant = None,
+    ) -> VisumParticipant:
+        """Creates a local representation of a scouts member."""
         member_participant = None
-        if participant.has_group_admin_id():
+        if participant.participant.has_group_admin_id():
+            group_admin_id = participant.participant.group_admin_id
             logger.debug(
                 "Looking for participant member with group admin id %s",
-                participant.group_admin_id,
+                group_admin_id,
             )
-            member_participant = InuitsParticipant.objects.safe_get(
-                group_admin_id=participant.group_admin_id
+            member_participant = VisumParticipant.objects.safe_get(
+                participant__group_admin_id=group_admin_id
             )
             scouts_member = self.groupadmin.get_member_info(
-                active_user=user, group_admin_id=participant.group_admin_id
+                active_user=user, group_admin_id=group_admin_id
             )
 
             if not scouts_member:
                 raise ValidationError(
-                    "Invalid group admin id for member: {}".format(
-                        participant.group_admin_id
-                    )
+                    "Invalid group admin id for member: {}".format(group_admin_id)
                 )
 
-            member_participant = InuitsParticipant.from_scouts_member(
-                scouts_member, member_participant
+            member_participant = VisumParticipant()
+
+            member_participant.participant_type = participant_type
+            member_participant.participant = InuitsParticipant.from_scouts_member(
+                scouts_member=scouts_member, member_participant=member_participant
             )
+            member_participant.payment_status = PaymentStatus.NOT_PAYED
 
             member_participant.is_member = True
             member_participant.group_group_admin_id = None
@@ -83,34 +88,35 @@ class InuitsParticipantService:
 
         return member_participant
 
-    def create(
+    def create_visum_participant(
         self,
-        participant: InuitsParticipant,
         created_by: settings.AUTH_USER_MODEL,
+        participant: VisumParticipant,
+        participant_type: ParticipantType = ParticipantType.PARTICIPANT,
         skip_validation: bool = False,
-    ) -> InuitsParticipant:
-        logger.debug("Creating InuitsParticipant with email %s", participant.email)
+    ) -> VisumParticipant:
+        logger.debug("Creating VisumParticipant with email %s", participant.email)
         # Check if the instance already exists
         if participant.has_id():
-            logger.debug("Querying for InuitsParticipant with id %s", participant.id)
-            object = InuitsParticipant.objects.safe_get(pk=participant.id)
+            logger.debug("Querying for VisumParticipant with id %s", participant.id)
+            object = VisumParticipant.objects.safe_get(pk=participant.id)
             if object:
                 logger.debug(
-                    "Found InuitsParticipant with id %s, not creating",
+                    "Found VisumParticipant with id %s, not creating",
                     participant.id,
                 )
                 return participant
 
         logger.debug(
-            "Creating InuitsParticipant with name %s %s and group admin id %s for group %s",
-            participant.first_name,
-            participant.last_name,
-            participant.group_admin_id,
-            participant.group_group_admin_id,
+            "Creating VisumParticipant with name %s %s and group admin id %s for group %s",
+            participant.participant.first_name,
+            participant.participant.last_name,
+            participant.participant.group_admin_id,
+            participant.participant.group_group_admin_id,
         )
 
         member = self.create_or_update_member_participant(
-            participant=participant, user=created_by
+            participant=participant, participant_type=participant_type, user=created_by
         )
         if member:
             return member
@@ -126,7 +132,7 @@ class InuitsParticipantService:
                     )
                 )
 
-        participant = InuitsParticipant(
+        participant = VisumParticipant(
             group_admin_id=None,
             is_member=False,
             group_group_admin_id=participant.group_group_admin_id,
@@ -153,13 +159,13 @@ class InuitsParticipantService:
     def update(
         self,
         *,
-        participant: InuitsParticipant,
-        updated_participant: InuitsParticipant,
+        participant: VisumParticipant,
+        updated_participant: VisumParticipant,
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
-    ) -> InuitsParticipant:
+    ) -> VisumParticipant:
         logger.debug(
-            "Updating InuitsParticipant with id %s and group_admin_id %s and e-mail %s",
+            "Updating VisumParticipant with id %s and group_admin_id %s and e-mail %s",
             participant.id,
             participant.group_admin_id,
             participant.email,
@@ -178,7 +184,7 @@ class InuitsParticipantService:
 
         logger.debug("Updated: %s", updated_participant)
 
-        # Update the InuitsParticipant instance
+        # Update the VisumParticipant instance
         participant.group_group_admin_id = (
             updated_participant.group_group_admin_id
             if updated_participant.group_group_admin_id
@@ -252,6 +258,22 @@ class InuitsParticipantService:
         participant.full_clean()
         participant.save()
 
-        logger.debug("InuitsParticipant instance updated (%s)", participant.id)
+        logger.debug("VisumParticipant instance updated (%s)", participant.id)
+
+        return participant
+
+    def toggle_payment_status(self, participant_id):
+        participant: VisumParticipant = VisumParticipant.objects.safe_get(
+            id=participant_id, raise_error=True
+        )
+
+        participant.payment_status = (
+            PaymentStatus.PAYED
+            if participant.payment_status != PaymentStatus.PAYED
+            else PaymentStatus.NOT_PAYED
+        )
+
+        participant.full_clean()
+        participant.save()
 
         return participant

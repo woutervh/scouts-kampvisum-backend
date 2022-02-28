@@ -38,7 +38,7 @@ from apps.deadlines.models import (
 )
 
 from scouts_auth.groupadmin.models import ScoutsUser
-from scouts_auth.inuits.models import PersistedFile
+from scouts_auth.inuits.models import PersistedFile, Gender
 from scouts_auth.inuits.services import PersistedFileService
 
 logger = logging.getLogger(__name__)
@@ -57,10 +57,12 @@ class Command(BaseCommand):
         data["scouts_section_name_first"] = str(ScoutsSectionName.objects.first().id)
         data["scouts_section_name_last"] = str(ScoutsSectionName.objects.last().id)
         data["scouts_section_name_kapoenen"] = str(
-            ScoutsSectionName.objects.get(name="kapoenen").id
+            ScoutsSectionName.objects.safe_get(name="kapoenen", gender=Gender.MIXED).id
         )
         data["scouts_section_name_welpen"] = str(
-            ScoutsSectionName.objects.get(name="welpen").id
+            ScoutsSectionName.objects.safe_get(
+                name="kabouters en welpen", gender=Gender.MIXED
+            ).id
         )
         # ScoutsSection
         data["scouts_section_first"] = str(ScoutsSection.objects.first().id)
@@ -172,7 +174,7 @@ class Command(BaseCommand):
         # ParticipantCheck
         data["linked_check_participant_ombudsman"] = str(
             LinkedParticipantCheck.objects.filter(
-                parent__name="communication_parents_ombudsman_contact"
+                parent__name="communication_agreements_parents_ombudsman_contact"
             )
             .first()
             .id
