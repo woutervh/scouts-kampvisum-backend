@@ -1,6 +1,5 @@
 import logging
 import datetime
-from dateutil.relativedelta import relativedelta
 
 from django.db import models
 from django.db.models.functions import Concat
