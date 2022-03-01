@@ -50,6 +50,8 @@ class Command(BaseCommand):
                 check_type = model.get("fields")["check_type"]
                 if check_type in settings.ENFORCE_MEMBER_CHECKS:
                     model.get("fields")["is_member"] = True
+                else:
+                    model.get("fields")["is_member"] = False
 
                 logger.debug("MODEL DATA: %s", model)
 
