@@ -243,6 +243,25 @@
     {
         "model": "visums.Check",
         "fields": {
+            "name": "logistics_locations_location",
+            "sub_category": [
+                "logistics_locations",
+                [
+                    "logistics",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "CampLocationCheck"
+            ],
+            "is_multiple": true,
+            "label": "Gegevens kampplaats en verhuurder",
+            "explanation": "Heb je al eens nagedacht over een internationale uitwisseling? Op <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/buitenlands-kamp/voorbereiding-van-je-buitenlands-kamp/uitwisseling'>deze pagina</a> vind je alle info."
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
             "name": "logistics_locations_water",
             "sub_category": [
                 "logistics_locations",
@@ -326,25 +345,6 @@
                 "SimpleCheck"
             ],
             "label": "Winkel in de buurt"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "logistics_locations_location",
-            "sub_category": [
-                "logistics_locations",
-                [
-                    "logistics",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "CampLocationCheck"
-            ],
-            "is_multiple": true,
-            "label": "Gegevens kampplaats en verhuurder",
-            "explanation": "Heb je al eens nagedacht over een internationale uitwisseling? Op <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/buitenlands-kamp/voorbereiding-van-je-buitenlands-kamp/uitwisseling'>deze pagina</a> vind je alle info."
         }
     },
     {
@@ -835,6 +835,23 @@
     {
         "model": "visums.Check",
         "fields": {
+            "name": "safety_healthcare_gp_pharmacy_hospital_location",
+            "sub_category": [
+                "safety_healthcare",
+                [
+                    "safety",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "LocationCheck"
+            ],
+            "label": "Locatie huisarts, apotheek, ziekenhuis"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
             "name": "safety_healthcare_gp",
             "sub_category": [
                 "safety_healthcare",
@@ -899,23 +916,6 @@
             ],
             "label": "EHBO-koffer volledig samengesteld",
             "link": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "safety_healthcare_gp_pharmacy_hospital_location",
-            "sub_category": [
-                "safety_healthcare",
-                [
-                    "safety",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "LocationCheck"
-            ],
-            "label": "Locatie huisarts, apotheek, ziekenhuis"
         }
     },
     {
