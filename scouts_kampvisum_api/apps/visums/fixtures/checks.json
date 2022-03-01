@@ -1178,7 +1178,6 @@
                 "ParticipantLeaderCheck"
             ],
             "is_multiple": true,
-            "is_member": true,
             "label": "Lijst van kampleiding"
         }
     },
@@ -1318,7 +1317,6 @@
                 "ParticipantMemberCheck"
             ],
             "is_multiple": true,
-            "is_member": true,
             "label": "Lijst van leden"
         }
     },

@@ -47,6 +47,10 @@ class Command(BaseCommand):
                     previous_index = 0
                 model.get("fields")["index"] = previous_index
 
+                check_type = model.get("fields")["check_type"]
+                if check_type in settings.ENFORCE_MEMBER_CHECKS:
+                    model.get("fields")["is_member"] = True
+
                 logger.debug("MODEL DATA: %s", model)
 
             with open(tmp_path, "w") as o:

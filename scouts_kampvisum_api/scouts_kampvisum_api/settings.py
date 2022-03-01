@@ -341,6 +341,10 @@ INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool(
 ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
 CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "05-01")
 RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-01")
+ENFORCE_MEMBER_CHECKS = env.list(
+    "ENFORCE_MEMBER_CHECKS",
+    ["ParticipantMemberCheck", "ParticipantLeaderCheck", "ParticipantResponsibleCheck"],
+)
 
 
 # ############################################################################ #
