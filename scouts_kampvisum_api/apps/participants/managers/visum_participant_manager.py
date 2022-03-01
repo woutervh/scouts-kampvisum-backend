@@ -29,7 +29,7 @@ class VisumParticipantManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
-        check = kwargs.get("check", None)
+        check = kwargs.get("check_id", None)
         inuits_participant = kwargs.get("inuits_participant_id", None)
         raise_error = kwargs.get("raise_error", False)
 
