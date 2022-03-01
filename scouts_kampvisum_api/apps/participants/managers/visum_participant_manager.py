@@ -29,6 +29,8 @@ class VisumParticipantManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        check = kwargs.get("check", None)
+        inuits_participant = kwargs.get("inuits_participant_id", None)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -37,10 +39,18 @@ class VisumParticipantManager(models.Manager):
             except:
                 pass
 
+        if check and inuits_participant:
+            try:
+                return self.get_queryset().get(
+                    checks=check, participant=inuits_participant
+                )
+            except:
+                pass
+
         if raise_error:
             raise ValidationError(
-                "Unable to locate VisumParticipant instance with provided params (id: {})".format(
-                    pk
+                "Unable to locate VisumParticipant instance with provided params (id: {}, check_id: {}, inuits_participant_id: {})".format(
+                    pk, check, inuits_participant
                 )
             )
         return None

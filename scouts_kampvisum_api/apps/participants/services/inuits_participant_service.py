@@ -15,12 +15,15 @@ class InuitsParticipantService:
 
     groupadmin = GroupAdmin()
 
-    def create_or_update(
+    def create_or_update_participant(
         self,
-        participant: InuitsParticipant,
+        participant: any,
         user: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
     ):
+        if not isinstance(participant, InuitsParticipant):
+            participant = InuitsParticipant(**participant)
+
         existing_participant = InuitsParticipant.objects.safe_get(
             id=participant.id,
             group_admin_id=participant.group_admin_id,
@@ -164,19 +167,27 @@ class InuitsParticipantService:
             participant.group_admin_id,
             participant.email,
         )
-        member = self.create_or_update_member_participant(
+        member: InuitsParticipant = self.create_or_update_member_participant(
             participant=updated_participant, user=updated_by
         )
         if member:
+            logger.debug(
+                "InuitsParticipant is a scouts member, returning (%s)",
+                member.group_admin_id,
+            )
             return member
+        logger.debug(
+            "InuitsParticipant %s %s (%s) is a non-member, updating",
+            participant.first_name,
+            participant.last_name,
+            participant.email,
+        )
 
         if participant.equals_participant(updated_participant):
             logger.debug(
                 "No differences between existing participant and updated participant"
             )
             return updated_participant
-
-        logger.debug("Updated: %s", updated_participant)
 
         # Update the InuitsParticipant instance
         participant.group_group_admin_id = (

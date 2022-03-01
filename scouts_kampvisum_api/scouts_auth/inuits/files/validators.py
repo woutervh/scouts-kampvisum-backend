@@ -32,9 +32,9 @@ def validate_uploaded_file(value):
         for ext in configured_allowed_extensions
     ]
 
-    logger.info(
-        "Configured: %s, allowed: %s", configured_allowed_extensions, allowed_extensions
-    )
+    # logger.info(
+    #     "Configured: %s, allowed: %s", configured_allowed_extensions, allowed_extensions
+    # )
 
     if not extension in allowed_extensions:
         raise ValidationError(

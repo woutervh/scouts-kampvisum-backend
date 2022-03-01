@@ -52,7 +52,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("PARTICIPANT CREATE VALIDATED REQUEST DATA: %s", validated_data)
 
-        participant = self.service.create_or_update(
+        participant = self.service.create_or_update_participant(
             participant=validated_data, user=request.user
         )
 

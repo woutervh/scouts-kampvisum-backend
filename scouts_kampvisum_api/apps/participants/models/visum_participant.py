@@ -11,7 +11,7 @@ from scouts_auth.inuits.models.fields import DefaultCharField
 class VisumParticipant(AuditedBaseModel):
     objects = VisumParticipantManager()
 
-    participant = models.OneToOneField(
+    participant = models.ForeignKey(
         InuitsParticipant, on_delete=models.CASCADE, related_name="visum_participant"
     )
     participant_type = DefaultCharField(

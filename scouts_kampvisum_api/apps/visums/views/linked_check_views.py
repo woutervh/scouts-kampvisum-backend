@@ -434,17 +434,17 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         request_body=LinkedParticipantCheckSerializer,
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
     )
-    def partial_update_participant_check_payment_status(
-        self, request, check_id, participant_id
+    def toggle_participant_payment_status(
+        self, request, check_id, visum_participant_id
     ):
         instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
             check_id=check_id
         )
 
-        instance = (
-            self.linked_check_service.update_participant_check_toggle_payment_status(
-                request=request, instance=instance
-            )
+        instance = self.linked_check_service.toggle_participant_payment_status(
+            request=request,
+            instance=instance,
+            visum_participant_id=visum_participant_id,
         )
 
         output_serializer = LinkedParticipantCheckSerializer(
@@ -457,7 +457,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         request_body=LinkedParticipantCheckSerializer,
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
     )
-    def unlink_participant(self, request, check_id, participant_id):
+    def unlink_participant(self, request, check_id, visum_participant_id):
         logger.debug("PARTICIPANT CHECK UNLINK REQUEST DATA: %s", request.data)
         instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
             check_id=check_id
@@ -475,7 +475,10 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("PARTICIPANT CHECK UNLINK VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.unlink_participant(
-            request, instance, participant_id, **validated_data
+            request=request,
+            instance=instance,
+            visum_participant_id=visum_participant_id,
+            **validated_data
         )
 
         output_serializer = LinkedParticipantCheckSerializer(
@@ -495,7 +498,20 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_participant_checks(self, request):
         return self._list(
             self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_CHECK
+                Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_CHECK)
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_MEMBER_CHECK
+                )
+                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_COOK_CHECK)
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_LEADER_CHECK
+                )
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK
+                )
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_ADULT_CHECK
+                )
             )
         )
 
@@ -511,8 +527,22 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         return self._list(
             LinkedParticipantCheck.objects.filter(
                 Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_CHECK)
-                & Q(value__isnull=False)
-            ).distinct()
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_MEMBER_CHECK
+                )
+                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_COOK_CHECK)
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_LEADER_CHECK
+                )
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK
+                )
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_ADULT_CHECK
+                )
+            )
+            .filter(Q(participants__isnull=False))
+            .distinct()
         )
 
     @swagger_auto_schema(

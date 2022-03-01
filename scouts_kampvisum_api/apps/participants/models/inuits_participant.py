@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -8,6 +10,9 @@ from scouts_auth.groupadmin.models import AbstractScoutsMember
 
 from scouts_auth.inuits.models import InuitsPerson, GenderHelper
 from scouts_auth.inuits.models.fields import OptionalCharField
+
+
+logger = logging.getLogger(__name__)
 
 
 class InuitsParticipant(InuitsPerson):
@@ -36,11 +41,17 @@ class InuitsParticipant(InuitsPerson):
 
     def equals_participant(self, updated_participant):
         if updated_participant is None:
+            logger.debug("here ! 1")
             return False
 
         if not type(updated_participant).__class__.__name__ == self.__class__.__name__:
+            logger.debug(
+                "here ! 2 %s, %s",
+                type(updated_participant).__class__.__name__,
+                self.__class__.__name__,
+            )
             return False
-
+        logger.debug("here ! 3")
         return (
             self.equals_person(updated_participant)
             and self.group_group_admin_id == updated_participant.group_group_admin_id

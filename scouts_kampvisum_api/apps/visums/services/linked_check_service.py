@@ -221,15 +221,17 @@ class LinkedCheckService:
                 self.unlink_participant(
                     request=request,
                     instance=instance,
-                    participant_id=existing_visum_participant.id,
+                    visum_participant_id=existing_visum_participant.id,
                 )
             data_changed = True
 
         for visum_participant in visum_participants:
-            visum_participant = self.participant_service.create_or_update(
-                user=request.user,
-                participant_type=instance.participant_check_type,
-                **visum_participant,
+            visum_participant = (
+                self.participant_service.create_or_update_visum_participant(
+                    user=request.user,
+                    participant_type=instance.participant_check_type,
+                    **visum_participant,
+                )
             )
 
             instance.participants.add(visum_participant)
@@ -237,37 +239,49 @@ class LinkedCheckService:
         return self.notify_change(instance=instance, data_changed=data_changed)
 
     @transaction.atomic
-    def update_participant_check_toggle_payment_status(
-        self, request, instance: LinkedParticipantCheck, participant_id
+    def toggle_participant_payment_status(
+        self, request, instance: LinkedParticipantCheck, visum_participant_id
     ) -> LinkedParticipantCheck:
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-        self.participant_service.toggle_payment_status(participant_id)
+        logger.debug("visum participant: %s", visum_participant_id)
+        self.participant_service.toggle_payment_status(
+            visum_participant_id=visum_participant_id
+        )
 
         return self.notify_change(instance=instance)
 
     @transaction.atomic
     def unlink_participant(
-        self, request, instance: LinkedParticipantCheck, participant_id, **data
+        self, request, instance: LinkedParticipantCheck, visum_participant_id, **data
     ):
-        logger.debug(
-            "Unlinking participant %s from instance with id %s",
-            participant_id,
-            instance.id,
-        )
-        logger.debug("DATA: %s", data)
-
-        participant = VisumParticipant.objects.safe_get(id=participant_id)
+        participant = VisumParticipant.objects.safe_get(id=visum_participant_id)
         if not participant:
-            raise ValidationError(
-                "Unknown participant with id {}".format(participant_id)
+            participant = VisumParticipant.objects.safe_get(
+                check_id=instance.id, inuits_participant_id=visum_participant_id
             )
 
-        instance.value.remove(participant)
+        logger.debug(
+            "Unlinking participant with id %s from instance with id %s",
+            visum_participant_id,
+            instance.id,
+        )
+
+        if not participant:
+            raise ValidationError(
+                "Can't unlink: Unknown visum participant with id {}".format(
+                    visum_participant_id
+                )
+            )
+
+        instance.participants.remove(participant)
 
         instance.full_clean()
         instance.save()
+
+        logger.debug("Deleting VisumParticipant instance with id %s", participant.id)
+        participant.delete()
 
         return self.notify_change(instance)
 

@@ -1,4 +1,5 @@
 import logging, json, datetime, uuid
+from types import SimpleNamespace
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -7,7 +8,7 @@ from apps.camps.models import Camp, CampYear, CampType
 
 from apps.groups.models import ScoutsSectionName, ScoutsSection, ScoutsGroupType
 
-from apps.participants.models import InuitsParticipant
+from apps.participants.models import InuitsParticipant, VisumParticipant
 from apps.participants.services import InuitsParticipantService
 
 from apps.visums.models import (
@@ -28,6 +29,7 @@ from apps.visums.models import (
     LinkedFileUploadCheck,
     LinkedNumberCheck,
 )
+from apps.visums.services import LinkedCheckService
 
 from apps.deadlines.models import (
     Deadline,
@@ -217,6 +219,21 @@ class Command(BaseCommand):
         data["deadline_flag_first"] = str(DeadlineFlag.objects.first().id)
         data["deadline_flag_last"] = str(DeadlineFlag.objects.last().id)
 
+        data["visum_participant_first"] = str(
+            self.link_participant(
+                user,
+                data["linked_check_participant_first"],
+                data["participant_non_member_first"],
+            )
+        )
+        data["visum_participant_last"] = str(
+            self.link_participant(
+                user,
+                data["linked_check_participant_last"],
+                data["participant_non_member_last"],
+            )
+        )
+
         print(json.dumps(data, indent=2))
 
     def setup_admin_user(self):
@@ -313,8 +330,26 @@ class Command(BaseCommand):
         participant: InuitsParticipant,
     ) -> InuitsParticipant:
 
-        return service.create_or_update(
+        return service.create_or_update_participant(
             participant=participant,
             user=user,
             skip_validation=True,
         )
+
+    def link_participant(
+        self, user: settings.AUTH_USER_MODEL, check_id, inuits_participant_id
+    ):
+        service = LinkedCheckService()
+
+        check: LinkedParticipantCheck = LinkedParticipantCheck.objects.get(id=check_id)
+        check: LinkedParticipantCheck = service.update_participant_check(
+            request=SimpleNamespace(user=user),
+            instance=check,
+            **{
+                "participants": [
+                    {"participant": InuitsParticipant(id=inuits_participant_id)}
+                ]
+            }
+        )
+
+        return check.participants.first().id

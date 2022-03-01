@@ -16,7 +16,7 @@ class InuitsParticipantSerializer(serializers.ModelSerializer):
         model = InuitsParticipant
         fields = "__all__"
 
-    def to_internal_value(self, data: dict) -> dict:
+    def to_internal_value(self, data: dict) -> any:
         logger.debug("PARTICIPANT SERIALIZER TO INTERNAL VALUE: %s", data)
         # If the data dict contains a group admin id, forget the rest and load the object from GA
         group_admin_id = data.get("group_admin_id", None)
