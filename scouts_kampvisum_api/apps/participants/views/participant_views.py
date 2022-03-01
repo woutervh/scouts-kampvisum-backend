@@ -9,12 +9,13 @@ from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.participants.models import InuitsParticipant
+from apps.participants.models.enums import ParticipantType
 from apps.participants.serializers import InuitsParticipantSerializer
 from apps.participants.filters import InuitsParticipantFilter
 from apps.participants.services import InuitsParticipantService
 from apps.participants.pagination import InuitsParticipantPagination
 
-from apps.visums.models import LinkedCheck
+from apps.visums.models import LinkedCheck, LinkedParticipantCheck
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
@@ -137,9 +138,16 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         min_age = self.request.GET.get("min_age", None)
         max_age = self.request.GET.get("max_age", None)
         gender = self.request.GET.get("gender", None)
+        participant_type = self.request.GET.get("type", None)
 
         if not (
-            check or search_term or group_group_admin_id or min_age or max_age or gender
+            check
+            or search_term
+            or group_group_admin_id
+            or min_age
+            or max_age
+            or gender
+            or participant_type
         ):
             if only_scouts_members:
                 return Response({})
@@ -149,42 +157,78 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
 
-        as_members = "participants"
+        if participant_type:
+            type = ParticipantType.parse_participant_type(participant_type)
+
+            if not type:
+                raise ValidationError(
+                    "Unknown ParticipantType {}".format(participant_type)
+                )
+
+            participant_type = type
+
         if check:
-            check: LinkedCheck = LinkedCheck.get_concrete_check_type_by_id(check)
+            check: LinkedParticipantCheck = LinkedCheck.get_concrete_check_type_by_id(
+                check
+            )
 
-            find_members = False
-            find_cooks = False
-            find_leaders = False
-            find_responsibles = False
-            find_adults = False
+            participant_type = check.participant_check_type
 
-            if check.parent.check_type.is_participant_member_check():
-                find_members = True
-                as_members = "members"
-            elif check.parent.check_type.is_participant_cook_check():
-                find_cooks = True
-                as_members = "cooks"
-            elif check.parent.check_type.is_participant_leader_check():
-                find_leaders = True
-                as_members = "leaders"
-            elif check.parent.check_type.is_participant_responsible_check():
-                find_responsibles = True
-                as_members = "responsibles"
-            elif check.parent.check_type.is_participant_adult_check():
-                find_adults = True
-                as_members = "adults"
+        # Ticket #90610 https://redmine.inuits.eu/issues/90610
+        presets = {}
+        if participant_type:
+            if ParticipantType.is_member(participant_type):
+                presets = {
+                    "participant_type": participant_type,
+                    "only_scouts_members": True,
+                }
+            elif ParticipantType.is_cook(participant_type):
+                presets = {
+                    "participant_type": participant_type,
+                    "include_inactive": True,
+                }
+            elif ParticipantType.is_leader(participant_type):
+                presets = {
+                    "participant_type": participant_type,
+                    "active_leader": True,
+                    "only_scouts_members": True,
+                    "include_inactive": False,
+                }
+            elif ParticipantType.is_responsible(participant_type):
+                presets = {
+                    "participant_type": participant_type,
+                    "active_leader": True,
+                    "only_scouts_members": True,
+                    "include_inactive": False,
+                }
+            elif ParticipantType.is_adult(participant_type):
+                presets = {
+                    "participant_type": participant_type,
+                    "include_inactive": True,
+                }
+            elif ParticipantType.is_participant(participant_type):
+                presets = {"participant_type": participant_type}
+
+            if presets.get("active_leader", False) and not group_group_admin_id:
+                raise ValidationError(
+                    "Can only search for active leaders in a group, no group admin id given"
+                )
+
+            include_inactive = presets.get("include_inactive", include_inactive)
+            only_scouts_members = presets.get(
+                "only_scouts_members", only_scouts_members
+            )
 
         logger.debug(
-            "Searching for %s (as %s) with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s), include_inactive (%s), only_scouts_members(%s)",
+            "Searching for %s with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s), include_inactive (%s), only_scouts_members(%s) and presets (%s)",
             search_term,
-            as_members,
             group_group_admin_id,
             min_age,
             max_age,
             gender,
             include_inactive,
             only_scouts_members,
+            presets,
         )
 
         members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
@@ -195,6 +239,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             max_age=max_age,
             gender=gender,
             include_inactive=include_inactive,
+            presets=presets,
         )
 
         if only_scouts_members:
