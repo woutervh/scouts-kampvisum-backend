@@ -2,7 +2,7 @@ import logging
 
 from django.db import models
 
-from apps.visums.managers import CategorySetPriorityManager
+from apps.visums.managers import CategoryPriorityManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
 
@@ -10,12 +10,12 @@ from scouts_auth.inuits.models import AbstractBaseModel
 logger = logging.getLogger(__name__)
 
 
-class CategorySetPriority(AbstractBaseModel):
+class CategoryPriority(AbstractBaseModel):
 
-    objects = CategorySetPriorityManager()
+    objects = CategoryPriorityManager()
 
     owner = models.CharField(max_length=32, unique=True, default="Verbond")
-    priority = models.IntegerField(default=100)
+    priority = models.IntegerField(default=10)
 
     class Meta:
         ordering = ["priority"]
@@ -25,10 +25,10 @@ class CategorySetPriority(AbstractBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED CategorySetPriority")
+        logger.debug("NATURAL KEY CALLED CategoryPriority")
         return (self.owner,)
 
     def __str__(self):
-        return "OBJECT CategorySetPriority: owner({}), priority({})".format(
+        return "OBJECT CategoryPriority: owner({}), priority({})".format(
             self.owner, self.priority
         )

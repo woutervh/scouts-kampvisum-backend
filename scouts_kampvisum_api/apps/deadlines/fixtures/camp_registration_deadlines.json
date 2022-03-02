@@ -12,6 +12,9 @@
                 "date_month": 3
             },
             "deadline_type": "M",
+            "camp_types": [
+                "basis"
+            ],
             "sub_categories": [
                 [
                     "planning_date",

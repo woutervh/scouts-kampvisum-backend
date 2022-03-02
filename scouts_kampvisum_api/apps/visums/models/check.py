@@ -5,7 +5,7 @@ from django.db import models
 from apps.visums.managers import CheckManager
 from apps.visums.models import SubCategory, CheckType
 
-from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField, OptionalCharField
 from scouts_auth.inuits.models.interfaces import (
     Explainable,
@@ -18,7 +18,9 @@ from scouts_auth.inuits.models.interfaces import (
 logger = logging.getLogger(__name__)
 
 
-class Check(Explainable, Indexable, Linkable, Translatable, AbstractBaseModel):
+class Check(
+    Explainable, Indexable, Linkable, Translatable, ArchiveableAbstractBaseModel
+):
 
     objects = CheckManager()
 

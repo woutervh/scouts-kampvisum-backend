@@ -1,21 +1,18 @@
 from django.db import models
 
-from apps.camps.models import Camp
+from apps.camps.models import Camp, CampType
 
-from apps.visums.models import LinkedCategorySet
 from apps.visums.managers import CampVisumManager
 
-from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models import AuditedBaseModel
 
 
-class CampVisum(AbstractBaseModel):
+class CampVisum(AuditedBaseModel):
 
     objects = CampVisumManager()
 
     camp = models.ForeignKey(Camp, on_delete=models.CASCADE)
-    category_set = models.ForeignKey(
-        LinkedCategorySet, on_delete=models.CASCADE, related_name="visum"
-    )
+    camp_types = models.ManyToManyField(CampType)
 
     # class Meta:
     #     ordering = ["camp__sections__name__age_group"]

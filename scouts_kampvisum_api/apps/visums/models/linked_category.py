@@ -4,10 +4,10 @@ from apps.visums.models import Category, LinkedCategorySet
 from apps.visums.models.enums import CheckState
 from apps.visums.managers import LinkedCategoryManager
 
-from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models import AuditedArchiveableBaseModel
 
 
-class LinkedCategory(AbstractBaseModel):
+class LinkedCategory(AuditedArchiveableBaseModel):
 
     objects = LinkedCategoryManager()
 

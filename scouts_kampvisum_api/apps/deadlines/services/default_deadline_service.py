@@ -1,9 +1,12 @@
 import logging
 import datetime
+from typing import List
 
 from django.db import transaction
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+
+from apps.camps.models import CampYear, CampType
 
 from apps.deadlines.models import DefaultDeadline, DeadlineDate, DefaultDeadlineFlag
 from apps.deadlines.models.enums import DeadlineType
@@ -14,7 +17,12 @@ logger = logging.getLogger(__name__)
 
 class DefaultDeadlineService:
     def get_or_create(
-        self, name: str = None, deadline_type: DeadlineType = None, **fields
+        self,
+        name: str = None,
+        deadline_type: DeadlineType = None,
+        camp_year: CampYear = None,
+        camp_types: List[CampType] = None,
+        **fields
     ) -> DefaultDeadline:
         instance = DefaultDeadline.objects.safe_get(
             name=name, deadline_type=deadline_type
@@ -28,6 +36,7 @@ class DefaultDeadlineService:
         instance.deadline_type = (
             deadline_type if deadline_type else fields.get("deadline_type", None)
         )
+        instance.camp_year = camp_year
         instance.label = fields.get("label", "")
         instance.description = fields.get("description", "")
         instance.explanation = fields.get("explanation", "")
@@ -35,6 +44,9 @@ class DefaultDeadlineService:
 
         instance.full_clean()
         instance.save()
+
+        for camp_type in camp_types:
+            instance.camp_types.add(camp_type)
 
         return instance
 

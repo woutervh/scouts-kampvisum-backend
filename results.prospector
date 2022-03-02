@@ -559,7 +559,7 @@ scouts_kampvisum_api/apps/visums/api/models/__init__.py
   Line: 4
     pyflakes: F401 / '.concern.Concern' imported but unused (col 1)
   Line: 5
-    pyflakes: F401 / '.priority.CategorySetPriority' imported but unused (col 1)
+    pyflakes: F401 / '.priority.CategoryPriority' imported but unused (col 1)
   Line: 6
     pyflakes: F401 / '.category_set.CategorySet' imported but unused (col 1)
   Line: 7
@@ -651,7 +651,7 @@ scouts_kampvisum_api/apps/visums/api/models/visum_sub_category.py
 
 scouts_kampvisum_api/apps/visums/api/serializers/__init__.py
   Line: 1
-    pyflakes: F401 / '.priority_serializer.CategorySetPrioritySerializer' imported but unused (col 1)
+    pyflakes: F401 / '.priority_serializer.CategoryPrioritySerializer' imported but unused (col 1)
   Line: 2
     pyflakes: F401 / '.category_serializer.CategorySerializer' imported but unused (col 1)
   Line: 3

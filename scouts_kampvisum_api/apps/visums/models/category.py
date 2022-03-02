@@ -4,9 +4,10 @@ from django.db import models
 
 from apps.camps.models import CampYear, CampType
 
+from apps.visums.models import CategoryPriority
 from apps.visums.managers import CategoryManager
 
-from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
 from scouts_auth.inuits.models.interfaces import (
     Describable,
     Explainable,
@@ -19,7 +20,9 @@ from scouts_auth.inuits.models.fields import RequiredCharField
 logger = logging.getLogger(__name__)
 
 
-class Category(Describable, Explainable, Indexable, Translatable, AbstractBaseModel):
+class Category(
+    Describable, Explainable, Indexable, Translatable, ArchiveableAbstractBaseModel
+):
 
     objects = CategoryManager()
 
@@ -28,6 +31,12 @@ class Category(Describable, Explainable, Indexable, Translatable, AbstractBaseMo
         CampYear, on_delete=models.CASCADE, related_name="categories"
     )
     camp_types = models.ManyToManyField(CampType)
+    # Indicates the hierarchical source and thereby specifies precedence.
+    priority = models.ForeignKey(
+        CategoryPriority,
+        on_delete=models.CASCADE,
+        default=None,
+    )
 
     class Meta:
         ordering = ["index"]
@@ -42,9 +51,11 @@ class Category(Describable, Explainable, Indexable, Translatable, AbstractBaseMo
         return (self.name, self.camp_year)
 
     def __str__(self):
-        return "OBJECT Category: name({}), camp_year ({}), label({}), index({}), description({}), explanation ({})".format(
+        return "OBJECT Category: id ({}), name({}), camp_year ({}), priority ({}) label({}), index({}), description({}), explanation ({})".format(
+            self.id,
             self.name,
             self.camp_year,
+            self.priority,
             self.label,
             self.index,
             self.description,

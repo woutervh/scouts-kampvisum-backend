@@ -24,6 +24,9 @@ class CampTypeManager(models.Manager):
     def get_queryset(self):
         return CampTypeQuerySet(self.model, using=self._db)
 
+    def get_default(self):
+        return self.get_queryset().get(is_default=True)
+
     def get_by_natural_key(self, camp_type):
         logger.debug(
             "GET BY NATURAL KEY %s: (camp_type: %s (%s))",
@@ -36,6 +39,3 @@ class CampTypeManager(models.Manager):
             logger.debug("ALL CAMP TYPES")
 
         return self.get(camp_type=camp_type)
-
-    def get_default(self):
-        return self.get_queryset().get(is_default=True)

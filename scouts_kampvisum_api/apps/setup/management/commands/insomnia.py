@@ -8,13 +8,11 @@ from apps.camps.models import Camp, CampYear, CampType
 
 from apps.groups.models import ScoutsSectionName, ScoutsSection, ScoutsGroupType
 
-from apps.participants.models import InuitsParticipant, VisumParticipant
+from apps.participants.models import InuitsParticipant
 from apps.participants.services import InuitsParticipantService
 
 from apps.visums.models import (
     CampVisum,
-    CampYearCategorySet,
-    CategorySet,
     Category,
     SubCategory,
     Check,
@@ -106,14 +104,6 @@ class Command(BaseCommand):
         # CampType
         data["camp_type_first"] = str(CampType.objects.first().id)
         data["camp_type_last"] = str(CampType.objects.last().id)
-        # CategorySet
-        data["camp_year_category_set_first"] = str(
-            CampYearCategorySet.objects.first().id
-        )
-        data["camp_year_category_set_last"] = str(CampYearCategorySet.objects.last().id)
-        # CategorySet
-        data["category_set_first"] = str(CategorySet.objects.first().id)
-        data["category_set_last"] = str(CategorySet.objects.last().id)
         # Category
         data["category_first"] = str(Category.objects.first().id)
         data["category_last"] = str(Category.objects.last().id)

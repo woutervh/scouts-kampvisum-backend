@@ -18,7 +18,7 @@ APPS=(
 # 	"scouts_section_names.json"
 # 	"default_scouts_section_names.json"
 # 	"camp_types.json"
-# 	"category_set_priorities.json"
+# 	"category_priorities.json"
 # 	"check_types.json"
 # )
 COMMANDS=(
@@ -27,9 +27,7 @@ COMMANDS=(
 	"loadcategories"
 	"loadsubcategories"
 	"loadchecks"
-	"createcategorysets"
 	"loaddefaultdeadlines"
-	"createdefaultdeadlinesets"
 )
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }

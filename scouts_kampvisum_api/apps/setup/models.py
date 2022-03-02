@@ -83,14 +83,6 @@ class Setup:
                 function="setup_camp_years",
                 args=[request],
             ),
-            # SetupItem(
-            #     "groups",
-            #     endpoint="/api/groups/import",
-            #     namespace="apps.groups.api.services",
-            #     module="ScoutsGroupService",
-            #     function="import_ga_groups",
-            #     args=[request.user],
-            # ),
             SetupItem(
                 "sections",
                 namespace="apps.groups.services",
@@ -98,14 +90,6 @@ class Setup:
                 function="setup_default_sections",
                 args=[request],
             ),
-            # SetupItem(
-            #     "category_sets",
-            #     endpoint="/api/category_sets/import",
-            #     namespace="apps.visums.services",
-            #     module="CategorySetService",
-            #     function="setup_default_sets",
-            #     args=None,
-            # ),
         ]
 
         for item in self.items:

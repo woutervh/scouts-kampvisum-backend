@@ -20,7 +20,7 @@ class Command(BaseCommand):
         "groups/fixtures/scouts_section_names.json",
         "groups/fixtures/default_scouts_section_names.json",
         "camps/fixtures/camp_types.json",
-        "visums/fixtures/category_set_priorities.json",
+        "visums/fixtures/category_priorities.json",
         "visums/fixtures/check_types.json",
     ]
 

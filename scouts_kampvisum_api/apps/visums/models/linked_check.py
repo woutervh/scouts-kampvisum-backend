@@ -16,7 +16,7 @@ from apps.visums.models import (
 from apps.visums.models.enums import CheckState
 from apps.visums.managers import LinkedCheckManager
 
-from scouts_auth.inuits.models import AbstractBaseModel, PersistedFile
+from scouts_auth.inuits.models import AuditedArchiveableBaseModel, PersistedFile
 from scouts_auth.inuits.models.fields import (
     DefaultCharField,
     OptionalCharField,
@@ -29,7 +29,7 @@ from scouts_auth.inuits.models.fields import (
 logger = logging.getLogger(__name__)
 
 
-class LinkedCheck(AbstractBaseModel):
+class LinkedCheck(AuditedArchiveableBaseModel):
 
     objects = LinkedCheckManager()
 

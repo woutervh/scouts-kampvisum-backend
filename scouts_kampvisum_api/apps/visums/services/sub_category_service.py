@@ -1,5 +1,7 @@
 import logging
 
+from django.db import transaction
+
 from apps.visums.models import LinkedCategory, Category, LinkedSubCategory, SubCategory
 from apps.visums.services import CheckService
 
@@ -9,6 +11,7 @@ logger = logging.getLogger(__name__)
 class SubCategoryService:
     check_service = CheckService()
 
+    @transaction.atomic
     def link_sub_categories(
         self, request, linked_category: LinkedCategory, category: Category
     ) -> LinkedCategory:
@@ -32,6 +35,7 @@ class SubCategoryService:
 
         return linked_category
 
+    @transaction.atomic
     def create(self, request, name: str, category: Category) -> SubCategory:
         """
         Saves a SubCategory object to the DB.
@@ -47,6 +51,7 @@ class SubCategoryService:
 
         return instance
 
+    @transaction.atomic
     def update(self, request, instance: SubCategory, **fields) -> SubCategory:
         """
         Updates an existing SubCategory object in the DB.

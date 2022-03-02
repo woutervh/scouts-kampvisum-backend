@@ -43,9 +43,11 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("CAMP VISUM CREATE VALIDATED DATA: %s", validated_data)
 
-        camp = self.camp_visum_service.visum_create(request, **validated_data)
+        visum: CampVisum = self.camp_visum_service.visum_create(
+            request, **validated_data
+        )
 
-        output_serializer = CampVisumSerializer(camp, context={"request": request})
+        output_serializer = CampVisumSerializer(visum, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 

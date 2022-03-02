@@ -1,11 +1,9 @@
 import logging, datetime
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 
 from apps.camps.models import Camp
 from apps.camps.services import CampYearService
-
-from apps.groups.models import ScoutsSection
 
 
 logger = logging.getLogger(__name__)
@@ -14,6 +12,7 @@ logger = logging.getLogger(__name__)
 class CampService:
     year_service = CampYearService()
 
+    @transaction.atomic
     def camp_create(self, request, **fields) -> Camp:
         """
         Saves a Camp object to the DB.
@@ -42,14 +41,14 @@ class CampService:
         logger.debug("Linking %d section(s) to camp '%s'", len(sections), camp.name)
         # section_objects = ScoutsSection.objects.filter(id__in=sections)
 
-        # if section_objects.count() == 0:
-        #     raise ObjectDoesNotExist("No sections found for id(s): %s", sections)
         for section in sections:
             camp.sections.add(section)
+
         camp.save()
 
         return camp
 
+    @transaction.atomic
     def camp_update(self, request, instance: Camp, **fields) -> Camp:
         """
         Updates an existing Camp object in the DB.

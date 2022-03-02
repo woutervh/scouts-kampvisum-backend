@@ -7,7 +7,7 @@ from apps.camps.models import CampType
 from apps.visums.models import Category
 from apps.visums.managers import SubCategoryManager
 
-from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
 from scouts_auth.inuits.models.interfaces import (
     Describable,
@@ -22,7 +22,12 @@ logger = logging.getLogger(__name__)
 
 
 class SubCategory(
-    Describable, Explainable, Indexable, Linkable, Translatable, AbstractBaseModel
+    Describable,
+    Explainable,
+    Indexable,
+    Linkable,
+    Translatable,
+    ArchiveableAbstractBaseModel,
 ):
 
     objects = SubCategoryManager()

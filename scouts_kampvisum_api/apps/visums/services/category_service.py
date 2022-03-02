@@ -1,6 +1,11 @@
 import logging
+from typing import List
 
-from apps.visums.models import LinkedCategorySet, CategorySet, LinkedCategory, Category
+from django.db import transaction
+
+from apps.camps.models import CampYear, CampType
+
+from apps.visums.models import LinkedCategorySet, LinkedCategory, Category
 from apps.visums.services import SubCategoryService
 
 logger = logging.getLogger(__name__)
@@ -8,16 +13,30 @@ logger = logging.getLogger(__name__)
 
 class CategoryService:
 
-    # category_set_service = CategorySetService()
     sub_category_service = SubCategoryService()
 
-    def link_categories(
-        self, request, linked_category_set: LinkedCategorySet, category_set: CategorySet
-    ) -> LinkedCategorySet:
-        logger.debug("Linking categories")
+    def get_categories(
+        self, camp_year: CampYear, camp_types: List[CampType]
+    ) -> List[Category]:
+        return Category.objects.safe_get(
+            camp_year=camp_year, camp_types=camp_types, raise_error=True
+        )
 
-        for category in category_set.categories.all():
-            logger.debug("Linked category: '%s'", category.name)
+    @transaction.atomic
+    def link_categories(
+        self,
+        request,
+        linked_category_set: LinkedCategorySet,
+        categories: List[Category],
+    ) -> LinkedCategorySet:
+        logger.debug(
+            "Linking %d categories to visum %s",
+            len(categories),
+            linked_category_set.visum.camp.name,
+        )
+
+        for category in categories:
+            logger.debug("Linking category: '%s'", category.name)
 
             linked_category = LinkedCategory()
 
@@ -33,6 +52,7 @@ class CategoryService:
 
         return linked_category_set
 
+    @transaction.atomic
     def create(self, request, name: str) -> Category:
         """
         Saves a Category object to the DB.
@@ -47,6 +67,7 @@ class CategoryService:
 
         return instance
 
+    @transaction.atomic
     def update(self, request, instance: Category, **fields) -> Category:
         """
         Updates an existing Category object in the DB.
@@ -58,19 +79,3 @@ class CategoryService:
         instance.save()
 
         return instance
-
-    # def deepcopy(self, instance: Category) -> Category:
-    #     sub_category_service = SubCategoryService()
-
-    #     instance_copy = copy_basemodel(instance)
-    #     instance_copy.is_default = False
-
-    #     instance_copy.full_clean()
-    #     instance_copy.save()
-
-    #     sub_categories = instance.sub_categories.all()
-    #     for sub_category in sub_categories:
-    #         sub_category_copy = sub_category_service.deepcopy(sub_category)
-    #         instance_copy.sub_categories.add(sub_category_copy)
-
-    #     return instance_copy

@@ -31,7 +31,8 @@ class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
         return (self.camp_type,)
 
     def __str__(self):
-        return "OBJECT CampType: camp_type({}), is_base ({}), is_default ({}), index ({}), label ({}), explanation ({})".format(
+        return "OBJECT CampType: id ({}), camp_type({}), is_base ({}), is_default ({}), index ({}), label ({}), explanation ({})".format(
+            self.id,
             self.camp_type,
             self.is_base,
             self.is_default,
@@ -39,3 +40,6 @@ class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
             self.label,
             self.explanation,
         )
+
+    def to_readable_str(self):
+        return "OBJECT CampType: {}".format(self.camp_type)

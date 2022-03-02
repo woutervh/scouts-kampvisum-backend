@@ -1,5 +1,7 @@
 import logging
 
+from django.db import transaction
+
 from apps.visums.models import (
     LinkedSubCategory,
     SubCategory,
@@ -11,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class CheckService:
+    @transaction.atomic
     def link_checks(
         self, request, linked_sub_category: LinkedSubCategory, sub_category: SubCategory
     ) -> LinkedSubCategory:

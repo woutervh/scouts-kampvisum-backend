@@ -1,8 +1,11 @@
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.mixins import AuditCreateModelMixin, AuditUpdateModelMixin
+from scouts_auth.inuits.mixins import AuditArchiveModelMixin
 
 
-class AuditedBaseModel(AbstractBaseModel, AuditCreateModelMixin, AuditUpdateModelMixin):
+class ArchiveableAbstractBaseModel(
+    AbstractBaseModel,
+    AuditArchiveModelMixin,
+):
     """Abstract base models that logs create and update events for time and user."""
 
     class Meta:

@@ -1,13 +1,12 @@
 from django.db import models
 
 from apps.visums.models import LinkedCategory, SubCategory
-from apps.visums.models.enums import CheckState
 from apps.visums.managers import LinkedSubCategoryManager
 
-from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models import AuditedArchiveableBaseModel
 
 
-class LinkedSubCategory(AbstractBaseModel):
+class LinkedSubCategory(AuditedArchiveableBaseModel):
 
     objects = LinkedSubCategoryManager()
 

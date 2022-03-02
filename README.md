@@ -127,7 +127,7 @@ In frontend repo: `/src/locales/nl.json`
       - COMMAND: `django-manage.py runfixtures`  
       - Links the group type with the section name to determine the list of default scouts sections a group has.  
   6. **CATEGORY SET PRIORITIES:**  
-      - FIXTURE: `scouts_kampvisum_api/apps/visums/fixtures/category_set_priorities.json`  
+      - FIXTURE: `scouts_kampvisum_api/apps/visums/fixtures/category_priorities.json`  
       - COMMAND: `django-manage.py runfixtures`  
       - Determines the precedence of one category set over another. Currently not in use anymore.  
   7. **CHECK TYPES:**  
@@ -168,7 +168,7 @@ In frontend repo: `/src/locales/nl.json`
    - groups/fixtures/scouts_section_names.json
    - groups/fixtures/default_scouts_section_names.json
    - camps/fixtures/camp_types.json
-   - visums/fixtures/category_set_priorities.json
+   - visums/fixtures/category_priorities.json
    - visums/fixtures/check_types.json
 
 

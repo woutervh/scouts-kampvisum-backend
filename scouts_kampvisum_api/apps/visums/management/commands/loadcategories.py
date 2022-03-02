@@ -1,6 +1,5 @@
 import logging, os, json
 from pathlib import Path
-from typing import List
 
 from django.conf import settings
 from django.core.management import call_command
@@ -8,6 +7,8 @@ from django.core.management.base import BaseCommand
 
 from apps.camps.models import CampYear, CampType
 from apps.camps.services import CampYearService
+
+from apps.visums.models import CategoryPriority
 
 
 logger = logging.getLogger(__name__)
@@ -37,6 +38,10 @@ class Command(BaseCommand):
         )
         all_camp_types = [[camp_type.camp_type] for camp_type in CampType.objects.all()]
 
+        # Set to highest priority, since only Verbond will set categories for now
+        # Highest priority: Verbond
+        highest_priority = CategoryPriority.objects.get_highest_priority()
+
         previous_index = -1
         with open(path) as f:
             data = json.load(f)
@@ -57,6 +62,10 @@ class Command(BaseCommand):
                 if not "camp_year" in model.get("fields"):
                     model.get("fields")["camp_year"] = list()
                     model.get("fields")["camp_year"].append(current_camp_year.year)
+
+                if not "priority" in model.get("fields"):
+                    model.get("fields")["priority"] = list()
+                    model.get("fields")["priority"].append(highest_priority.owner)
 
                 logger.debug("MODEL DATA: %s", model)
 

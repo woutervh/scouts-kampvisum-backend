@@ -35,16 +35,22 @@ class CampTypeService:
 
         return instance
 
-    def load_camp_types(self, camp_types: List[str] = None) -> List[CampType]:
+    def get_camp_types(
+        self, camp_types: List[str] = None, include_default: bool = True
+    ) -> List[CampType]:
         default_camp_type = [CampType.objects.get_default()]
 
         if camp_types is None or len(camp_types) == 0:
-            logger.warn("No camp type given, getting default CampType instance")
-            camp_types = default_camp_type
+            logger.warn("No camp types given, getting default CampType instance")
+
+            if include_default:
+                camp_types = default_camp_type
+            else:
+                camp_types = []
         else:
             camp_types = ListUtils.concatenate_unique_lists(
-                default_camp_type,
-                [CampType.objects.get(name=name) for name in camp_types],
+                default_camp_type if include_default else [],
+                [CampType.objects.get(camp_type=camp_type) for camp_type in camp_types],
             )
 
         return camp_types

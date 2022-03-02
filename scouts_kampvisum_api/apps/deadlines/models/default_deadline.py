@@ -2,6 +2,8 @@ import logging
 
 from django.db import models
 
+from apps.camps.models import CampYear, CampType
+
 from apps.deadlines.models.enums import DeadlineType
 from apps.deadlines.managers import DefaultDeadlineManager
 
@@ -27,6 +29,10 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
         default=DeadlineType.DEADLINE,
         max_length=1,
     )
+    camp_year = models.ForeignKey(
+        CampYear, on_delete=models.CASCADE, related_name="default_deadline_set"
+    )
+    camp_types = models.ManyToManyField(CampType, related_name="deadlines")
     sub_categories = models.ManyToManyField(SubCategory)
     checks = models.ManyToManyField(Check)
 
@@ -38,11 +44,16 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
             "is_important",
             "name",
         ]
-        unique_together = ("name", "deadline_type")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "deadline_type", "camp_year"],
+                name="unique_name__deadline_type__camp_year",
+            )
+        ]
 
     def natural_key(self):
         logger.debug("NATURAL KEY CALLED DefaultDeadline")
-        return (self.name, self.deadline_type)
+        return (self.name, self.deadline_type, self.camp_year)
 
     def is_deadline(self):
         return self.deadline_type == DeadlineType.DEADLINE
@@ -74,10 +85,12 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
         return self.is_deadline() and self.flags and len(self.flags) > 0
 
     def __str__(self) -> str:
-        return "id ({}), name ({}), deadline_type ({}), is_important ({}), label ({}), description ({}), explanation ({})".format(
+        return "id ({}), name ({}), deadline_type ({}), camp_year({}), camp_types ({}), is_important ({}), label ({}), description ({}), explanation ({})".format(
             self.id,
             self.name,
             self.deadline_type,
+            self.camp_year.year,
+            ",".join(camp_type.to_readable_str() for camp_type in self.camp_types),
             self.is_important,
             self.label,
             self.description,

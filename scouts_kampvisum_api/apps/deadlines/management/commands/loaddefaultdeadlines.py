@@ -5,6 +5,9 @@ from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
+from apps.camps.models import CampYear
+from apps.camps.services import CampYearService, CampTypeService
+
 from apps.deadlines.models import DeadlineDate
 from apps.deadlines.models.enums import DeadlineType
 from apps.deadlines.services import DefaultDeadlineService
@@ -35,16 +38,49 @@ class Command(BaseCommand):
             logger.debug("Loading default deadlines from %s", path)
 
             default_deadline_service = DefaultDeadlineService()
+            camp_year_service = CampYearService()
+            camp_type_service = CampTypeService()
+
+            current_camp_year: CampYear = (
+                camp_year_service.get_or_create_current_camp_year()
+            )
 
             with open(path) as f:
                 data = json.load(f)
 
+                logger.debug("LOADING and REWRITING fixture %s", path)
+
                 for model in data:
+                    # Allow creating default deadlines for the current year without specifying the camp year
+                    if not "camp_year" in model.get("fields"):
+                        model.get("fields")["camp_year"] = list()
+                        model.get("fields")["camp_year"].append(current_camp_year.year)
+
+                    if not "camp_types" in model.get("fields"):
+                        model.get("fields")["camp_types"] = list()
+                    else:
+                        camp_types = model.get("fields")["camp_types"]
+
+                        model.get("fields")["camp_types"] = list()
+
+                        for camp_type in camp_types:
+                            model.get("fields")["camp_types"].append([camp_type])
+
+                    camp_types = camp_type_service.get_camp_types(
+                        camp_types=[
+                            camp_type[0]
+                            for camp_type in model.get("fields")["camp_types"]
+                        ],
+                        include_default=False,
+                    )
+
                     default_deadline = default_deadline_service.get_or_create(
                         name=model.get("fields")["name"],
                         deadline_type=model.get("fields").get(
                             "deadline_type", DeadlineType.DEADLINE
                         ),
+                        camp_year=current_camp_year,
+                        camp_types=camp_types,
                     )
                     model["pk"] = str(default_deadline.id)
 
@@ -83,6 +119,7 @@ class Command(BaseCommand):
                 with open(tmp_path, "w") as o:
                     json.dump(data, o)
 
+            logger.debug("LOADING adjusted fixture %s", tmp_path)
             call_command("loaddata", tmp_path)
 
             os.remove(tmp_path)

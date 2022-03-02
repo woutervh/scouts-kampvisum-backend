@@ -5,10 +5,11 @@ from django.utils import timezone
 from django.db import transaction
 from django.core.exceptions import ValidationError
 
+from apps.camps.models import CampYear, CampType
+
 from apps.deadlines.models import (
     DefaultDeadline,
     DefaultDeadlineFlag,
-    DefaultDeadlineSet,
     DeadlineDate,
     Deadline,
     DeadlineFlag,
@@ -355,28 +356,18 @@ class DeadlineService:
 
     @transaction.atomic
     def link_to_visum(self, request, visum: CampVisum):
-        camp_year = visum.category_set.parent.camp_year_category_set.camp_year
-        camp_type = visum.category_set.parent.camp_type
+        camp_year: CampYear = visum.camp.year
+        camp_types: List[CampType] = visum.camp_types.all()
 
-        default_deadline_set: DefaultDeadlineSet = DefaultDeadlineSet.objects.safe_get(
-            camp_year=camp_year, camp_type=camp_type
+        default_deadlines: List[DefaultDeadline] = DefaultDeadline.objects.safe_get(
+            camp_year=camp_year, camp_types=camp_types
         )
-        if not default_deadline_set:
-            raise ValidationError(
-                "Unable to find default deadline set for camp year {} and camp type {}".format(
-                    camp_year.year, camp_type.camp_type
-                )
-            )
 
-        default_deadlines: List[
-            DefaultDeadline
-        ] = default_deadline_set.default_deadlines.all()
         logger.debug(
-            "Found %d DefaultDeadline instances in set %s with camp year %s and camp type %s",
+            "Found %d DefaultDeadline instances with camp year %s and camp types %s",
             len(default_deadlines),
-            default_deadline_set.id,
             camp_year.year,
-            camp_type.camp_type,
+            ",".join(camp_type.camp_type for camp_type in camp_types),
         )
         for default_deadline in default_deadlines:
             deadline_fields = DeadlineFactory.get_deadline_fields(

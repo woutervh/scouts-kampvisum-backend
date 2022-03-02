@@ -11,6 +11,9 @@
                 "date_month": 9
             },
             "deadline_type": "C",
+            "camp_types": [
+                "basis"
+            ],
             "checks": [
                 [
                     "logistics_locations_location",
@@ -37,6 +40,9 @@
                 "date_month": 12
             },
             "deadline_type": "S",
+            "camp_types": [
+                "basis"
+            ],
             "sub_categories": [
                 [
                     "logistics_transport",
@@ -60,6 +66,9 @@
                 "date_month": 4
             },
             "deadline_type": "D",
+            "camp_types": [
+                "basis"
+            ],
             "flags": [
                 [
                     "contact_cities_email",
@@ -84,6 +93,9 @@
                 "date_month": 5
             },
             "deadline_type": "D",
+            "camp_types": [
+                "basis"
+            ],
             "flags": [
                 [
                     "forest_license_request",
