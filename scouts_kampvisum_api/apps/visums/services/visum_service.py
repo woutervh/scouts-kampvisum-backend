@@ -33,6 +33,7 @@ class CampVisumService:
         camp = self.camp_service.camp_create(request, **camp_data)
 
         camp_types = data.get("camp_types")
+        camp_types = [camp_type.get("camp_type") for camp_type in camp_types]
         camp_types: List[CampType] = self.camp_type_service.get_camp_types(
             camp_types=camp_types
         )
@@ -95,8 +96,7 @@ class CampVisumService:
             self.category_set_service.update_linked_category_set(
                 request=request,
                 instance=instance.category_set,
-                camp=camp,
-                camp_types=camp_types,
+                visum=instance,
             )
         )
 
