@@ -2,7 +2,6 @@ import logging
 
 from django.db import models
 
-from apps.camps.models import CampType
 
 from apps.visums.managers import CategorySetManager
 from apps.visums.models import (
@@ -27,9 +26,6 @@ class CategorySet(Indexable, AuditedBaseModel):
 
     camp_year_category_set = models.ForeignKey(
         CampYearCategorySet, on_delete=models.CASCADE, related_name="category_sets"
-    )
-    camp_type = models.ForeignKey(
-        CampType, on_delete=models.CASCADE, related_name="category_sets"
     )
     # Indicates the hierarchical source and thereby specifies precedence.
     priority = models.ForeignKey(

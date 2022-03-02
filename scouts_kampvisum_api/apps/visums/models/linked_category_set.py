@@ -1,6 +1,7 @@
 from django.db import models
 
-from apps.visums.models import CategorySet
+from apps.camps.models import CampType
+
 from apps.visums.models.enums import CheckState
 
 from scouts_auth.inuits.models import AbstractBaseModel
@@ -8,7 +9,7 @@ from scouts_auth.inuits.models import AbstractBaseModel
 
 class LinkedCategorySet(AbstractBaseModel):
 
-    parent = models.ForeignKey(CategorySet, on_delete=models.CASCADE)
+    camp_types = models.ManyToManyField(CampType)
 
     def is_checked(self) -> CheckState:
         for category in self.categories.all():
