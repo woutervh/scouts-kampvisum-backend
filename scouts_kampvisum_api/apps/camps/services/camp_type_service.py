@@ -51,7 +51,7 @@ class CampTypeService:
             camp_types = ListUtils.concatenate_unique_lists(
                 default_camp_type if include_default else [],
                 [
-                    CampType.objects.safe_get(camp_type=camp_type)
+                    CampType.objects.safe_get(camp_type=camp_type, raise_error=True)
                     for camp_type in camp_types
                 ],
             )
