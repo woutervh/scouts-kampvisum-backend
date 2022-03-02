@@ -1,6 +1,7 @@
 import logging
 
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,7 @@ class LinkedSubCategoryManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         parent = kwargs.get("parent", None)
         visum = kwargs.get("visum", None)
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
@@ -38,4 +40,10 @@ class LinkedSubCategoryManager(models.Manager):
             except:
                 pass
 
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate LinkedSubCategory instance(s) with provided params (id: {}, (parent: {}, visum: {})".format(
+                    pk, parent, visum
+                )
+            )
         return None
