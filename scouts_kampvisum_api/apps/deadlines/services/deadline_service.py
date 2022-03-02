@@ -509,7 +509,7 @@ class DeadlineService:
         )
         for sub_category in sub_categories:
             linked_sub_category: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
-                parent=sub_category, visum=visum
+                parent=sub_category, visum=visum, raise_error=True
             )
             if not linked_sub_category:
                 raise ValidationError(
