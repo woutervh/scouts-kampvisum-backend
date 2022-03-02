@@ -35,7 +35,7 @@ class LinkedSubCategoryManager(models.Manager):
         if parent and visum:
             try:
                 return self.get_queryset().get(
-                    parent=parent, category__category_set__visum=visum
+                    parent__id=parent.id, category__category_set__visum__id=visum.id
                 )
             except:
                 pass
@@ -43,7 +43,7 @@ class LinkedSubCategoryManager(models.Manager):
         if raise_error:
             raise ValidationError(
                 "Unable to locate LinkedSubCategory instance(s) with provided params (id: {}, (parent: {}, visum: {})".format(
-                    pk, parent, visum
+                    pk, parent.to_simple_str(), visum
                 )
             )
         return None

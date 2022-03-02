@@ -58,3 +58,6 @@ class SubCategory(
             self.link,
             self.category,
         )
+
+    def to_simple_str(self):
+        return "{} ({})".format(self.id, self.name)

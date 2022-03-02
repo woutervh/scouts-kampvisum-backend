@@ -5,6 +5,8 @@ from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
+from apps.camps.models import CampType
+
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +28,8 @@ class Command(BaseCommand):
         tmp_data_path = "{}/{}".format(self.BASE_PATH, self.TMP_FIXTURE)
         tmp_path = os.path.join(parent_path, tmp_data_path)
 
+        all_camp_types = [[camp_type.camp_type] for camp_type in CampType.objects.all()]
+
         logger.debug("Loading sub-categories from %s", path)
 
         previous_category = None
@@ -44,6 +48,13 @@ class Command(BaseCommand):
                     previous_category = category
                     previous_index = 0
                 model.get("fields")["index"] = previous_index
+
+                # Check if the camp type is an expander (*)
+                camp_types: list = model.get("fields")["camp_types"]
+                if len(camp_types) == 0 or (
+                    len(camp_types) == 1 and camp_types[0] == ["*"]
+                ):
+                    model.get("fields")["camp_types"] = all_camp_types
 
                 logger.debug("MODEL DATA: %s", model)
 

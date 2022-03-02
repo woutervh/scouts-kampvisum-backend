@@ -508,15 +508,21 @@ class DeadlineService:
             default_deadline.name,
         )
         for sub_category in sub_categories:
+            # logger.debug(
+            #     "SUB CATEGORY: %s (%s), CATEGORY: %s (%s)",
+            #     sub_category.id,
+            #     sub_category.name,
+            #     sub_category.category.id,
+            #     sub_category.category.name,
+            # )
             linked_sub_category: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
                 parent=sub_category, visum=visum, raise_error=True
             )
-            if not linked_sub_category:
-                raise ValidationError(
-                    "Unable to find LinkedSubCategory with parent SubCategory id {}".format(
-                        sub_category.id
-                    )
-                )
+            # logger.debug(
+            #     "FOUND LINKED SUB CATEGORY: %s (%s)",
+            #     linked_sub_category.id,
+            #     linked_sub_category.parent.name,
+            # )
             deadline.linked_sub_categories.add(linked_sub_category)
 
     def _link_checks_to_deadline(

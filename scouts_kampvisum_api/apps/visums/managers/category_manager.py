@@ -38,9 +38,9 @@ class CategoryManager(models.Manager):
         if camp_year and len(camp_types) > 0:
             try:
                 return list(
-                    self.get_queryset().filter(
-                        camp_year=camp_year, camp_types__in=camp_types
-                    )
+                    self.get_queryset()
+                    .filter(camp_year=camp_year, camp_types__in=camp_types)
+                    .distinct()
                 )
             except:
                 pass

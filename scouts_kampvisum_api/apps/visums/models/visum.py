@@ -16,3 +16,6 @@ class CampVisum(AuditedBaseModel):
 
     # class Meta:
     #     ordering = ["camp__sections__name__age_group"]
+
+    def __str__(self):
+        return "{}".format(self.id)

@@ -1,6 +1,7 @@
 import logging
 
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -21,6 +22,8 @@ class LinkedCategoryManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        category = kwargs.get("category", None)
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
@@ -28,4 +31,16 @@ class LinkedCategoryManager(models.Manager):
             except:
                 pass
 
+        if category:
+            try:
+                return self.get_queryset().get(parent=category)
+            except:
+                pass
+
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate LinkedCategory instance(s) with provided params (id: {}, category: {})".format(
+                    pk, category
+                )
+            )
         return None
