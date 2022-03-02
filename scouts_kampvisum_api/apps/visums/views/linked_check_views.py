@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from django.db.models import Q
@@ -39,6 +38,7 @@ from apps.visums.services import LinkedCheckService
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 
+import logging
 
 logger = logging.getLogger(__name__)
 

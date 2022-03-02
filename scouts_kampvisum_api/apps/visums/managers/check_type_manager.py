@@ -1,7 +1,7 @@
-import logging
-
 from django.db import models
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ class CheckTypeManager(models.Manager):
     """
 
     def get_by_natural_key(self, check_type):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (check_type: %s (%s))",
             "CheckType",
             check_type,

@@ -1,8 +1,7 @@
-import logging
-
 from scouts_auth.inuits.models import InuitsCountry
 from scouts_auth.inuits.serializers import NonModelSerializer
 
+import logging
 
 logger = logging.getLogger(__name__)
 

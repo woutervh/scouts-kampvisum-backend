@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from django.utils import timezone
@@ -29,6 +28,8 @@ from apps.visums.models import (
     LinkedCheck,
 )
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

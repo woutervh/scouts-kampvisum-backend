@@ -1,4 +1,4 @@
-import logging, json, datetime, uuid
+import json, datetime, uuid
 from types import SimpleNamespace
 
 from django.conf import settings
@@ -38,8 +38,11 @@ from apps.deadlines.models import (
 )
 
 from scouts_auth.groupadmin.models import ScoutsUser
+
 from scouts_auth.inuits.models import PersistedFile, Gender
 from scouts_auth.inuits.services import PersistedFileService
+
+import logging
 
 logger = logging.getLogger(__name__)
 

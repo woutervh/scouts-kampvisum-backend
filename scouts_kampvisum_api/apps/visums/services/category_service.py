@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from django.db import transaction
@@ -7,6 +6,9 @@ from apps.camps.models import CampYear, CampType
 
 from apps.visums.models import LinkedCategorySet, LinkedCategory, Category
 from apps.visums.services import SubCategoryService
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 

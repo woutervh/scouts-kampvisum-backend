@@ -1,9 +1,8 @@
-import logging
-
 from rest_framework import serializers
 
 from scouts_auth.inuits.models import InuitsAddress
 
+import logging
 
 logger = logging.getLogger(__name__)
 

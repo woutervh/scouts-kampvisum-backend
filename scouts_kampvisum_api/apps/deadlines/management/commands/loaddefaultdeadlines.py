@@ -1,4 +1,4 @@
-import logging, os, json
+import os, json
 from pathlib import Path
 
 from django.conf import settings
@@ -12,6 +12,8 @@ from apps.deadlines.models import DeadlineDate
 from apps.deadlines.models.enums import DeadlineType
 from apps.deadlines.services import DefaultDeadlineService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +92,6 @@ class Command(BaseCommand):
                             **model.get("fields")["due_date"]
                         )
                     )
-                    # model.get("fields")["due_date"] = [str(default_deadline.id)]
                     model.get("fields").pop("due_date")
 
                     flags = model.get("fields").get("flags", [])
@@ -111,10 +112,9 @@ class Command(BaseCommand):
                                 )
                             )
 
-                        # model.get("fields")["flags"] = [str(flag.id) for flag in results]
                         model.get("fields").pop("flags")
 
-                    # logger.debug("MODEL: %s", model)
+                    logger.trace("MODEL: %s", model)
 
                 with open(tmp_path, "w") as o:
                     json.dump(data, o)
@@ -122,4 +122,5 @@ class Command(BaseCommand):
             logger.debug("LOADING adjusted fixture %s", tmp_path)
             call_command("loaddata", tmp_path)
 
+            logger.debug("REMOVING adjusted fixture %s", tmp_path)
             os.remove(tmp_path)

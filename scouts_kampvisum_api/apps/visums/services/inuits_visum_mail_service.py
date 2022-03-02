@@ -1,9 +1,10 @@
-import logging
-
 from django.conf import settings
 
 from scouts_auth.inuits.mail import Email, EmailAttachment, EmailService
 from scouts_auth.inuits.utils import TextUtils
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 

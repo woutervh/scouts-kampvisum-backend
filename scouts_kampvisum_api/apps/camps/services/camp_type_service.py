@@ -1,9 +1,10 @@
-import logging
 from typing import List
 
 from apps.camps.models import CampType
 
 from scouts_auth.inuits.utils import ListUtils
+
+import logging
 
 logger = logging.getLogger(__name__)
 

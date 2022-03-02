@@ -1,10 +1,12 @@
-import logging
 from typing import List
 
 from django.db import transaction
 
 from apps.visums.models import LinkedCategory, Category, LinkedSubCategory, SubCategory
 from apps.visums.services import CheckService
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 

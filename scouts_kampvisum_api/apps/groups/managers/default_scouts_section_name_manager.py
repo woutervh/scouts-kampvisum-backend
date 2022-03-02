@@ -1,7 +1,7 @@
-import logging
-
 from django.db import models
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -13,9 +13,8 @@ class DefaultScoutsSectionNameManager(models.Manager):
     This is useful for defining fixtures.
     """
 
-    # def get_by_natural_key(self, type: ScoutsGroupType, name: ScoutsSectionName):
     def get_by_natural_key(self, group_type, name):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (group_type: %s (%s), name: %s (%s))",
             "DefaultScoutsSectionName",
             group_type,

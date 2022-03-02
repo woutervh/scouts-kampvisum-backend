@@ -1,10 +1,10 @@
-import logging
-
 from django.db.models import Q
 from django_filters import FilterSet, CharFilter
 
 from apps.locations.models import LinkedLocation
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

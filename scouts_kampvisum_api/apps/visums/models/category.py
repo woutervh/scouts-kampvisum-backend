@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 
 from apps.camps.models import CampYear, CampType
@@ -16,6 +14,7 @@ from scouts_auth.inuits.models.interfaces import (
 )
 from scouts_auth.inuits.models.fields import RequiredCharField
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +46,7 @@ class Category(
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED Category")
+        logger.trace("NATURAL KEY CALLED Category")
         return (self.name, self.camp_year)
 
     def __str__(self):

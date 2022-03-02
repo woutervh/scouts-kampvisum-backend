@@ -1,5 +1,3 @@
-import logging
-
 from django.db import transaction
 from django.conf import settings
 
@@ -8,6 +6,8 @@ from apps.participants.models.enums import ParticipantType
 from apps.participants.models.enums import PaymentStatus
 from apps.participants.services import InuitsParticipantService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

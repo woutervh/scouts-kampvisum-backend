@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -25,6 +23,7 @@ from scouts_auth.inuits.models.fields import (
     DatetypeAwareDateField,
 )
 
+import logging
 
 logger = logging.getLogger(__name__)
 

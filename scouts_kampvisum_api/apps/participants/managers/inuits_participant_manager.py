@@ -1,8 +1,9 @@
-import logging
-
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +44,7 @@ class InuitsParticipantManager(models.Manager):
             obj = self.safe_get_by_group_admin_id(group_admin_id)
             if obj:
                 return obj
-        
+
         if email:
             obj = self.safe_get_by_email(email)
             if obj:
@@ -60,11 +61,13 @@ class InuitsParticipantManager(models.Manager):
 
     def safe_get_by_group_admin_id(self, group_admin_id):
         try:
-            logger.debug("Query InuitsParticipant with group admin id %s", group_admin_id)
+            logger.debug(
+                "Query InuitsParticipant with group admin id %s", group_admin_id
+            )
             return self.get_queryset().get(group_admin_id=str(group_admin_id))
         except:
             return None
-    
+
     def safe_get_by_email(self, email):
         try:
             logger.debug("Query InuitsParticipant with email %s", email)

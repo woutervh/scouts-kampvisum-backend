@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 
 from apps.camps.managers import CampTypeManager
@@ -8,6 +6,7 @@ from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
 from scouts_auth.inuits.models.interfaces import Indexable, Explainable, Translatable
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED CampType")
+        logger.trace("NATURAL KEY CALLED CampType")
         return (self.camp_type,)
 
     def __str__(self):

@@ -1,4 +1,3 @@
-import logging
 from django.db import models
 
 from apps.camps.models import CampYear
@@ -7,6 +6,7 @@ from apps.groups.models import ScoutsSection
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import OptionalDateField
 
+import logging
 
 logger = logging.getLogger(__name__)
 

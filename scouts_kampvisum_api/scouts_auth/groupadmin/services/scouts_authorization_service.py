@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from django.conf import settings
@@ -11,6 +10,7 @@ from scouts_auth.groupadmin.settings import GroupadminSettings
 
 from scouts_auth.inuits.utils import GlobalSettingsUtil
 
+import logging
 
 logger = logging.getLogger(__name__)
 

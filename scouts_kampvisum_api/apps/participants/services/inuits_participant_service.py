@@ -1,12 +1,12 @@
-import logging
-
 from django.conf import settings
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 
 from apps.participants.models import InuitsParticipant
 
 from scouts_auth.groupadmin.services import GroupAdmin
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

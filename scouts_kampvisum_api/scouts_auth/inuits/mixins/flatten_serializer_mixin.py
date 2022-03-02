@@ -1,5 +1,7 @@
-import logging, uuid, inspect
+import uuid, inspect
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

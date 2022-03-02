@@ -1,10 +1,7 @@
-import logging
-
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
 from apps.participants.models import VisumParticipant
-from apps.participants.models.enums import ParticipantType
 from apps.participants.services import VisumParticipantService
 
 from apps.locations.models import LinkedLocation
@@ -27,6 +24,7 @@ from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.services import PersistedFileService
 
+import logging
 
 logger = logging.getLogger(__name__)
 

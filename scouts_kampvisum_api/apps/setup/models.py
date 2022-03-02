@@ -1,8 +1,9 @@
-import logging
 import importlib
 
 from rest_framework import serializers
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

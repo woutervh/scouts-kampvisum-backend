@@ -1,5 +1,3 @@
-import logging
-
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.dispatch import receiver
@@ -17,6 +15,8 @@ from scouts_auth.auth.user import OIDCUserHelper
 
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from django.core.exceptions import ValidationError
@@ -20,6 +19,9 @@ from apps.visums.models import LinkedCheck, LinkedParticipantCheck
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.settings import GroupadminSettings
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 

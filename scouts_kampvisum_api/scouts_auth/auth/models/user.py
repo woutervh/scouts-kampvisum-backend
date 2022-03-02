@@ -1,4 +1,4 @@
-import logging, uuid
+import uuid
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -7,6 +7,8 @@ from django.utils import timezone
 
 from scouts_auth.inuits.models.fields import OptionalEmailField
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

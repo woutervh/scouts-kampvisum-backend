@@ -1,10 +1,12 @@
-import logging, os, json
+import os, json
 from pathlib import Path
 
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -33,9 +35,9 @@ class Command(BaseCommand):
         with open(path) as f:
             data = json.load(f)
 
-            for model in data:
+            logger.debug("LOADING and REWRITING fixture %s", path)
 
-                logger.debug("MODEL DATA: %s", model)
+            for model in data:
                 sub_category = model.get("fields")["sub_category"]
                 if previous_sub_category is None:
                     previous_sub_category = sub_category
@@ -53,11 +55,13 @@ class Command(BaseCommand):
                 else:
                     model.get("fields")["is_member"] = False
 
-                logger.debug("MODEL DATA: %s", model)
+                logger.trace("MODEL DATA: %s", model)
 
             with open(tmp_path, "w") as o:
                 json.dump(data, o)
 
+        logger.debug("LOADING adjusted fixture %s", tmp_path)
         call_command("loaddata", tmp_path)
 
+        logger.debug("REMOVING adjusted fixture %s", tmp_path)
         os.remove(tmp_path)

@@ -1,11 +1,11 @@
-import logging
-
 from django.db import models
 
 from apps.visums.managers import CategoryPriorityManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class CategoryPriority(AbstractBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED CategoryPriority")
+        logger.trace("NATURAL KEY CALLED CategoryPriority")
         return (self.owner,)
 
     def __str__(self):

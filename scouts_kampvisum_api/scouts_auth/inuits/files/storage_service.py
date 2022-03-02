@@ -1,9 +1,10 @@
-import logging, importlib
+import importlib
 
 from django.core.files.storage import Storage
 
 from scouts_auth.inuits.files import StorageSettings, CustomStorage
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -39,17 +40,27 @@ class StorageService(Storage):
         package_name = ".".join(storage_type.split(".")[:-1])
         storage_name = storage_type.split(".")[-1]
 
-        logger.debug("Initialising storage type: %s%s", package_name + "." if package_name else "", storage_name)
+        logger.debug(
+            "Initialising storage type: %s%s",
+            package_name + "." if package_name else "",
+            storage_name,
+        )
 
         if package_name:
-            logger.debug("Importing storage module %s from package %s", storage_name, package_name)
+            logger.debug(
+                "Importing storage module %s from package %s",
+                storage_name,
+                package_name,
+            )
             # importlib.import_module(storage_name, package_name)
             module = importlib.import_module(package_name)
             self.storage = getattr(module, storage_name)()
         else:
             self.storage = storage_name()
 
-        assert isinstance(self.storage, CustomStorage), "Storage classes should subclass CustomStorage"
+        assert isinstance(
+            self.storage, CustomStorage
+        ), "Storage classes should subclass CustomStorage"
 
     # Required override for custom Storage
     def delete(self, name):

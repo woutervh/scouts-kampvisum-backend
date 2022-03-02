@@ -1,6 +1,7 @@
-import logging
-
 from django.db import models
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ class DeadlineDateManager(models.Manager):
         return None
 
     def get_by_natural_key(self, default_deadline):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (default_deadline: %s (%s))",
             "DeadlineDate",
             default_deadline,

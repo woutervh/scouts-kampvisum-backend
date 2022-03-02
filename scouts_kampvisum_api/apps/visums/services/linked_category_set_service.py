@@ -1,18 +1,15 @@
-import logging
-from typing import List
-
 from django.db import transaction
 
-from apps.camps.models import Camp, CampYear, CampType
 from apps.camps.services import CampTypeService
 
 from apps.visums.models import (
     CampVisum,
-    Category,
     LinkedCategorySet,
 )
 from apps.visums.services import CategoryService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

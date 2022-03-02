@@ -1,9 +1,10 @@
-import logging
-
 from django.db import models
 from django.core.exceptions import ValidationError
 
 from apps.camps.models import CampYear
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +55,7 @@ class CategoryManager(models.Manager):
         return None
 
     def get_by_natural_key(self, name, camp_year):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (name: %s (%s), camp_year: %s (%s))",
             "Category",
             name,

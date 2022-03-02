@@ -1,10 +1,12 @@
-import logging, datetime
+import datetime
 
 from django.db import transaction
 
 from apps.camps.models import Camp
 from apps.camps.services import CampYearService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

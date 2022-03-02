@@ -1,7 +1,3 @@
-import logging
-from typing import List
-
-from django.core.exceptions import ValidationError
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -25,6 +21,8 @@ from apps.deadlines.serializers import (
 )
 from apps.deadlines.services import DeadlineService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,10 +1,10 @@
-import logging
 from typing import List
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroupSpecificField
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
+import logging
 
 logger = logging.getLogger(__name__)
 

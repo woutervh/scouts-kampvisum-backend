@@ -1,7 +1,9 @@
-import logging, json
+import json
 
 from rest_framework import parsers
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +16,9 @@ class MultipartJsonParser(parsers.MultiPartParser):
     """
 
     def parse(self, stream, media_type=None, parser_context=None):
-        result = super().parse(stream, media_type=media_type, parser_context=parser_context)
+        result = super().parse(
+            stream, media_type=media_type, parser_context=parser_context
+        )
 
         data = {}
 
@@ -33,7 +37,10 @@ class MultipartJsonParser(parsers.MultiPartParser):
                 try:
                     data[key] = json.loads(value)
                 except ValueError:
-                    logger.error("Value error while attempting to parse value as json (key: %s)", key)
+                    logger.error(
+                        "Value error while attempting to parse value as json (key: %s)",
+                        key,
+                    )
                     data[key] = value
             else:
                 data[key] = value

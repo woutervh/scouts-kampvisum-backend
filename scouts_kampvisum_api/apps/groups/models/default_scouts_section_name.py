@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -8,6 +6,8 @@ from apps.groups.models import ScoutsSectionName, ScoutsGroupType
 
 from scouts_auth.inuits.models import AbstractBaseModel
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -35,5 +35,5 @@ class DefaultScoutsSectionName(AbstractBaseModel):
             )
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED")
+        logger.trace("NATURAL KEY CALLED DefaultScoutsSectionName")
         return (self.group_type, self.name)

@@ -1,7 +1,7 @@
-import logging
-
 from django.db import models
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ class ScoutsGroupTypeManager(models.Manager):
     """
 
     def get_by_natural_key(self, group_type):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (group_type: %s (%s))",
             "ScoutsGroupType",
             group_type,

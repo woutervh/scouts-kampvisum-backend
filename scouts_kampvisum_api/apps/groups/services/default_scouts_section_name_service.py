@@ -1,10 +1,9 @@
-import logging
 from typing import List
-
-from django.db.models import Q
 
 from apps.groups.models import DefaultScoutsSectionName, ScoutsGroupType
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

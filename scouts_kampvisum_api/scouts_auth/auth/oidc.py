@@ -1,4 +1,4 @@
-import requests, logging
+import requests
 from requests.exceptions import HTTPError
 
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
@@ -14,6 +14,8 @@ from scouts_auth.auth.models import User
 from scouts_auth.auth.settings import OIDCSettings
 from scouts_auth.auth.signals import ScoutsAuthSignalSender
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

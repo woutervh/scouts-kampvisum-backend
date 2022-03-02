@@ -1,5 +1,3 @@
-import logging
-
 from apps.deadlines.models import Deadline
 from apps.deadlines.serializers import (
     DeadlineSerializer,
@@ -9,6 +7,9 @@ from apps.deadlines.serializers import (
 )
 
 from apps.visums.models.enums import CheckState
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 

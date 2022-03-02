@@ -5,6 +5,10 @@ from apps.deadlines.managers import DeadlineFlagManager
 
 from scouts_auth.inuits.models import AuditedBaseModel
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class DeadlineFlag(AuditedBaseModel):
 

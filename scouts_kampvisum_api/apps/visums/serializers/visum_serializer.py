@@ -1,11 +1,11 @@
-import logging
-
 from rest_framework import serializers
 
 from apps.camps.serializers import CampSerializer, CampTypeSerializer
 from apps.visums.models import CampVisum
 from apps.visums.serializers import LinkedCategorySetSerializer
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

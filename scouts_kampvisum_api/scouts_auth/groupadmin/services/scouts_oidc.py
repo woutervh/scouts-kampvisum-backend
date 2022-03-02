@@ -1,4 +1,3 @@
-import logging
 import jwt
 
 from django.conf import settings
@@ -10,6 +9,8 @@ from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
 from scouts_auth.groupadmin.services import GroupAdmin, ScoutsAuthorizationService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,9 +1,8 @@
-import logging
-
 from scouts_auth.groupadmin.models import AbstractScoutsValue
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +38,6 @@ class AbstractScoutsValueSerializer(NonModelSerializer):
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
+            logger.api("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance

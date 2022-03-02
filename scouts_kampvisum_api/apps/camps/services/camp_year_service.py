@@ -1,10 +1,11 @@
-import logging
 import datetime
 
 from apps.camps.models import CampYear
 
 from scouts_auth.groupadmin.scouts import ScoutsTemporalDetails
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

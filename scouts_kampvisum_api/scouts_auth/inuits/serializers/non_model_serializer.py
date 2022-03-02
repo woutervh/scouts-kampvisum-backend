@@ -1,8 +1,9 @@
-import logging
 from datetime import date, datetime
 
 from rest_framework import serializers
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,9 @@ class NonModelSerializer(serializers.Serializer):
         return None
 
     def get_object():
-        raise NotImplementedError("The get_object method should be implemented in a concrete subclass.")
+        raise NotImplementedError(
+            "The get_object method should be implemented in a concrete subclass."
+        )
 
     def to_internal_value(self, data):
 
@@ -35,7 +38,9 @@ class NonModelSerializer(serializers.Serializer):
             return validated_data
         except Exception:
             """NonModelSerializer instances must implement this to support read operations."""
-            raise NotImplementedError("The to_internal_value method should be implemented in a concrete subclass.")
+            raise NotImplementedError(
+                "The to_internal_value method should be implemented in a concrete subclass."
+            )
 
     def to_representation(self, instance):
         """
@@ -76,21 +81,27 @@ class NonModelSerializer(serializers.Serializer):
                     # logger.debug("Serializing list attribute %s", attribute_name)
                     # logger.debug("List contents: %s", attribute)
                     # Recursively deal with items in lists.
-                    output[attribute_name] = [NonModelSerializer().to_representation(item) for item in attribute]
+                    output[attribute_name] = [
+                        NonModelSerializer().to_representation(item)
+                        for item in attribute
+                    ]
             elif isinstance(attribute, dict):
                 # Ignore empty dictionaries
                 if len(attribute.keys()) > 0:
                     # logger.debug("Serializing dict attribute %s", attribute_name)
                     # Recursively deal with items in dictionaries.
                     output[attribute_name] = {
-                        str(key): NonModelSerializer().to_representation(value) for key, value in attribute.items()
+                        str(key): NonModelSerializer().to_representation(value)
+                        for key, value in attribute.items()
                     }
             elif isinstance(attribute, date) or isinstance(attribute, datetime):
                 # logger.debug("Serializing datetime attribute %s", attribute_name)
                 output[attribute_name] = str(attribute)
             elif hasattr(attribute, "__class__"):
                 # logger.debug("Serializing nested class attribute %s", attribute_name)
-                output[attribute_name] = NonModelSerializer().to_representation(attribute)
+                output[attribute_name] = NonModelSerializer().to_representation(
+                    attribute
+                )
             else:
                 # Force anything else to its string representation.
                 output[attribute_name] = str(attribute)

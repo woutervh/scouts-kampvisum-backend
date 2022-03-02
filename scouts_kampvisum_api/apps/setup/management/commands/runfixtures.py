@@ -1,10 +1,12 @@
-import logging, os
+import os
 from pathlib import Path
 
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -31,4 +33,5 @@ class Command(BaseCommand):
             data_path = "{}/{}".format(self.BASE_PATH, fixture)
             path = os.path.join(parent_path, data_path)
 
+            logger.debug("LOADING and RUNNING fixture %s", path)
             call_command("loaddata", path)

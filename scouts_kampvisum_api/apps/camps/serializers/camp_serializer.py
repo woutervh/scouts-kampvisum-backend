@@ -1,5 +1,3 @@
-import logging
-
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
@@ -9,6 +7,8 @@ from apps.camps.services import CampYearService
 
 from apps.groups.serializers import ScoutsSectionSerializer
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
-import logging
-
 from django.db import models
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class CheckManager(models.Manager):
         return None
 
     def get_by_natural_key(self, name, sub_category):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (name: %s (%s), sub_category: %s (%s))",
             "Check",
             name,

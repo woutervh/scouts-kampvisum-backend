@@ -1,4 +1,4 @@
-import logging, yaml, importlib
+import yaml, importlib
 from typing import List
 
 from django.contrib.auth.models import Group, Permission
@@ -6,6 +6,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from scouts_auth.auth.settings import OIDCSettings
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

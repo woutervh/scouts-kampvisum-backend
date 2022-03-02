@@ -1,8 +1,8 @@
-import logging
-
 from scouts_auth.groupadmin.models import AbstractScoutsGrouping
 
 from scouts_auth.inuits.serializers import NonModelSerializer
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +16,14 @@ class AbstractScoutsGroupingSerializer(NonModelSerializer):
         if data is None:
             return None
 
-        validated_data = {"name": data.pop("naam", None), "index": data.pop("volgorde", None)}
+        validated_data = {
+            "name": data.pop("naam", None),
+            "index": data.pop("volgorde", None),
+        }
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -38,6 +41,6 @@ class AbstractScoutsGroupingSerializer(NonModelSerializer):
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
+            logger.api("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance

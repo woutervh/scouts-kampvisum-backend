@@ -1,4 +1,3 @@
-import logging
 import datetime
 from typing import List
 
@@ -11,6 +10,8 @@ from apps.camps.models import CampYear, CampType
 from apps.deadlines.models import DefaultDeadline, DeadlineDate, DefaultDeadlineFlag
 from apps.deadlines.models.enums import DeadlineType
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

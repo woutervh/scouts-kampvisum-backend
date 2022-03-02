@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 
 from apps.visums.managers import CheckTypeManager
@@ -8,6 +6,7 @@ from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.interfaces import Describable
 from scouts_auth.inuits.models.fields import RequiredCharField
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +56,7 @@ class CheckType(Describable, AbstractBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED CheckType")
+        logger.trace("NATURAL KEY CALLED CheckType")
         return (self.check_type,)
 
     @property

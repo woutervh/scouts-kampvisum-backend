@@ -18,7 +18,11 @@ class AbstractScoutsFunctionCode:
         self.code = code
 
     def is_group_leader(self):
-        return self in (self.GROUP_LEADER, self.ADJUNCT_GROUP_LEADER, self.GROUP_LEADER_TEAM)
+        return self in (
+            self.GROUP_LEADER,
+            self.ADJUNCT_GROUP_LEADER,
+            self.GROUP_LEADER_TEAM,
+        )
 
     def is_district_commissioner(self):
         return self in (

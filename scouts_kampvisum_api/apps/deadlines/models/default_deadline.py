@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 
 from apps.camps.models import CampYear, CampType
@@ -14,6 +12,8 @@ from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField, DefaultCharField
 from scouts_auth.inuits.models.interfaces import Describable, Explainable, Translatable
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +52,7 @@ class DefaultDeadline(Describable, Explainable, Translatable, AuditedBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED DefaultDeadline")
+        logger.trace("NATURAL KEY CALLED DefaultDeadline")
         return (self.name, self.deadline_type, self.camp_year)
 
     def is_deadline(self):

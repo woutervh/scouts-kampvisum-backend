@@ -1,8 +1,9 @@
-import logging
 import datetime
 
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

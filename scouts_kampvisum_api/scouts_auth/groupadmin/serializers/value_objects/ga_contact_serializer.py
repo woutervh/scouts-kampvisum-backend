@@ -1,10 +1,11 @@
-import logging
-
 from scouts_auth.groupadmin.models import AbstractScoutsContact
-from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsLinkSerializer
+from scouts_auth.groupadmin.serializers.value_objects import (
+    AbstractScoutsLinkSerializer,
+)
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -24,12 +25,14 @@ class AbstractScoutsContactSerializer(NonModelSerializer):
             "name": data.pop("naam", None),
             "phone_number": data.pop("tel", None),
             "email": data.pop("email", None),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
+                data.pop("links", [])
+            ),
         }
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -47,10 +50,12 @@ class AbstractScoutsContactSerializer(NonModelSerializer):
         instance.name = validated_data.pop("name", None)
         instance.phone_number = validated_data.pop("phone_number", None)
         instance.email = validated_data.pop("email", None)
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(
+            validated_data.pop("links", [])
+        )
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
+            logger.api("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance

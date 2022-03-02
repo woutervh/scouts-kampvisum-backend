@@ -1,5 +1,3 @@
-import logging
-
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
@@ -14,6 +12,9 @@ from apps.camps.models import Camp
 from apps.camps.serializers import CampSerializer
 from apps.camps.services import CampService
 from apps.camps.filters import CampFilter
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 

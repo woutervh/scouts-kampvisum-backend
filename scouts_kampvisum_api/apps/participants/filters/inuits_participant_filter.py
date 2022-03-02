@@ -1,4 +1,3 @@
-import logging
 import datetime
 
 from django.db import models
@@ -10,6 +9,8 @@ from apps.participants.models import InuitsParticipant
 
 from scouts_auth.inuits.models import GenderHelper
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

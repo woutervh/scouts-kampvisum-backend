@@ -1,5 +1,3 @@
-import logging
-
 from rest_framework import status, viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,6 +7,8 @@ from scouts_auth.groupadmin.models import ScoutsAllowedCalls
 from scouts_auth.groupadmin.serializers import ScoutsAllowedCallsSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

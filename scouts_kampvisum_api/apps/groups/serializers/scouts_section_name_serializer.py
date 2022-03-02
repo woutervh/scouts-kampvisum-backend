@@ -1,9 +1,9 @@
-import logging
-
 from rest_framework import serializers
 
 from apps.groups.models import ScoutsSectionName
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

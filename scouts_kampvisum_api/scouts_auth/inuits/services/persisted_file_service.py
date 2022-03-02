@@ -1,10 +1,11 @@
-import logging, mimetypes
+import mimetypes
 
 from django.http import Http404
 from django.core.files.base import File
 
 from scouts_auth.inuits.models import PersistedFile
 
+import logging
 
 logger = logging.getLogger(__name__)
 

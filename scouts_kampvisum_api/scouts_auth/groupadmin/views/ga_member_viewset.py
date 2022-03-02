@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from django.conf import settings
@@ -23,6 +22,8 @@ from scouts_auth.groupadmin.serializers import (
 )
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,4 +1,4 @@
-import logging, warnings
+import warnings
 from typing import List
 
 from django.conf import settings
@@ -18,6 +18,8 @@ from apps.groups.services import (
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

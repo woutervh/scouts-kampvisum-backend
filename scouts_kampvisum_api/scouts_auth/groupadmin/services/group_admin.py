@@ -1,4 +1,4 @@
-import logging, requests
+import requests
 
 from django.conf import settings
 from django.http import Http404
@@ -29,6 +29,8 @@ from scouts_auth.groupadmin.serializers import (
 
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +118,7 @@ class GroupAdmin:
         json_data = self.get(self.url_allowed_calls, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_allowed_calls", self.url_allowed_calls)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -145,7 +147,7 @@ class GroupAdmin:
         json_data = self.get(self.url_groups, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_groups", self.url_groups)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -171,7 +173,7 @@ class GroupAdmin:
         json_data = self.get(self.url_groups_vga, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_accountable_groups", self.url_groups_vga)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -200,7 +202,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_group", url)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -275,7 +277,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_functions", url)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -306,7 +308,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_function", url)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -332,7 +334,7 @@ class GroupAdmin:
         json_data = self.get(self.url_member_profile, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_member_profile", self.url_function)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -361,7 +363,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_member_info", url)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -443,7 +445,7 @@ class GroupAdmin:
         json_data = self.get(self.url_member_list, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_member_list", self.url_member_list)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -472,7 +474,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "search_member", url)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -501,6 +503,6 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "search_similar_member", url)
-        logger.debug("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data

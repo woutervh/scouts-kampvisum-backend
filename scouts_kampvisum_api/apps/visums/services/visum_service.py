@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from django.db import transaction
@@ -11,6 +10,8 @@ from apps.deadlines.services import DeadlineService
 from apps.visums.models import LinkedCategorySet, CampVisum
 from apps.visums.services import LinkedCategorySetService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,10 +1,10 @@
-import logging
-
 from rest_framework import serializers
 
 from apps.locations.models import LinkedLocation
 from apps.locations.serializers import CampLocationSerializer
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

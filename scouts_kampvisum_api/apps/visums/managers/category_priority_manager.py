@@ -1,7 +1,7 @@
-import logging
-
 from django.db import models
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ class CategoryPriorityManager(models.Manager):
         return self.get_queryset().order_by("priority").first()
 
     def get_by_natural_key(self, owner):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (owner: %s (%s))",
             "CategoryPriority",
             owner,

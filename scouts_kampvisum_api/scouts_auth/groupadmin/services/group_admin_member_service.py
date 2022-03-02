@@ -1,4 +1,3 @@
-import logging
 from typing import List
 from datetime import date, datetime, timedelta
 
@@ -11,8 +10,10 @@ from scouts_auth.groupadmin.models import (
 )
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.groupadmin.settings import GroupadminSettings
+
 from scouts_auth.inuits.models import GenderHelper
 
+import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,3 @@
-import logging
-
 from rest_framework import serializers
 
 from apps.deadlines.models import DefaultDeadline
@@ -10,6 +8,8 @@ from apps.deadlines.serializers import (
 
 from apps.visums.serializers import SubCategorySerializer, CheckSerializer
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

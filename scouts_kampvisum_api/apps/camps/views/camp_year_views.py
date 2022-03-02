@@ -1,5 +1,3 @@
-import logging
-
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
@@ -13,6 +11,9 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 from apps.camps.models import CampYear
 from apps.camps.serializers import CampYearSerializer
 from apps.camps.services import CampYearService
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 

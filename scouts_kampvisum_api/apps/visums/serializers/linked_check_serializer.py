@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from django.core.exceptions import ValidationError
@@ -32,6 +31,7 @@ from scouts_auth.inuits.serializers.fields import (
     OptionalIntegerSerializerField,
 )
 
+import logging
 
 logger = logging.getLogger(__name__)
 

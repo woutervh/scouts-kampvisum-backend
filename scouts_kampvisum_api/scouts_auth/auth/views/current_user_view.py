@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from rest_framework import views, permissions, status
@@ -12,6 +11,8 @@ from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

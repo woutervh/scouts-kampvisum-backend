@@ -1,35 +1,33 @@
-from logging import Logger
-
-from django.conf import settings
+import logging, logging.config
 
 
-class InuitsLogger(Logger):
+class InuitsLogger(logging.getLoggerClass()):
     name: str
     level: str
 
-    def __init__(self, name, level=None):
-        self.name = name
-        self.level = level if level else settings.LOGGING_LEVEL
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-        super().__init__(name=self.name, level=self.level)
-
-    def debug(self, msg, *args, **kwargs):
-        super().debug(self, msg, *args, **kwargs)
-
-    def info(self, msg, *args, **kwargs):
-        super().info(self, msg, *args, **kwargs)
-
-    def warning(self, msg, *args, **kwargs):
-        super().warning(self, msg, *args, **kwargs)
-
-    def error(self, msg, *args, **kwargs):
-        super().error(self, msg, *args, **kwargs)
-
-    def exception(self, msg, *args, exc_info=True, **kwargs):
-        super().exception(self, msg, *args, exc_info, **kwargs)
-
-    def critical(self, msg, *args, **kwargs):
-        super().critical(self, msg, *args, **kwargs)
+    def note(self, msg, *args, **kwargs):
+        self.log(logging.NOTE, msg, *args, **kwargs)
 
     def trace(self, msg, *args, **kwargs):
-        print("TRACE", msg if not isinstance(msg, object) else str(msg), *args, **kwargs)
+        self.log(logging.TRACE, msg, *args, **kwargs)
+
+    def api(self, msg, *args, **kwargs):
+        self.log(logging.API, msg, *args, **kwargs)
+
+    @staticmethod
+    def setup_logging(config=None):
+        logging.NOTE = logging.INFO + 5
+        logging.TRACE = logging.DEBUG - 5
+        logging.API = logging.DEBUG - 10
+
+        logging.addLevelName(logging.INFO + 5, "NOTE")
+        logging.addLevelName(logging.DEBUG - 5, "TRACE")
+        logging.addLevelName(logging.DEBUG - 10, "API")
+
+        logging.setLoggerClass(InuitsLogger)
+
+        if config:
+            logging.config.dictConfig(config)

@@ -1,10 +1,11 @@
-import logging
-
 from scouts_auth.groupadmin.models import AbstractScoutsAddress
-from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsPositionSerializer
+from scouts_auth.groupadmin.serializers.value_objects import (
+    AbstractScoutsPositionSerializer,
+)
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -29,14 +30,16 @@ class AbstractScoutsAddressSerializer(NonModelSerializer):
             "phone_number": data.pop("telefoon", None),
             "postal_address": data.pop("postadres", None),
             "status": data.pop("status", None),
-            "position": AbstractScoutsPositionSerializer().to_internal_value(data.pop("positie", None)),
+            "position": AbstractScoutsPositionSerializer().to_internal_value(
+                data.pop("positie", None)
+            ),
             "giscode": data.pop("giscode", None),
             "description": data.pop("omschrijving", None),
         }
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -59,12 +62,14 @@ class AbstractScoutsAddressSerializer(NonModelSerializer):
         instance.phone_number = validated_data.pop("phone_number", None)
         instance.postal_address = validated_data.pop("postal_address", None)
         instance.status = validated_data.pop("status", None)
-        instance.position = AbstractScoutsPositionSerializer().create(validated_data.pop("position", None))
+        instance.position = AbstractScoutsPositionSerializer().create(
+            validated_data.pop("position", None)
+        )
         instance.giscode = validated_data.pop("giscode", None)
         instance.description = validated_data.pop("description", None)
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
+            logger.api("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance

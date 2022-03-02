@@ -1,11 +1,11 @@
-import logging
-
 from rest_framework import serializers
 
 from apps.participants.models import VisumParticipant
 from apps.participants.models.enums import ParticipantType, PaymentStatus
 from apps.participants.serializers import InuitsParticipantSerializer
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

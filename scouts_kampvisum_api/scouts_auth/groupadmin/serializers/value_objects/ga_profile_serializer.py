@@ -1,11 +1,11 @@
-import logging
-
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.serializers.value_objects import (
     AbstractScoutsGroupSpecificFieldSerializer,
     AbstractScoutsMemberSerializer,
 )
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -21,13 +21,15 @@ class AbstractScoutsMemberProfileSerializer(AbstractScoutsMemberSerializer):
 
         validated_data = super().to_internal_value(data)
 
-        validated_data["group_specific_fields"] = AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
+        validated_data[
+            "group_specific_fields"
+        ] = AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
             data.pop("groepseigenVelden", None)
         )
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -42,6 +44,6 @@ class AbstractScoutsMemberProfileSerializer(AbstractScoutsMemberSerializer):
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
+            logger.api("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance

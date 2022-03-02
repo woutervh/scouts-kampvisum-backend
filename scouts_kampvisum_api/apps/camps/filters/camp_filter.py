@@ -1,10 +1,10 @@
-import logging
-
 from django_filters import rest_framework as filters
 from django.db.models import Q
 
 from apps.camps.models import Camp
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

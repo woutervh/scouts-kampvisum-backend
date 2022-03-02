@@ -1,8 +1,8 @@
-import logging
-
 from django.db import connection
 from django.core.management.base import BaseCommand
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,3 @@
-import logging
-
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
@@ -9,6 +7,8 @@ from apps.locations.models import LinkedLocation
 from apps.locations.serializers import LinkedLocationSerializer
 from apps.locations.filters import LinkedLocationFilter
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

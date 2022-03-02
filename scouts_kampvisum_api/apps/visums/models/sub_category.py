@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 
 from apps.camps.models import CampType
@@ -17,6 +15,7 @@ from scouts_auth.inuits.models.interfaces import (
     Translatable,
 )
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +44,7 @@ class SubCategory(
         unique_together = ("name", "category")
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED SubCategory")
+        logger.trace("NATURAL KEY CALLED SubCategory")
         return (self.name, self.category)
 
     def __str__(self):

@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 from safedelete.models import HARD_DELETE
 
@@ -16,6 +14,7 @@ from scouts_auth.inuits.models.fields import (
 # Taken from https://nl.wikipedia.org/wiki/Tak_(scouting)
 # https://en.wikipedia.org/wiki/Age_groups_in_Scouting_and_Guiding#History
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +51,7 @@ class ScoutsSectionName(AbstractBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED")
+        logger.trace("NATURAL KEY CALLED ScoutsSectionName")
         if not self.gender:
             self.gender = Gender.UNKNOWN
         if not self.age_group:

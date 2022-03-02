@@ -1,8 +1,8 @@
-import logging
-
 from django.db import models
 from django.core.exceptions import ValidationError
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ class ScoutsSectionNameManager(models.Manager):
     """
 
     def get_by_natural_key(self, name, gender, age_group):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (name: %s (%s), gender: %s (%s), age_group: %s (%s))",
             "ScoutsSectionName",
             name,

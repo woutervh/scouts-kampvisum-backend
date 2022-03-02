@@ -1,5 +1,3 @@
-import logging
-
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status
@@ -11,6 +9,8 @@ from apps.visums.models import SubCategory
 from apps.visums.services import SubCategoryService
 from apps.visums.serializers import SubCategorySerializer
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

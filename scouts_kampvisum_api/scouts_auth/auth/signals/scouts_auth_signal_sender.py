@@ -1,9 +1,9 @@
-import logging
-
 from django.conf import settings
 
 from . import app_ready, authenticated, refreshed
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

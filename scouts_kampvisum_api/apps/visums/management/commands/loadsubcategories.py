@@ -1,4 +1,4 @@
-import logging, os, json
+import os, json
 from pathlib import Path
 
 from django.conf import settings
@@ -7,6 +7,8 @@ from django.core.management.base import BaseCommand
 
 from apps.camps.models import CampType
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +39,8 @@ class Command(BaseCommand):
         with open(path) as f:
             data = json.load(f)
 
+            logger.debug("LOADING and REWRITING fixture %s", path)
+
             for model in data:
                 category = model.get("fields")["category"]
                 if previous_category is None:
@@ -56,11 +60,13 @@ class Command(BaseCommand):
                 ):
                     model.get("fields")["camp_types"] = all_camp_types
 
-                logger.debug("MODEL DATA: %s", model)
+                logger.trace("MODEL DATA: %s", model)
 
             with open(tmp_path, "w") as o:
                 json.dump(data, o)
 
+        logger.debug("LOADING adjusted fixture %s", tmp_path)
         call_command("loaddata", tmp_path)
 
+        logger.debug("REMOVING adjusted fixture %s", tmp_path)
         os.remove(tmp_path)

@@ -5,6 +5,10 @@ from apps.camps.managers import CampYearManager
 
 from scouts_auth.inuits.models import AuditedBaseModel
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class CampYear(AuditedBaseModel):
     """
@@ -26,6 +30,7 @@ class CampYear(AuditedBaseModel):
         constraints = [models.UniqueConstraint(fields=["year"], name="unique_year")]
 
     def natural_key(self):
+        logger.trace("NATURAL KEY CALLED CampYear")
         return (self.year,)
 
     def __str__(self):

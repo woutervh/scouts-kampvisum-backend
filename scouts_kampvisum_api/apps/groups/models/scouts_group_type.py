@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 
 from apps.groups.managers import ScoutsGroupTypeManager
@@ -7,6 +5,8 @@ from apps.groups.managers import ScoutsGroupTypeManager
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class ScoutsGroupType(AbstractBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED")
+        logger.trace("NATURAL KEY CALLED ScoutsGroupType")
         return (self.group_type,)
 
     def __str__(self):

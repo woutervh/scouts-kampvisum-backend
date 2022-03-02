@@ -1,5 +1,3 @@
-import logging
-
 from django.db import transaction
 
 from apps.visums.models import (
@@ -8,6 +6,8 @@ from apps.visums.models import (
     LinkedCheck,
 )
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

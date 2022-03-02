@@ -1,5 +1,3 @@
-import logging
-
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
@@ -13,6 +11,8 @@ from apps.visums.serializers import CampVisumSerializer
 from apps.visums.filters import CampVisumFilter
 from apps.visums.services import CampVisumService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

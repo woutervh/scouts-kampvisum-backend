@@ -13,9 +13,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os, logging, logging.config
 from environs import Env
 
-# Get a pre-config logger
-logger = logging.getLogger(__name__)
-
 # ############################################################################ #
 #                                                                              #
 # ENVIRONMENT                                                                  #
@@ -41,12 +38,13 @@ if environment_conf:
         env.read_env(".env." + environment_conf)
 
         environment_loaded = True
-        logger.debug("Environment file loaded: .env." + environment_conf)
+        # logger.debug("Environment file loaded: .env." + environment_conf)
     except Exception:
-        logger.warn(
-            "WARN: Environment file .env." + environment_conf,
-            " not found ! " + "Defaulting to next configured default environment.",
-        )
+        # logger.warn(
+        #     "WARN: Environment file .env." + environment_conf,
+        #     " not found ! " + "Defaulting to next configured default environment.",
+        # )
+        pass
 
     if not environment_loaded:
         for environment in environments:
@@ -57,11 +55,10 @@ if environment_conf:
                 env = Env()
                 env.read_env(".env." + environment)
 
-                logger.debug("Environment file loaded: .env." + environment)
+                # logger.debug("Environment file loaded: .env." + environment)
                 environment_loaded = True
             except Exception:
                 pass
-
 
 # ############################################################################ #
 #                                                                              #
@@ -88,6 +85,8 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 # https://stackoverflow.com/questions/53014435/why-is-logging-in-my-django-settings-py-ignored
 LOGGING_CONFIG = None
 LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
+# LOGGING_LEVEL = "INFO"
+# LOGGING_LEVEL = "API"
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
 LOGGING = {
     "version": 1,
@@ -155,7 +154,11 @@ LOGGING = {
         # },
     },
 }
-logging.config.dictConfig(LOGGING)
+
+from scouts_auth.inuits.logging import InuitsLogger
+
+InuitsLogger.setup_logging(config=LOGGING)
+logger = InuitsLogger(__name__)
 
 
 def correct_url(issuer, url):

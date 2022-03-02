@@ -1,4 +1,3 @@
-import logging
 import datetime
 
 from scouts_auth.groupadmin.models import (
@@ -20,6 +19,7 @@ from scouts_auth.groupadmin.serializers.value_objects import (
 from scouts_auth.inuits.models import GenderHelper
 from scouts_auth.inuits.serializers import NonModelSerializer
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class AbstractScoutsMemberPersonalDataSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -67,7 +67,7 @@ class AbstractScoutsMemberPersonalDataSerializer(NonModelSerializer):
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
+            logger.api("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance
 
@@ -94,7 +94,7 @@ class AbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -125,7 +125,7 @@ class AbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
+            logger.api("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance
 
@@ -146,7 +146,7 @@ class AbstractScoutsMemberScoutsDataSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -164,7 +164,7 @@ class AbstractScoutsMemberScoutsDataSerializer(NonModelSerializer):
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
+            logger.api("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance
 
@@ -214,7 +214,7 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -265,7 +265,7 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
+            logger.api("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance
 

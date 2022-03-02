@@ -1,9 +1,8 @@
-import logging
-
 from django.core.files.storage import FileSystemStorage
 
 from scouts_auth.inuits.files import CustomStorage
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -23,5 +22,8 @@ class CustomFileSystemStorage(CustomStorage, FileSystemStorage):
         return self.storage.get_file_contents(file_src_path)
 
     def copy_file(self, file_src_path: str, file_dest_path: str = None):
-        logger.debug("Fetching file from local filesystem to use as e-mail attachment: %s", file_src_path)
+        logger.debug(
+            "Fetching file from local filesystem to use as e-mail attachment: %s",
+            file_src_path,
+        )
         return file_src_path

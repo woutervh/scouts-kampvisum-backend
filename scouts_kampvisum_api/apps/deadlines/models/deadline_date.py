@@ -1,4 +1,3 @@
-import logging
 import datetime
 
 from django.db import models
@@ -13,6 +12,7 @@ from scouts_auth.inuits.models.fields import (
     DatetypeAwareDateField,
 )
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ class DeadlineDate(AbstractBaseModel):
         ]
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED DeadlineDate")
+        logger.trace("NATURAL KEY CALLED DeadlineDate")
         return (self.default_deadline,)
 
     def to_date(self) -> datetime.date:

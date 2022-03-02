@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 
 from apps.visums.managers import CheckManager
@@ -14,6 +12,7 @@ from scouts_auth.inuits.models.interfaces import (
     Translatable,
 )
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +38,7 @@ class Check(
         unique_together = ("name", "sub_category")
 
     def natural_key(self):
-        logger.debug("NATURAL KEY CALLED Check")
+        logger.trace("NATURAL KEY CALLED Check")
         return (self.name, self.sub_category)
 
     def has_change_handler(self):

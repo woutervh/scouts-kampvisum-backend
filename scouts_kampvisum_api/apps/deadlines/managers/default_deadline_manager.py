@@ -1,8 +1,8 @@
-import logging
-
 from django.db import models
 from django.core.exceptions import ValidationError
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class DefaultDeadlineManager(models.Manager):
         return None
 
     def get_by_natural_key(self, name, deadline_type, camp_year):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (name: %s (%s), deadline_type: %s (%s), camp_year: %s (%s))",
             "DefaultDeadline",
             name,

@@ -1,9 +1,8 @@
-import logging
-
 from django_filters import FilterSet, CharFilter
 
 from scouts_auth.inuits.models import PersistedFile
 
+import logging
 
 logger = logging.getLogger(__name__)
 

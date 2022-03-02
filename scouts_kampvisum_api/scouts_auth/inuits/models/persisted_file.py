@@ -1,12 +1,9 @@
-import logging
-
 from django.db import models
-from django.db.models import Q
-from django.conf import settings
 
 from scouts_auth.inuits.files.validators import validate_uploaded_file
 from scouts_auth.inuits.models import AuditedBaseModel
 
+import logging
 
 logger = logging.getLogger(__name__)
 

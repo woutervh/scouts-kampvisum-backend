@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 
 from apps.deadlines.models import DefaultDeadline
@@ -9,6 +7,8 @@ from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
 from scouts_auth.inuits.models.interfaces import Indexable, Translatable
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -33,10 +33,11 @@ class DefaultDeadlineFlag(Indexable, Translatable, AbstractBaseModel):
         ]
 
     def natural_key(self):
+        logger.trace("NATURAL KEY CALLED DefaultDeadlineFlag")
         return (self.name,)
 
     def get_by_natural_key(self, default_deadline, name):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (default_deadline: %s (%s),  name: %s (%s))",
             "DefaultDeadline",
             default_deadline,

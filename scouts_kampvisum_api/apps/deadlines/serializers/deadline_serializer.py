@@ -1,5 +1,3 @@
-import logging
-
 from rest_framework import serializers
 
 from apps.deadlines.models import (
@@ -19,6 +17,8 @@ from apps.visums.serializers import (
     LinkedCheckSerializer,
 )
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

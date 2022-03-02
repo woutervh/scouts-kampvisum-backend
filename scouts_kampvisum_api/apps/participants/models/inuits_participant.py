@@ -1,5 +1,3 @@
-import logging
-
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -11,6 +9,8 @@ from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.inuits.models import InuitsPerson, GenderHelper
 from scouts_auth.inuits.models.fields import OptionalCharField
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,8 @@
-import logging
-
 from django.db import models
 from django.core.exceptions import ValidationError
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class CampTypeManager(models.Manager):
         return self.get_queryset().get(is_default=True)
 
     def get_by_natural_key(self, camp_type):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (camp_type: %s (%s))",
             "CampType",
             camp_type,
@@ -62,6 +62,6 @@ class CampTypeManager(models.Manager):
         )
 
         if camp_type.strip() == "*":
-            logger.debug("ALL CAMP TYPES")
+            logger.trace("GET BY NATURAL KEY WITH expander (*)")
 
         return self.get(camp_type=camp_type)

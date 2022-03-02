@@ -1,10 +1,11 @@
-import os, logging
+import os
 from typing import List
 
 from django.core.exceptions import ValidationError
 
 from scouts_auth.inuits.files import StorageSettings
 
+import logging
 
 logger = logging.getLogger(__name__)
 

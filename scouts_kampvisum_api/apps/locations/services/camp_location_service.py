@@ -1,4 +1,3 @@
-import logging
 import uuid
 
 from django.core.exceptions import ValidationError
@@ -8,6 +7,8 @@ from apps.locations.models import LinkedLocation, CampLocation
 
 from apps.visums.models import LinkedLocationCheck
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

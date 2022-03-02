@@ -1,5 +1,3 @@
-import logging
-
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -11,6 +9,8 @@ from apps.groups.services import ScoutsSectionNameService
 from apps.groups.serializers import ScoutsSectionNameSerializer
 from apps.groups.filters import ScoutsSectionFilter
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

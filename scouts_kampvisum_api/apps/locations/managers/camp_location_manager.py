@@ -1,8 +1,8 @@
-import logging
-
 from django.db import models
-from django.db.models import Q
 from django.conf import settings
+
+
+import logging
 
 logger = logging.getLogger(__name__)
 

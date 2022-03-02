@@ -1,9 +1,9 @@
-import logging
-
 from apps.groups.models import ScoutsSectionName
 
 from scouts_auth.inuits.models import Gender
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

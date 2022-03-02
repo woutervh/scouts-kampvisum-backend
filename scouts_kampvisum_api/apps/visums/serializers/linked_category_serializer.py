@@ -1,11 +1,11 @@
-import logging
-
 from rest_framework import serializers
 
 from apps.visums.models import LinkedCategory
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CategorySerializer, LinkedSubCategorySerializer
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 

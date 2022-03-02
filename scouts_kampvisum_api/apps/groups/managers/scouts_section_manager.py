@@ -1,9 +1,9 @@
-import logging
-
 from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class ScoutsSectionManager(models.Manager):
         return ScoutsSectionQuerySet(self.model, using=self._db)
 
     def get_by_natural_key(self, group_group_admin_id):
-        logger.debug(
+        logger.trace(
             "GET BY NATURAL KEY %s: (group_admin_id: %s (%s))",
             "ScoutsSection",
             group_group_admin_id,

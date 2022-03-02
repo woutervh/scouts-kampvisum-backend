@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from django.http.response import HttpResponse
@@ -12,6 +11,8 @@ from apps.groups.models import ScoutsSection
 from apps.groups.serializers import ScoutsSectionSerializer
 from apps.groups.services import ScoutsSectionService
 
+
+import logging
 
 logger = logging.getLogger(__name__)
 
