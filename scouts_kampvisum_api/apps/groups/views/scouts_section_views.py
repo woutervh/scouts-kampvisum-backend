@@ -12,9 +12,11 @@ from apps.groups.serializers import ScoutsSectionSerializer
 from apps.groups.services import ScoutsSectionService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionViewSet(viewsets.GenericViewSet):

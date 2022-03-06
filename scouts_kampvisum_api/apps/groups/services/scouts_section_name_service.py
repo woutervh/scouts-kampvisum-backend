@@ -3,9 +3,11 @@ from apps.groups.models import ScoutsSectionName
 from scouts_auth.inuits.models import Gender
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionNameService:

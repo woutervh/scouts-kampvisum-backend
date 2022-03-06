@@ -8,14 +8,15 @@ from django.core.management.base import BaseCommand
 from apps.camps.models import CampYear
 from apps.camps.services import CampYearService, CampTypeService
 
-from apps.deadlines.models import DeadlineDate
-from apps.deadlines.models.enums import DeadlineType
-from apps.deadlines.services import DefaultDeadlineService
+from apps.deadlines.models import DefaultDeadline, DeadlineDate
+from apps.deadlines.services import DefaultDeadlineService, DefaultDeadlineItemService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -40,6 +41,7 @@ class Command(BaseCommand):
             logger.debug("Loading default deadlines from %s", path)
 
             default_deadline_service = DefaultDeadlineService()
+            default_deadline_item_service = DefaultDeadlineItemService()
             camp_year_service = CampYearService()
             camp_type_service = CampTypeService()
 
@@ -47,6 +49,7 @@ class Command(BaseCommand):
                 camp_year_service.get_or_create_current_camp_year()
             )
 
+            previous_index = -1
             with open(path) as f:
                 data = json.load(f)
 
@@ -76,13 +79,14 @@ class Command(BaseCommand):
                         include_default=False,
                     )
 
-                    default_deadline = default_deadline_service.get_or_create(
-                        name=model.get("fields")["name"],
-                        deadline_type=model.get("fields").get(
-                            "deadline_type", DeadlineType.DEADLINE
-                        ),
-                        camp_year=current_camp_year,
-                        camp_types=camp_types,
+                    default_deadline: DefaultDeadline = (
+                        default_deadline_service.get_or_create_default_deadline(
+                            request=None,
+                            name=model.get("fields")["name"],
+                            camp_year=current_camp_year,
+                            camp_types=camp_types,
+                            items=[],
+                        )
                     )
                     model["pk"] = str(default_deadline.id)
 
@@ -94,25 +98,22 @@ class Command(BaseCommand):
                     )
                     model.get("fields").pop("due_date")
 
-                    flags = model.get("fields").get("flags", [])
-                    if flags:
+                    items = model.get("fields").get("items", [])
+                    if items:
                         results = []
 
-                        for flag in flags:
-                            name = flag[0]
-                            label = flag[1] if flag[1] else None
+                        for item in items:
+                            # Allow ordering categories in the order in which they appear in the fixture json, without specifying the index
+                            previous_index = previous_index + 1
+                            item["index"] = previous_index
 
                             results.append(
-                                default_deadline_service.get_or_create_default_flag(
-                                    default_deadline=default_deadline,
-                                    **{
-                                        "name": name,
-                                        "label": label,
-                                    }
+                                default_deadline_item_service.create_default_deadline_item(
+                                    default_deadline=default_deadline, **item
                                 )
                             )
 
-                        model.get("fields").pop("flags")
+                        model.get("fields").pop("items")
 
                     logger.trace("MODEL: %s", model)
 

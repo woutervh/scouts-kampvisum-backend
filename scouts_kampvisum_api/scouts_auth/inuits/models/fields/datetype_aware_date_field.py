@@ -3,9 +3,11 @@ from datetime import datetime
 from django.db import models
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DatetypeAwareDateField(models.DateField):

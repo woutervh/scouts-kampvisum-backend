@@ -3,9 +3,11 @@ from django.db import models
 from scouts_auth.inuits.files.validators import validate_uploaded_file
 from scouts_auth.inuits.models import AuditedBaseModel
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PersistedFileQuerySet(models.QuerySet):

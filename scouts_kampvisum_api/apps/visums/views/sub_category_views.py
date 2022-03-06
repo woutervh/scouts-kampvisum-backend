@@ -10,9 +10,11 @@ from apps.visums.services import SubCategoryService
 from apps.visums.serializers import SubCategorySerializer
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class SubCategoryViewSet(viewsets.GenericViewSet):

@@ -7,9 +7,11 @@ from scouts_auth.inuits.serializers.fields import (
     RequiredYearSerializerField,
 )
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampYearSerializer(serializers.ModelSerializer):
@@ -33,12 +35,15 @@ class CampYearSerializer(serializers.ModelSerializer):
 
         return data
 
-    def validate(self, data):
-        # logger.debug("VALIDATING DATA: %s", data)
-        if data["year"] is None:
-            raise serializers.ValidationError("Year can't be null")
-
-        return data
+    def validate(self, data) -> CampYear:
+        # Safe to raise an error, because this serializer will not be used to create a CampType
+        return CampYear.objects.safe_get(
+            id=data.get("id", None),
+            year=data.get("year", None),
+            start_date=data.get("start_date", None),
+            end_date=data.get("end_date", None),
+            raise_error=True,
+        )
 
     def create(self, validated_data) -> CampYear:
         return CampYear(**validated_data)

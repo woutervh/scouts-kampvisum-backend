@@ -1,9 +1,12 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineDateQuerySet(models.QuerySet):
@@ -18,6 +21,7 @@ class DeadlineDateManager(models.Manager):
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         default_deadline = kwargs.get("default_deadline", None)
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
@@ -31,6 +35,13 @@ class DeadlineDateManager(models.Manager):
             except:
                 pass
 
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate DefaultDeadline instance(s) with the provided params: (id: {}, default_deadline: {})".format(
+                    pk,
+                    default_deadline,
+                )
+            )
         return None
 
     def get_by_natural_key(self, default_deadline):

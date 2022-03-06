@@ -14,9 +14,11 @@ from scouts_auth.inuits.models.fields import (
 # Taken from https://nl.wikipedia.org/wiki/Tak_(scouting)
 # https://en.wikipedia.org/wiki/Age_groups_in_Scouting_and_Guiding#History
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionName(AbstractBaseModel):

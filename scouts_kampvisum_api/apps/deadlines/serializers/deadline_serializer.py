@@ -1,175 +1,73 @@
 from rest_framework import serializers
 
-from apps.deadlines.models import (
-    Deadline,
-    LinkedSubCategoryDeadline,
-    LinkedCheckDeadline,
-    MixedDeadline,
-)
-from apps.deadlines.models.enums import DeadlineType
-from apps.deadlines.serializers import DefaultDeadlineSerializer, DeadlineFlagSerializer
+from apps.deadlines.models import Deadline
+from apps.deadlines.serializers import DefaultDeadlineSerializer, DeadlineItemSerializer
 
-from apps.visums.models import LinkedSubCategory, LinkedCheck
-from apps.visums.models.enums import CheckState
-from apps.visums.serializers import (
-    CampVisumSerializer,
-    LinkedSubCategorySerializer,
-    LinkedCheckSerializer,
-)
+from apps.visums.serializers import CampVisumSerializer
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineSerializer(serializers.ModelSerializer):
 
     parent = DefaultDeadlineSerializer(required=False)
     visum = CampVisumSerializer(required=False)
-    flags = DeadlineFlagSerializer(many=True)
+    items = DeadlineItemSerializer(many=True)
 
     class Meta:
         model = Deadline
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        # logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
-        data["deadline_type"] = DeadlineType.DEADLINE
+        parent = data.pop("parent", {})
+
+        # data["parent"] = {}
+        data["items"] = []
+
+        logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        data = super().to_internal_value(data)
+        logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
+
+        data["parent"] = parent
+        logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         return data
 
     def to_representation(self, obj: Deadline) -> dict:
+        logger.debug("DEADLINE SERIALIZER TO_REPRESENTATION: %s", obj)
+
+        visum = obj.visum.id
+        obj.visum = None
+
         data = super().to_representation(obj)
 
-        visum = data.pop("visum")
-        data["visum"] = visum.get("id")
+        # visum = data.pop("visum")
+        # data["visum"] = visum.get("id")
+        data["visum"] = visum
 
         return data
 
-    def _parse_sub_categories(self, linked_sub_categories: list) -> list:
-        results = []
-        for linked_sub_category in linked_sub_categories:
-            id = linked_sub_category.get("id", None)
-            if id:
-                instance = LinkedSubCategory.objects.safe_get(id=id)
-                if instance:
-                    results.append(
-                        {
-                            "id": instance.id,
-                            "name": instance.parent.name,
-                            "label": instance.parent.label,
-                            "category": {
-                                "id": instance.category.id,
-                                "name": instance.category.parent.name,
-                                "label": instance.category.parent.label,
-                            },
-                            "state": linked_sub_category.get(
-                                "state", CheckState.UNCHECKED
-                            ),
-                        }
-                    )
 
-        return results
+class DeadlineInputSerializer(serializers.Serializer):
 
-    def _parse_checks(self, linked_checks: list) -> list:
-        results = []
-        for linked_check in linked_checks:
-            id = linked_check.get("id", None)
-            if id:
-                instance = LinkedCheck.objects.safe_get(id=id)
-                if instance:
-                    results.append(
-                        {
-                            "id": instance.id,
-                            "name": instance.parent.name,
-                            "label": instance.parent.label,
-                            "category": {
-                                "id": instance.sub_category.category.id,
-                                "name": instance.sub_category.category.parent.name,
-                                "label": instance.sub_category.category.parent.label,
-                            },
-                            "state": linked_check.get("state", CheckState.UNCHECKED),
-                        }
-                    )
-
-        return results
-
-
-class LinkedSubCategoryDeadlineSerializer(DeadlineSerializer):
-
-    linked_sub_categories = LinkedSubCategorySerializer(many=True)
+    parent = DefaultDeadlineSerializer(required=False)
+    visum = CampVisumSerializer(required=False)
+    items = DeadlineItemSerializer(many=True)
 
     class Meta:
-        model = LinkedSubCategoryDeadline
+        model = Deadline
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        # logger.debug("SUB CATEGORY DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
-
-        data["deadline_type"] = DeadlineType.LINKED_SUB_CATEGORY
+        data["items"] = []
 
         data = super().to_internal_value(data)
-
-        return data
-
-    def to_representation(self, obj: LinkedSubCategoryDeadline) -> dict:
-        data = super().to_representation(obj)
-        # logger.debug("LINKED SUB CATEGORY DEADELINE: %s", data)
-
-        data["linked_sub_categories"] = self._parse_sub_categories(
-            data.get("linked_sub_categories", [])
-        )
-
-        return data
-
-
-class LinkedCheckDeadlineSerializer(DeadlineSerializer):
-
-    linked_checks = LinkedCheckSerializer(many=True)
-
-    class Meta:
-        model = LinkedCheckDeadline
-        fields = "__all__"
-
-    def to_internal_value(self, data: dict) -> dict:
-        data["deadline_type"] = DeadlineType.LINKED_CHECK
-
-        data = super().to_internal_value(data)
-
-        return data
-
-    def to_representation(self, obj: LinkedCheckDeadline) -> dict:
-        data = super().to_representation(obj)
-
-        data["linked_checks"] = self._parse_checks(data.get("linked_checks", []))
-
-        return data
-
-
-class MixedDeadlineSerializer(DeadlineSerializer):
-
-    linked_sub_categories = LinkedSubCategorySerializer(many=True)
-    linked_checks = LinkedCheckSerializer(many=True)
-
-    class Meta:
-        model = MixedDeadline
-        fields = "__all__"
-
-    def to_internal_value(self, data: dict) -> dict:
-        data["deadline_type"] = DeadlineType.LINKED_CHECK
-
-        data = super().to_internal_value(data)
-
-        return data
-
-    def to_representation(self, obj: LinkedCheckDeadline) -> dict:
-        data = super().to_representation(obj)
-
-        data["linked_sub_categories"] = self._parse_sub_categories(
-            data.get("linked_sub_categories", [])
-        )
-        data["linked_checks"] = self._parse_checks(data.get("linked_checks", []))
 
         return data

@@ -14,9 +14,11 @@ from scouts_auth.inuits.models.interfaces import (
 )
 from scouts_auth.inuits.models.fields import RequiredCharField
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Category(

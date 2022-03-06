@@ -9,16 +9,22 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategory
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ["category", "camp_types"]
 
+    def to_internal_value(self, data: dict) -> dict:
+        id = data.get("id", None)
+        if id:
+            instance: SubCategory = SubCategory.objects.safe_get(
+                id=id, raise_error=True
+            )
 
-class SubCategoryAPISerializer(serializers.ModelSerializer):
+            if instance:
+                data = {"id": id, "name": instance.name}
 
-    status = serializers.SerializerMethodField()
+        data = super().to_internal_value(data)
 
-    class Meta:
-        model = SubCategory
-        fields = ["name", "id", "status"]
+        return data
 
-    def get_status(self, obj):
-        return False
+    def validate(self, data: dict) -> SubCategory:
+        return SubCategory.objects.safe_get(**data, raise_error=True)

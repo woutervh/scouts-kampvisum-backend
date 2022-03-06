@@ -3,9 +3,11 @@ from typing import List
 from apps.groups.models import DefaultScoutsSectionName, ScoutsGroupType
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DefaultScoutsSectionNameService:

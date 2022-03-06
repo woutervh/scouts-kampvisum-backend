@@ -14,9 +14,11 @@ from apps.camps.services import CampService
 from apps.camps.filters import CampFilter
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampViewSet(viewsets.GenericViewSet):

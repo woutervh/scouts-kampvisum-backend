@@ -7,9 +7,11 @@ from drf_yasg2.utils import swagger_auto_schema
 from apps.setup.models import Setup, SetupSerializer
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class SetupViewSet(viewsets.GenericViewSet):

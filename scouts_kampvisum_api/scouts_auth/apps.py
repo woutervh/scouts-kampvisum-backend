@@ -1,9 +1,11 @@
 from django.apps import AppConfig
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsAuthConfig(AppConfig):

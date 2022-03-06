@@ -6,9 +6,11 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -38,6 +40,7 @@ class Command(BaseCommand):
             logger.debug("LOADING and REWRITING fixture %s", path)
 
             for model in data:
+                # Allow ordering checks in the order in which they appear in the fixture json, without specifying the index
                 sub_category = model.get("fields")["sub_category"]
                 if previous_sub_category is None:
                     previous_sub_category = sub_category

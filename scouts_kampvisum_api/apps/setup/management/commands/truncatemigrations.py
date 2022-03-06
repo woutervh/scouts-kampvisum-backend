@@ -2,9 +2,11 @@ from django.db import connection
 from django.core.management.base import BaseCommand
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):

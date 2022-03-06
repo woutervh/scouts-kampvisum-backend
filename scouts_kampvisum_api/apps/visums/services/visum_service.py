@@ -11,9 +11,11 @@ from apps.visums.models import LinkedCategorySet, CampVisum
 from apps.visums.services import LinkedCategorySetService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumService:

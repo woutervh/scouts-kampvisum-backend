@@ -3,9 +3,11 @@ from rest_framework import serializers
 from scouts_auth.inuits.models import InuitsPersonalDetails
 from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsPersonalDetailsSerializer(serializers.Serializer):

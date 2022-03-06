@@ -38,9 +38,11 @@ from apps.visums.services import LinkedCheckService
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCheckViewSet(viewsets.GenericViewSet):

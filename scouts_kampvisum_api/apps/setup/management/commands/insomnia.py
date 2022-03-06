@@ -31,9 +31,6 @@ from apps.visums.services import LinkedCheckService
 
 from apps.deadlines.models import (
     Deadline,
-    LinkedSubCategoryDeadline,
-    LinkedCheckDeadline,
-    MixedDeadline,
     DeadlineFlag,
 )
 
@@ -42,9 +39,11 @@ from scouts_auth.groupadmin.models import ScoutsUser
 from scouts_auth.inuits.models import PersistedFile, Gender
 from scouts_auth.inuits.services import PersistedFileService
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -192,22 +191,22 @@ class Command(BaseCommand):
         data["deadline_first"] = str(Deadline.objects.first().id)
         data["deadline_last"] = str(Deadline.objects.last().id)
         # LinkedSubCategoryDeadline
-        data["sub_category_deadline_first"] = str(
-            LinkedSubCategoryDeadline.objects.first().id
-        )
-        data["sub_category_deadline_last"] = str(
-            LinkedSubCategoryDeadline.objects.last().id
-        )
-        # LinkedCheckDeadline
-        data["check_category_deadline_first"] = str(
-            LinkedCheckDeadline.objects.first().id
-        )
-        data["check_category_deadline_last"] = str(
-            LinkedCheckDeadline.objects.last().id
-        )
-        # MixedDeadline
-        data["mixed_deadline_first"] = str(MixedDeadline.objects.first().id)
-        data["mixed_deadline_last"] = str(MixedDeadline.objects.last().id)
+        # data["sub_category_deadline_first"] = str(
+        #     LinkedSubCategoryDeadline.objects.first().id
+        # )
+        # data["sub_category_deadline_last"] = str(
+        #     LinkedSubCategoryDeadline.objects.last().id
+        # )
+        # # LinkedCheckDeadline
+        # data["check_category_deadline_first"] = str(
+        #     LinkedCheckDeadline.objects.first().id
+        # )
+        # data["check_category_deadline_last"] = str(
+        #     LinkedCheckDeadline.objects.last().id
+        # )
+        # # MixedDeadline
+        # data["mixed_deadline_first"] = str(MixedDeadline.objects.first().id)
+        # data["mixed_deadline_last"] = str(MixedDeadline.objects.last().id)
         # DeadlineFlag
         data["deadline_flag_first"] = str(DeadlineFlag.objects.first().id)
         data["deadline_flag_last"] = str(DeadlineFlag.objects.last().id)

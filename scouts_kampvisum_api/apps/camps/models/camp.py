@@ -6,9 +6,11 @@ from apps.groups.models import ScoutsSection
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import OptionalDateField
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Camp(AuditedBaseModel):

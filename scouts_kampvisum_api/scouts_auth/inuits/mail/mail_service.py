@@ -7,9 +7,11 @@ from anymail.message import AnymailMessage
 
 from scouts_auth.inuits.mail import Email
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class EmailService:

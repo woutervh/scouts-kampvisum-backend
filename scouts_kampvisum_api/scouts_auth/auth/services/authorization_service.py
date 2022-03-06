@@ -3,9 +3,11 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class AuthorizationService:

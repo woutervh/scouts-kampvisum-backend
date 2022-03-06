@@ -6,9 +6,11 @@ from apps.visums.models import LinkedCategory
 from apps.visums.serializers import LinkedCategorySerializer
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCategoryViewSet(viewsets.GenericViewSet):

@@ -4,9 +4,11 @@ from scouts_auth.inuits.mail import Email, EmailAttachment, EmailService
 from scouts_auth.inuits.utils import TextUtils
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsVisumMailService(EmailService):

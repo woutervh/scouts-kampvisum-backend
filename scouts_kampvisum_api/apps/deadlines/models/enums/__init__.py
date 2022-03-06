@@ -1,1 +1,1 @@
-from .deadline_type import DeadlineType
+from .deadline_item_type import DeadlineItemType

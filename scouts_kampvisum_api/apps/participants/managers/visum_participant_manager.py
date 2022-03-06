@@ -4,9 +4,11 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class VisumParticipantQuerySet(models.QuerySet):

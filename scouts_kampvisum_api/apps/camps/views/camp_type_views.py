@@ -11,9 +11,11 @@ from apps.camps.serializers import CampTypeSerializer
 from apps.camps.filters import CampTypeFilter
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampTypeViewSet(viewsets.GenericViewSet):

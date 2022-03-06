@@ -6,9 +6,11 @@ from apps.visums.models import CampVisum
 from apps.camps.services import CampYearService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumFilter(filters.FilterSet):

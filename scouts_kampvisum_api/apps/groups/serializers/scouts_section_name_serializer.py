@@ -3,9 +3,11 @@ from rest_framework import serializers
 from apps.groups.models import ScoutsSectionName
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionNameSerializer(serializers.ModelSerializer):

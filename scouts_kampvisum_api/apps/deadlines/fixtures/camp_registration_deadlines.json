@@ -11,57 +11,64 @@
                 "date_day": 1,
                 "date_month": 3
             },
-            "deadline_type": "M",
             "camp_types": [
                 "basis"
             ],
-            "sub_categories": [
-                [
-                    "planning_date",
-                    [
-                        "planning",
-                        2022
-                    ]
-                ],
-                [
-                    "members_leaders_estimates",
-                    [
-                        "members_leaders",
-                        2022
-                    ]
-                ]
-            ],
-            "checks": [
-                [
-                    "logistics_locations_location",
-                    [
-                        "logistics_locations",
+            "items": [
+                {
+                    "item_sub_category": [
+                        "planning_date",
                         [
-                            "logistics",
+                            "planning",
                             2022
                         ]
                     ]
-                ],
-                [
-                    "members_leaders_responsible_main",
-                    [
-                        "members_leaders_responsible",
+                },
+                {
+                    "item_check": [
+                        "logistics_locations_location",
+                        [
+                            "logistics_locations",
+                            [
+                                "logistics",
+                                2022
+                            ]
+                        ]
+                    ]
+                },
+                {
+                    "item_sub_category": [
+                        "members_leaders_estimates",
                         [
                             "members_leaders",
                             2022
                         ]
                     ]
-                ],
-                [
-                    "members_leaders_responsible_adjunct",
-                    [
-                        "members_leaders_responsible",
+                },
+                {
+                    "item_check": [
+                        "members_leaders_responsible_main",
                         [
-                            "members_leaders",
-                            2022
+                            "members_leaders_responsible",
+                            [
+                                "members_leaders",
+                                2022
+                            ]
                         ]
                     ]
-                ]
+                },
+                {
+                    "item_check": [
+                        "members_leaders_responsible_adjunct",
+                        [
+                            "members_leaders_responsible",
+                            [
+                                "members_leaders",
+                                2022
+                            ]
+                        ]
+                    ]
+                }
             ]
         }
     }

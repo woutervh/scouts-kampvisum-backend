@@ -5,9 +5,11 @@ from django.core.files.base import File
 
 from scouts_auth.inuits.models import PersistedFile
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PersistedFileService:

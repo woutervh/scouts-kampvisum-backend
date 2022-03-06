@@ -1,26 +1,27 @@
 from django.db import models
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class DeadlineType(models.TextChoices):
+class DeadlineItemType(models.TextChoices):
     # alphabetically ordered
     DEADLINE = "D", "Deadline"
     LINKED_CHECK = "C", "LinkedCheck deadline"
     LINKED_SUB_CATEGORY = "S", "LinkedSubCategory deadline"
-    MIXED = "M", "Mix of linked checks and sub categories deadline"
 
     def parse_deadline_type(value: str = None):
         if not value:
-            return DeadlineType.DEADLINE
+            return DeadlineItemType.DEADLINE
 
         value = value.upper()
 
         if value in ["D", "DEADLINE"]:
-            return DeadlineType.DEADLINE
+            return DeadlineItemType.DEADLINE
         if value in [
             "S",
             "SUB_CATEGORY",
@@ -28,10 +29,8 @@ class DeadlineType(models.TextChoices):
             "LINKED_SUB_CATEGORY",
             "LINKEDSUBCATEGORY",
         ]:
-            return DeadlineType.LINKED_SUB_CATEGORY
+            return DeadlineItemType.LINKED_SUB_CATEGORY
         if value in ["C", "CHECK", "LINKED_CHECK", "LINKEDCHECK"]:
-            return DeadlineType.LINKED_CHECK
-        if value in ["M", "MIXED"]:
-            return DeadlineType.MIXED
+            return DeadlineItemType.LINKED_CHECK
 
-        return DeadlineType.DEADLINE
+        return DeadlineItemType.DEADLINE

@@ -8,9 +8,11 @@ from django.core.management.base import BaseCommand
 from apps.camps.models import CampType
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -42,6 +44,7 @@ class Command(BaseCommand):
             logger.debug("LOADING and REWRITING fixture %s", path)
 
             for model in data:
+                # Allow ordering sub-categories in the order in which they appear in the fixture json, without specifying the index
                 category = model.get("fields")["category"]
                 if previous_category is None:
                     previous_category = category

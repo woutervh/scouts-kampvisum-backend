@@ -1,5 +1,7 @@
 import logging, logging.config
 
+from django.conf import settings
+
 
 class InuitsLogger(logging.getLoggerClass()):
     name: str
@@ -7,6 +9,8 @@ class InuitsLogger(logging.getLoggerClass()):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        super().setLevel(settings.LOGGING_LEVEL)
 
     def note(self, msg, *args, **kwargs):
         self.log(logging.NOTE, msg, *args, **kwargs)

@@ -5,9 +5,11 @@ from apps.camps.models import CampYear
 from scouts_auth.groupadmin.scouts import ScoutsTemporalDetails
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampYearService:

@@ -16,9 +16,11 @@ from scouts_auth.auth.user import OIDCUserHelper
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class SignalHandler:

@@ -6,9 +6,11 @@ from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsParticipantSerializer(serializers.ModelSerializer):

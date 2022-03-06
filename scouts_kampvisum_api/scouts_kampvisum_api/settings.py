@@ -87,6 +87,7 @@ LOGGING_CONFIG = None
 LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
 # LOGGING_LEVEL = "INFO"
 # LOGGING_LEVEL = "API"
+# LOGGING_LEVEL = "TRACE"
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
 LOGGING = {
     "version": 1,
@@ -158,7 +159,7 @@ LOGGING = {
 from scouts_auth.inuits.logging import InuitsLogger
 
 InuitsLogger.setup_logging(config=LOGGING)
-logger = InuitsLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 def correct_url(issuer, url):

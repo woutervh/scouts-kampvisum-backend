@@ -5,9 +5,11 @@ from apps.visums.models import CampVisum
 from apps.visums.serializers import LinkedCategorySetSerializer
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumSerializer(serializers.ModelSerializer):
@@ -22,6 +24,11 @@ class CampVisumSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         data["category_set"] = {}
+
+        id = data.get("id", None)
+        instance: CampVisum = CampVisum.objects.safe_get(id=id)
+        if instance:
+            return instance
 
         data = super().to_internal_value(data)
 

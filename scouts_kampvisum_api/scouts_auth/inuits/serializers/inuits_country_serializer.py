@@ -1,9 +1,11 @@
 from scouts_auth.inuits.models import InuitsCountry
 from scouts_auth.inuits.serializers import NonModelSerializer
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsCountrySerializer(NonModelSerializer):

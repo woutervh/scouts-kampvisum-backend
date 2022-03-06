@@ -1,9 +1,17 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
+
+
+class CheckQuerySet(models.QuerySet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class CheckManager(models.Manager):
@@ -13,14 +21,25 @@ class CheckManager(models.Manager):
     This is useful for defining fixtures.
     """
 
+    def get_queryset(self):
+        return CheckQuerySet(self.model, using=self._db)
+
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        raise_error = kwargs.get("raise_error", False)
 
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
             except:
                 pass
+
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate Check instance(s) with the provided params: (id: {})".format(
+                    pk,
+                )
+            )
 
         return None
 

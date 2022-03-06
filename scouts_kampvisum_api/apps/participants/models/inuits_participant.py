@@ -10,9 +10,11 @@ from scouts_auth.inuits.models import InuitsPerson, GenderHelper
 from scouts_auth.inuits.models.fields import OptionalCharField
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsParticipant(InuitsPerson):

@@ -11,9 +11,11 @@ from scouts_auth.inuits.filters import PersistedFileFilter
 from scouts_auth.inuits.services import PersistedFileService
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PersistedFileViewSet(viewsets.GenericViewSet):

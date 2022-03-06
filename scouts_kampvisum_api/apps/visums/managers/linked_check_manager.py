@@ -1,9 +1,12 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCheckQuerySet(models.QuerySet):
@@ -23,6 +26,7 @@ class LinkedCheckManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         parent = kwargs.get("parent", None)
         visum = kwargs.get("visum", None)
+        raise_error = kwargs.get("raise_error", True)
 
         if pk:
             try:
@@ -38,4 +42,10 @@ class LinkedCheckManager(models.Manager):
             except:
                 pass
 
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate LinkedCheck instance(s) with provided params (id: {}, (parent: {}, visum: {})".format(
+                    pk, parent.to_simple_str(), visum
+                )
+            )
         return None

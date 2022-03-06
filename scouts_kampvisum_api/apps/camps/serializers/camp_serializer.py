@@ -8,9 +8,11 @@ from apps.camps.services import CampYearService
 from apps.groups.serializers import ScoutsSectionSerializer
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampSerializer(serializers.ModelSerializer):

@@ -10,4 +10,4 @@ class DeadlineFlagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeadlineFlag
-        exclude = ["deadline"]
+        fields = "__all__"

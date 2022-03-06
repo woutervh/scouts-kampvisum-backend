@@ -10,21 +10,22 @@
             "due_date": {
                 "date_month": 9
             },
-            "deadline_type": "C",
             "camp_types": [
                 "basis"
             ],
-            "checks": [
-                [
-                    "logistics_locations_location",
-                    [
-                        "logistics_locations",
+            "items": [
+                {
+                    "item_check": [
+                        "logistics_locations_location",
                         [
-                            "logistics",
-                            2022
+                            "logistics_locations",
+                            [
+                                "logistics",
+                                2022
+                            ]
                         ]
                     ]
-                ]
+                }
             ]
         }
     },
@@ -39,18 +40,19 @@
             "due_date": {
                 "date_month": 12
             },
-            "deadline_type": "S",
             "camp_types": [
                 "basis"
             ],
-            "sub_categories": [
-                [
-                    "logistics_transport",
-                    [
-                        "logistics",
-                        2022
+            "items": [
+                {
+                    "item_sub_category": [
+                        "logistics_transport",
+                        [
+                            "logistics",
+                            2022
+                        ]
                     ]
-                ]
+                }
             ]
         }
     },
@@ -65,19 +67,22 @@
             "due_date": {
                 "date_month": 4
             },
-            "deadline_type": "D",
             "camp_types": [
                 "basis"
             ],
-            "flags": [
-                [
-                    "contact_cities_email",
-                    "Bereid de email voor"
-                ],
-                [
-                    "contact_cities_email_sent",
-                    "Email naar gemeente verstuurd"
-                ]
+            "items": [
+                {
+                    "item_flag": {
+                        "name": "contact_cities_email",
+                        "label": "Bereid de email voor"
+                    }
+                },
+                {
+                    "item_flag": {
+                        "name": "contact_cities_email_sent",
+                        "label": "Email naar gemeente verstuurd"
+                    }
+                }
             ]
         }
     },
@@ -92,15 +97,16 @@
             "due_date": {
                 "date_month": 5
             },
-            "deadline_type": "D",
             "camp_types": [
                 "basis"
             ],
-            "flags": [
-                [
-                    "forest_license_request",
-                    "Bosaanvraag aangevraagd"
-                ]
+            "items": [
+                {
+                    "item_flag": {
+                        "name": "forest_license_request",
+                        "label": "Bosaanvraag aangevraagd"
+                    }
+                }
             ]
         }
     }

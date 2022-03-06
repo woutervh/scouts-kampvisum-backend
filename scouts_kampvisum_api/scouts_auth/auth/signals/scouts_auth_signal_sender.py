@@ -3,9 +3,11 @@ from django.conf import settings
 from . import app_ready, authenticated, refreshed
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsAuthSignalSender:

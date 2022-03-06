@@ -4,9 +4,11 @@ from apps.locations.models import LinkedLocation
 from apps.locations.serializers import CampLocationSerializer
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedLocationSerializer(serializers.ModelSerializer):

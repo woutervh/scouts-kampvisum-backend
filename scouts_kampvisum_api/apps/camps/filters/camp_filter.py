@@ -4,9 +4,11 @@ from django.db.models import Q
 from apps.camps.models import Camp
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampFilter(filters.FilterSet):

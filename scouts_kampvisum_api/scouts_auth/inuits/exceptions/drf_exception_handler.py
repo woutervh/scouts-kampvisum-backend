@@ -6,9 +6,11 @@ from rest_framework.views import exception_handler
 
 from scouts_auth.inuits.mail import EmailServiceException
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 def drf_exception_handler(exc, context):

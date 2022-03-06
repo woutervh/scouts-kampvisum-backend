@@ -6,9 +6,11 @@ from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
 from scouts_auth.inuits.models.interfaces import Indexable, Explainable, Translatable
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):

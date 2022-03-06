@@ -8,9 +8,11 @@ from apps.locations.models import LinkedLocation, CampLocation
 from apps.visums.models import LinkedLocationCheck
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampLocationService:

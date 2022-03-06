@@ -4,9 +4,11 @@ from apps.camps.models import CampType
 
 from scouts_auth.inuits.utils import ListUtils
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampTypeService:

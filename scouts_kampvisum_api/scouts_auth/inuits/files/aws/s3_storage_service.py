@@ -4,9 +4,11 @@ from storages.backends.s3boto3 import S3Boto3Storage
 
 from scouts_auth.inuits.files import CustomStorage, StorageSettings
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class S3StorageService(CustomStorage, S3Boto3Storage):

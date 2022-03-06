@@ -11,9 +11,11 @@ from apps.camps.services import CampYearService
 from apps.visums.models import CategoryPriority
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -51,7 +53,7 @@ class Command(BaseCommand):
             logger.debug("LOADING and REWRITING fixture %s", path)
 
             for model in data:
-                # Allow ordering categories in the order in which they appear in the fixture json
+                # Allow ordering categories in the order in which they appear in the fixture json, without specifying the index
                 previous_index = previous_index + 1
                 model.get("fields")["index"] = previous_index
 

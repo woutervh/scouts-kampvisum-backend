@@ -8,9 +8,11 @@ from apps.visums.models import LinkedCategorySet, LinkedCategory, Category
 from apps.visums.services import SubCategoryService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CategoryService:

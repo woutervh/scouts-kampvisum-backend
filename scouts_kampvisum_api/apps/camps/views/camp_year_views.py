@@ -13,9 +13,11 @@ from apps.camps.serializers import CampYearSerializer
 from apps.camps.services import CampYearService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampYearViewSet(viewsets.GenericViewSet):

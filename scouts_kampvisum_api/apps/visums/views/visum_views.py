@@ -12,9 +12,11 @@ from apps.visums.filters import CampVisumFilter
 from apps.visums.services import CampVisumService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumViewSet(viewsets.GenericViewSet):

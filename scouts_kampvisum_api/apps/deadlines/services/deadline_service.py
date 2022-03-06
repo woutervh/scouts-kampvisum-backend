@@ -8,17 +8,14 @@ from apps.camps.models import CampYear, CampType
 
 from apps.deadlines.models import (
     DefaultDeadline,
+    DefaultDeadlineItem,
     DefaultDeadlineFlag,
     DeadlineDate,
     Deadline,
-    DeadlineFlag,
-    LinkedSubCategoryDeadline,
-    LinkedCheckDeadline,
-    MixedDeadline,
-    DeadlineFactory,
+    DeadlineItem,
 )
-from apps.deadlines.models.enums import DeadlineType
-from apps.deadlines.services import DefaultDeadlineService
+from apps.deadlines.models.enums import DeadlineItemType
+from apps.deadlines.services import DefaultDeadlineService, DeadlineItemService
 
 from apps.visums.models import (
     CampVisum,
@@ -29,76 +26,98 @@ from apps.visums.models import (
 )
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineService:
 
     default_deadline_service = DefaultDeadlineService()
+    deadline_item_service = DeadlineItemService()
 
     @transaction.atomic
-    def get_or_create_deadline(
+    def create_or_update_deadline(
         self,
         request,
         default_deadline: DefaultDeadline = None,
         visum: CampVisum = None,
         **fields
     ) -> Deadline:
-        instance = Deadline.objects.safe_get(parent=default_deadline, visum=visum)
-        if instance:
-            return instance
-
-        instance = Deadline()
-
-        if default_deadline and isinstance(default_deadline, DefaultDeadline):
-            instance.parent = default_deadline
-        else:
-            instance.parent = self.default_deadline_service.get_or_create(
-                {
-                    "name": fields.get("name", None),
-                    "deadline_type": DeadlineType.DEADLINE,
-                    "label": fields.get("label", None),
-                    "description": fields.get("description", None),
-                    "explanation": fields.get("explanation", None),
-                    "is_important": fields.get("is_important", False),
-                }
+        if not default_deadline or not isinstance(default_deadline, DefaultDeadline):
+            default_deadline = (
+                self.default_deadline_service.get_or_create_default_deadline(
+                    request=request, **fields.get("parent", {})
+                )
             )
 
-        if visum and isinstance(visum, CampVisum):
-            instance.visum = visum
+        instance = Deadline.objects.safe_get(parent=default_deadline, visum=visum)
+        if instance:
+            return self.update_deadline(
+                request=request,
+                instance=instance,
+                default_deadline=default_deadline,
+                **fields
+            )
         else:
-            instance.visum = CampVisum.objects.safe_get(
+            return self.create_deadline(
+                request=request,
+                default_deadline=default_deadline,
+                visum=visum,
+                **fields
+            )
+
+    @transaction.atomic
+    def create_deadline(
+        self,
+        request,
+        default_deadline: DefaultDeadline = None,
+        visum: CampVisum = None,
+        **fields
+    ) -> Deadline:
+        instance = Deadline()
+
+        instance.parent = default_deadline
+        if not (visum and isinstance(visum, CampVisum)):
+            visum = CampVisum.objects.safe_get(
                 id=fields.get("visum", {}).get("id", None)
             )
 
-        instance.created_by = request.user
-
         logger.debug(
-            "Creating a %s instance for visum with id %s, with name %s and type %s",
+            "Creating a %s instance for visum with id %s, with name %s",
             "Deadline",
             visum.id,
             instance.parent.name,
-            instance.parent.deadline_type,
         )
+
+        instance.visum = visum
+        instance.created_by = request.user
 
         instance.full_clean()
         instance.save()
 
-        if not (
-            fields
-            and isinstance(fields, dict)
-            and "due_date" in fields
-            and isinstance(fields.get("due_date"), dict)
-        ):
-            fields["due_date"] = dict()
-        due_date: DeadlineDate = (
-            self.default_deadline_service.get_or_create_deadline_date(
-                default_deadline=instance.parent,
-                **fields.get("due_date", None),
-            )
+        items: List[
+            DeadlineItem
+        ] = self.deadline_item_service.create_or_update_deadline_items(
+            request=request, deadline=instance
         )
+
+        for item in items:
+            instance.items.add(item)
+
+        # default_items: List[DefaultDeadlineItem] = default_deadline.items.all()
+        # for default_item in default_items:
+        #     deadline_item: DeadlineItem = (
+        #         self.deadline_item_service.create_deadline_item(
+        #             request=request,
+        #             deadline=instance,
+        #             default_deadline_item=default_item,
+        #         )
+        #     )
+
+        #     instance.items.add(deadline_item)
 
         return instance
 
@@ -109,9 +128,14 @@ class DeadlineService:
             logger.error("Deadline with id %s not found", deadline_id)
             raise ValidationError("Deadline with id {} not found".format(deadline_id))
 
+    @transaction.atomic
     def update_deadline(self, request, instance: Deadline, **fields):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
+        )
+
+        parent: DefaultDeadline = self.default_deadline_service.update_default_deadline(
+            request=request, instance=instance.parent, **fields.get("parent", {})
         )
 
         instance.updated_by = request.user
@@ -128,230 +152,10 @@ class DeadlineService:
         ):
             fields["due_date"] = dict()
         due_date: DeadlineDate = self.default_deadline_service.update_deadline_date(
-            instance=instance.due_date, **fields.get("due_date", None)
+            request=request,
+            instance=instance.parent.due_date,
+            **fields.get("due_date", None)
         )
-
-        return instance
-
-    @transaction.atomic
-    def get_or_create_linked_sub_category_deadline(
-        self,
-        request,
-        default_deadline: DefaultDeadline = None,
-        visum: CampVisum = None,
-        **fields
-    ) -> LinkedSubCategoryDeadline:
-        instance = LinkedSubCategoryDeadline.objects.safe_get(
-            parent=default_deadline, visum=visum
-        )
-        if instance:
-            return instance
-
-        # parent = self.get_or_create_deadline(
-        #     request, default_deadline=default_deadline, visum=visum, **fields
-        # )
-
-        instance = LinkedSubCategoryDeadline()
-
-        instance.parent = default_deadline
-        instance.visum = visum
-
-        logger.debug(
-            "Creating a %s instance for visum with id %s, with name %s and type %s",
-            "LinkedSubCategoryDeadline",
-            visum.id,
-            default_deadline.name,
-            default_deadline.deadline_type,
-        )
-
-        instance.full_clean()
-        instance.save()
-
-        if not (
-            fields
-            and isinstance(fields, dict)
-            and "due_date" in fields
-            and isinstance(fields.get("due_date"), dict)
-        ):
-            fields["due_date"] = dict()
-        due_date: DeadlineDate = (
-            self.default_deadline_service.get_or_create_deadline_date(
-                default_deadline=default_deadline, **fields.get("due_date", None)
-            )
-        )
-
-        return instance
-
-    def get_linked_sub_category_deadline(self, deadline_id):
-        try:
-            return LinkedSubCategoryDeadline.objects.get(deadline_ptr=deadline_id)
-        except LinkedSubCategoryDeadline.DoesNotExist:
-            raise ValidationError(
-                "LinkedSubCategoryDeadline with id {} not found".format(deadline_id)
-            )
-
-    @transaction.atomic
-    def get_or_create_linked_check_deadline(
-        self,
-        request,
-        default_deadline: DefaultDeadline = None,
-        visum: CampVisum = None,
-        **fields
-    ) -> LinkedCheckDeadline:
-
-        instance = LinkedCheckDeadline.objects.safe_get(
-            parent=default_deadline, visum=visum
-        )
-        if instance:
-            return instance
-
-        # parent = self.get_or_create_deadline(
-        #     request, default_deadline=default_deadline, visum=visum, **fields
-        # )
-        # logger.debug("PARENT: %s", parent)
-
-        instance = LinkedCheckDeadline()
-
-        instance.parent = default_deadline
-        instance.visum = visum
-
-        logger.debug(
-            "Creating a %s instance for visum with id %s, with name %s and type %s",
-            "LinkedCheckDeadline",
-            visum.id,
-            default_deadline.name,
-            default_deadline.deadline_type,
-        )
-
-        instance.full_clean()
-        instance.save()
-
-        if not (
-            fields
-            and isinstance(fields, dict)
-            and "due_date" in fields
-            and isinstance(fields.get("due_date"), dict)
-        ):
-            fields["due_date"] = dict()
-        due_date: DeadlineDate = (
-            self.default_deadline_service.get_or_create_deadline_date(
-                default_deadline=default_deadline, **fields.get("due_date", None)
-            )
-        )
-
-        return instance
-
-    def get_linked_check_deadline(self, deadline_id):
-        try:
-            return LinkedCheckDeadline.objects.get(deadline_ptr=deadline_id)
-        except LinkedCheckDeadline.DoesNotExist:
-            raise ValidationError(
-                "LinkedCheckDeadline with id {} not found", deadline_id
-            )
-
-    @transaction.atomic
-    def get_or_create_mixed_deadline(
-        self,
-        request,
-        default_deadline: DefaultDeadline = None,
-        visum: CampVisum = None,
-        **fields
-    ) -> MixedDeadline:
-
-        instance = MixedDeadline.objects.safe_get(parent=default_deadline, visum=visum)
-        if instance:
-            return instance
-
-        # parent = self.get_or_create_deadline(
-        #     request, default_deadline=default_deadline, visum=visum, **fields
-        # )
-        # logger.debug("PARENT: %s", parent)
-
-        instance = MixedDeadline()
-
-        instance.parent = default_deadline
-        instance.visum = visum
-
-        logger.debug(
-            "Creating a %s instance for visum with id %s, with name %s and type %s",
-            "MixedDeadline",
-            visum.id,
-            default_deadline.name,
-            default_deadline.deadline_type,
-        )
-
-        instance.full_clean()
-        instance.save()
-
-        if not (
-            fields
-            and isinstance(fields, dict)
-            and "due_date" in fields
-            and isinstance(fields.get("due_date"), dict)
-        ):
-            fields["due_date"] = dict()
-        due_date: DeadlineDate = (
-            self.default_deadline_service.get_or_create_deadline_date(
-                default_deadline=default_deadline, **fields.get("due_date", None)
-            )
-        )
-
-        return instance
-
-    def get_mixed_deadline(self, deadline_id):
-        try:
-            return MixedDeadline.objects.get(deadline_ptr=deadline_id)
-        except MixedDeadline.DoesNotExist:
-            raise ValidationError(
-                "MixedDeadline with id {} not found".format(deadline_id)
-            )
-
-    @transaction.atomic
-    def get_or_create_deadline_flag(
-        self, request, deadline: Deadline, default_deadline_flag: DefaultDeadlineFlag
-    ) -> DeadlineFlag:
-        instance = DeadlineFlag.objects.safe_get(
-            parent=default_deadline_flag, deadline=deadline
-        )
-        if instance:
-            return instance
-
-        default_deadline_flag = (
-            self.default_deadline_service.get_or_create_default_flag(
-                instance=default_deadline_flag,
-                **{
-                    "name": default_deadline_flag.name,
-                    "label": default_deadline_flag.label,
-                    "index": default_deadline_flag.index,
-                    "flag": default_deadline_flag.flag,
-                },
-            )
-        )
-
-        instance = DeadlineFlag()
-
-        instance.parent = default_deadline_flag
-        instance.deadline = deadline
-        instance.flag = default_deadline_flag.flag
-
-        instance.full_clean()
-        instance.save()
-
-        return instance
-
-    @transaction.atomic
-    def update_deadline_flag(
-        self, request, instance: DeadlineFlag, **data
-    ) -> DeadlineFlag:
-        logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
-        )
-
-        instance.flag = data.get("flag", instance.flag)
-        instance.updated_by = request.user
-
-        instance.full_clean()
-        instance.save()
 
         return instance
 
@@ -371,133 +175,24 @@ class DeadlineService:
             ",".join(camp_type.camp_type for camp_type in camp_types),
         )
         for default_deadline in default_deadlines:
-            deadline_fields = DeadlineFactory.get_deadline_fields(
-                default_deadline=default_deadline
+            self._link_deadline_to_visum(
+                request=request, default_deadline=default_deadline, visum=visum
             )
-            if default_deadline.is_deadline():
-                self._link_deadline_to_visum(
-                    request, default_deadline, visum, deadline_fields
-                )
-
-            elif default_deadline.is_sub_category_deadline():
-                self._link_sub_category_deadline_to_visum(
-                    request, default_deadline, visum, deadline_fields
-                )
-            elif default_deadline.is_check_deadline():
-                self._link_check_deadline_to_visum(
-                    request, default_deadline, visum, deadline_fields
-                )
-            elif default_deadline.is_mixed_deadline():
-                self._link_mixed_deadline_to_visum(
-                    request, default_deadline, visum, deadline_fields
-                )
-            else:
-                raise ValidationError(
-                    "Unknown deadline type: {}".format(default_deadline.deadline_type)
-                )
 
     def _link_deadline_to_visum(
-        self,
-        request,
-        default_deadline: DefaultDeadline,
-        visum: CampVisum,
-        deadline_fields: dict,
+        self, request, default_deadline: DefaultDeadline, visum: CampVisum
     ):
         logger.debug(
-            "Setting up Deadline %s (%s) with type %s for visum %s",
+            "Setting up Deadline %s (%s) for visum %s",
             default_deadline.name,
             default_deadline.id,
-            default_deadline.deadline_type,
             visum.id,
         )
-        deadline: Deadline = self.get_or_create_deadline(
-            request=request,
-            default_deadline=default_deadline,
-            visum=visum,
-            **deadline_fields,
-        )
-        default_flags: List[DefaultDeadlineFlag] = default_deadline.default_flags.all()
-        logger.debug(
-            "Found %d DefaultDeadlineFlag instances for DefaultDeadline %s",
-            len(default_flags),
-            default_deadline.name,
-        )
-        for default_flag in default_flags:
-            flag = self.get_or_create_deadline_flag(
-                request, deadline=deadline, default_deadline_flag=default_flag
-            )
-            deadline.flags.add(flag)
-
-    def _link_sub_category_deadline_to_visum(
-        self,
-        request,
-        default_deadline: DefaultDeadline,
-        visum: CampVisum,
-        deadline_fields: dict,
-    ):
-        logger.debug(
-            "Setting up LinkedSubCategoryDeadline %s (%s) with type %s for visum %s",
-            default_deadline.name,
-            default_deadline.id,
-            default_deadline.deadline_type,
-            visum.id,
-        )
-        deadline: LinkedSubCategoryDeadline = (
-            self.get_or_create_linked_sub_category_deadline(
-                request=request,
-                default_deadline=default_deadline,
-                visum=visum,
-                **deadline_fields,
-            )
-        )
-        self._link_sub_categories_to_deadline(default_deadline, visum, deadline)
-
-    def _link_check_deadline_to_visum(
-        self,
-        request,
-        default_deadline: DefaultDeadline,
-        visum: CampVisum,
-        deadline_fields: dict,
-    ):
-        logger.debug(
-            "Setting up LinkedCheckDeadline %s (%s) with type %s for visum %s",
-            default_deadline.name,
-            default_deadline.id,
-            default_deadline.deadline_type,
-            visum.id,
-        )
-        deadline: LinkedCheckDeadline = self.get_or_create_linked_check_deadline(
-            request,
-            default_deadline=default_deadline,
-            visum=visum,
-            **deadline_fields,
+        deadline: Deadline = self.create_or_update_deadline(
+            request=request, default_deadline=default_deadline, visum=visum
         )
 
-        self._link_checks_to_deadline(default_deadline, visum, deadline)
-
-    def _link_mixed_deadline_to_visum(
-        self,
-        request,
-        default_deadline: DefaultDeadline,
-        visum: CampVisum,
-        deadline_fields: dict,
-    ):
-        logger.debug(
-            "Setting up MixedDeadline %s (%s) with type %s for visum %s",
-            default_deadline.name,
-            default_deadline.id,
-            default_deadline.deadline_type,
-            visum.id,
-        )
-        deadline: MixedDeadline = self.get_or_create_mixed_deadline(
-            request,
-            default_deadline=default_deadline,
-            visum=visum,
-            **deadline_fields,
-        )
-
-        self._link_sub_categories_to_deadline(default_deadline, visum, deadline)
-        self._link_checks_to_deadline(default_deadline, visum, deadline)
+        return deadline
 
     def _link_sub_categories_to_deadline(
         self, default_deadline: DefaultDeadline, visum: CampVisum, deadline
@@ -509,21 +204,21 @@ class DeadlineService:
             default_deadline.name,
         )
         for sub_category in sub_categories:
-            # logger.debug(
-            #     "SUB CATEGORY: %s (%s), CATEGORY: %s (%s)",
-            #     sub_category.id,
-            #     sub_category.name,
-            #     sub_category.category.id,
-            #     sub_category.category.name,
-            # )
+            logger.trace(
+                "SUB CATEGORY: %s (%s), CATEGORY: %s (%s)",
+                sub_category.id,
+                sub_category.name,
+                sub_category.category.id,
+                sub_category.category.name,
+            )
             linked_sub_category: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
                 parent=sub_category, visum=visum, raise_error=True
             )
-            # logger.debug(
-            #     "FOUND LINKED SUB CATEGORY: %s (%s)",
-            #     linked_sub_category.id,
-            #     linked_sub_category.parent.name,
-            # )
+            logger.trace(
+                "FOUND LINKED SUB CATEGORY: %s (%s)",
+                linked_sub_category.id,
+                linked_sub_category.parent.name,
+            )
             deadline.linked_sub_categories.add(linked_sub_category)
 
     def _link_checks_to_deadline(
@@ -548,22 +243,7 @@ class DeadlineService:
             deadline.linked_checks.add(linked_check)
 
     def list_for_visum(self, visum: CampVisum) -> List[Deadline]:
-        deadlines: List[Deadline] = Deadline.objects.filter(visum=visum)
-        results = list()
-
-        for deadline in deadlines:
-            results.append(self.get_visum_deadline(deadline=deadline))
-
-        return results
+        return Deadline.objects.filter(visum=visum)
 
     def get_visum_deadline(self, deadline: Deadline) -> Deadline:
-        if deadline.parent.is_deadline():
-            return Deadline.objects.get(id=deadline.id)
-        elif deadline.parent.is_sub_category_deadline():
-            return LinkedSubCategoryDeadline.objects.get(deadline_ptr=deadline.id)
-        elif deadline.parent.is_check_deadline():
-            return LinkedCheckDeadline.objects.get(deadline_ptr=deadline.id)
-        elif deadline.parent.is_mixed_deadline():
-            return MixedDeadline.objects.get(deadline_ptr=deadline.id)
-        else:
-            raise ValidationError("Invalid deadline %s".format(deadline))
+        return Deadline.objects.get(id=deadline.id)

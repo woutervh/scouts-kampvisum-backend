@@ -3,9 +3,11 @@ from django.db.models import Q
 from django.conf import settings
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsParticipantQuerySet(models.QuerySet):

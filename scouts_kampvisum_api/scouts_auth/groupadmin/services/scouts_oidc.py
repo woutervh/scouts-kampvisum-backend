@@ -10,9 +10,11 @@ from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
 from scouts_auth.groupadmin.services import GroupAdmin, ScoutsAuthorizationService
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):

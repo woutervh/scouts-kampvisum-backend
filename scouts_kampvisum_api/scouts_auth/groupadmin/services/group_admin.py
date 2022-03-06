@@ -30,9 +30,11 @@ from scouts_auth.groupadmin.serializers import (
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class GroupAdmin:

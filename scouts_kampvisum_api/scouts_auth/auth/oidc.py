@@ -15,9 +15,11 @@ from scouts_auth.auth.settings import OIDCSettings
 from scouts_auth.auth.signals import ScoutsAuthSignalSender
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):

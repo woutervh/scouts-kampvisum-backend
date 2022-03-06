@@ -8,9 +8,11 @@ from apps.locations.serializers import LinkedLocationSerializer
 from apps.locations.filters import LinkedLocationFilter
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LocationViewSet(viewsets.GenericViewSet):

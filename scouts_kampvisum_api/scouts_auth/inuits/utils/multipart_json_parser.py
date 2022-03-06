@@ -3,9 +3,11 @@ import json
 from rest_framework import parsers
 
 
+# LOGGING
 import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
-logger = logging.getLogger(__name__)
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class MultipartJsonParser(parsers.MultiPartParser):
