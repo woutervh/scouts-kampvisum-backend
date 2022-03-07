@@ -35,10 +35,8 @@ class CampVisumService:
         logger.debug("Creating camp with name '%s'", camp_name)
         camp = self.camp_service.camp_create(request, **camp_data)
 
-        camp_types = data.get("camp_types")
-        camp_types = [camp_type.get("camp_type") for camp_type in camp_types]
         camp_types: List[CampType] = self.camp_type_service.get_camp_types(
-            camp_types=camp_types
+            camp_types=data.get("camp_types")
         )
 
         logger.debug(

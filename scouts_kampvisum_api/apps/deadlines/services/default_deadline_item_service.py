@@ -63,12 +63,12 @@ class DefaultDeadlineItemService:
         if sub_category:
             item.deadline_item_type = DeadlineItemType.LINKED_SUB_CATEGORY
             item.item_sub_category = SubCategory.objects.get_by_natural_key(
-                name=sub_category.name, category=sub_category.category
+                name=sub_category[0], category=sub_category[1]
             )
         elif check:
             item.deadline_item_type = DeadlineItemType.LINKED_CHECK
             item.item_check = Check.objects.get_by_natural_key(
-                name=check.name, sub_category=check.sub_category
+                name=check[0], sub_category=check[1]
             )
         elif flag:
             item.deadline_item_type = DeadlineItemType.DEADLINE

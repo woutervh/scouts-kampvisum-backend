@@ -85,7 +85,6 @@ class CategoryService:
         self,
         request,
         linked_category_set: LinkedCategorySet,
-        categories: List[Category],
     ) -> LinkedCategorySet:
         categories: List[Category] = self.get_categories(
             camp_year=linked_category_set.visum.camp.year,

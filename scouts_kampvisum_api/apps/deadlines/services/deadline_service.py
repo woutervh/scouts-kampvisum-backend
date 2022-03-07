@@ -8,13 +8,10 @@ from apps.camps.models import CampYear, CampType
 
 from apps.deadlines.models import (
     DefaultDeadline,
-    DefaultDeadlineItem,
-    DefaultDeadlineFlag,
     DeadlineDate,
     Deadline,
     DeadlineItem,
 )
-from apps.deadlines.models.enums import DeadlineItemType
 from apps.deadlines.services import DefaultDeadlineService, DeadlineItemService
 
 from apps.visums.models import (
