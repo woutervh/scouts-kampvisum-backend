@@ -11,6 +11,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsGroupSpecificField,
     AbstractScoutsLink,
     AbstractScoutsGroup,
+    ScoutsGroup,
 )
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
@@ -44,6 +45,9 @@ class ScoutsUser(User):
     # first_name = models.CharField(max_length=124, blank=True)
     # last_name = models.CharField(max_length=124, blank=True)
     # email = models.EmailField(blank=True)
+    
+    # Persisted fields
+    persisted_scouts_groups: List[ScoutsGroup] = models.ManyToManyField(ScoutsGroup)
 
     #
     # Locally cached, non-persisted fields

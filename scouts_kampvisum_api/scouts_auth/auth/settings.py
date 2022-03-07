@@ -46,7 +46,11 @@ class OIDCSettings(SettingsHelper):
 
     @staticmethod
     def get_profile_refresh_time(default_value=24):
-        return SettingsHelper.get("PROFILE_REFRESH", default_value)
+        return SettingsHelper.get_int("PROFILE_REFRESH", default_value)
+
+    @staticmethod
+    def get_profile_refresh_groups_time(default_value=24):
+        return SettingsHelper.get_int("PROFILE_REFRESH_GROUPS", default_value)
 
     @staticmethod
     def get_secret_key(default_value=None):

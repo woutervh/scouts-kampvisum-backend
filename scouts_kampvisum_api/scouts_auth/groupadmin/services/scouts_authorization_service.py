@@ -4,8 +4,8 @@ from django.conf import settings
 
 from scouts_auth.auth.services import AuthorizationService
 
-from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsFunction
-from scouts_auth.groupadmin.services import GroupAdminMemberService
+from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsFunction, ScoutsGroup
+from scouts_auth.groupadmin.services import GroupAdminMemberService, ScoutsGroupService
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
 from scouts_auth.inuits.utils import GlobalSettingsUtil
@@ -48,6 +48,7 @@ class ScoutsAuthorizationService(AuthorizationService):
     ]
 
     service = GroupAdminMemberService()
+    scouts_group_service = ScoutsGroupService()
 
     def load_user_scouts_groups(
         self, user: settings.AUTH_USER_MODEL
@@ -57,6 +58,8 @@ class ScoutsAuthorizationService(AuthorizationService):
         ).scouts_groups
 
         user.scouts_groups = scouts_groups
+        
+        self.scouts_group_service.create_or_update_scouts_groups(user=user)
 
         user = self.update_user_scouts_groups(user)
 

@@ -334,25 +334,6 @@ PARTICIPANT_PAGINATION_MAX_RESULTS = env.int("PARTICIPANT_PAGINATION_MAX_RESULTS
 
 # ############################################################################ #
 #                                                                              #
-# SCOUTS                                                                       #
-#                                                                              #
-# ############################################################################ #
-SCOUTS_YEAR_START = env.str("SCOUTS_YEAR_END", "09-01")
-SCOUTS_YEAR_END = env.str("SCOUTS_YEAR_END", "09-01")
-INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool(
-    "INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", False
-)
-ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
-CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "05-01")
-RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-01")
-ENFORCE_MEMBER_CHECKS = env.list(
-    "ENFORCE_MEMBER_CHECKS",
-    ["ParticipantMemberCheck", "ParticipantLeaderCheck", "ParticipantResponsibleCheck"],
-)
-
-
-# ############################################################################ #
-#                                                                              #
 # OIDC                                                                         #
 #                                                                              #
 # ############################################################################ #
@@ -534,10 +515,31 @@ OIDC_OP_JWKS_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOI
 # SCOUTS                                                                       #
 #                                                                              #
 # ############################################################################ #
-GROUP_ADMIN_BASE_URL = env.str("GROUP_ADMIN_BASE_URL")
+SCOUTS_YEAR_START = env.str("SCOUTS_YEAR_END", "09-01")
+SCOUTS_YEAR_END = env.str("SCOUTS_YEAR_END", "09-01")
+INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool(
+    "INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", False
+)
+ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
+CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "05-01")
+RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-01")
+ENFORCE_MEMBER_CHECKS = env.list(
+    "ENFORCE_MEMBER_CHECKS",
+    ["ParticipantMemberCheck", "ParticipantLeaderCheck", "ParticipantResponsibleCheck"],
+)
+PROFILE_REFRESH = env.int("PROFILE_REFRESH", 60*24*7)
+PROFILE_REFRESH_GROUPS = env.int("PROFILE_REFRESH_GROUPS", PROFILE_REFRESH)
 KNOWN_ADMIN_GROUPS = env.list("KNOWN_ADMIN_GROUPS")
 KNOWN_TEST_GROUPS = env.list("KNOWN_TEST_GROUPS")
 KNOWN_ROLES = env.list("KNOWN_ROLES")
+
+
+# ############################################################################ #
+#                                                                              #
+# GROUPADMIN                                                                   #
+#                                                                              #
+# ############################################################################ #
+GROUP_ADMIN_BASE_URL = env.str("GROUP_ADMIN_BASE_URL")
 SECTION_LEADER_IDENTIFIER = env.str("SECTION_LEADER_IDENTIFIER")
 GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/"
 GROUP_ADMIN_PROFILE_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid/profiel"
