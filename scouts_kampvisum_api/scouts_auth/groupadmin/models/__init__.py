@@ -26,4 +26,5 @@ from .value_objects import (
     AbstractScoutsMember,
     AbstractScoutsMedicalFlashCard,
 )
+from .scouts_group import ScoutsGroup
 from .scouts_user import ScoutsUser

@@ -1,5 +1,7 @@
 from typing import List
 
+from django.core.exceptions import ValidationError
+
 from apps.camps.models import CampType
 
 from scouts_auth.inuits.utils import ListUtils
@@ -54,9 +56,11 @@ class CampTypeService:
             camp_types = ListUtils.concatenate_unique_lists(
                 default_camp_type if include_default else [],
                 [
-                    CampType.objects.safe_get(camp_type=camp_type, raise_error=True)
-                    for camp_type in camp_types
+                    camp_type if isinstance(camp_type, CampType) else CampType.objects.safe_get(camp_type=camp_type, raise_error=True) for camp_type in camp_types 
                 ],
             )
+        
+        if not camp_types or len(camp_types) == 0:
+            raise ValidationError("Can't create a visum without camp types")
 
         return camp_types

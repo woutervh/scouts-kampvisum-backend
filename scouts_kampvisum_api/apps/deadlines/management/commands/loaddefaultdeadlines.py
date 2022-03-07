@@ -109,7 +109,7 @@ class Command(BaseCommand):
 
                             results.append(
                                 default_deadline_item_service.create_default_deadline_item(
-                                    default_deadline=default_deadline, **item
+                                    request=None, default_deadline=default_deadline, **item
                                 )
                             )
 

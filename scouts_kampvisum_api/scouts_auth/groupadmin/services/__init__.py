@@ -1,4 +1,5 @@
 from .group_admin import GroupAdmin
 from .group_admin_member_service import GroupAdminMemberService
+from .scouts_group_service import ScoutsGroupService
 from .scouts_authorization_service import ScoutsAuthorizationService
 from .scouts_oidc import ScoutsOIDCAuthenticationBackend

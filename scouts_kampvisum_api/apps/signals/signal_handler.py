@@ -11,7 +11,7 @@ from scouts_auth.auth.signals import (
     refreshed,
 )
 from scouts_auth.auth.services import PermissionService
-from scouts_auth.auth.user import OIDCUserHelper
+from scouts_auth.auth.oidc_user_helper import OIDCUserHelper
 
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
@@ -70,16 +70,16 @@ class SignalHandler:
         section_service = ScoutsSectionService()
 
         if OIDCUserHelper.requires_data_loading(user=user):
-            logger.debug
-            logger.debug(
-                "SIGNAL handling for 'authenticated' -> Loading additional user groups"
-            )
-            user = authorization_service.load_user_scouts_groups(user)
+            if OIDCUserHelper.requires_group_loading(user=user):
+                logger.debug(
+                    "SIGNAL handling for 'authenticated' -> Loading additional user groups"
+                )
+                user = authorization_service.load_user_scouts_groups(user=user)
 
             logger.debug(
                 "SIGNAL handling for 'authenticated' -> Loading scouts functions"
             )
-            user = authorization_service.load_user_functions(user)
+            user = authorization_service.load_user_functions(user=user)
 
             logger.debug(
                 "SIGNAL handling for 'authenticated' -> Setting up sections for user's groups"
