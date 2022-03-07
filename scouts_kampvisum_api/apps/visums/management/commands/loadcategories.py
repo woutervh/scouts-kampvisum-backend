@@ -1,5 +1,6 @@
 import os, json
 from pathlib import Path
+from typing import List
 
 from django.conf import settings
 from django.core.management import call_command
@@ -9,6 +10,8 @@ from apps.camps.models import CampYear, CampType
 from apps.camps.services import CampYearService
 
 from apps.visums.models import CategoryPriority
+
+from scouts_auth.inuits.utils import ListUtils
 
 
 # LOGGING
@@ -40,7 +43,11 @@ class Command(BaseCommand):
         current_camp_year: CampYear = (
             CampYearService().get_or_create_current_camp_year()
         )
-        all_camp_types = [[camp_type.camp_type] for camp_type in CampType.objects.all()]
+
+        default_camp_type: CampType = CampType.objects.get_default()
+        all_camp_types: List[CampType] = [
+            [camp_type.camp_type] for camp_type in CampType.objects.all().selectable()
+        ]
 
         # Set to highest priority, since only Verbond will set categories for now
         # Highest priority: Verbond
@@ -63,6 +70,13 @@ class Command(BaseCommand):
                     len(camp_types) == 1 and camp_types[0] == ["*"]
                 ):
                     model.get("fields")["camp_types"] = all_camp_types
+                # Make sure that the default camp type is not present if other types are defined
+                if len(camp_types) > 1 and default_camp_type.id in [
+                    camp_type.id for camp_type in camp_types
+                ]:
+                    camp_types: List[CampType] = ListUtils.concatenate_unique_lists(
+                        [default_camp_type], camp_types
+                    )
 
                 # Allow creating categories for the current year without specifying the camp year
                 if not "camp_year" in model.get("fields"):

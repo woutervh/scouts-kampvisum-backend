@@ -1,11 +1,14 @@
 import os, json
 from pathlib import Path
+from typing import List
 
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 from apps.camps.models import CampType
+
+from scouts_auth.inuits.utils import ListUtils
 
 
 # LOGGING
@@ -32,7 +35,10 @@ class Command(BaseCommand):
         tmp_data_path = "{}/{}".format(self.BASE_PATH, self.TMP_FIXTURE)
         tmp_path = os.path.join(parent_path, tmp_data_path)
 
-        all_camp_types = [[camp_type.camp_type] for camp_type in CampType.objects.all()]
+        default_camp_type: CampType = CampType.objects.get_default()
+        all_camp_types: List[CampType] = [
+            [camp_type.camp_type] for camp_type in CampType.objects.all().selectable()
+        ]
 
         logger.debug("Loading sub-categories from %s", path)
 
@@ -62,6 +68,13 @@ class Command(BaseCommand):
                     len(camp_types) == 1 and camp_types[0] == ["*"]
                 ):
                     model.get("fields")["camp_types"] = all_camp_types
+                # Make sure that the default camp type is not present if other types are defined
+                if len(camp_types) > 1 and default_camp_type.id in [
+                    camp_type.id for camp_type in camp_types
+                ]:
+                    camp_types: List[CampType] = ListUtils.concatenate_unique_lists(
+                        [default_camp_type], camp_types
+                    )
 
                 logger.trace("MODEL DATA: %s", model)
 
