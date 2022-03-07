@@ -1,6 +1,7 @@
 import jwt
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
 from scouts_auth.auth.settings import OIDCSettings
@@ -28,13 +29,16 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         username = None
         access_token = claims.get("access_token", None)
         if access_token:
-            decoded = jwt.decode(
-                access_token,
-                algorithms=["RS256"],
-                verify=False,
-                options={"verify_signature": False},
-            )
-            username = decoded.get("preferred_username", None)
+            try:
+                decoded = jwt.decode(
+                    access_token,
+                    algorithms=["RS256"],
+                    verify=False,
+                    options={"verify_signature": False},
+                )
+                username = decoded.get("preferred_username", None)
+            except:
+                logger.error("Unable to decode JWT token - Do you need a refresh ?")
         member: AbstractScoutsMember = self.load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self.UserModel.objects.create_user(
             username=username if username else member.username, email=member.email
