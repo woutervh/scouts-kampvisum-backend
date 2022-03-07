@@ -647,3 +647,21 @@ TMP_FOLDER = RESOURCES_PATH + "temp"
 ANYMAIL = {}
 
 setup_mail()
+
+# ############################################################################ #
+#                                                                              #
+# REDIS CACHE                                                                  #
+#                                                                              #
+# ############################################################################ #
+REDIS_HOST = env.str("REDIS_HOST", "redis")
+REDIS_PORT = env.int("REDIS_PORT", 6379)
+REDIS_PASSWORD = env.str("REDIS_PASSWORD", "2rWp1qg5D/BmspoAMS57EzFDPAMY.Q.BouRrbFg")
+REDIS_USER_TTL = env.int("REDIS_USER_TTL", 10080)
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_HOST + ":" + REDIS_PORT + "/1",
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        "KEY_PREFIX": "scouts",
+    }
+}
