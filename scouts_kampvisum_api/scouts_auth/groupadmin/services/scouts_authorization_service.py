@@ -4,7 +4,11 @@ from django.conf import settings
 
 from scouts_auth.auth.services import AuthorizationService
 
-from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsFunction, ScoutsGroup
+from scouts_auth.groupadmin.models import (
+    AbstractScoutsGroup,
+    AbstractScoutsFunction,
+    ScoutsGroup,
+)
 from scouts_auth.groupadmin.services import GroupAdminMemberService, ScoutsGroupService
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
@@ -58,7 +62,7 @@ class ScoutsAuthorizationService(AuthorizationService):
         ).scouts_groups
 
         user.scouts_groups = scouts_groups
-        
+
         self.scouts_group_service.create_or_update_scouts_groups(user=user)
 
         user = self.update_user_scouts_groups(user)
@@ -102,7 +106,8 @@ class ScoutsAuthorizationService(AuthorizationService):
                     "User %s is member of a test group and DEBUG is set to True, adding user as administrator",
                     user.username,
                 )
-                GlobalSettingsUtil.instance().is_test = True
+                # GlobalSettingsUtil.instance().is_test = True
+                GlobalSettingsUtil.is_test = True
                 user = self.add_user_as_admin(user)
 
         return user
