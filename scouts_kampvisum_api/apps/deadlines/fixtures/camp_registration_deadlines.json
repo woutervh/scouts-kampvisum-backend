@@ -8,8 +8,8 @@
             "explanation": "Is je kampregistratie ingevuld, ben je te bereiken bij een noodgeval (ongeval, problemen op het thuisfront, natuurrampen, gezondheidsrisico's of andere onvoorziene omstandigheden) ? De mensen die de noodlijn van Scouts en Gidsen Vlaanderen opvolgen kunnen je zo bereiken.",
             "is_important": true,
             "due_date": {
-                "date_day": 1,
-                "date_month": 3
+                "date_day": 3,
+                "date_month": 4
             },
             "deadline_type": "M",
             "camp_types": [
