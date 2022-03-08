@@ -54,6 +54,10 @@ class CampLocationService:
                 is_camp_location=is_camp_location,
                 **data
             )
+
+            # Reusing a previous location
+            if not linked_location in check.locations.all():
+                check.locations.add(linked_location)
         else:
             linked_location = self._create_linked_location(
                 request=request, is_camp_location=is_camp_location, **data
