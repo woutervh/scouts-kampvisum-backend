@@ -178,6 +178,7 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "scouts_auth",
+    # "django_redis",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -527,7 +528,7 @@ ENFORCE_MEMBER_CHECKS = env.list(
     "ENFORCE_MEMBER_CHECKS",
     ["ParticipantMemberCheck", "ParticipantLeaderCheck", "ParticipantResponsibleCheck"],
 )
-PROFILE_REFRESH = env.int("PROFILE_REFRESH", 60*24*7)
+PROFILE_REFRESH = env.int("PROFILE_REFRESH", 60 * 24 * 7)
 PROFILE_REFRESH_GROUPS = env.int("PROFILE_REFRESH_GROUPS", PROFILE_REFRESH)
 KNOWN_ADMIN_GROUPS = env.list("KNOWN_ADMIN_GROUPS")
 KNOWN_TEST_GROUPS = env.list("KNOWN_TEST_GROUPS")
@@ -655,15 +656,28 @@ setup_mail()
 # REDIS CACHE                                                                  #
 #                                                                              #
 # ############################################################################ #
-REDIS_HOST = env.str("REDIS_HOST", "redis")
-REDIS_PORT = env.int("REDIS_PORT", 6379)
-REDIS_PASSWORD = env.str("REDIS_PASSWORD", "2rWp1qg5D/BmspoAMS57EzFDPAMY.Q.BouRrbFg")
-REDIS_USER_TTL = env.int("REDIS_USER_TTL", 10080)
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_HOST + ":" + REDIS_PORT + "/1",
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
-        "KEY_PREFIX": "scouts",
-    }
-}
+# REDIS_HOST = env.str("REDIS_HOST")
+# REDIS_PORT = str(env.int("REDIS_PORT"))
+# REDIS_KEY_PREFIX = env.str("REDIS_KEY_PREFIX")
+# REDIS_PASSWORD = env.str("REDIS_PASSWORD")
+# REDIS_USER_TTL = env.int("REDIS_USER_TTL", 10080)
+# REDIS_PICKLE_VERSION = env.str("REDIS_PICKLE_VERSION", "-1")
+# DJANGO_REDIS_IGNORE_EXCEPTIONS = env.bool("DJANGO_REDIS_IGNORE_EXCEPTIONS", True)
+# DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = env.bool(
+#     "DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS", True
+# )
+# REDIS_URL = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": REDIS_URL,
+#         "KEY_PREFIX": REDIS_KEY_PREFIX,
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#             "PICKLE_VERSION": REDIS_PICKLE_VERSION,
+#             "IGNORE_EXCEPTIONS": DJANGO_REDIS_IGNORE_EXCEPTIONS,
+#         },
+#         "KEY_PREFIX": "scouts",
+#     }
+# }
+# SESSION_ENGINE = "django.contrib.sessions.backends.cache"

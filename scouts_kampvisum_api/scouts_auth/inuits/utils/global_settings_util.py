@@ -7,8 +7,8 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-@Singleton
-class GlobalSettingsUtil:
+# @Singleton
+class GlobalSettingsUtil(metaclass=Singleton):
 
     _is_test = False
 
