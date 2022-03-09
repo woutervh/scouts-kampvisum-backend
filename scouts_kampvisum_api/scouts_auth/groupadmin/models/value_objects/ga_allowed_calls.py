@@ -16,4 +16,6 @@ class ScoutsAllowedCalls(AbstractNonModel):
         # super().__init__([], {})
 
     def __str__(self):
-        return "links({})".format(", ".join(link for link in self.links))
+        return "links({})".format(
+            ", ".join(link for link in self.links) if self.links else "[]"
+        )

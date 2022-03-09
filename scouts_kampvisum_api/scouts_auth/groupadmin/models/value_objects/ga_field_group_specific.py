@@ -17,7 +17,12 @@ class AbstractScoutsGroupSpecificField(AbstractNonModel):
     class Meta:
         abstract = True
 
-    def __init__(self, group: str = None, schema: List[str] = None, values: List[AbstractScoutsValue] = None):
+    def __init__(
+        self,
+        group: str = None,
+        schema: List[str] = None,
+        values: List[AbstractScoutsValue] = None,
+    ):
         self.group = group
         self.schema = schema if schema else []
         self.values = values if values else []
@@ -27,6 +32,8 @@ class AbstractScoutsGroupSpecificField(AbstractNonModel):
     def __str__(self):
         return "group ({}), schema({}), values({})".format(
             self.group,
-            ", ".join(schema_item for schema_item in self.schema),
-            ", ".join(value for value in self.values),
+            ", ".join(schema_item for schema_item in self.schema)
+            if self.schema
+            else "[]",
+            ", ".join(value for value in self.values) if self.values else "[]",
         )

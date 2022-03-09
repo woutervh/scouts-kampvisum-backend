@@ -43,5 +43,5 @@ class AbstractScoutsContact(AbstractNonModel):
             self.name,
             self.phone_number,
             self.email,
-            ", ".join(str(link) for link in self.links),
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )

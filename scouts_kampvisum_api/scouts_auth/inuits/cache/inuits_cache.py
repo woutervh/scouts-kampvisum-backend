@@ -2,6 +2,7 @@ import io
 from typing import List
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
@@ -100,12 +101,19 @@ class InuitsCache(metaclass=Singleton):
         function_data = data.get("functions", {})
 
         # groups: List[AbstractScoutsGroup] = []
+        groups: List[str] = []
         for group in group_data:
-            user.scouts_groups.append(
-                AbstractScoutsGroupSerializer().create(validated_data=group)
-            )
-        # user.groups = groups
-        # logger.debug("GROUPS: %s", user.scouts_groups)
+            group_admin_id = group.get("group_admin_id", None)
+            if not group_admin_id:
+                raise ValidationError(
+                    "AbstractScoutsGroup is missing a group admin id - Badly serialized or deserialized while performing a cache operation"
+                )
+
+            if group_admin_id not in groups:
+                groups.append(group_admin_id)
+                user.scouts_groups.append(
+                    AbstractScoutsFunctionSerializer().create(validated_data=group)
+                )
 
         # functions: List[AbstractScoutsFunction] = []
         for function in function_data:

@@ -129,7 +129,9 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
             if isinstance(result, tuple):
                 (user, token) = result
 
-                ScoutsAuthSignalSender().send_authenticated(user)
+                # logger.debug("USER: (%s) %s", type(user).__name__, user)
+
+                ScoutsAuthSignalSender().send_oidc_authenticated(user)
 
             return result
         except HTTPError as exc:

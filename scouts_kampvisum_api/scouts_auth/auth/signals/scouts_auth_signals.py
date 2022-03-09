@@ -1,5 +1,6 @@
 from django import dispatch
 
 app_ready = dispatch.Signal()
-authenticated = dispatch.Signal()
-refreshed = dispatch.Signal()
+oidc_login = dispatch.Signal()
+oidc_refresh = dispatch.Signal()
+oidc_authenticated = dispatch.Signal()

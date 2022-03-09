@@ -12,6 +12,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsLink,
     AbstractScoutsGroup,
     ScoutsGroup,
+    ScoutsFunction,
 )
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
@@ -45,9 +46,14 @@ class ScoutsUser(User):
     # first_name = models.CharField(max_length=124, blank=True)
     # last_name = models.CharField(max_length=124, blank=True)
     # email = models.EmailField(blank=True)
-    
+
     # Persisted fields
-    persisted_scouts_groups: List[ScoutsGroup] = models.ManyToManyField(ScoutsGroup)
+    persisted_scouts_groups: List[ScoutsGroup] = models.ManyToManyField(
+        ScoutsGroup, related_name="user"
+    )
+    persisted_scouts_functions: List[ScoutsFunction] = models.ManyToManyField(
+        ScoutsFunction, related_name="user"
+    )
 
     #
     # Locally cached, non-persisted fields
@@ -153,9 +159,22 @@ class ScoutsUser(User):
             self.membership_number,
             self.customer_number,
             self.birth_date,
-            ", ".join(group.group_admin_id for group in self.scouts_groups),
-            ", ".join(address.to_descriptive_string() for address in self.addresses),
-            ", ".join(function.to_descriptive_string() for function in self.functions),
+            ", ".join(group.group_admin_id for group in self.scouts_groups)
+            if self.scouts_groups
+            else "[]",
+            ", ".join(address.to_descriptive_string() for address in self.addresses)
+            if self.addresses
+            else "[]",
+            ", ".join(function.to_descriptive_string() for function in self.functions)
+            if self.functions
+            else "[]",
+            ", ".join(
+                str(group_specific_field)
+                for group_specific_field in self.group_specific_fields
+            )
+            if self.group_specific_fields
+            else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
     def to_descriptive_string(self):

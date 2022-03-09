@@ -6,10 +6,15 @@ from scouts_auth.auth.services import AuthorizationService
 
 from scouts_auth.groupadmin.models import (
     AbstractScoutsGroup,
-    AbstractScoutsFunction,
     ScoutsGroup,
+    AbstractScoutsFunction,
+    ScoutsFunction,
 )
-from scouts_auth.groupadmin.services import GroupAdminMemberService, ScoutsGroupService
+from scouts_auth.groupadmin.services import (
+    GroupAdminMemberService,
+    ScoutsGroupService,
+    ScoutsFunctionService,
+)
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
 from scouts_auth.inuits.utils import GlobalSettingsUtil
@@ -53,6 +58,7 @@ class ScoutsAuthorizationService(AuthorizationService):
 
     service = GroupAdminMemberService()
     scouts_group_service = ScoutsGroupService()
+    scouts_function_service = ScoutsFunctionService()
 
     def load_user_scouts_groups(
         self, user: settings.AUTH_USER_MODEL
@@ -60,6 +66,12 @@ class ScoutsAuthorizationService(AuthorizationService):
         scouts_groups: List[AbstractScoutsGroup] = self.service.get_groups(
             active_user=user
         ).scouts_groups
+
+        logger.debug(
+            "SCOUTS AUTHORIZATION SERVICE: Found %d groups(s) for user %s",
+            len(scouts_groups),
+            user.username,
+        )
 
         user.scouts_groups = scouts_groups
 
@@ -140,23 +152,27 @@ class ScoutsAuthorizationService(AuthorizationService):
             user.username,
         )
 
-        for user_function in user.functions:
-            for function in functions:
-                if function.group_admin_id == user_function.function:
-                    for grouping in function.groupings:
-                        if (
-                            grouping.name
-                            == GroupadminSettings.get_section_leader_identifier()
-                        ):
-                            logger.debug(
-                                "Setting user as section leader for group %s",
-                                user_function.scouts_group.group_admin_id,
-                            )
-                            user_function.groups_section_leader[
-                                user_function.scouts_group.group_admin_id
-                            ] = True
+        user.functions = functions
 
-        user.full_clean()
-        user.save()
+        self.scouts_function_service.create_or_update_scouts_functions(user=user)
+
+        # for user_function in user.functions:
+        #     for function in functions:
+        #         if function.group_admin_id == user_function.function:
+        #             for grouping in function.groupings:
+        #                 if (
+        #                     grouping.name
+        #                     == GroupadminSettings.get_section_leader_identifier()
+        #                 ):
+        #                     logger.debug(
+        #                         "Setting user as section leader for group %s",
+        #                         user_function.scouts_group.group_admin_id,
+        #                     )
+        #                     user_function.groups_section_leader[
+        #                         user_function.scouts_group.group_admin_id
+        #                     ] = True
+
+        # user.full_clean()
+        # user.save()
 
         return user

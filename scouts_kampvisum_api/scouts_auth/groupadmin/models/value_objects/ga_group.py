@@ -10,7 +10,11 @@ from scouts_auth.groupadmin.models.value_objects import (
     AbstractScoutsGroupSpecificField,
 )
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalEmailField, OptionalDateField
+from scouts_auth.inuits.models.fields import (
+    OptionalCharField,
+    OptionalEmailField,
+    OptionalDateField,
+)
 
 
 class AbstractScoutsGroup(AbstractNonModel):
@@ -68,7 +72,9 @@ class AbstractScoutsGroup(AbstractNonModel):
         self.show_members_improved = show_members_improved
         self.addresses = addresses if addresses else []
         self.contacts = contacts if contacts else []
-        self.group_specific_fields = group_specific_fields if group_specific_fields else []
+        self.group_specific_fields = (
+            group_specific_fields if group_specific_fields else []
+        )
         self.links = links if links else []
 
         # super().__init__([], {})
@@ -91,9 +97,13 @@ class AbstractScoutsGroup(AbstractNonModel):
             self.website,
             self.info,
             self.type,
-            ", ".join(str(contact) for contact in self.contacts),
-            ", ".join(str(field) for field in self.group_specific_fields),
-            ", ".join(str(link) for link in self.links),
+            ", ".join(str(contact) for contact in self.contacts)
+            if self.contacts
+            else "[]",
+            ", ".join(str(field) for field in self.group_specific_fields)
+            if self.group_specific_fields
+            else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
     def to_simple_string(self) -> str:

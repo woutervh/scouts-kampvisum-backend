@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
+from scouts_auth.auth.signals import ScoutsAuthSignalSender
 from scouts_auth.auth.settings import OIDCSettings
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
@@ -21,6 +22,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
     service = GroupAdmin()
     authorization_service = ScoutsAuthorizationService()
+    signal_sender = ScoutsAuthSignalSender()
 
     def create_user(self, claims: dict) -> settings.AUTH_USER_MODEL:
         """
@@ -39,17 +41,18 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
                 username = decoded.get("preferred_username", None)
             except:
                 logger.error("Unable to decode JWT token - Do you need a refresh ?")
-        member: AbstractScoutsMember = self.load_member_data(data=claims)
+        member: AbstractScoutsMember = self._load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self.UserModel.objects.create_user(
             username=username if username else member.username, email=member.email
         )
-        user = self.merge_member_data(user, member, claims)
+        user = self._merge_member_data(user, member, claims)
 
         logger.debug(
             "SCOUTS OIDC AUTHENTICATION: Created a user with username %s from member %s",
             user.username,
             member.group_admin_id,
         )
+        self.signal_sender.send_oidc_login(user=user)
 
         return user
 
@@ -59,17 +62,18 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Update existing user with new claims if necessary, save, and return the updated user object.
         """
-        member: AbstractScoutsMember = self.load_member_data(data=claims)
-        user: settings.AUTH_USER_MODEL = self.merge_member_data(user, member, claims)
+        member: AbstractScoutsMember = self._load_member_data(data=claims)
+        user: settings.AUTH_USER_MODEL = self._merge_member_data(user, member, claims)
 
         logger.debug(
             "SCOUTS OIDC AUTHENTICATION: Updated a user with username %s ",
             user.username,
         )
+        self.signal_sender.send_oidc_refresh(user=user)
 
         return user
 
-    def load_member_data(self, data: dict) -> AbstractScoutsMember:
+    def _load_member_data(self, data: dict) -> AbstractScoutsMember:
         serializer = AbstractScoutsMemberSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
@@ -77,7 +81,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         return member
 
-    def merge_member_data(
+    def _merge_member_data(
         self, user: settings.AUTH_USER_MODEL, member: AbstractScoutsMember, claims: dict
     ) -> settings.AUTH_USER_MODEL:
         user.group_admin_id = member.group_admin_id

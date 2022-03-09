@@ -1,10 +1,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsGroup
 
 from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateTimeField
 
 
 # LOGGING
@@ -14,18 +14,20 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ScoutsGroupQuerySet(models.QuerySet):
+class ScoutsFunctionQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 
-class ScoutsGroupManager(models.Manager):
+class ScoutsFunctionManager(models.Manager):
     def get_queryset(self):
-        return ScoutsGroupQuerySet(self.model, using=self._db)
+        return ScoutsFunctionQuerySet(self.model, using=self._db)
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         group_admin_id = kwargs.get("group_admin_id", None)
+        code = kwargs.get("code", None)
+        group_group_admin_id = kwargs.get("group_group_admin_id", None)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -40,11 +42,18 @@ class ScoutsGroupManager(models.Manager):
             except:
                 pass
 
+        if code and group_group_admin_id:
+            try:
+                return self.get_queryset().get(
+                    code=code, group__group_admin_id=group_group_admin_id
+                )
+            except:
+                pass
+
         if raise_error:
             raise ValidationError(
-                "Unable to locate ScoutsGroup instance(s) with the provided params: (id: {}, group_admin_id: {})".format(
-                    pk,
-                    group_admin_id,
+                "Unable to locate DefaultDeadline instance(s) with the provided params: (id: {}, group_admin_id: {}, code: {}, group_group_admin_id: {})".format(
+                    pk, group_admin_id, code, group_group_admin_id
                 )
             )
         return None
@@ -60,29 +69,24 @@ class ScoutsGroupManager(models.Manager):
         return self.get(group_admin_id=group_admin_id)
 
 
-class ScoutsGroup(AuditedBaseModel):
+class ScoutsFunction(AuditedBaseModel):
 
-    objects = ScoutsGroupManager()
+    objects = ScoutsFunctionManager()
 
     group_admin_id = OptionalCharField()
-    number = OptionalCharField()
-    name = OptionalCharField()
-    group_type = OptionalCharField()
+    code = OptionalCharField()
+    type = OptionalCharField()
+    description = OptionalCharField()
+    group = models.ForeignKey(
+        ScoutsGroup, on_delete=models.CASCADE, related_name="functions"
+    )
+    begin = OptionalDateTimeField()
+    end = OptionalDateTimeField()
 
     class Meta:
+        ordering = ["code"]
         constraints = [
             models.UniqueConstraint(
-                fields=["group_admin_id"], name="unique_group_admin_id_for_group"
+                fields=["code", "group"], name="unique_function_for_group"
             )
         ]
-
-    @staticmethod
-    def from_abstract_scouts_group(abstract_group: AbstractScoutsGroup):
-        group = ScoutsGroup()
-
-        group.group_admin_id = abstract_group.group_admin_id
-        group.number = abstract_group.number
-        group.name = abstract_group.name
-        group.group_type = abstract_group.type
-
-        return group

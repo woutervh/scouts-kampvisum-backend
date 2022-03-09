@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from . import app_ready, authenticated, refreshed
+from . import app_ready, oidc_login, oidc_refresh, oidc_authenticated
 
 
 # LOGGING
@@ -21,10 +21,14 @@ class ScoutsAuthSignalSender:
         logger.debug("SCOUTS-AUTH: Sending SIGNAL 'app_ready'")
         app_ready.send(sender=self.sender)
 
-    def send_authenticated(self, user: settings.AUTH_USER_MODEL):
-        logger.debug("SCOUTS-AUTH: Sending SIGNAL 'authenticated'")
-        authenticated.send(sender=self.sender, user=user)
+    def send_oidc_login(self, user: settings.AUTH_USER_MODEL):
+        logger.debug("SCOUTS-AUTH: Sending SIGNAL 'login'")
+        oidc_login.send(sender=self.sender, user=user)
 
-    def send_refreshed(self, user: settings.AUTH_USER_MODEL):
+    def send_oidc_refresh(self, user: settings.AUTH_USER_MODEL):
         logger.debug("SCOUTS-AUTH: Sending SIGNAL 'refreshed'")
-        refreshed.send(sender=self.sender, user=user)
+        oidc_refresh.send(sender=self.sender, user=user)
+
+    def send_oidc_authenticated(self, user: settings.AUTH_USER_MODEL):
+        logger.debug("SCOUTS-AUTH: Sending SIGNAL 'authenticated'")
+        oidc_authenticated.send(sender=self.sender, user=user)

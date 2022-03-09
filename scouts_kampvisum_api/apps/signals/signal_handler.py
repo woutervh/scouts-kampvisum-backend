@@ -7,14 +7,16 @@ from apps.groups.services import ScoutsSectionService
 from scouts_auth.auth.signals import (
     ScoutsAuthSignalSender,
     app_ready,
-    authenticated,
-    refreshed,
+    oidc_login,
+    oidc_refresh,
+    oidc_authenticated,
 )
 from scouts_auth.auth.services import PermissionService
 from scouts_auth.auth.oidc_user_helper import OIDCUserHelper
 
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
+from scouts_auth.inuits.cache import InuitsCache
 
 # LOGGING
 import logging
@@ -24,6 +26,11 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class SignalHandler:
+
+    handling_login = False
+    handling_refresh = False
+    handling_authentication = False
+
     @staticmethod
     @receiver(
         app_ready,
@@ -31,8 +38,9 @@ class SignalHandler:
         dispatch_uid=ScoutsAuthSignalSender.app_ready_uid,
     )
     def handle_app_ready(**kwargs):
+        signal = "app_ready"
         logger.debug(
-            "SIGNAL received: 'app_ready' from %s", ScoutsAuthSignalSender.sender
+            "SIGNAL received: '%s' from %s", signal, ScoutsAuthSignalSender.sender
         )
         if not SignalHandler._is_initial_db_ready():
             logger.debug(
@@ -48,11 +56,11 @@ class SignalHandler:
 
     @staticmethod
     @receiver(
-        authenticated,
+        oidc_login,
         sender=ScoutsAuthSignalSender.sender,
         dispatch_uid=ScoutsAuthSignalSender.authenticated_uid,
     )
-    def handle_authenticated(
+    def handle_oidc_login(
         user: settings.AUTH_USER_MODEL, **kwargs
     ) -> settings.AUTH_USER_MODEL:
         """
@@ -61,46 +69,79 @@ class SignalHandler:
         Some user data necessary for permissions can only be loaded by a groupadmin profile call after authentication.
         This method handles a signal for the basic oidc authentication, then makes the necessary additional calls.
         """
+        if SignalHandler.handling_login:
+            return
+        SignalHandler.handling_login = True
+        signal = "oidc_login"
+
         logger.debug(
-            "SIGNAL received: 'authenticated' from %s", ScoutsAuthSignalSender.sender
+            "SIGNAL received: '%s' from %s", signal, ScoutsAuthSignalSender.sender
         )
-        logger.debug("AUTHENTICATED USER: %s (%s)", user.username, type(user).__name__)
+        logger.debug("LOGGED IN USER: %s (%s)", user.username, type(user).__name__)
 
-        authorization_service = ScoutsAuthorizationService()
-        section_service = ScoutsSectionService()
+        user: settings.AUTH_USER_MODEL = SignalHandler._check_user_data(
+            user=user, signal=signal
+        )
 
-        if OIDCUserHelper.requires_data_loading(user=user):
-            if OIDCUserHelper.requires_group_loading(user=user):
-                logger.debug(
-                    "SIGNAL handling for 'authenticated' -> Loading additional user groups"
-                )
-                user = authorization_service.load_user_scouts_groups(user=user)
-
-            logger.debug(
-                "SIGNAL handling for 'authenticated' -> Loading scouts functions"
-            )
-            user = authorization_service.load_user_functions(user=user)
-
-            logger.debug(
-                "SIGNAL handling for 'authenticated' -> Setting up sections for user's groups"
-            )
-            section_service.setup_default_sections(user=user)
-
-        logger.debug(user.to_descriptive_string())
+        SignalHandler.handling_login = False
 
         return user
 
     @staticmethod
     @receiver(
-        refreshed,
+        oidc_refresh,
         sender=ScoutsAuthSignalSender.sender,
         dispatch_uid=ScoutsAuthSignalSender.refreshed_uid,
     )
-    def handle_refreshed(user: settings.AUTH_USER_MODEL, **kwargs):
+    def handle_oidc_refresh(
+        user: settings.AUTH_USER_MODEL, **kwargs
+    ) -> settings.AUTH_USER_MODEL:
+        if SignalHandler.handling_refresh:
+            return
+        SignalHandler.handling_refresh = True
+        signal = "oidc_refresh"
+
         logger.debug(
-            "SIGNAL received: 'refreshed' from %s", ScoutsAuthSignalSender.sender
+            "SIGNAL received: '%s' from %s", signal, ScoutsAuthSignalSender.sender
         )
         logger.debug("REFRESHED USER: %s (%s)", user.username, type(user).__name__)
+
+        user: settings.AUTH_USER_MODEL = SignalHandler._check_user_data(
+            user=user, signal=signal
+        )
+
+        SignalHandler.handling_refresh = False
+
+        return user
+
+    @staticmethod
+    @receiver(
+        oidc_authenticated,
+        sender=ScoutsAuthSignalSender.sender,
+        dispatch_uid=ScoutsAuthSignalSender.authenticated_uid,
+    )
+    def handle_oidc_authenticated(
+        user: settings.AUTH_USER_MODEL, **kwargs
+    ) -> settings.AUTH_USER_MODEL:
+        """
+        Reads additional data for a user and takes appropriate action.
+
+        Some user data necessary for permissions can only be loaded by a groupadmin profile call after authentication.
+        This method handles a signal for the basic oidc authentication, then makes the necessary additional calls.
+        """
+        if SignalHandler.handling_authentication:
+            return
+        SignalHandler.handling_authentication = True
+        signal = "oidc_authenticated"
+
+        logger.debug(
+            "SIGNAL received: '%s' from %s", signal, ScoutsAuthSignalSender.sender
+        )
+        logger.debug("AUTHENTICATED USER: %s (%s)", user.username, type(user).__name__)
+
+        SignalHandler.handling_authentication = False
+
+        return user
 
     @staticmethod
     def _is_initial_db_ready() -> bool:
@@ -115,3 +156,66 @@ class SignalHandler:
             )
 
         return False
+
+    @staticmethod
+    def _check_user_data(
+        user: settings.AUTH_USER_MODEL, signal: str
+    ) -> settings.AUTH_USER_MODEL:
+        authorization_service = ScoutsAuthorizationService()
+        section_service = ScoutsSectionService()
+
+        if not OIDCUserHelper.requires_data_loading(user=user):
+            return user
+
+        if OIDCUserHelper.requires_group_loading(user=user):
+            logger.debug(
+                "SIGNAL handling for '%s' -> Loading additional user groups", signal
+            )
+            user = authorization_service.load_user_scouts_groups(user=user)
+
+        if OIDCUserHelper.requires_function_loading(user=user):
+            logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
+            user = authorization_service.load_user_functions(user=user)
+
+        logger.debug(
+            "SIGNAL handling for '%s' -> Setting up sections for user's groups",
+            signal,
+        )
+        section_service.setup_default_sections(user=user)
+
+        user: settings.AUTH_USER_MODEL = SignalHandler._cache_user_data(
+            user=user, signal=signal
+        )
+
+        logger.debug(user.to_descriptive_string())
+
+        return user
+
+    @staticmethod
+    def _cache_user_data(
+        user: settings.AUTH_USER_MODEL, signal: str
+    ) -> settings.AUTH_USER_MODEL:
+        # InuitsCache().store_user_data(user)
+
+        # user = InuitsCache().retrieve_user_data(user.id)
+        # logger.debug(
+        #     "USER %s has %d groups and %d functions",
+        #     user.username,
+        #     len(user.scouts_groups),
+        #     len(user.functions),
+        # )
+        # for group in user.scouts_groups:
+        #     logger.debug("GROUP: %s", group.group_admin_id)
+        #     logger.debug(
+        #         "%s - SECTION LEADER: %s",
+        #         group.group_admin_id,
+        #         user.has_role_section_leader(group),
+        #     )
+        #     logger.debug(
+        #         "%s - GROUP LEADER: %s",
+        #         group.group_admin_id,
+        #         user.has_role_group_leader(group),
+        #     )
+        # logger.debug(user.to_descriptive_string())
+
+        return user

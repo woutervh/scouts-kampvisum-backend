@@ -17,7 +17,13 @@ class AbstractScoutsLink(AbstractNonModel):
     class Meta:
         abstract = True
 
-    def __init__(self, rel: str = "", href: str = "", method: str = "", sections: List[str] = None):
+    def __init__(
+        self,
+        rel: str = "",
+        href: str = "",
+        method: str = "",
+        sections: List[str] = None,
+    ):
         self.rel = rel
         self.href = href
         self.method = method
@@ -30,5 +36,7 @@ class AbstractScoutsLink(AbstractNonModel):
             self.rel,
             self.href,
             self.method,
-            ", ".join(str(section) for section in self.sections),
+            ", ".join(str(section) for section in self.sections)
+            if self.sections
+            else "[]",
         )

@@ -7,6 +7,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     user_permissions = serializers.SerializerMethodField()
     scouts_groups = serializers.SerializerMethodField()
+    functions = serializers.SerializerMethodField()
 
     class Meta:
         model = ScoutsUser
@@ -24,4 +25,16 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "type": group.type,
             }
             for group in obj.scouts_groups
+        ]
+
+    def get_functions(self, obj: ScoutsUser):
+        return [
+            {
+                "type": function.type,
+                "function": function.function,
+                "scouts_group": function.scouts_group.group_admin_id,
+                "code": function.code,
+                "description": function.description,
+            }
+            for function in obj.functions
         ]

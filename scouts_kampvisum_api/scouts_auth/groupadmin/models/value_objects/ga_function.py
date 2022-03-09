@@ -1,10 +1,18 @@
 from typing import List, Dict
 from datetime import date, datetime
 
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsGrouping, AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import (
+    AbstractScoutsGroup,
+    AbstractScoutsGrouping,
+    AbstractScoutsLink,
+)
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField, OptionalDateTimeField
+from scouts_auth.inuits.models.fields import (
+    OptionalCharField,
+    OptionalDateField,
+    OptionalDateTimeField,
+)
 
 
 class AbstractScoutsFunction(AbstractNonModel):
@@ -65,7 +73,9 @@ class AbstractScoutsFunction(AbstractNonModel):
         self.description = description
         self.adjunct = adjunct
         self.links = links if links else []
-        self.groups_section_leader = groups_section_leader if groups_section_leader else {}
+        self.groups_section_leader = (
+            groups_section_leader if groups_section_leader else {}
+        )
         self.groups_group_leader = groups_group_leader if groups_group_leader else {}
 
         # super().__init__([], {})
@@ -80,7 +90,10 @@ class AbstractScoutsFunction(AbstractNonModel):
         return self.groups_section_leader.get(group.group_admin_id, False)
 
     def is_group_leader(self, group: AbstractScoutsGroup) -> bool:
-        return self.function_code.is_group_leader() and self.scouts_group.group_admin_id == group.group_admin_id
+        return (
+            self.function_code.is_group_leader()
+            and self.scouts_group.group_admin_id == group.group_admin_id
+        )
 
     def is_district_commissioner(self) -> bool:
         return self.function_code.is_district_commissioner()
@@ -91,16 +104,22 @@ class AbstractScoutsFunction(AbstractNonModel):
             self.type,
             self.function,
             str(self.scouts_group),
-            ", ".join(str(group) for group in self.scouts_groups),
-            ", ".join(str(grouping) for grouping in self.groupings),
+            ", ".join(str(group) for group in self.scouts_groups)
+            if self.scouts_groups
+            else "[]",
+            ", ".join(str(grouping) for grouping in self.groupings)
+            if self.groupings
+            else "[]",
             self.begin,
             self.end,
             self.max_birth_date,
             self.code,
             self.description,
             self.adjunct,
-            ", ".join(str(link) for link in self.links),
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
     def to_descriptive_string(self):
-        return "{} -> {} ({}),".format(self.scouts_group.group_admin_id, self.code, self.description)
+        return "{} -> {} ({}),".format(
+            self.scouts_group.group_admin_id, self.code, self.description
+        )

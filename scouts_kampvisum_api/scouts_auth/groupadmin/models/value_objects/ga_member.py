@@ -231,12 +231,22 @@ class AbstractScoutsMember(AbstractNonModel):
             self.username,
             self.group_admin_id,
             self.inactive_member,
-            ", ".join(str(address) for address in self.addresses),
-            ", ".join(str(contact) for contact in self.contacts),
-            ", ".join(str(function) for function in self.functions),
-            ", ".join(str(group) for group in self.scouts_groups),
-            ", ".join(str(field) for field in self.group_specific_fields),
-            ", ".join(str(link) for link in self.links),
+            ", ".join(str(address) for address in self.addresses)
+            if self.addresses
+            else "[]",
+            ", ".join(str(contact) for contact in self.contacts)
+            if self.contacts
+            else "[]",
+            ", ".join(str(function) for function in self.functions)
+            if self.functions
+            else "[]",
+            ", ".join(str(group) for group in self.scouts_groups)
+            if self.scouts_groups
+            else "[]",
+            ", ".join(str(field) for field in self.group_specific_fields)
+            if self.group_specific_fields
+            else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
     def to_search_member(self) -> AbstractScoutsMemberSearchMember:

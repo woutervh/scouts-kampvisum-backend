@@ -43,6 +43,9 @@ class AbstractScoutsResponse(AbstractNonModel):
             self.total,
             self.offset,
             self.filter_criterium,
-            ", ".join((str(key) + "(" + str(self.criteria[key]) + ")") for key in self.criteria.keys()),
-            ", ".join(str(link) for link in self.links),
+            ", ".join(
+                (str(key) + "(" + str(self.criteria[key]) + ")")
+                for key in self.criteria.keys()
+            ),
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
