@@ -1,7 +1,7 @@
 from .category_priority import CategoryPriority
 from .category import Category
 from .sub_category import SubCategory
-from .check_type import CheckType, CheckTypeEnum
+from .check_type import CheckType
 from .check import Check
 from .visum import CampVisum
 from .linked_category_set import LinkedCategorySet

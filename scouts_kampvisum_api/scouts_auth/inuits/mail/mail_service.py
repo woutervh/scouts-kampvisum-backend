@@ -52,7 +52,7 @@ class EmailService:
             reply_to = to
 
         logger.debug(
-            "VALIDATE (from_email: [%s], to: [%s], cc: [%s], bcc:[%s], reply_to: [%s])",
+            "VALIDATE (from_email: %s, to: %s, cc: %s, bcc: %s, reply_to: %s)",
             from_email,
             ",".join(to),
             ",".join(cc),

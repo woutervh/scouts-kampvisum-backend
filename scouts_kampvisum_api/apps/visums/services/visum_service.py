@@ -8,7 +8,7 @@ from apps.camps.services import CampService, CampTypeService
 from apps.deadlines.services import DeadlineService
 
 from apps.visums.models import LinkedCategorySet, CampVisum
-from apps.visums.services import LinkedCategorySetService
+from apps.visums.services import LinkedCategorySetService, InuitsVisumMailService
 
 
 # LOGGING
@@ -24,6 +24,7 @@ class CampVisumService:
     camp_type_service = CampTypeService()
     category_set_service = LinkedCategorySetService()
     deadline_service = DeadlineService()
+    mail_service = InuitsVisumMailService()
 
     @transaction.atomic
     def visum_create(self, request, **data) -> CampVisum:
@@ -48,6 +49,7 @@ class CampVisumService:
         visum = CampVisum()
 
         visum.camp = camp
+        visum.created_by = request.user
 
         visum.full_clean()
         visum.save()
@@ -67,6 +69,8 @@ class CampVisumService:
 
         logger.debug("Linking default deadline set to visum")
         self.deadline_service.link_to_visum(request=request, visum=visum)
+
+        self.mail_service.notify_camp_registered(visum=visum)
 
         return visum
 

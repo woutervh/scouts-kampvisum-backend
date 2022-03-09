@@ -22,4 +22,4 @@ class ChangeHandlerService:
         today = timezone.now().date()
 
         if today > epoch:
-            self.mail_service.notify_responsible()
+            self.mail_service.notify_responsible_changed()

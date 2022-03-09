@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.visums.models import (
-    CheckTypeEnum,
     LinkedCheck,
     LinkedSimpleCheck,
     LinkedDateCheck,
@@ -21,6 +20,7 @@ from apps.visums.models import (
     LinkedCommentCheck,
     LinkedNumberCheck,
 )
+from apps.visums.models.enums import CheckTypeEnum
 from apps.visums.serializers import (
     LinkedCheckSerializer,
     LinkedSimpleCheckSerializer,

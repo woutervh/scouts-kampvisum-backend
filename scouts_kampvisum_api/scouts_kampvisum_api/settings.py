@@ -71,6 +71,7 @@ if environment_conf:
 SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
+IS_ACCEPTANCE = env.bool("IS_ACCEPTANCE", default=False)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_URL = env.str("BASE_URL", default="/")
@@ -605,6 +606,9 @@ RESOURCES_MAIL_TEMPLATE_START = RESOURCES_MAIL_TEMPLATE_PATH + env.str(
 RESOURCES_MAIL_TEMPLATE_END = RESOURCES_MAIL_TEMPLATE_PATH + env.str(
     "RESOURCES_MAIL_TEMPLATE_END"
 )
+RESOURCES_TEMPLATE_CAMP_REGISTRATION = (
+    RESOURCES_MAIL_TEMPLATE_PATH + "camp_registered.html"
+)
 
 # EMAIL
 EMAIL_DEBUG_RECIPIENT = env.str("EMAIL_DEBUG_RECIPIENT")
@@ -629,9 +633,7 @@ def setup_mail():
     else:
         EMAIL_TEMPLATE = None
 
-    FROM_LIST = env.str("EMAIL_FROM", None)
-    if FROM_LIST:
-        EMAIL_FROM = FROM_LIST.split(",")
+    EMAIL_FROM = env.str("EMAIL_FROM", None)
 
 
 # DJANGO MAIL SETTINGS

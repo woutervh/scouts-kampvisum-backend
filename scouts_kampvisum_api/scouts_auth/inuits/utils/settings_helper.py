@@ -1,7 +1,7 @@
-import datetime
-
 from django.conf import settings
 from django.core.exceptions import ValidationError
+
+from scouts_auth.inuits.utils import GlobalSettingsUtil
 
 
 class SettingsHelper:
@@ -58,4 +58,19 @@ class SettingsHelper:
 
         raise ValidationError(
             "Expected a list, but got a {}".format(type(value).__class__.__name__)
+        )
+
+    @staticmethod
+    def is_debug() -> bool:
+        return SettingsHelper.get_bool("DEBUG", False)
+
+    @staticmethod
+    def is_test() -> bool:
+        # return SettingsHelper.is_debug() and GlobalSettingsUtil.is_test
+        return SettingsHelper.is_debug()
+
+    @staticmethod
+    def is_acceptance() -> bool:
+        return SettingsHelper.is_test() and SettingsHelper.get_bool(
+            "IS_ACCEPTANCE", False
         )
