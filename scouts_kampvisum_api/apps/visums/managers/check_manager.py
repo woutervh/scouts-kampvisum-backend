@@ -26,6 +26,8 @@ class CheckManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        sub_category = kwargs.get("sub_category", None)
+        camp_types = kwargs.get("camp_types", [])
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -34,10 +36,20 @@ class CheckManager(models.Manager):
             except:
                 pass
 
+        if sub_category and len(camp_types) > 0:
+            try:
+                return list(
+                    self.get_queryset().filter(
+                        sub_category=sub_category, camp_types__in=camp_types
+                    )
+                )
+            except:
+                pass
+
         if raise_error:
             raise ValidationError(
-                "Unable to locate Check instance(s) with the provided params: (id: {})".format(
-                    pk,
+                "Unable to locate Check instance(s) with the provided params: (id: {}, (sub_category: {}, camp_types: {}))".format(
+                    pk, sub_category, camp_types
                 )
             )
 

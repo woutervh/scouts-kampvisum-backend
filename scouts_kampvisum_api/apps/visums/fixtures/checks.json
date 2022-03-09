@@ -800,6 +800,29 @@
     {
         "model": "visums.Check",
         "fields": {
+            "name": "safety_insurance_european_insurance_card",
+            "camp_types": [
+                [
+                    "buitenlands_kamp"
+                ]
+            ],
+            "sub_category": [
+                "safety_insurance",
+                [
+                    "safety",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Europese ziekteverzekeringskaart",
+            "explanation": ""
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
             "name": "safety_insurance_comments",
             "sub_category": [
                 "safety_insurance",
@@ -1023,24 +1046,6 @@
             ],
             "label": "Gezondheid en medicatie",
             "explanation": "Ga na of medicatie die je wil meenemen ook toegelaten is in het land van bestemming. Verder kan je via de handige website <a href='https://www.wanda.be/nl/'>Wanda</a> ook bekijken welke vaccinaties verplicht of aangeraden zijn in het land waar je naartoe gaat."
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "safety_foreign_rules_european_insurance_card",
-            "sub_category": [
-                "safety_foreign_rules",
-                [
-                    "safety",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Europese ziekteverzekeringskaart",
-            "explanation": ""
         }
     },
     {

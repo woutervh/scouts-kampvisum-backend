@@ -52,7 +52,7 @@ class Category(
         return (self.name, self.camp_year)
 
     def __str__(self):
-        return "OBJECT Category: id ({}), name({}), camp_year ({}), priority ({}) label({}), index({}), description({}), explanation ({})".format(
+        return "OBJECT Category: id ({}), name({}), camp_year ({}), priority ({}) label({}), index({}), description({}), explanation ({}), camp_types ({})".format(
             self.id,
             self.name,
             self.camp_year,
@@ -61,4 +61,7 @@ class Category(
             self.index,
             self.description,
             self.explanation,
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types)
+            if self.camp_types
+            else "[]",
         )

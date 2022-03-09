@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.camps.models import CampType
+
 from apps.visums.managers import CheckManager
 from apps.visums.models import SubCategory, CheckType
 
@@ -34,6 +36,7 @@ class Check(
     check_type = models.ForeignKey(CheckType, on_delete=models.CASCADE)
     # References a method in change_notifier.py
     change_handler = OptionalCharField()
+    camp_types = models.ManyToManyField(CampType)
 
     class Meta:
         ordering = ["name"]
@@ -47,6 +50,12 @@ class Check(
         return True if self.change_handler else False
 
     def __str__(self):
-        return "OBJECT Check: name({}), sub_category({}), check_type({}), is_multiple ({})".format(
-            self.name, str(self.sub_category), str(self.check_type), self.is_multiple
+        return "OBJECT Check: name({}), sub_category({}), check_type({}), is_multiple ({}), camp_types ({})".format(
+            self.name,
+            str(self.sub_category),
+            str(self.check_type),
+            self.is_multiple,
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types)
+            if self.camp_types
+            else "[]",
         )

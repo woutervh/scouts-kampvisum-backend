@@ -50,7 +50,7 @@ class SubCategory(
         return (self.name, self.category)
 
     def __str__(self):
-        return "OBJECT SubCategory: name({}), label ({}), index ({}), explanation ({}), description ({}), link ({}), category({})".format(
+        return "OBJECT SubCategory: name({}), label ({}), index ({}), explanation ({}), description ({}), link ({}), category({}), camp_types ({})".format(
             self.name,
             self.label,
             self.index,
@@ -58,6 +58,9 @@ class SubCategory(
             self.description,
             self.link,
             self.category,
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types)
+            if self.camp_types
+            else "[]",
         )
 
     def to_simple_str(self):

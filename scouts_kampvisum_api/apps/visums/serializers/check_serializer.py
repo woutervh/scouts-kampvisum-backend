@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from apps.camps.serializers import CampTypeSerializer
+
 from apps.visums.models import Check
 from apps.visums.serializers import CheckTypeSerializer
 
@@ -13,13 +15,13 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class CheckSerializer(serializers.ModelSerializer):
 
-    # sub_category = SubCategorySerializer()
     check_type = CheckTypeSerializer()
+    # camp_types = CampTypeSerializer(many=True)
 
     class Meta:
         model = Check
         # fields = "__all__"
-        exclude = ["sub_category", "change_handler"]
+        exclude = ["sub_category", "change_handler", "camp_types"]
 
     def to_internal_value(self, data: dict) -> dict:
         logger.debug("CHECK SERIALIZER TO_INTERNAL_VALUE: %s", data)

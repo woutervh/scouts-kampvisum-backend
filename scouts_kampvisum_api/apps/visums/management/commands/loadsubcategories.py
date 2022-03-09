@@ -35,8 +35,8 @@ class Command(BaseCommand):
         tmp_data_path = "{}/{}".format(self.BASE_PATH, self.TMP_FIXTURE)
         tmp_path = os.path.join(parent_path, tmp_data_path)
 
-        default_camp_type: CampType = CampType.objects.get_default()
-        all_camp_types: List[CampType] = [
+        default_camp_type: str = CampType.objects.get_default().camp_type
+        all_camp_types: List[str] = [
             [camp_type.camp_type] for camp_type in CampType.objects.all().selectable()
         ]
 
@@ -62,19 +62,24 @@ class Command(BaseCommand):
                     previous_index = 0
                 model.get("fields")["index"] = previous_index
 
+                # If not present, set the default camp type
+                camp_types: List[str] = model.get("fields").get("camp_types", [])
+                results = []
+                for camp_type in camp_types:
+                    if isinstance(camp_type, str):
+                        results.append(camp_type)
+                    elif isinstance(camp_type, list) and isinstance(camp_type[0], str):
+                        results.append(camp_type[0])
+                camp_types = results
+                if len(camp_types) == 0:
+                    camp_types = [default_camp_type]
                 # Check if the camp type is an expander (*)
-                camp_types: list = model.get("fields")["camp_types"]
-                if len(camp_types) == 0 or (
-                    len(camp_types) == 1 and camp_types[0] == ["*"]
-                ):
-                    model.get("fields")["camp_types"] = all_camp_types
+                elif len(camp_types) == 1 and camp_types[0] == ["*"]:
+                    camp_types = all_camp_types
                 # Make sure that the default camp type is not present if other types are defined
-                if len(camp_types) > 1 and default_camp_type.id in [
-                    camp_type.id for camp_type in camp_types
-                ]:
-                    camp_types: List[CampType] = ListUtils.concatenate_unique_lists(
-                        [default_camp_type], camp_types
-                    )
+                elif len(camp_types) > 1 and default_camp_type in camp_types:
+                    camp_types.remove(default_camp_type)
+                model.get("fields")["camp_types"] = [camp_types]
 
                 logger.trace("MODEL DATA: %s", model)
 
