@@ -34,28 +34,34 @@ class DeadlineItemSerializer(serializers.ModelSerializer):
 
         if obj.is_sub_category_deadline():
             data["linked_sub_category"]["category"] = {
-                "id": obj.linked_sub_category.id,
-                "name": obj.linked_sub_category.parent.name,
-                "label": obj.linked_sub_category.parent.label,
-                "category": {
-                    "id": obj.linked_sub_category.category.id,
-                    "name": obj.linked_sub_category.category.parent.name,
-                    "label": obj.linked_sub_category.category.parent.label,
-                },
+                "id": obj.linked_sub_category.category.id,
+                "name": obj.linked_sub_category.category.parent.name,
+                "label": obj.linked_sub_category.category.parent.label,
+                # "id": obj.linked_sub_category.id,
+                # "name": obj.linked_sub_category.parent.name,
+                # "label": obj.linked_sub_category.parent.label,
+                # "category": {
+                #     "id": obj.linked_sub_category.category.id,
+                #     "name": obj.linked_sub_category.category.parent.name,
+                #     "label": obj.linked_sub_category.category.parent.label,
+                # },
                 "state": data.get("linked_sub_category").get(
                     "state", CheckState.UNCHECKED
                 ),
             }
         elif obj.is_check_deadline():
             data["linked_check"]["category"] = {
-                "id": obj.linked_check.id,
-                "name": obj.linked_check.parent.name,
-                "label": obj.linked_check.parent.label,
-                "category": {
-                    "id": obj.linked_check.sub_category.category.id,
-                    "name": obj.linked_check.sub_category.category.parent.name,
-                    "label": obj.linked_check.sub_category.category.parent.label,
-                },
+                "id": obj.linked_check.sub_category.category.id,
+                "name": obj.linked_check.sub_category.category.parent.name,
+                "label": obj.linked_check.sub_category.category.parent.label,
+                # "id": obj.linked_check.id,
+                # "name": obj.linked_check.parent.name,
+                # "label": obj.linked_check.parent.label,
+                # "category": {
+                #     "id": obj.linked_check.sub_category.category.id,
+                #     "name": obj.linked_check.sub_category.category.parent.name,
+                #     "label": obj.linked_check.sub_category.category.parent.label,
+                # },
                 "state": data.get("linked_check").get("state", CheckState.UNCHECKED),
             }
 

@@ -28,7 +28,6 @@ class DeadlineSerializer(serializers.ModelSerializer):
 
         parent = data.pop("parent", {})
 
-        # data["parent"] = {}
         data["items"] = []
 
         logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
@@ -48,8 +47,6 @@ class DeadlineSerializer(serializers.ModelSerializer):
 
         data = super().to_representation(obj)
 
-        # visum = data.pop("visum")
-        # data["visum"] = visum.get("id")
         data["visum"] = visum
 
         return data
