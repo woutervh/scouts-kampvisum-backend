@@ -2,13 +2,14 @@ import os, json
 from pathlib import Path
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 from apps.camps.models import CampYear
 from apps.camps.services import CampYearService, CampTypeService
 
-from apps.deadlines.models import DefaultDeadline, DeadlineDate
+from apps.deadlines.models import DefaultDeadline, DeadlineDate, DefaultDeadlineItem
 from apps.deadlines.services import DefaultDeadlineService, DefaultDeadlineItemService
 
 
@@ -99,19 +100,26 @@ class Command(BaseCommand):
                     model.get("fields").pop("due_date")
 
                     items = model.get("fields").get("items", [])
+                    if len(items) == 0:
+                        raise ValidationError(
+                            "No DefaultDeadlineItem instances defined to link to DefaultDeadline !"
+                        )
+
+                    previous_item_index = -1
                     if items:
                         results = []
 
                         for item in items:
                             # Allow ordering categories in the order in which they appear in the fixture json, without specifying the index
-                            previous_index = previous_index + 1
-                            item["index"] = previous_index
+                            previous_item_index = previous_item_index + 1
+                            item["index"] = previous_item_index
 
-                            results.append(
-                                default_deadline_item_service.create_default_deadline_item(
-                                    request=None, default_deadline=default_deadline, **item
-                                )
+                            default_deadline_item: DefaultDeadlineItem = default_deadline_item_service.create_default_deadline_item(
+                                request=None, default_deadline=default_deadline, **item
                             )
+                            default_deadline.items.add(default_deadline_item)
+
+                            results.append(default_deadline_item)
 
                         model.get("fields").pop("items")
 

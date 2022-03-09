@@ -50,7 +50,9 @@ class DefaultDeadlineItemService:
 
         return results
 
-    def create_default_deadline_item(self, request, **fields) -> DefaultDeadlineItem:
+    def create_default_deadline_item(
+        self, request, default_deadline: DefaultDeadline, **fields
+    ) -> DefaultDeadlineItem:
         logger.debug("ITEM: %s", fields)
         sub_category: SubCategory = fields.get("item_sub_category", None)
         check: Check = fields.get("item_check", None)

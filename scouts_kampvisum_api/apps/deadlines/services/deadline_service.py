@@ -101,20 +101,14 @@ class DeadlineService:
             request=request, deadline=instance
         )
 
+        if len(items) == 0:
+            raise ValidationError(
+                "No DeadlineItem instances found to link to Deadline %s !",
+                instance.parent.name,
+            )
+
         for item in items:
             instance.items.add(item)
-
-        # default_items: List[DefaultDeadlineItem] = default_deadline.items.all()
-        # for default_item in default_items:
-        #     deadline_item: DeadlineItem = (
-        #         self.deadline_item_service.create_deadline_item(
-        #             request=request,
-        #             deadline=instance,
-        #             default_deadline_item=default_item,
-        #         )
-        #     )
-
-        #     instance.items.add(deadline_item)
 
         return instance
 
@@ -164,6 +158,9 @@ class DeadlineService:
         default_deadlines: List[DefaultDeadline] = DefaultDeadline.objects.safe_get(
             camp_year=camp_year, camp_types=camp_types
         )
+
+        if len(default_deadlines) == 0:
+            raise ValidationError("No deadlines found to link to visum")
 
         logger.debug(
             "Found %d DefaultDeadline instances with camp year %s and camp types %s",
