@@ -7,7 +7,7 @@
             "is_default": true,
             "index": 0,
             "label": "Basiskamp",
-            "explanation": "Basis kamptype, met categorieen die bij elk kamp herhaald worden"
+            "explanation": "Basis kamptype, met categorieën die bij elk kamp herhaald worden"
         }
     },
     {
@@ -17,7 +17,7 @@
             "is_base": true,
             "index": 1,
             "label": "Scouts en AKABE",
-            "explanation": "Categorieen voor gewone scouts- en akabegroepen"
+            "explanation": "Categorieën voor gewone scouts- en akabegroepen"
         }
     },
     {
@@ -27,7 +27,7 @@
             "is_base": true,
             "index": 2,
             "label": "Zeescouts",
-            "explanation": "Categorieen voor zeescoutsgroepen"
+            "explanation": "Categorieën voor zeescoutsgroepen"
         }
     },
     {
@@ -36,8 +36,8 @@
             "camp_type": "buitenlands_kamp",
             "is_base": false,
             "index": 3,
-            "label": "Buitenlandse kampen",
-            "explanation": "Categorieen voor buitenlandse kampen"
+            "label": "buitenlands kamp",
+            "explanation": "Categorieën voor buitenlandse kampen"
         }
     }
 ]
