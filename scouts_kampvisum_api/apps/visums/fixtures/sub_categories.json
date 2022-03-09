@@ -76,7 +76,8 @@
 					"basis"
 				]
 			],
-			"label": "Vervoer"
+			"label": "Vervoer",
+			"explanation": "Maak voor je vervoer een milieubewuste keuze. Ga met de trein, leg een bus in. Of stel een schema voor co-driving op voor de ouder van je leden.<br>Als je met de auto of bus reist, ga dan zeker na of er lage emissiezones zijn op de plaatsen waar je zal rondrijden."
 		}
 	},
 	{
@@ -140,9 +141,7 @@
 					"basis"
 				]
 			],
-			"label": "Verzekeringen",
-			"explanation": "Info over verzekeringen",
-			"link": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/waarvoor-ben-je-verzekerd"
+			"label": "Verzekeringen"
 		}
 	},
 	{
@@ -238,7 +237,7 @@
 					"basis"
 				]
 			],
-			"label": "Fourage"
+			"label": "Foerage"
 		}
 	},
 	{

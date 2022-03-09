@@ -14,7 +14,8 @@
                 "DurationCheck"
             ],
             "is_multiple": true,
-            "label": "Start- en einddatum voor het ledenkamp"
+            "label": "Start- en einddatum voor het ledenkamp",
+			"explanation": "• Jullie zijn niet de enigen die elke zomer op kamp gaan. Begin tijdig aan de zoektocht naar een kampterrein. De drukste kampperiode is van 11 juli tot 10 augustus. Plan je je kamp buiten deze periode, dan heb je meer keuze in mogelijke bestemmingen.  <br> • Laat de ouders van je leden liefst zo snel mogelijk de kampdata weten. Zo kunnen zij zelf ook hun vakantie plannen."
         }
     },
     {
@@ -65,7 +66,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Voor- en nakamp geregeld ?"
+            "label": "Voor- en nakamp geregeld ?",
+			"explanation": "Ook je voor- en nakamp moet voorbereid zijn. Welke voorbereidingen ga je treffen? Welke geplande tocht ga je verkennen? Wat moet er nog allemaal gebeuren op nakamp?"
         }
     },
     {
@@ -82,7 +84,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Regenplanning opgesteld ?"
+            "label": "Regenplanning opgesteld ?",
+			"explanation": "Door aanhoudende regen kan je dagprogramma letterlijk in het water vallen. Maar dat hoeft de pret niet te bederven. Zorg dat je activiteiten achter de hand hebt voor deze situatie. Neem gezelschapspelletjes mee en lijst wat spellen op die je binnen of in de tent kan doen. Inspiratie kan je vinden in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br> Vergeet niet dat iedereen goed beschermd moet zijn tegen de regen en droge kleren moet kunnen dragen."
         }
     },
     {
@@ -99,7 +102,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Hitteplanning opgemaakt ?"
+            "label": "Hitteplanning opgemaakt ?",
+			"explanation": "Hitte kan een boosdoener zijn op kamp. Bij 30°C worden mensen traag en sloom. Zorg al zeker dat iedereen genoeg water drinkt. Je activiteiten doe je beter in de schaduw of binnen. Of zoek wat verfrissing in een beek of een plonsbadje. Let ook hier op met directe zon. Je kan ook een siësta houden op het warmst van de dag. <br> Inspiratie voor (binnen-) spelen vind je in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br>Vergeet niet dat iedereen goed beschermd moet zijn tegen zijn tegen de zon. Iedereen smeert zich in met zonnecrème (spf 50) en draagt een hoedje of pet."
         }
     },
     {
@@ -116,7 +120,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Totemisatie gepland ?"
+            "label": "Totemisatie gepland ?",
+			"explanation": "Bij het totemiseren spreek je uit wat je als groep in iemand waardeert. Je benoemt de eigenschappen van een lid die je als je groep nodig hebt. Een goede totemisatie daagt je leden uit om stil te staan bij zichzelf en om op een prikkelende manier grenzen af te tasten. <br> Een totemisatie mag niet ontsporen in een machtsspel, laat staan dat er plaats is voor vernedering. De totemisatie moet de sociale samenhang in de groep in de kijker zetten en gaat uit van respect voor elkaar. Een totem is iets om je leven lang fier op te zijn. <br> Alles over totemisatie vind je in <a href='https://www.hopper.be/nl/dr000160' target='_blank'>de totemmap</a>, die te koop is in de Hopper Winkel, en in de totemapp. In de <a href='https://www.scoutsengidsenvlaanderen.be/totemzoeker' target='_blank'>totemzoeker</a> vind je de betekenis van totemnamen, of kan je op eigenschappen een gepaste totem zoeken. "
         }
     },
     {
@@ -133,7 +138,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Nachtspel planning ok ?"
+            "label": "Nachtspel planning ok ?",
+			"explanation": "Kampavonden zijn unieke gelegenheden om kinderen en jongeren vertrouwd te maken met het duister. <br> Het is niet de bedoeling dat het duister gebruikt wordt om angstaanjagende nachtspelen en activiteiten te organiseren. Het donker is al spannend genoeg. Je hebt hiervoor geen ontvoeringen of schriktochten nodig. <br> Wandelen in een donker bos, buskestamp bij maanlicht, dicht bijeen of ver uit elkaar genieten van de sterrenhemel… dat is het soort spanning dat deugd doet. <br><br> Vergeet niet: <br> • Nachtlawaai is in België wettelijk verboden tussen 22 een 7 uur.<br> • Voldoende nachtrust is voor leden én leiding een must voor een geslaagd kamp.<br> • Droppings zijn enkel ’s avonds toegelaten (niet ’s nachts!) en leden moeten minstens per 2 samenlopen via enkel onverharde wegen."
         }
     },
     {
@@ -185,7 +191,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Evenwichtig menu"
+            "label": "Evenwichtig menu",
+			"explanation": "Stel een evenwichtig en gevarieerd menu samen. Houd hierbij rekening met leden die een specifiek dieet volgen omwille van allergieën, intoleranties of persoonlijke overtuigingen. Deze informatie vind je terug in de individuele steekkaart van je leden."
         }
     },
     {
@@ -256,7 +263,7 @@
             ],
             "is_multiple": true,
             "label": "Gegevens kampplaats en verhuurder",
-            "explanation": "Heb je al eens nagedacht over een internationale uitwisseling? Op <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/buitenlands-kamp/voorbereiding-van-je-buitenlands-kamp/uitwisseling'>deze pagina</a> vind je alle info."
+            "explanation": "Geef hier de locatie van je kampterrein in. <br> Ga je op trekkamp? Vul dan elke locatie in met bijhorende data."
         }
     },
     {
@@ -274,7 +281,7 @@
                 "SimpleCheck"
             ],
             "label": "Attest water",
-            "explanation": "Water dat niet uit de kraan of aangekochte flessen komt (bronwater, regenputten, ...) moet gecontroleerd worden. De eigenaar moet hier zelf een attest voor aanvragen. Het is ook zeer belangrijk om na te gaan waarvoor de waterslangen nog gebruikt worden. Als een boer bijvoorbeeld door het jaar zijn sproeistoffen door deze slangen jaagt, spreekt het voor zich dat die niet voor drinkwater geschikt zijn, behalve indien deze chemisch ontsmet zijn. Vermijd ook stilstaand water (bv. wanneer de waterslang de hele dag in de zon ligt)."
+            "explanation": "• Water dat niet uit de kraan of aangekochte flessen komt, moet gecontroleerd worden. Hiervoor moet de eigenaar zelf een attest aanvragen. Info over de bevoegde instanties in Vlaanderen en Wallonië kan je vinden op <a href='https://www.opkamp.be/voedselveiligheid' target='_blank'>opkamp.be</a>. <br> • Is het water om te drinken, koken, tandenpoetsen, …? Gebruik altijd stromend water. In stilstaand water ontstaan snel ziektekiemen."
         }
     },
     {
@@ -292,7 +299,7 @@
                 "SimpleCheck"
             ],
             "label": "HUDO, chemische toiletten, afvalzakken",
-            "explanation": "In Vlaanderen en Wallonië bestaat er geen overkoepelende reglementering rond het graven van HUDO’s, maar verschillende gemeentebesturen en/of eigenaars van kampeerweides verbieden het wel. Als je een HUDO graaft, tracht dit dan zo ecologisch mogelijk te doen. Belangrijk is dat je de HUDO minstens op een afstand van 70 meter van beken en andere watertjes uitgraaft. Voorzie een vuilniszak voor maandverband e.a. In de Oostkantons mogen er geen putten gegraven worden voor HUDO’s. Dat wil zeggen dat je verplicht bent om op een kampeerweide gebruik te maken van chemische toiletten. Check vooraf bij de verhuurder van de kampeerweide of hij chemische toiletten voorziet, zoniet zal je er zelf voor moeten zorgen. Ook GFT-putten (groente-, fruit- en tuinafval) zijn verboden. Gebruik daarvoor de gereglementeerde afvalzakken of de composthoop van de kampuitbater. www.opkamp.be > regelgeving > hudo"
+            "explanation": "Graaf geen hudo in drinkwaterwinningsgebieden. Soms wordt zo'n gebied aangegeven met een verkeersbord, maar niet altijd. Vraag tijdig na bij de gemeente en de boswachter of jullie kampeerweide in een drinkwaterwinningsgebied ligt of niet. <br> Graaf een hudo op een afstand van minstens 50 meter van beken en andere watertjes. <br> Giet geen chloorproducten of bleekwater in een hudo. Hou het bij een beetje zand na elk gebruik. 's Avonds kan je nog een extra laagje zand in de put gooien. Maak de hudo voldoende diep. <br> Meer info vind je op de website van de Vlaamse Overheid <a href='https://www.opkamp.be/waar-wel-waar-niet' target='_blank'>opkamp.be</a>."
         }
     },
     {
@@ -310,7 +317,7 @@
                 "SimpleCheck"
             ],
             "label": "Machtigingen vuur maken",
-            "explanation": "In Vlaanderen mag je geen vuur maken op minder dan 25 meter van huizen, bossen, heide, boomgaarden, hagen, graan en stro. Voor een kampvuur kan je wel een uitzondering krijgen, maar dan moet je minstens 35 dagen voor je kamp een machtiging aanvragen bij het Agentschap voor Natuur en Bos. De Waalse regelgeving voorziet geen machtiging als je korter bij het bos een vuur wil maken. Informeer je ook steeds over de reglementering van je kampgemeente; deze kan strenger zijn dan de 25-meterregel (wat vaak het geval is in de Oostkantons). Ook rook verspreiden over de openbare weg is verboden."
+            "explanation": "Vuur is gevaarlijk en daarom mag het niet overal. Neem vooraf contact op met de eigenaar van je kampterrein, de plaatselijke gemeente en de brandweer, om zeker te zijn wat wel en niet mag. Meer info vind je op de <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/voorbereiding-van-je-kamp-weekend/waar-mag-je-vuur-maken' target='_blank'>website</a>."
         }
     },
     {
@@ -344,7 +351,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Winkel in de buurt"
+            "label": "Winkel in de buurt",
+			"explanation": "Zoek op welke plaatselijke winkels er zijn. Voor grote bestellingen plaats je best reservaties, zo is er genoeg voor iedereen. <br> Tip: Plaatselijke handelaars zoals bakkers en slagers geven vaak korting op bestellingen van jeugdbewegingen. Vraag hier zeker naar."
         }
     },
     {
@@ -379,7 +387,8 @@
                 "FileUploadCheck"
             ],
             "is_multiple": true,
-            "label": "Laad hier je contract op"
+            "label": "Laad hier je contract op",
+			"explanation": "• Stelt de eigenaar zelf een overeenkomst voor? Kijk dan na of deze alle elementen van onze overeenkomst bevat. Is dit niet het geval, vraag dan om een aanvullende verklaring op te stellen. <br> • Ga je op trekkamp? Vul dan voor elke locatie een apart contract in."
         }
     },
     {
@@ -465,8 +474,7 @@
                 "FileUploadCheck"
             ],
             "is_multiple": true,
-            "label": "Laad hier je vervoersplanning op",
-            "explanation": "Als je met de auto of bus reist, ga dan zeker na of er lage emissiezones zijn op de plaatsen waar je zal rondrijden."
+            "label": "Laad hier je vervoersplanning op"
         }
     },
     {
@@ -484,7 +492,7 @@
                 "SimpleCheck"
             ],
             "label": "Materiaal nagekeken ?",
-            "explanation": "Zoek op hoe stopcontacten er ter plekke uitzien, welke type gasflessen beschikbaar zijn, of afstanden in mijl of kilometer aangegeven worden,…"
+            "explanation": "Materiaal, dat gaat van spel- en knutselmateriaal tot keukenmateriaal en tenten. <br> Voor tenten kan je terecht op de website van het ULDK (Uitleendienst Kampeermateriaal van de Vlaamse Overheid). Vanaf 1 oktober kan je een aanvraagformulier invullen voor de komende zomer. In de loop van maart krijg je dan een antwoord. Lopen de tenten schade op? Neem dan contact op met de uitleendienst (tel. 02 251 69 43). <br> Geen tenten van het ULDK? Vraag na bij jeugdbewegingen in de buurt of zij materiaal uitlenen. <br> Wil je meer kans op voldoende tenten? De drukste kampperiode is van 11 juli tot 10 augustus, plan je kamp buiten deze periode."
         }
     },
     {
@@ -536,7 +544,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Duidelijk aanspreekpunt voor de ouders"
+            "label": "Duidelijk aanspreekpunt voor de ouders",
+            "explanation": "Het is handig om binnen de leiding 1 iemand aan te duiden die het aanspreekpunt is voor de ouders. Zo voorkom je onbedoelde tegenstrijdige informatie."
         }
     },
     {
@@ -553,7 +562,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Ouders zijn voldoende geïnformeerd"
+            "label": "Ouders zijn voldoende geïnformeerd",
+            "explanation": "Zijn de ouders voldoende geïnformeerd over hoe het kamp eruitziet? Dit kan in een kampbrief of een brochure. Of laat je creativiteit los en ga voor een ongeziene vorm in jullie groep."
         }
     },
     {
@@ -639,7 +649,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Afspraken: roken"
+            "label": "Afspraken: roken",
+            "explanation": "De regels rond roken in de scouts vind je <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/alcohol-en-drugs/wetgeving-regels-en-richtlijnen' target='_blank'>hier</a>."
         }
     },
     {
@@ -674,7 +685,7 @@
                 "SimpleCheck"
             ],
             "label": "Afspraken: alcohol- en BOB-regeling",
-            "explanation": "Elk Europees land heeft regels en sociale normen omtrent alcohol en het gebruik ervan binnen de jeugdbewegingen. Informeer je hierover en pas je alcoholbeleid aan aan de lokale context. Check <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/buitenlands-kamp/regels-over-alcohol-europa'>hier</a> de regels per land."
+            "explanation": "Kijk zeker de regels na rond alcohol op kamp op de <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/alcohol-en-drugs/wetgeving-regels-en-richtlijnen' target='_blank'>website</a>. Ga je op kamp naar het buitenland? Vind dan <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/buitenlands-kamp/regels-over-alcohol-europa' target='_blank'>hier</a> de regels per land in de EU."
         }
     },
     {
@@ -691,7 +702,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Zijn ouders op de hoogte van de afspraken ?"
+            "label": "Zijn de ouders op de hoogte van de afspraken ?",
+            "explanation": "Het getuigt van een goed beleid als je de ouders inlicht over je drank- en drugsbeleid op kamp. Zeker bij de oudste groepen, waar leden mogen drinken en roken."
         }
     },
     {
@@ -743,7 +755,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Alle leden en leiding verzekerd"
+            "label": "Alle leden en leiding verzekerd",
+            "explanation": "Alle leden van Scouts en Gidsen Vlaanderen (leden en leiding) zijn door de organisatie verzekerd tijdens en op weg naar scoutsactiviteiten overal ter wereld. Als iedereen op je kamp ingeschreven is bij de scouts is dit dus al helemaal in orde! <br> Wil je toch meer info? Die vind je op de <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/waarvoor-ben-je-verzekerd' target='_blank'>website</a>."
         }
     },
     {
@@ -760,7 +773,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Alle niet-leden (fouriers, bezoekers) verzekerd"
+            "label": "Alle niet-leden (fouriers, bezoekers) verzekerd",
+            "explanation": "Voor niet-leden van Scouts en Gidsen Vlaanderen kan je <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/tijdelijke-verzekering-niet-leden' target='_blank'>hier</a> een tijdelijkz verzekering aanvragen."
         }
     },
     {
@@ -777,7 +791,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Alle voertuigen verzekerd"
+            "label": "Alle voertuigen verzekerd",
+			"explanation": "Wil je een auto verzekeren voor jullie weekend of kamp? Dat kan <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/autoverzekering.' target='_blank'>zo</a>."
         }
     },
     {
@@ -794,7 +809,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Alle materiaal verzekerd"
+            "label": "Alle materiaal verzekerd",
+			"explanation": "Kies voor een <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/materiaalverzekering' target='_blank'>materiaalverzekering</a> om tenten, groeps- of persoonlijk materiaal (fiets, gsm, laptop, radio...) te verzekeren."
         }
     },
     {
@@ -938,7 +954,7 @@
                 "SimpleCheck"
             ],
             "label": "EHBO-koffer volledig samengesteld",
-            "link": "https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer"
+			"explanation": "Schrammen na het bosspel, blaren na de tocht…  Soms moet je kleine verwondingen kunnen verzorgen. Maar wat heb je daarvoor nodig? Vind <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer' target='_blank'>hier</a> wat er allemaal in je EHBO-koffer moet."
         }
     },
     {
@@ -991,7 +1007,7 @@
                 "SimpleCheck"
             ],
             "label": "Reisadvies en lokale regels",
-            "explanation": "Op de <a href='https://diplomatie.belgium.be'>website</a> van diplomatie België vind je over elk land de meest recente informatie terug."
+            "explanation": "Op de <a href='https://diplomatie.belgium.be' target='_blank'>website</a> van Diplomatie België vind je over elk land de meest recente informatie terug."
         }
     },
     {
@@ -1045,7 +1061,7 @@
                 "SimpleCheck"
             ],
             "label": "Gezondheid en medicatie",
-            "explanation": "Ga na of medicatie die je wil meenemen ook toegelaten is in het land van bestemming. Verder kan je via de handige website <a href='https://www.wanda.be/nl/'>Wanda</a> ook bekijken welke vaccinaties verplicht of aangeraden zijn in het land waar je naartoe gaat."
+            "explanation": "Ga na of medicatie die je wil meenemen ook toegelaten is in het land van bestemming. Verder kan je via de handige website <a href='https://www.wanda.be/nl/' target='_blank'>Wanda</a> ook bekijken welke vaccinaties verplicht of aangeraden zijn in het land waar je naartoe gaat."
         }
     },
     {
@@ -1080,7 +1096,8 @@
                 "ParticipantResponsibleCheck"
             ],
             "change_handler": "change_camp_responsible",
-            "label": "Contactgegevens kampverantwoordelijke"
+            "label": "Contactgegevens kampverantwoordelijke",
+            "explanation": "De kampverantwoordelijke is iemand van de leidingsploeg die als verantwoordelijke het kamp ‘trekt’."
         }
     },
     {
@@ -1114,7 +1131,8 @@
             "check_type": [
                 "ParticipantAdultCheck"
             ],
-            "label": "21-jarige verantwoordelijke"
+            "label": "21-jarige die gedurende heel het kamp aanwezig is",
+            "explanation": "Op ieder kamp moet ook een eindverantwoordelijke aanwezig zijn, die het hele kamp aanwezig is. De kampverantwoordelijke moet minstens 21 jaar, of in het lopend werkjaar 21 jaar worden. Dit mag ook een groepsleider zijn die mee is op het kamp, of als je niemand vindt binnen de leiding, een foerier."
         }
     },
     {
@@ -1217,7 +1235,7 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Voldoende fouriers"
+            "label": "Voldoende foeriers"
         }
     },
     {
@@ -1235,7 +1253,7 @@
                 "ParticipantCookCheck"
             ],
             "is_multiple": true,
-            "label": "Lijst van fourage"
+            "label": "Lijst van foerage"
         }
     },
     {
@@ -1270,7 +1288,7 @@
                 "SimpleCheck"
             ],
             "label": "Individuele steekkaarten up-to-date",
-            "explanation": "Tip: Laat de individuele steekkaart in een andere taal invullen, zodat lokale dokters er iets aan hebben. Je vindt de sjablonen <a href='https://oudesite.scoutsengidsenvlaanderen.be/publicatie/individuele-steekkaart'>hier</a>."
+            "explanation": "De individuele steekkaart is een uitgebreide medische fiche. Zo wil Scouts en Gidsen Vlaanderen leiding helpen om hun leden veilig en persoonlijk te begeleiden. <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/individuele-steekkaart' target='_blank'>Ontdek</a> er meer over."
         }
     },
     {
@@ -1287,7 +1305,7 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Copy identiteitskaarten"
+            "label": "Kopie identiteitskaarten"
         }
     },
     {
@@ -1356,7 +1374,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Evenwichtig begroting"
+            "label": "Evenwichtige begroting",
+            "explanation": "• Stel een vaste financiële verantwoordelijke aan, die op kamp dagelijks het kasboek bijhoudt en alle uitgaven noteert. Dit mag ook een foerier zijn. <br> • Vaak kan je korting vragen aan vervoersmaatschappijen en lokale bakkers, slagers en winkels. <br> • Ga na of er in het jeugdbeleidsplan van je gemeente geld voorzien is voor kampen. Informeer hiervoor bij de jeugddienst."
         }
     },
     {
@@ -1373,7 +1392,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Afspraken betaling leiding"
+            "label": "Afspraken betaling leiding",
+            "explanation": "Als je ervoor kiest om met de leiding een deel van de kampprijs niet te betalen heeft dit grote gevolgen op de kampprijs per deelnemer en je begroting."
         }
     },
     {
