@@ -14,7 +14,7 @@ from apps.deadlines.serializers import (
     VisumDeadlineSerializer,
     DeadlineFlagSerializer,
 )
-from apps.deadlines.services import DeadlineService
+from apps.deadlines.services import DeadlineService, DeadlineFlagService
 
 
 # LOGGING
@@ -34,6 +34,7 @@ class DeadlineViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.DjangoFilterBackend]
 
     deadline_service = DeadlineService()
+    deadline_flag_service = DeadlineFlagService()
 
     @swagger_auto_schema(
         request_body=DeadlineInputSerializer,
@@ -138,7 +139,7 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         request_body=DeadlineFlagSerializer,
         responses={status.HTTP_200_OK: VisumDeadlineSerializer},
     )
-    def partial_update_deadline_flag(self, request, deadline_flag_id):
+    def partial_update_deadline_flag(self, request, deadline_id, deadline_flag_id):
         logger.debug("DEADLINE FLAG UPDATE REQUEST DATA: %s", request.data)
         instance: DeadlineFlag = DeadlineFlag.objects.safe_get(
             id=deadline_flag_id, raise_error=True
@@ -155,12 +156,12 @@ class DeadlineViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("DEADLINE FLAG UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance: DeadlineFlag = self.deadline_service.update_deadline_flag(
+        instance: DeadlineFlag = self.deadline_flag_service.update_deadline_flag(
             request, instance, **validated_data
         )
 
         instance: Deadline = self.deadline_service.get_visum_deadline(
-            deadline=instance.deadline
+            deadline=deadline_id
         )
         serializer = VisumDeadlineSerializer(instance, context={"request": request})
 

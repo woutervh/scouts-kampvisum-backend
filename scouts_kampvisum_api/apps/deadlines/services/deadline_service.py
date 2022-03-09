@@ -240,4 +240,7 @@ class DeadlineService:
         return Deadline.objects.filter(visum=visum)
 
     def get_visum_deadline(self, deadline: Deadline) -> Deadline:
-        return Deadline.objects.get(id=deadline.id)
+        if deadline and isinstance(deadline, Deadline):
+            return Deadline.objects.get(id=deadline.id)
+
+        return Deadline.objects.get(id=deadline)
