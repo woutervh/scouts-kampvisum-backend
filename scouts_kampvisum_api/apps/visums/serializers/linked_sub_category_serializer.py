@@ -31,13 +31,7 @@ class LinkedSubCategorySerializer(serializers.ModelSerializer):
         return super().to_internal_value(data)
 
     def to_representation(self, obj: LinkedSubCategory) -> dict:
-        # logger.debug("LINKED CATEGORY TO_REPRESENTATION: %s", obj)
-
         data = super().to_representation(obj)
-
-        # logger.debug("LINKED CATEGORY TO_REPRESENTATION: %s", obj)
-
-        # data["state"] = obj.is_checked()
 
         data["state"] = CheckState.CHECKED
         for check in data.get("checks", []):

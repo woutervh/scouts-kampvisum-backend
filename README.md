@@ -218,6 +218,8 @@ In frontend repo: `/src/locales/nl.json`
      - **`is_member`** (**OPTIONAL**, default: false)
        A remainder from a previous implementation iteration, but kept on the model to ease the integration of possible future changes.
        This was used to limit the types of people that were allowed to be set on the participant check. Currently useless, because all different participant types are captured in their proper check type.
+     - **`is_required_for_validation`** (**OPTIONAL**, default: true)
+       A boolean that determines if the check needs to have a value set to validate as CheckState.CHECKED.
 
 3. Check types  
    Defined in file `apps/visums/fixtures/check_types.json`

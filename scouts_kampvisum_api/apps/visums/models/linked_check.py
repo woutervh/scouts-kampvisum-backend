@@ -51,6 +51,9 @@ class LinkedCheck(AuditedArchiveableBaseModel):
             return value
         return True
 
+    def is_required_for_validation(self) -> bool:
+        return self.parent.is_required_for_validation
+
     def should_be_checked(self) -> bool:
         check_type: CheckType = self.parent.check_type
 

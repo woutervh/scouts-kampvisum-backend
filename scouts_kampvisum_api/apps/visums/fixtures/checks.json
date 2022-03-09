@@ -15,7 +15,7 @@
             ],
             "is_multiple": true,
             "label": "Start- en einddatum voor het ledenkamp",
-			"explanation": "• Jullie zijn niet de enigen die elke zomer op kamp gaan. Begin tijdig aan de zoektocht naar een kampterrein. De drukste kampperiode is van 11 juli tot 10 augustus. Plan je je kamp buiten deze periode, dan heb je meer keuze in mogelijke bestemmingen.  <br> • Laat de ouders van je leden liefst zo snel mogelijk de kampdata weten. Zo kunnen zij zelf ook hun vakantie plannen."
+            "explanation": "• Jullie zijn niet de enigen die elke zomer op kamp gaan. Begin tijdig aan de zoektocht naar een kampterrein. De drukste kampperiode is van 11 juli tot 10 augustus. Plan je je kamp buiten deze periode, dan heb je meer keuze in mogelijke bestemmingen.  <br> • Laat de ouders van je leden liefst zo snel mogelijk de kampdata weten. Zo kunnen zij zelf ook hun vakantie plannen."
         }
     },
     {
@@ -67,7 +67,7 @@
                 "SimpleCheck"
             ],
             "label": "Voor- en nakamp geregeld ?",
-			"explanation": "Ook je voor- en nakamp moet voorbereid zijn. Welke voorbereidingen ga je treffen? Welke geplande tocht ga je verkennen? Wat moet er nog allemaal gebeuren op nakamp?"
+            "explanation": "Ook je voor- en nakamp moet voorbereid zijn. Welke voorbereidingen ga je treffen? Welke geplande tocht ga je verkennen? Wat moet er nog allemaal gebeuren op nakamp?"
         }
     },
     {
@@ -85,7 +85,7 @@
                 "SimpleCheck"
             ],
             "label": "Regenplanning opgesteld ?",
-			"explanation": "Door aanhoudende regen kan je dagprogramma letterlijk in het water vallen. Maar dat hoeft de pret niet te bederven. Zorg dat je activiteiten achter de hand hebt voor deze situatie. Neem gezelschapspelletjes mee en lijst wat spellen op die je binnen of in de tent kan doen. Inspiratie kan je vinden in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br> Vergeet niet dat iedereen goed beschermd moet zijn tegen de regen en droge kleren moet kunnen dragen."
+            "explanation": "Door aanhoudende regen kan je dagprogramma letterlijk in het water vallen. Maar dat hoeft de pret niet te bederven. Zorg dat je activiteiten achter de hand hebt voor deze situatie. Neem gezelschapspelletjes mee en lijst wat spellen op die je binnen of in de tent kan doen. Inspiratie kan je vinden in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br> Vergeet niet dat iedereen goed beschermd moet zijn tegen de regen en droge kleren moet kunnen dragen."
         }
     },
     {
@@ -103,7 +103,7 @@
                 "SimpleCheck"
             ],
             "label": "Hitteplanning opgemaakt ?",
-			"explanation": "Hitte kan een boosdoener zijn op kamp. Bij 30°C worden mensen traag en sloom. Zorg al zeker dat iedereen genoeg water drinkt. Je activiteiten doe je beter in de schaduw of binnen. Of zoek wat verfrissing in een beek of een plonsbadje. Let ook hier op met directe zon. Je kan ook een siësta houden op het warmst van de dag. <br> Inspiratie voor (binnen-) spelen vind je in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br>Vergeet niet dat iedereen goed beschermd moet zijn tegen zijn tegen de zon. Iedereen smeert zich in met zonnecrème (spf 50) en draagt een hoedje of pet."
+            "explanation": "Hitte kan een boosdoener zijn op kamp. Bij 30°C worden mensen traag en sloom. Zorg al zeker dat iedereen genoeg water drinkt. Je activiteiten doe je beter in de schaduw of binnen. Of zoek wat verfrissing in een beek of een plonsbadje. Let ook hier op met directe zon. Je kan ook een siësta houden op het warmst van de dag. <br> Inspiratie voor (binnen-) spelen vind je in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br>Vergeet niet dat iedereen goed beschermd moet zijn tegen zijn tegen de zon. Iedereen smeert zich in met zonnecrème (spf 50) en draagt een hoedje of pet."
         }
     },
     {
@@ -121,7 +121,7 @@
                 "SimpleCheck"
             ],
             "label": "Totemisatie gepland ?",
-			"explanation": "Bij het totemiseren spreek je uit wat je als groep in iemand waardeert. Je benoemt de eigenschappen van een lid die je als je groep nodig hebt. Een goede totemisatie daagt je leden uit om stil te staan bij zichzelf en om op een prikkelende manier grenzen af te tasten. <br> Een totemisatie mag niet ontsporen in een machtsspel, laat staan dat er plaats is voor vernedering. De totemisatie moet de sociale samenhang in de groep in de kijker zetten en gaat uit van respect voor elkaar. Een totem is iets om je leven lang fier op te zijn. <br> Alles over totemisatie vind je in <a href='https://www.hopper.be/nl/dr000160' target='_blank'>de totemmap</a>, die te koop is in de Hopper Winkel, en in de totemapp. In de <a href='https://www.scoutsengidsenvlaanderen.be/totemzoeker' target='_blank'>totemzoeker</a> vind je de betekenis van totemnamen, of kan je op eigenschappen een gepaste totem zoeken. "
+            "explanation": "Bij het totemiseren spreek je uit wat je als groep in iemand waardeert. Je benoemt de eigenschappen van een lid die je als je groep nodig hebt. Een goede totemisatie daagt je leden uit om stil te staan bij zichzelf en om op een prikkelende manier grenzen af te tasten. <br> Een totemisatie mag niet ontsporen in een machtsspel, laat staan dat er plaats is voor vernedering. De totemisatie moet de sociale samenhang in de groep in de kijker zetten en gaat uit van respect voor elkaar. Een totem is iets om je leven lang fier op te zijn. <br> Alles over totemisatie vind je in <a href='https://www.hopper.be/nl/dr000160' target='_blank'>de totemmap</a>, die te koop is in de Hopper Winkel, en in de totemapp. In de <a href='https://www.scoutsengidsenvlaanderen.be/totemzoeker' target='_blank'>totemzoeker</a> vind je de betekenis van totemnamen, of kan je op eigenschappen een gepaste totem zoeken. "
         }
     },
     {
@@ -139,7 +139,7 @@
                 "SimpleCheck"
             ],
             "label": "Nachtspel planning ok ?",
-			"explanation": "Kampavonden zijn unieke gelegenheden om kinderen en jongeren vertrouwd te maken met het duister. <br> Het is niet de bedoeling dat het duister gebruikt wordt om angstaanjagende nachtspelen en activiteiten te organiseren. Het donker is al spannend genoeg. Je hebt hiervoor geen ontvoeringen of schriktochten nodig. <br> Wandelen in een donker bos, buskestamp bij maanlicht, dicht bijeen of ver uit elkaar genieten van de sterrenhemel… dat is het soort spanning dat deugd doet. <br><br> Vergeet niet: <br> • Nachtlawaai is in België wettelijk verboden tussen 22 een 7 uur.<br> • Voldoende nachtrust is voor leden én leiding een must voor een geslaagd kamp.<br> • Droppings zijn enkel ’s avonds toegelaten (niet ’s nachts!) en leden moeten minstens per 2 samenlopen via enkel onverharde wegen."
+            "explanation": "Kampavonden zijn unieke gelegenheden om kinderen en jongeren vertrouwd te maken met het duister. <br> Het is niet de bedoeling dat het duister gebruikt wordt om angstaanjagende nachtspelen en activiteiten te organiseren. Het donker is al spannend genoeg. Je hebt hiervoor geen ontvoeringen of schriktochten nodig. <br> Wandelen in een donker bos, buskestamp bij maanlicht, dicht bijeen of ver uit elkaar genieten van de sterrenhemel… dat is het soort spanning dat deugd doet. <br><br> Vergeet niet: <br> • Nachtlawaai is in België wettelijk verboden tussen 22 een 7 uur.<br> • Voldoende nachtrust is voor leden én leiding een must voor een geslaagd kamp.<br> • Droppings zijn enkel ’s avonds toegelaten (niet ’s nachts!) en leden moeten minstens per 2 samenlopen via enkel onverharde wegen."
         }
     },
     {
@@ -192,7 +192,7 @@
                 "SimpleCheck"
             ],
             "label": "Evenwichtig menu",
-			"explanation": "Stel een evenwichtig en gevarieerd menu samen. Houd hierbij rekening met leden die een specifiek dieet volgen omwille van allergieën, intoleranties of persoonlijke overtuigingen. Deze informatie vind je terug in de individuele steekkaart van je leden."
+            "explanation": "Stel een evenwichtig en gevarieerd menu samen. Houd hierbij rekening met leden die een specifiek dieet volgen omwille van allergieën, intoleranties of persoonlijke overtuigingen. Deze informatie vind je terug in de individuele steekkaart van je leden."
         }
     },
     {
@@ -352,7 +352,7 @@
                 "SimpleCheck"
             ],
             "label": "Winkel in de buurt",
-			"explanation": "Zoek op welke plaatselijke winkels er zijn. Voor grote bestellingen plaats je best reservaties, zo is er genoeg voor iedereen. <br> Tip: Plaatselijke handelaars zoals bakkers en slagers geven vaak korting op bestellingen van jeugdbewegingen. Vraag hier zeker naar."
+            "explanation": "Zoek op welke plaatselijke winkels er zijn. Voor grote bestellingen plaats je best reservaties, zo is er genoeg voor iedereen. <br> Tip: Plaatselijke handelaars zoals bakkers en slagers geven vaak korting op bestellingen van jeugdbewegingen. Vraag hier zeker naar."
         }
     },
     {
@@ -388,7 +388,7 @@
             ],
             "is_multiple": true,
             "label": "Laad hier je contract op",
-			"explanation": "• Stelt de eigenaar zelf een overeenkomst voor? Kijk dan na of deze alle elementen van onze overeenkomst bevat. Is dit niet het geval, vraag dan om een aanvullende verklaring op te stellen. <br> • Ga je op trekkamp? Vul dan voor elke locatie een apart contract in."
+            "explanation": "• Stelt de eigenaar zelf een overeenkomst voor? Kijk dan na of deze alle elementen van onze overeenkomst bevat. Is dit niet het geval, vraag dan om een aanvullende verklaring op te stellen. <br> • Ga je op trekkamp? Vul dan voor elke locatie een apart contract in."
         }
     },
     {
@@ -580,6 +580,7 @@
             "check_type": [
                 "ParticipantCheck"
             ],
+            "is_required_for_validation": false,
             "label": "Naam aanspreekpunt"
         }
     },
@@ -792,7 +793,7 @@
                 "SimpleCheck"
             ],
             "label": "Alle voertuigen verzekerd",
-			"explanation": "Wil je een auto verzekeren voor jullie weekend of kamp? Dat kan <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/autoverzekering.' target='_blank'>zo</a>."
+            "explanation": "Wil je een auto verzekeren voor jullie weekend of kamp? Dat kan <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/autoverzekering.' target='_blank'>zo</a>."
         }
     },
     {
@@ -810,7 +811,7 @@
                 "SimpleCheck"
             ],
             "label": "Alle materiaal verzekerd",
-			"explanation": "Kies voor een <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/materiaalverzekering' target='_blank'>materiaalverzekering</a> om tenten, groeps- of persoonlijk materiaal (fiets, gsm, laptop, radio...) te verzekeren."
+            "explanation": "Kies voor een <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/materiaalverzekering' target='_blank'>materiaalverzekering</a> om tenten, groeps- of persoonlijk materiaal (fiets, gsm, laptop, radio...) te verzekeren."
         }
     },
     {
@@ -954,7 +955,7 @@
                 "SimpleCheck"
             ],
             "label": "EHBO-koffer volledig samengesteld",
-			"explanation": "Schrammen na het bosspel, blaren na de tocht…  Soms moet je kleine verwondingen kunnen verzorgen. Maar wat heb je daarvoor nodig? Vind <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer' target='_blank'>hier</a> wat er allemaal in je EHBO-koffer moet."
+            "explanation": "Schrammen na het bosspel, blaren na de tocht…  Soms moet je kleine verwondingen kunnen verzorgen. Maar wat heb je daarvoor nodig? Vind <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/ehbo/ehbo-koffer' target='_blank'>hier</a> wat er allemaal in je EHBO-koffer moet."
         }
     },
     {

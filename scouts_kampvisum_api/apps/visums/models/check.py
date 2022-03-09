@@ -30,6 +30,7 @@ class Check(
     name = RequiredCharField(max_length=64)
     is_multiple = models.BooleanField(default=False)
     is_member = models.BooleanField(default=False)
+    is_required_for_validation = models.BooleanField(default=True)
     sub_category = models.ForeignKey(
         SubCategory, related_name="checks", on_delete=models.CASCADE
     )

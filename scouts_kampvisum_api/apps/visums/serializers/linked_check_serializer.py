@@ -57,7 +57,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
     def get_value(self, obj: LinkedCheck):
         # logger.debug("Getting value for %s with id %s", type(obj).__name__, obj.id)
-        check = LinkedCheckService.get_value_type(obj)
+        check: LinkedCheck = LinkedCheckService.get_value_type(obj)
 
         if check.parent.check_type.is_simple_check():
             value = LinkedSimpleCheckSerializer.get_value(check)
@@ -90,7 +90,11 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
         else:
             value = check.value
 
-        self._state = CheckState.CHECKED if check.is_checked() else CheckState.UNCHECKED
+        self._state = (
+            CheckState.CHECKED
+            if check.is_checked() or not check.is_required_for_validation()
+            else CheckState.UNCHECKED
+        )
 
         return value
 
