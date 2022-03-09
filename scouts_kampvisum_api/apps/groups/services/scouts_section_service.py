@@ -15,7 +15,7 @@ from apps.groups.services import (
     ScoutsSectionNameService,
 )
 
-from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import AbstractScoutsGroup, ScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -181,23 +181,21 @@ class ScoutsSectionService:
         if not user:
             user: settings.AUTH_USER_MODEL = request.user
 
-        groups = user.scouts_groups
+        # groups = user.scouts_groups
+        groups: List[ScoutsGroup] = user.persisted_scouts_groups.all()
         created_sections = list()
 
         for group in groups:
-            logger.debug(
-                "Linking sections to GROUP: %s (%s)", group.group_admin_id, group.name
-            )
-
-            sections = ScoutsSection.objects.all().filter(
+            sections: List[ScoutsSection] = ScoutsSection.objects.all().filter(
                 group_group_admin_id=group.group_admin_id
             )
 
-            # @TODO update if necessary
-            logger.debug(
-                "Found %d SECTIONS to link to group %ss", sections.count(), group.name
-            )
             if sections.count() == 0:
+                logger.debug(
+                    "Linking sections to GROUP: %s (%s)",
+                    group.group_admin_id,
+                    group.name,
+                )
                 group_type = ScoutsGroupType.objects.get(group_type=group.type)
                 default_scouts_section_names: List[
                     DefaultScoutsSectionName
@@ -207,7 +205,11 @@ class ScoutsSectionService:
                     "Found %d default section NAMES", len(default_scouts_section_names)
                 )
                 for name in default_scouts_section_names:
-                    logger.debug("Linking section NAME: %s", name.name)
+                    logger.debug(
+                        "Linking DefaultSectionName %s to group %s",
+                        name.name,
+                        group.group_admin_id,
+                    )
                     created_sections.append(
                         self.section_create_or_update(
                             request=request,
@@ -217,5 +219,11 @@ class ScoutsSectionService:
                             hidden=name.name.hidden,
                         )
                     )
+            else:
+                logger.debug(
+                    "Found %d SECTIONS linked to to group %s",
+                    sections.count(),
+                    group.name,
+                )
 
         return created_sections
