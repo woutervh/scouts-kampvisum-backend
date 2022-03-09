@@ -196,7 +196,7 @@ class ScoutsSectionService:
                     group.group_admin_id,
                     group.name,
                 )
-                group_type = ScoutsGroupType.objects.get(group_type=group.type)
+                group_type = ScoutsGroupType.objects.get(group_type=group.group_type)
                 default_scouts_section_names: List[
                     DefaultScoutsSectionName
                 ] = self.default_section_name_service.load_for_type(request, group_type)
