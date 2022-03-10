@@ -14,8 +14,7 @@
                 "DurationCheck"
             ],
             "is_multiple": true,
-            "label": "Start- en einddatum voor het ledenkamp",
-            "explanation": "• Jullie zijn niet de enigen die elke zomer op kamp gaan. Begin tijdig aan de zoektocht naar een kampterrein. De drukste kampperiode is van 11 juli tot 10 augustus. Plan je je kamp buiten deze periode, dan heb je meer keuze in mogelijke bestemmingen.  <br> • Laat de ouders van je leden liefst zo snel mogelijk de kampdata weten. Zo kunnen zij zelf ook hun vakantie plannen."
+            "label": "Start- en einddatum voor het ledenkamp"
         }
     },
     {
@@ -775,7 +774,7 @@
                 "SimpleCheck"
             ],
             "label": "Alle niet-leden (fouriers, bezoekers) verzekerd",
-            "explanation": "Voor niet-leden van Scouts en Gidsen Vlaanderen kan je <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/tijdelijke-verzekering-niet-leden' target='_blank'>hier</a> een tijdelijkz verzekering aanvragen."
+            "explanation": "Voor niet-leden van Scouts en Gidsen Vlaanderen kan je <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/tijdelijke-verzekering-niet-leden' target='_blank'>hier</a> een tijdelijke verzekering aanvragen."
         }
     },
     {
