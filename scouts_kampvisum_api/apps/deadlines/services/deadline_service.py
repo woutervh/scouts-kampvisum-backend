@@ -79,7 +79,7 @@ class DeadlineService:
         instance.parent = default_deadline
         if not (visum and isinstance(visum, CampVisum)):
             visum = CampVisum.objects.safe_get(
-                id=fields.get("visum", {}).get("id", None)
+                id=fields.get("visum", {}).get("id", None), raise_error=True
             )
 
         logger.debug(
@@ -107,6 +107,11 @@ class DeadlineService:
                 instance.parent.name,
             )
 
+        logger.debug(
+            "Linking %d DeadlineItem instance(s) to deadline %s",
+            len(items),
+            instance.parent.name,
+        )
         for item in items:
             instance.items.add(item)
 
@@ -169,24 +174,15 @@ class DeadlineService:
             ",".join(camp_type.camp_type for camp_type in camp_types),
         )
         for default_deadline in default_deadlines:
-            self._link_deadline_to_visum(
+            logger.debug(
+                "Setting up Deadline %s (%s) for visum %s",
+                default_deadline.name,
+                default_deadline.id,
+                visum.id,
+            )
+            deadline: Deadline = self.create_or_update_deadline(
                 request=request, default_deadline=default_deadline, visum=visum
             )
-
-    def _link_deadline_to_visum(
-        self, request, default_deadline: DefaultDeadline, visum: CampVisum
-    ):
-        logger.debug(
-            "Setting up Deadline %s (%s) for visum %s",
-            default_deadline.name,
-            default_deadline.id,
-            visum.id,
-        )
-        deadline: Deadline = self.create_or_update_deadline(
-            request=request, default_deadline=default_deadline, visum=visum
-        )
-
-        return deadline
 
     def _link_sub_categories_to_deadline(
         self, default_deadline: DefaultDeadline, visum: CampVisum, deadline
