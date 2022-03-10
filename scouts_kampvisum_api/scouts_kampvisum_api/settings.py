@@ -90,9 +90,11 @@ LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
 # LOGGING_LEVEL = "API"
 # LOGGING_LEVEL = "TRACE"
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
+LOGGING_LEVEL_DB = "INFO"
 LOGGING = {
     "version": 1,
-    "disable_existing_loggers": False,
+    "disable_existing_loggers": True,
+    "incremental": False,
     "formatters": {
         "verbose": {
             "format": "%(asctime)s - %(levelname)-7s - %(name)-12s - %(message)s",
@@ -149,11 +151,11 @@ LOGGING = {
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
-        # "django.db.backends": {
-        #     "handlers": ["console"],
-        #     "level": LOGGING_LEVEL,
-        #     "propagate": False,
-        # },
+        "django.db.backends": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL_DB,
+            "propagate": False,
+        },
     },
 }
 

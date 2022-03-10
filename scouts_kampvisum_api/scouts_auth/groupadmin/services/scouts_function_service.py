@@ -53,12 +53,12 @@ class ScoutsFunctionService:
                     abstract_function=abstract_function,
                     abstract_group=abstract_group,
                 )
-            else:
-                logger.debug(
-                    "Scouts function already exists and has same end date (existing: %s - groupadmin: %s",
-                    scouts_function.end,
-                    abstract_function.end,
-                )
+            # else:
+            #     logger.debug(
+            #         "Scouts function already exists and has same end date (existing: %s - groupadmin: %s",
+            #         scouts_function.end,
+            #         abstract_function.end,
+            #     )
         else:
             scouts_function: ScoutsFunction = self.create_scouts_function(
                 created_by=user,

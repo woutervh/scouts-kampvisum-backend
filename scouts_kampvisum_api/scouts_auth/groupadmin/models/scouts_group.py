@@ -86,3 +86,11 @@ class ScoutsGroup(AuditedBaseModel):
         group.group_type = abstract_group.type
 
         return group
+
+    def equals_abstract_scouts_group(self, abstract_group: AbstractScoutsGroup):
+        return (
+            self.group_admin_id == abstract_group.group_admin_id
+            and self.number == abstract_group.number
+            and self.name == abstract_group.name
+            and self.group_type == abstract_group.type
+        )
