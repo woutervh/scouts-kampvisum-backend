@@ -7,12 +7,16 @@ class VisumSettings(SettingsHelper):
     @staticmethod
     def get_home():
         if SettingsHelper.is_acceptance():
-            return "https://kamp-acc.scoutsengidsenvlaanderen.be/kamp/"
+            return "https://kamp-acc.scoutsengidsenvlaanderen.be/kamp"
 
         if SettingsHelper.is_debug():
-            return "http://localhost:8040/kamp/"
+            return "http://localhost:8040/kamp"
 
         return "https://kamp.scoutsengidsenvlaanderen.be/kamp"
+
+    @staticmethod
+    def construct_visum_url(visum_id):
+        return "{}/{}".format(VisumSettings.get_home(), visum_id)
 
     @staticmethod
     def get_email_from():

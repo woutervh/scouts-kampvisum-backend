@@ -82,7 +82,7 @@ class InuitsVisumMailService(EmailService):
     def _prepare_dictionary_camp_registered(self, visum: CampVisum):
         return {
             "registrant__first_name": visum.created_by.first_name,
-            "visum_url": "{}/{}".format(VisumSettings.get_home(), visum.id),
+            "visum_url": VisumSettings.construct_visum_url(visum.id),
             "title_mail": "",
         }
 
