@@ -113,7 +113,7 @@ class CampViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
     def get_available_years(self, request, group_admin_id=None):
         camps = Camp.objects.filter(
-            sections__group_group_admin_id=group_admin_id
+            sections__group__group_admin_id=group_admin_id
         ).distinct()
         years = list()
 

@@ -187,6 +187,12 @@ class SignalHandler:
             user=user, signal=signal
         )
 
+        group_count: int = len(user.scouts_groups)
+        persisted_group_count: int = user.persisted_scouts_groups.count()
+        function_count: int = len(user.functions)
+        persisted_function_count: int = user.persisted_scouts_functions.count()
+        section_count: int = 0
+
         logger.debug(user.to_descriptive_string())
 
         return user

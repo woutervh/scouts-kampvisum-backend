@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 
 from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import RequiredCharField, OptionalCharField
 
 
 # LOGGING
@@ -64,10 +64,11 @@ class ScoutsGroup(AuditedBaseModel):
 
     objects = ScoutsGroupManager()
 
-    group_admin_id = OptionalCharField()
+    group_admin_id = RequiredCharField()
     number = OptionalCharField()
     name = OptionalCharField()
     group_type = OptionalCharField()
+    default_sections_loaded = models.BooleanField(default=False)
 
     class Meta:
         constraints = [

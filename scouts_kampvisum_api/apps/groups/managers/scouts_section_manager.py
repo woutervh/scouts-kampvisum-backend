@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 
+from scouts_auth.groupadmin.models import ScoutsGroup
+
 
 # LOGGING
 import logging
@@ -19,17 +21,24 @@ class ScoutsSectionManager(models.Manager):
     def get_queryset(self):
         return ScoutsSectionQuerySet(self.model, using=self._db)
 
-    def get_by_natural_key(self, group_group_admin_id):
+    def get_by_natural_key(self, group, name):
         logger.trace(
-            "GET BY NATURAL KEY %s: (group_admin_id: %s (%s))",
+            "GET BY NATURAL KEY %s: (group: %s (%s), name: %s (%s))",
             "ScoutsSection",
-            group_group_admin_id,
-            type(group_group_admin_id).__name__,
+            group,
+            type(group).__name__,
+            name,
+            type(name).__name__,
         )
-        return self.get(group_group_admin_id=group_group_admin_id)
+
+        if isinstance(group, ScoutsGroup):
+            return self.get(group=group, name=name)
+
+        return self.get(group__group_admin_id=group, name=name)
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        group = kwargs.get("group", None)
         group_group_admin_id = kwargs.get("group_group_admin_id", None)
         name = kwargs.get("name", None)
         raise_error = kwargs.get("raise_error", False)
@@ -40,18 +49,25 @@ class ScoutsSectionManager(models.Manager):
             except:
                 pass
 
-        if group_group_admin_id and name:
-            try:
-                return self.get_queryset().get(
-                    group_group_admin_id=group_group_admin_id, name=name
-                )
-            except:
-                pass
+        if name:
+            if group:
+                try:
+                    return self.get_queryset().get(group=group, name=name)
+                except:
+                    pass
+
+            if group_group_admin_id:
+                try:
+                    return self.get_queryset().get(
+                        group__group_admin_id=group_group_admin_id, name=name
+                    )
+                except:
+                    pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate ScoutsSection instance with the provided params: (pk: ({}), (group_group_admin_id: ({}), name ({})))".format(
-                    pk, group_group_admin_id, name
+                "Unable to locate ScoutsSection instance with the provided params: (pk: ({}), (group: ({}), name: ({})), (group_group_admin_id: ({}), name ({})))".format(
+                    pk, group, name, group_group_admin_id, name
                 )
             )
         return None

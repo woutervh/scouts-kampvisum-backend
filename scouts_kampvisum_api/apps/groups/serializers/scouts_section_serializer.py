@@ -6,6 +6,8 @@ from apps.groups.serializers import (
     ScoutsSectionNameSerializer,
 )
 
+from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
+
 
 # LOGGING
 import logging
@@ -20,6 +22,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
     """
 
     # group_type = ScoutsGroupTypeSerializer()
+    group = ScoutsGroupSerializer()
     name = ScoutsSectionNameSerializer()
     hidden = serializers.BooleanField(default=False)
 
@@ -32,6 +35,12 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
 
         if isinstance(data, str):
             return ScoutsSection.objects.safe_get(id=data, raise_error=True)
+
+        group = data.get("group", None)
+        group_group_admin_id = data.get("group_group_admin_id", None)
+
+        if not group and group_group_admin_id:
+            data["group"] = {"group_admin_id": group_group_admin_id}
 
         data = super().to_internal_value(data)
 

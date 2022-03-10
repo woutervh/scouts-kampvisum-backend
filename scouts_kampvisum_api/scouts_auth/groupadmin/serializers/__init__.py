@@ -26,5 +26,5 @@ from .value_objects import (
     AbstractScoutsMedicalFlashCardSerializer,
 )
 
-
+from .scouts_group_serializer import ScoutsGroupSerializer
 from .scouts_user_serializer import ScoutsUserSerializer

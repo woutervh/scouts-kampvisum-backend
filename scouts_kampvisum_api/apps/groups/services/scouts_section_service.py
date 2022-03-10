@@ -36,7 +36,7 @@ class ScoutsSectionService:
         self,
         request=None,
         user: settings.AUTH_USER_MODEL = None,
-        group_group_admin_id: str = None,
+        group: ScoutsGroup = None,
         name: ScoutsSectionName = None,
         hidden: bool = False,
     ) -> ScoutsSection:
@@ -46,40 +46,38 @@ class ScoutsSectionService:
         if not user:
             user = request.user
 
-        scouts_group = self.group_admin.get_group(
-            active_user=user, group_group_admin_id=group_group_admin_id
-        )
-        if not scouts_group:
-            raise ValidationError(
-                "Invalid group admin id {} for scouts group".format(
-                    group_group_admin_id
-                )
-            )
-        logger.debug(
-            "GROUP ('%s'), NAME ('%s'), HIDDEN: %s",
-            scouts_group.name,
-            name.name,
-            hidden,
-        )
-
-        name_instance = ScoutsSectionName.objects.safe_get(
-            id=name.id, name=name.name, gender=name.gender, age_group=name.age_group
-        )
+        # scouts_group = self.group_admin.get_group(
+        #     active_user=user, group_group_admin_id=group_group_admin_id
+        # )
+        # scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
+        #     group=group
+        # )
+        # if not group:
+        #     raise ValidationError(
+        #         "Invalid group admin id {} for scouts group".format(
+        #             group_group_admin_id
+        #         )
+        #     )
+        # logger.debug(
+        #     "GROUP ('%s'), NAME ('%s'), HIDDEN: %s",
+        #     group.name,
+        #     name.name,
+        #     hidden,
+        # )
 
         logger.debug(
             "Querying existing ScoutsSection instances with group admin id %s and name %s (%s)",
-            scouts_group.group_admin_id,
+            group.group_admin_id,
             name,
             type(name).__name__,
         )
+        name_instance = ScoutsSectionName.objects.safe_get(
+            id=name.id, name=name.name, gender=name.gender, age_group=name.age_group
+        )
         if name_instance is None:
-            qs = ScoutsSection.objects.filter(
-                group_group_admin_id=scouts_group.group_admin_id, name__name=name
-            )
+            qs = ScoutsSection.objects.filter(group=group, name__name=name)
         else:
-            qs = ScoutsSection.objects.filter(
-                group_group_admin_id=scouts_group.group_admin_id, name=name
-            )
+            qs = ScoutsSection.objects.filter(group=group, name=name_instance)
         count = qs.count()
 
         if count > 0:
@@ -87,20 +85,26 @@ class ScoutsSectionService:
             return None
 
         if count == 0:
-            logger.debug("Creating ScoutsSection with name '%s'", name)
-            return self._section_create(request, user, scouts_group, name, hidden)
+            logger.debug(
+                "Creating ScoutsSection with name '%s' for group %s",
+                name,
+                group.group_admin_id,
+            )
+            return self._section_create(request, user, group, name, hidden)
         if count == 1:
             instance = qs[0]
-            logger.debug("Updating ScoutsSection with name '%s'", instance.name.name)
-            return self._section_update(
-                request, user, instance, scouts_group, name, hidden
+            logger.debug(
+                "Updating ScoutsSection with name '%s' for group %s",
+                instance.name.name,
+                group.group_admin_id,
             )
+            return self._section_update(request, user, instance, group, name, hidden)
 
     def _section_create(
         self,
         request=None,
         user: settings.AUTH_USER_MODEL = None,
-        group: AbstractScoutsGroup = None,
+        group: ScoutsGroup = None,
         name: ScoutsSectionName = None,
         hidden: bool = False,
     ) -> ScoutsSection:
@@ -109,7 +113,7 @@ class ScoutsSectionService:
 
         instance = ScoutsSection()
 
-        instance.group_group_admin_id = group.group_admin_id
+        instance.group = group
         instance.name = self.section_name_service.get_or_create_name(
             request=request, section_name=name
         )
@@ -151,7 +155,7 @@ class ScoutsSectionService:
         request=None,
         user: settings.AUTH_USER_MODEL = None,
         instance: ScoutsSection = None,
-        group: AbstractScoutsGroup = None,
+        group: ScoutsGroup = None,
         name: ScoutsSectionName = None,
         hidden=False,
     ) -> ScoutsSection:
@@ -163,7 +167,7 @@ class ScoutsSectionService:
 
         logger.debug("Updating Section with name '%s'", instance.name.name)
 
-        instance.group_group_admin_id = group.group_admin_id
+        instance.group = group
         instance.name = name
         instance.hidden = hidden
 
@@ -181,49 +185,49 @@ class ScoutsSectionService:
         if not user:
             user: settings.AUTH_USER_MODEL = request.user
 
-        # groups = user.scouts_groups
         groups: List[ScoutsGroup] = user.persisted_scouts_groups.all()
         created_sections = list()
 
         for group in groups:
-            sections: List[ScoutsSection] = ScoutsSection.objects.all().filter(
-                group_group_admin_id=group.group_admin_id
-            )
-
-            if sections.count() == 0:
+            if group.default_sections_loaded:
                 logger.debug(
-                    "Linking sections to GROUP: %s (%s)",
+                    "Default sections for group %s already loaded (%d section(s))",
                     group.group_admin_id,
-                    group.name,
+                    group.sections.count(),
                 )
-                group_type = ScoutsGroupType.objects.get(group_type=group.group_type)
-                default_scouts_section_names: List[
-                    DefaultScoutsSectionName
-                ] = self.default_section_name_service.load_for_type(request, group_type)
+                return created_sections
 
+            logger.debug(
+                "Linking sections to GROUP: %s (%s)",
+                group.group_admin_id,
+                group.name,
+            )
+            group_type = ScoutsGroupType.objects.get(group_type=group.group_type)
+            default_scouts_section_names: List[
+                DefaultScoutsSectionName
+            ] = self.default_section_name_service.load_for_type(request, group_type)
+
+            logger.debug(
+                "Found %d default section NAMES", len(default_scouts_section_names)
+            )
+            for name in default_scouts_section_names:
                 logger.debug(
-                    "Found %d default section NAMES", len(default_scouts_section_names)
+                    "Linking DefaultSectionName %s to group %s",
+                    name.name,
+                    group.group_admin_id,
                 )
-                for name in default_scouts_section_names:
-                    logger.debug(
-                        "Linking DefaultSectionName %s to group %s",
-                        name.name,
-                        group.group_admin_id,
+                created_sections.append(
+                    self.section_create_or_update(
+                        request=request,
+                        user=user,
+                        group=group,
+                        name=name.name,
+                        hidden=name.name.hidden,
                     )
-                    created_sections.append(
-                        self.section_create_or_update(
-                            request=request,
-                            user=user,
-                            group_group_admin_id=group.group_admin_id,
-                            name=name.name,
-                            hidden=name.name.hidden,
-                        )
-                    )
-            else:
-                logger.debug(
-                    "Found %d SECTIONS linked to to group %s",
-                    sections.count(),
-                    group.name,
                 )
+
+            group.default_sections_loaded = True
+            group.full_clean()
+            group.save()
 
         return created_sections
