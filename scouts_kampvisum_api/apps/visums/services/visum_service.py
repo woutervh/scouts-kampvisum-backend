@@ -5,7 +5,7 @@ from django.db import transaction
 from apps.camps.models import CampType
 from apps.camps.services import CampService, CampTypeService
 
-from apps.deadlines.services import DeadlineService
+from apps.deadlines.services import LinkedDeadlineService
 
 from apps.visums.models import LinkedCategorySet, CampVisum
 from apps.visums.services import LinkedCategorySetService, InuitsVisumMailService
@@ -23,7 +23,7 @@ class CampVisumService:
     camp_service = CampService()
     camp_type_service = CampTypeService()
     category_set_service = LinkedCategorySetService()
-    deadline_service = DeadlineService()
+    linked_deadline_service = LinkedDeadlineService()
     mail_service = InuitsVisumMailService()
 
     @transaction.atomic
@@ -67,8 +67,8 @@ class CampVisumService:
             )
         )
 
-        logger.debug("Linking default deadline set to visum")
-        self.deadline_service.link_to_visum(request=request, visum=visum)
+        logger.debug("Linking deadline set to visum")
+        self.linked_deadline_service.link_to_visum(request=request, visum=visum)
 
         self.mail_service.notify_camp_registered(visum=visum)
 

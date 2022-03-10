@@ -51,7 +51,7 @@ class ScoutsFunctionManager(models.Manager):
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate DefaultDeadline instance(s) with the provided params: (id: {}, group_admin_id: {}, group_group_admin_id: {})".format(
+                "Unable to locate ScoutsFunction instance(s) with the provided params: (id: {}, group_admin_id: {}, group_group_admin_id: {})".format(
                     pk, group_admin_id, group_group_admin_id
                 )
             )
@@ -60,7 +60,7 @@ class ScoutsFunctionManager(models.Manager):
     def get_by_natural_key(self, group_admin_id):
         logger.trace(
             "GET BY NATURAL KEY %s: (group_admin_id: %s (%s))",
-            "ScoutsGroup",
+            "ScoutsFunction",
             group_admin_id,
             type(group_admin_id).__name__,
         )

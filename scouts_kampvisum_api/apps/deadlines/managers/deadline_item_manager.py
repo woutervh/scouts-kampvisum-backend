@@ -9,14 +9,14 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class DefaultDeadlineItemQuerySet(models.QuerySet):
+class DeadlineItemQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 
-class DefaultDeadlineItemManager(models.Manager):
+class DeadlineItemManager(models.Manager):
     def get_queryset(self):
-        return DefaultDeadlineItemQuerySet(self.model, using=self._db)
+        return DeadlineItemQuerySet(self.model, using=self._db)
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
@@ -32,12 +32,12 @@ class DefaultDeadlineItemManager(models.Manager):
                 pass
 
         if item_flag:
-            from apps.deadlines.models import DefaultDeadlineFlag
+            from apps.deadlines.models import DeadlineFlag
 
-            if isinstance(item_flag, DefaultDeadlineFlag):
+            if isinstance(item_flag, DeadlineFlag):
                 item_flag = item_flag.id
             else:
-                flag = DefaultDeadlineFlag.objects.safe_get(**item_flag)
+                flag = DeadlineFlag.objects.safe_get(**item_flag)
                 if flag:
                     item_flag = flag.id
 
@@ -52,7 +52,9 @@ class DefaultDeadlineItemManager(models.Manager):
             if isinstance(item_sub_category, SubCategory):
                 item_sub_category = item_sub_category.id
             else:
-                sub_category = DefaultDeadlineFlag.objects.safe_get(**item_sub_category)
+                sub_category = SubCategory.objects.get_by_natural_key(
+                    item_sub_category[0], item_sub_category[1]
+                )
                 if sub_category:
                     item_sub_category = sub_category.id
 
@@ -67,7 +69,7 @@ class DefaultDeadlineItemManager(models.Manager):
             if isinstance(item_check, Check):
                 item_check = item_check.id
             else:
-                check = Check.objects.safe_get(**item_check)
+                check = Check.objects.get_by_natural_key(item_check[0], item_check[1])
                 if check:
                     item_check = check.id
 
@@ -78,7 +80,7 @@ class DefaultDeadlineItemManager(models.Manager):
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate DefaultDeadlineItem instance(s) with the provided params: (id: {}, item_flag: {}, item_sub_category: {}, item_check: {})".format(
+                "Unable to locate DeadlineItem instance(s) with the provided params: (id: {}, item_flag: {}, item_sub_category: {}, item_check: {})".format(
                     pk,
                     item_flag,
                     item_sub_category,

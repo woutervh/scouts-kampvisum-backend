@@ -1,8 +1,8 @@
-from apps.deadlines.models import Deadline
+from apps.deadlines.models import LinkedDeadline
 from apps.deadlines.serializers import (
+    LinkedDeadlineSerializer,
     DeadlineSerializer,
-    DefaultDeadlineSerializer,
-    DeadlineItemSerializer,
+    LinkedDeadlineItemSerializer,
 )
 
 from apps.visums.models.enums import CheckState
@@ -15,8 +15,8 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class VisumDeadlineSerializer(DeadlineSerializer):
-    def to_representation(self, obj: Deadline) -> dict:
+class VisumDeadlineSerializer(LinkedDeadlineSerializer):
+    def to_representation(self, obj: LinkedDeadline) -> dict:
         data = super().to_representation(obj)
 
         items = data.get("items", [])

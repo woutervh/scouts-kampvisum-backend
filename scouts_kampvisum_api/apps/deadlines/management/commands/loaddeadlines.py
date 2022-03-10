@@ -9,8 +9,11 @@ from django.core.management.base import BaseCommand
 from apps.camps.models import CampYear
 from apps.camps.services import CampYearService, CampTypeService
 
-from apps.deadlines.models import DefaultDeadline, DeadlineDate, DefaultDeadlineItem
-from apps.deadlines.services import DefaultDeadlineService, DefaultDeadlineItemService
+from apps.deadlines.models import Deadline, DeadlineItem, DeadlineDate
+from apps.deadlines.services import (
+    DeadlineService,
+    DeadlineItemService,
+)
 
 
 # LOGGING
@@ -21,11 +24,11 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = "Loads the default deadlines from default_deadlines.json"
+    help = "Loads the deadlines from deadlines.json"
     exception = False
 
     BASE_PATH = "apps/deadlines/fixtures"
-    FIXTURES = ["default_deadlines.json", "camp_registration_deadlines.json"]
+    FIXTURES = ["deadlines.json", "camp_registration_deadlines.json"]
 
     def handle(self, *args, **kwargs):
         parent_path = Path(settings.BASE_DIR)
@@ -39,10 +42,10 @@ class Command(BaseCommand):
             tmp_data_path = "{}/{}".format(self.BASE_PATH, TMP_FIXTURE)
             tmp_path = os.path.join(parent_path, tmp_data_path)
 
-            logger.debug("Loading default deadlines from %s", path)
+            logger.debug("Loading deadlines from %s", path)
 
-            default_deadline_service = DefaultDeadlineService()
-            default_deadline_item_service = DefaultDeadlineItemService()
+            deadline_service = DeadlineService()
+            deadline_item_service = DeadlineItemService()
             camp_year_service = CampYearService()
             camp_type_service = CampTypeService()
 
@@ -57,7 +60,10 @@ class Command(BaseCommand):
                 logger.debug("LOADING and REWRITING fixture %s", path)
 
                 for model in data:
-                    # Allow creating default deadlines for the current year without specifying the camp year
+                    previous_index = previous_index + 1
+                    model["index"] = previous_index
+
+                    # Allow creating deadlines for the current year without specifying the camp year
                     if not "camp_year" in model.get("fields"):
                         model.get("fields")["camp_year"] = list()
                         model.get("fields")["camp_year"].append(current_camp_year.year)
@@ -80,21 +86,18 @@ class Command(BaseCommand):
                         include_default=False,
                     )
 
-                    default_deadline: DefaultDeadline = (
-                        default_deadline_service.get_or_create_default_deadline(
-                            request=None,
-                            name=model.get("fields")["name"],
-                            camp_year=current_camp_year,
-                            camp_types=camp_types,
-                            items=[],
-                        )
+                    deadline: Deadline = deadline_service.get_or_create_deadline(
+                        request=None,
+                        name=model.get("fields")["name"],
+                        camp_year=current_camp_year,
+                        camp_types=camp_types,
+                        items=[],
                     )
-                    model["pk"] = str(default_deadline.id)
+                    model["pk"] = str(deadline.id)
 
                     due_date: DeadlineDate = (
-                        default_deadline_service.get_or_create_deadline_date(
-                            default_deadline=default_deadline,
-                            **model.get("fields")["due_date"]
+                        deadline_service.get_or_create_deadline_date(
+                            deadline=deadline, **model.get("fields")["due_date"]
                         )
                     )
                     model.get("fields").pop("due_date")
@@ -102,7 +105,7 @@ class Command(BaseCommand):
                     items = model.get("fields").get("items", [])
                     if len(items) == 0:
                         raise ValidationError(
-                            "No DefaultDeadlineItem instances defined to link to DefaultDeadline !"
+                            "No DeadlineItem instances defined to link to Deadline !"
                         )
 
                     previous_item_index = -1
@@ -114,12 +117,14 @@ class Command(BaseCommand):
                             previous_item_index = previous_item_index + 1
                             item["index"] = previous_item_index
 
-                            default_deadline_item: DefaultDeadlineItem = default_deadline_item_service.create_default_deadline_item(
-                                request=None, default_deadline=default_deadline, **item
+                            deadline_item: DeadlineItem = (
+                                deadline_item_service.create_or_update_deadline_item(
+                                    request=None, deadline=deadline, **item
+                                )
                             )
-                            default_deadline.items.add(default_deadline_item)
+                            deadline.items.add(deadline_item)
 
-                            results.append(default_deadline_item)
+                            results.append(deadline_item)
 
                         model.get("fields").pop("items")
 

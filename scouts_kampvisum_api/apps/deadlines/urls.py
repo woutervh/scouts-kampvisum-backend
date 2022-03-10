@@ -7,10 +7,10 @@ class LinkedCheckEndpointFactory:
 from django.urls import path
 from rest_framework import routers
 
-from apps.deadlines.views import DeadlineViewSet
+from apps.deadlines.views import LinkedDeadlineViewSet
 
-visum = DeadlineViewSet.as_view({"get": "list_for_visum"})
-flags = DeadlineViewSet.as_view(
+visum = LinkedDeadlineViewSet.as_view({"get": "list_for_visum"})
+flags = LinkedDeadlineViewSet.as_view(
     {
         "get": "partial_update_deadline_flag",
         "patch": "partial_update_deadline_flag",
@@ -29,6 +29,6 @@ urlpatterns = [
 
 router = routers.SimpleRouter()
 
-router.register(r"deadlines", DeadlineViewSet, "deadlines")
+router.register(r"deadlines", LinkedDeadlineViewSet, "deadlines")
 
 urlpatterns += router.urls

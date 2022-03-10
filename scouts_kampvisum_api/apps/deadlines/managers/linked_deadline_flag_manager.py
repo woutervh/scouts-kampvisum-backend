@@ -9,18 +9,19 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class DeadlineFlagQuerySet(models.QuerySet):
+class LinkedDeadlineFlagQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 
-class DeadlineFlagManager(models.Manager):
+class LinkedDeadlineFlagManager(models.Manager):
     def get_queryset(self):
-        return DeadlineFlagQuerySet(self.model, using=self._db)
+        return LinkedDeadlineFlagQuerySet(self.model, using=self._db)
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
-        name = kwargs.get("name", None)
+        parent = kwargs.get("parent", None)
+        linked_deadline = kwargs.get("linked_deadline", None)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -29,27 +30,18 @@ class DeadlineFlagManager(models.Manager):
             except:
                 pass
 
-        if name:
+        if parent and linked_deadline:
             try:
-                return self.get_queryset().get(name=name)
+                return self.get_queryset().get(
+                    parent=parent, linked_deadline=linked_deadline
+                )
             except:
                 pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate DeadlineFlag instance(s) with the provided params: (id: {}, name: {})".format(
-                    pk,
-                    name,
+                "Unable to locate LinkedDeadlineFlag instance with provided params (id: {}, (parent: {}, linked_deadline: {})".format(
+                    pk, parent, linked_deadline
                 )
             )
         return None
-
-    def get_by_natural_key(self, name):
-        logger.trace(
-            "GET BY NATURAL KEY %s: (name: %s (%s))",
-            "DeadlineFlag",
-            name,
-            type(name).__name__,
-        )
-
-        return self.get(name=name)
