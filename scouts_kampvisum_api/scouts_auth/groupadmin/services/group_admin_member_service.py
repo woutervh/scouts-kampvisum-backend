@@ -263,10 +263,10 @@ class GroupAdminMemberService(GroupAdmin):
                 # An end date of a function was registered in the member record
                 end_of_activity_period_counter = end_of_activity_period_counter + 1
 
-                logger.debug("DATE: %s", isinstance(end_of_activity_period, date))
-                logger.debug(
-                    "DATETIME: %s", isinstance(end_of_activity_period, datetime)
-                )
+                # logger.debug("DATE: %s", isinstance(end_of_activity_period, date))
+                # logger.debug(
+                #     "DATETIME: %s", isinstance(end_of_activity_period, datetime)
+                # )
 
                 end_of_activity_period = end_of_activity_period.date()
 
