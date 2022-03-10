@@ -167,16 +167,20 @@ class SignalHandler:
         if not OIDCUserHelper.requires_data_loading(user=user):
             return user
 
-        if OIDCUserHelper.requires_group_loading(user=user):
-            logger.debug(
-                "SIGNAL handling for '%s' -> Loading additional user groups", signal
-            )
-            user = authorization_service.load_user_scouts_groups(user=user)
-
-        if OIDCUserHelper.requires_function_loading(user=user):
-            logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
-            user = authorization_service.load_user_functions(user=user)
-
+        # if OIDCUserHelper.requires_group_loading(user=user):
+        #     logger.debug(
+        #         "SIGNAL handling for '%s' -> Loading additional user groups", signal
+        #     )
+        #     user = authorization_service.load_user_scouts_groups(user=user)
+        logger.debug(
+            "SIGNAL handling for '%s' -> Loading additional user groups", signal
+        )
+        user = authorization_service.load_user_scouts_groups(user=user)
+        # if OIDCUserHelper.requires_function_loading(user=user):
+        #     logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
+        #     user = authorization_service.load_user_functions(user=user)
+        logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
+        user = authorization_service.load_user_functions(user=user)
         logger.debug(
             "SIGNAL handling for '%s' -> Setting up sections for user's groups",
             signal,
