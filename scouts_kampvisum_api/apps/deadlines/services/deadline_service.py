@@ -82,6 +82,7 @@ class DeadlineService:
 
         return instance
 
+    @transaction.atomic
     def update_deadline(
         self,
         request,
