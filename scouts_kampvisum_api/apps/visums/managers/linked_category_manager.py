@@ -24,6 +24,7 @@ class LinkedCategoryManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        category_set = kwargs.get("category_set", None)
         category = kwargs.get("category", None)
         raise_error = kwargs.get("raise_error", False)
 
@@ -33,9 +34,11 @@ class LinkedCategoryManager(models.Manager):
             except:
                 pass
 
-        if category:
+        if category_set and category:
             try:
-                return self.get_queryset().get(parent=category)
+                return self.get_queryset().get(
+                    category_set=category_set, parent=category
+                )
             except:
                 pass
 

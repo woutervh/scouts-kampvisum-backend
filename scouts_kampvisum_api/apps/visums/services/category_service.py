@@ -112,7 +112,7 @@ class CategoryService:
             logger.debug("Updating category: '%s'", category.name)
 
             linked_category: LinkedCategory = LinkedCategory.objects.safe_get(
-                category=category
+                category_set=linked_category_set, category=category
             )
 
             # Added Category
