@@ -623,7 +623,7 @@ def setup_mail():
 
     if USE_SENDINBLUE:
         API_KEY = env.str("SENDINBLUE_API_KEY")
-        if DEBUG:
+        if DEBUG and not IS_ACCEPTANCE:
             API_KEY = env.str("SENDINBLUE_API_KEY_DEBUG", API_KEY)
 
         EMAIL_BACKEND = env.str("SENDINBLUE_BACKEND")
