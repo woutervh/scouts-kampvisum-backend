@@ -37,7 +37,11 @@ class ScoutsSectionNameService:
         if section_name:
             return section_name
 
-        instance = ScoutsSectionName(name=name, gender=gender, age_group=age_group)
+        instance = ScoutsSectionName()
+
+        instance.name = name
+        instance.gender = gender
+        instance.age_group = age_group
 
         instance.full_clean()
         instance.save()
@@ -57,17 +61,17 @@ class ScoutsSectionNameService:
 
         instance.name = (
             updated_instance.name
-            if updated_instance
+            if updated_instance and updated_instance.name
             else fields.get("name", instance.name)
         )
         instance.gender = (
             updated_instance.gender
-            if updated_instance
+            if updated_instance and updated_instance.gender
             else fields.get("gender", instance.gender)
         )
         instance.age_group = (
             updated_instance.age_group
-            if updated_instance
+            if updated_instance and updated_instance.age_group
             else fields.get("age_group", instance.age_group)
         )
 

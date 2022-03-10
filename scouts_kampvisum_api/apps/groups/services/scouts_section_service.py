@@ -46,25 +46,6 @@ class ScoutsSectionService:
         if not user:
             user = request.user
 
-        # scouts_group = self.group_admin.get_group(
-        #     active_user=user, group_group_admin_id=group_group_admin_id
-        # )
-        # scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-        #     group=group
-        # )
-        # if not group:
-        #     raise ValidationError(
-        #         "Invalid group admin id {} for scouts group".format(
-        #             group_group_admin_id
-        #         )
-        #     )
-        # logger.debug(
-        #     "GROUP ('%s'), NAME ('%s'), HIDDEN: %s",
-        #     group.name,
-        #     name.name,
-        #     hidden,
-        # )
-
         logger.debug(
             "Querying existing ScoutsSection instances with group admin id %s and name %s (%s)",
             group.group_admin_id,
@@ -125,11 +106,9 @@ class ScoutsSectionService:
         return instance
 
     def update_section(self, request, instance: ScoutsSection, **data) -> ScoutsSection:
-        # logger.debug("SCOUTS SECTION SERVICE UPDATE DATA: %s", data)
-        group_group_admin_id = data.get(
-            "group_group_admin_id", instance.group_group_admin_id
-        )
-        name = self.section_name_service.update_name(
+        logger.debug("SCOUTS SECTION SERVICE UPDATE DATA: %s", data)
+        group: ScoutsGroup = data.get("group")
+        name: ScoutsSectionName = self.section_name_service.update_name(
             request,
             instance=ScoutsSectionName.objects.safe_get(
                 id=data.get("name").id, raise_error=True
@@ -138,10 +117,10 @@ class ScoutsSectionService:
         )
 
         instance = ScoutsSection.objects.safe_get(
-            id=instance.id, group_group_admin_id=group_group_admin_id, name=name
+            id=instance.id, group=group, name=name
         )
 
-        instance.group_group_admin_id = group_group_admin_id
+        instance.group = group
         instance.name = name
         instance.hidden = data.get("hidden", instance.hidden)
 
