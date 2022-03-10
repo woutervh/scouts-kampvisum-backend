@@ -8,6 +8,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsFunction,
     ScoutsFunction,
 )
+from scouts_auth.groupadmin.services import ScoutsGroupService
 
 
 # LOGGING
@@ -18,6 +19,8 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsFunctionService:
+    scouts_group_service = ScoutsGroupService()
+
     def create_or_update_scouts_functions(
         self, user: settings.AUTH_USER_MODEL
     ) -> List[ScoutsFunction]:
@@ -53,12 +56,6 @@ class ScoutsFunctionService:
                     abstract_function=abstract_function,
                     abstract_group=abstract_group,
                 )
-            # else:
-            #     logger.debug(
-            #         "Scouts function already exists and has same end date (existing: %s - groupadmin: %s",
-            #         scouts_function.end,
-            #         abstract_function.end,
-            #     )
         else:
             scouts_function: ScoutsFunction = self.create_scouts_function(
                 created_by=user,
@@ -83,8 +80,13 @@ class ScoutsFunctionService:
         )
 
         scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-            group_admin_id=abstract_group.group_admin_id, raise_error=True
+            group_admin_id=abstract_group.group_admin_id
         )
+        if not scouts_group:
+            # User has a function in a group that isn't the user's group list anymore
+            scouts_group: ScoutsGroup = self.scouts_group_service.create_scouts_group(
+                created_by=created_by, group_admin_id=abstract_group.group_admin_id
+            )
 
         scouts_function: ScoutsFunction = ScoutsFunction()
 

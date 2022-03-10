@@ -63,33 +63,10 @@ class ScoutsAuthorizationService(AuthorizationService):
     def load_user_scouts_groups(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
-        scouts_groups: List[AbstractScoutsGroup] = self.service.get_groups(
-            active_user=user
-        ).scouts_groups
-
-        logger.debug(
-            "SCOUTS AUTHORIZATION SERVICE: Found %d groups(s) for user %s",
-            len(scouts_groups),
-            user.username,
+        user = self.scouts_group_service.create_or_update_scouts_groups_for_user(
+            user=user
         )
-
-        user.scouts_groups = scouts_groups
-
-        self.scouts_group_service.create_or_update_scouts_groups(user=user)
-
-        user = self.update_user_scouts_groups(user)
-
-        return user
-
-    def update_user_scouts_groups(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> settings.AUTH_USER_MODEL:
-        """
-        Updates the authenticated user with the groups he/she belongs to.
-
-        The groupadmin call for groups can only be made after the user has been authenticated.
-        """
-        user: settings.AUTH_USER_MODEL = self.update_user_authorizations(user)
+        user = self.update_user_authorizations(user)
 
         user.full_clean()
         user.save()
