@@ -87,6 +87,6 @@ class ScoutsFunction(AuditedBaseModel):
         ordering = ["code"]
         constraints = [
             models.UniqueConstraint(
-                fields=["code", "group"], name="unique_function_for_group"
+                fields=["group_admin_id"], name="unique_group_admin_id"
             )
         ]
