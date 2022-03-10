@@ -1,5 +1,6 @@
 from typing import List
 
+from django.db import transaction
 from django.core.exceptions import ValidationError
 
 from apps.deadlines.models import (
@@ -24,13 +25,10 @@ class DeadlineItemService:
 
     deadline_flag_service = DeadlineFlagService()
 
+    @transaction.atomic
     def create_or_update_deadline_items(
         self, request, deadline: Deadline, items: List[dict]
     ) -> List[DeadlineItem]:
-        current_items: List[DeadlineItem] = deadline.items.all()
-
-        deadline.items.clear()
-
         results = []
         for item in items:
             results.append(
@@ -39,6 +37,7 @@ class DeadlineItemService:
 
         return results
 
+    @transaction.atomic
     def create_or_update_deadline_item(self, request, deadline, **item) -> DeadlineItem:
         instance = DeadlineItem.objects.safe_get(**item)
 
@@ -51,10 +50,9 @@ class DeadlineItemService:
                 request=request, deadline=deadline, **item
             )
 
-        deadline.items.add(instance)
-
         return instance
 
+    @transaction.atomic
     def create_deadline_item(
         self, request, deadline: Deadline, **fields
     ) -> DeadlineItem:
@@ -65,6 +63,7 @@ class DeadlineItemService:
 
         instance = DeadlineItem()
 
+        instance.deadline = deadline
         instance.index = fields.get("index", 0)
 
         if sub_category:
@@ -90,6 +89,7 @@ class DeadlineItemService:
 
         return instance
 
+    @transaction.atomic
     def update_deadline_item(
         self, request, instance: DeadlineItem, **fields
     ) -> DeadlineItem:

@@ -110,7 +110,8 @@ class Command(BaseCommand):
 
                     previous_item_index = -1
                     if items:
-                        results = []
+                        if len(items) == 0:
+                            raise ValidationError("A deadline needs items")
 
                         for item in items:
                             # Allow ordering categories in the order in which they appear in the fixture json, without specifying the index
@@ -122,9 +123,6 @@ class Command(BaseCommand):
                                     request=None, deadline=deadline, **item
                                 )
                             )
-                            deadline.items.add(deadline_item)
-
-                            results.append(deadline_item)
 
                         model.get("fields").pop("items")
 

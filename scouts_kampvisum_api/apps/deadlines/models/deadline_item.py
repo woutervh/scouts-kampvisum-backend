@@ -1,6 +1,7 @@
 from django.db import models
+from django.db.models import Q
 
-from apps.deadlines.models import DeadlineFlag
+from apps.deadlines.models import Deadline, DeadlineFlag
 from apps.deadlines.models.enums import DeadlineItemType
 from apps.deadlines.managers import DeadlineItemManager
 
@@ -21,6 +22,9 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class DeadlineItem(Indexable, AbstractBaseModel):
     objects = DeadlineItemManager()
 
+    deadline = models.ForeignKey(
+        Deadline, on_delete=models.CASCADE, related_name="items"
+    )
     deadline_item_type = DefaultCharField(
         choices=DeadlineItemType.choices,
         default=DeadlineItemType.DEADLINE,
@@ -48,6 +52,23 @@ class DeadlineItem(Indexable, AbstractBaseModel):
 
     class Meta:
         ordering = ["index"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["deadline", "deadline_item_type", "item_flag"],
+                condition=(Q(item_sub_category=None) & Q(item_check=None)),
+                name="unique_deadline_type_and_flag_if_null_sub_category_and_null_check",
+            ),
+            models.UniqueConstraint(
+                fields=["deadline", "deadline_item_type", "item_sub_category"],
+                condition=(Q(item_flag=None) & Q(item_check=None)),
+                name="unique_deadline_type_and_sub_category_if_null_flag_and_null_check",
+            ),
+            models.UniqueConstraint(
+                fields=["deadline", "deadline_item_type", "item_check"],
+                condition=(Q(item_flag=None) & Q(item_sub_category=None)),
+                name="unique_deadline_type_and_check_if_null_flag_and_null_sub_category",
+            ),
+        ]
 
     def is_deadline(self):
         return self.deadline_item_type == DeadlineItemType.DEADLINE

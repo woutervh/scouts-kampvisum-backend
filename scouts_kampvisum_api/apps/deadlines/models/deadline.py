@@ -2,7 +2,6 @@ from django.db import models
 
 from apps.camps.models import CampYear, CampType
 
-from apps.deadlines.models import DeadlineItem
 from apps.deadlines.managers import DeadlineManager
 
 from scouts_auth.inuits.models import AuditedBaseModel
@@ -32,7 +31,6 @@ class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseMod
         CampYear, on_delete=models.CASCADE, related_name="deadline_set"
     )
     camp_types = models.ManyToManyField(CampType, related_name="deadlines")
-    items = models.ManyToManyField(DeadlineItem)
 
     class Meta:
         ordering = [

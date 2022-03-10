@@ -1,5 +1,8 @@
 from typing import List
 
+from django.db import transaction
+from django.core.exceptions import ValidationError
+
 from apps.deadlines.models import (
     Deadline,
     LinkedDeadline,
@@ -16,11 +19,20 @@ class LinkedDeadlineItemService:
 
     linked_deadline_flag_service = LinkedDeadlineFlagService()
 
+    @transaction.atomic
     def create_or_update_linked_deadline_items(
         self, request, linked_deadline: LinkedDeadline
     ) -> List[LinkedDeadlineItem]:
+        items: List[DeadlineItem] = linked_deadline.parent.items.all()
+        if not items or len(items) == 0:
+            raise ValidationError(
+                "No DeadlineItem instances linked to Deadline {}".format(
+                    linked_deadline.parent.name,
+                )
+            )
+
         results = []
-        for item in linked_deadline.parent.items.all():
+        for item in items:
             results.append(
                 self.create_linked_deadline_item(
                     request=request, linked_deadline=linked_deadline, deadline_item=item
@@ -29,6 +41,7 @@ class LinkedDeadlineItemService:
 
         return results
 
+    @transaction.atomic
     def create_linked_deadline_item(
         self, request, linked_deadline: LinkedDeadline, deadline_item: DeadlineItem
     ) -> LinkedDeadlineItem:
