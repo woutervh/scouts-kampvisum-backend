@@ -26,7 +26,6 @@ class ScoutsFunctionManager(models.Manager):
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         group_admin_id = kwargs.get("group_admin_id", None)
-        code = kwargs.get("code", None)
         group_group_admin_id = kwargs.get("group_group_admin_id", None)
         raise_error = kwargs.get("raise_error", False)
 
@@ -42,18 +41,18 @@ class ScoutsFunctionManager(models.Manager):
             except:
                 pass
 
-        if code and group_group_admin_id:
+        if group_group_admin_id:
             try:
                 return self.get_queryset().get(
-                    code=code, group__group_admin_id=group_group_admin_id
+                    group__group_admin_id=group_group_admin_id
                 )
             except:
                 pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate DefaultDeadline instance(s) with the provided params: (id: {}, group_admin_id: {}, code: {}, group_group_admin_id: {})".format(
-                    pk, group_admin_id, code, group_group_admin_id
+                "Unable to locate DefaultDeadline instance(s) with the provided params: (id: {}, group_admin_id: {}, group_group_admin_id: {})".format(
+                    pk, group_admin_id, group_group_admin_id
                 )
             )
         return None
