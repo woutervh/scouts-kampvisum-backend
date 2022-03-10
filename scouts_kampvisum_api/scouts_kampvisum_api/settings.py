@@ -621,7 +621,6 @@ def setup_mail():
     global EMAIL_BACKEND
     global ANYMAIL
     global EMAIL_TEMPLATE
-    global EMAIL_FROM
 
     if USE_SENDINBLUE:
         API_KEY = env.str("SENDINBLUE_API_KEY")
@@ -635,8 +634,6 @@ def setup_mail():
     else:
         EMAIL_TEMPLATE = None
 
-    EMAIL_FROM = env.str("EMAIL_FROM", None)
-
 
 # DJANGO MAIL SETTINGS
 EMAIL_BACKEND = env.str("EMAIL_BACKEND")
@@ -648,7 +645,8 @@ EMAIL_PORT = env.str("EMAIL_PORT")
 # SENDINBLUE EMAIL SETTINGS
 USE_SENDINBLUE = env.bool("USE_SENDINBLUE", False)
 # SCOUTS KAMPVISUM EMAIL SETTINGS
-EMAIL_FROM = None
+# @TINUS moet toegevoegd worden in env of gewoon in settings ?
+EMAIL_FROM = env.str("EMAIL_FROM", "kamp@scoutsengidsenvlaanderen.be")
 EMAIL_TEMPLATE = None
 TMP_FOLDER = RESOURCES_PATH + "temp"
 ANYMAIL = {}
