@@ -34,6 +34,7 @@ class VisumParticipantManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         check = kwargs.get("check_id", None)
         inuits_participant = kwargs.get("inuits_participant_id", None)
+        group_admin_id = kwargs.get("group_admin_id", None)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -46,6 +47,14 @@ class VisumParticipantManager(models.Manager):
             try:
                 return self.get_queryset().get(
                     checks=check, participant=inuits_participant
+                )
+            except:
+                pass
+
+        if check and group_admin_id:
+            try:
+                return self.get_queryset().get(
+                    checks=check, participant__group_admin_id=group_admin_id
                 )
             except:
                 pass

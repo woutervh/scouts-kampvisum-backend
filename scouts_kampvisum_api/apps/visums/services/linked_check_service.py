@@ -230,11 +230,13 @@ class LinkedCheckService:
                 self.participant_service.create_or_update_visum_participant(
                     user=request.user,
                     participant_type=instance.participant_check_type,
+                    check=instance,
                     **visum_participant,
                 )
             )
 
-            instance.participants.add(visum_participant)
+            if visum_participant not in instance.participants.all():
+                instance.participants.add(visum_participant)
 
         return self.notify_change(instance=instance, data_changed=data_changed)
 

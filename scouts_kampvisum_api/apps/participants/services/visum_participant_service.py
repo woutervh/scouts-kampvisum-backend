@@ -6,6 +6,8 @@ from apps.participants.models.enums import ParticipantType
 from apps.participants.models.enums import PaymentStatus
 from apps.participants.services import InuitsParticipantService
 
+from apps.visums.models import LinkedParticipantCheck
+
 
 # LOGGING
 import logging
@@ -23,13 +25,16 @@ class VisumParticipantService:
         self,
         user: settings.AUTH_USER_MODEL,
         participant_type: ParticipantType = ParticipantType.PARTICIPANT,
+        check: LinkedParticipantCheck = None,
         skip_validation: bool = False,
         **fields: dict,
     ) -> VisumParticipant:
         logger.debug("FIELDS: %s", fields)
         visum_participant = VisumParticipant(**fields)
         existing_visum_participant = VisumParticipant.objects.safe_get(
-            id=visum_participant.id
+            id=visum_participant.id,
+            check_id=check.id,
+            group_admin_id=visum_participant.participant.group_admin_id,
         )
 
         if existing_visum_participant:
@@ -102,11 +107,11 @@ class VisumParticipantService:
         logger.debug(
             "Updating VisumParticipant with id %s and group_admin_id %s and e-mail %s",
             visum_participant.id,
-            visum_participant.group_admin_id,
-            visum_participant.email,
+            visum_participant.participant.group_admin_id,
+            visum_participant.participant.email,
         )
 
-        if visum_participant.equals_participant(updated_visum_participant):
+        if visum_participant.equals_visum_participant(updated_visum_participant):
             logger.debug(
                 "No differences between existing VisumParticipant and updated VisumParticipant"
             )
