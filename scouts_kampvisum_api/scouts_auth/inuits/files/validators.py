@@ -15,9 +15,10 @@ logger: InuitsLogger = logging.getLogger(__name__)
 def validate_uploaded_file(value):
     if value.size > StorageSettings.get_max_file_size():
         raise ValidationError(
-            "File size ({}) exceeds max file size defined in {}",
-            value.size,
-            StorageSettings.FILE_UPLOAD_MAX_SIZE,
+            "File size ({}) exceeds max file size defined in {}".format(
+                value.size,
+                StorageSettings.get_max_file_size(),
+            )
         )
     configured_allowed_extensions: List[
         str
