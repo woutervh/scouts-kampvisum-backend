@@ -69,7 +69,7 @@ class ScoutsGroupService:
     def create_scouts_group(
         self,
         created_by: settings.AUTH_USER_MODEL,
-        abstract_group: AbstractScoutsGroup,
+        abstract_group: AbstractScoutsGroup = None,
         group_admin_id=None,
     ) -> ScoutsGroup:
         if not abstract_group:
