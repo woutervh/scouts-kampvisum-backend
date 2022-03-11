@@ -4,7 +4,11 @@ from django.core.exceptions import ValidationError
 from scouts_auth.groupadmin.models import ScoutsGroup
 
 from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateTimeField
+from scouts_auth.inuits.models.fields import (
+    RequiredCharField,
+    OptionalCharField,
+    OptionalDateTimeField,
+)
 
 
 # LOGGING
@@ -72,7 +76,7 @@ class ScoutsFunction(AuditedBaseModel):
 
     objects = ScoutsFunctionManager()
 
-    group_admin_id = OptionalCharField()
+    group_admin_id = RequiredCharField()
     code = OptionalCharField()
     type = OptionalCharField()
     description = OptionalCharField()
@@ -83,7 +87,7 @@ class ScoutsFunction(AuditedBaseModel):
     end = OptionalDateTimeField()
 
     class Meta:
-        ordering = ["code"]
+        ordering = ["group_admin_id"]
         constraints = [
             models.UniqueConstraint(
                 fields=["group_admin_id"], name="unique_group_admin_id"
