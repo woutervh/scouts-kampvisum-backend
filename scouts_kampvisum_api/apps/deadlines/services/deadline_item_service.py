@@ -39,7 +39,7 @@ class DeadlineItemService:
 
     @transaction.atomic
     def create_or_update_deadline_item(self, request, deadline, **item) -> DeadlineItem:
-        instance = DeadlineItem.objects.safe_get(**item)
+        instance = DeadlineItem.objects.safe_get(deadline=deadline, **item)
 
         if instance:
             instance: DeadlineItem = self.update_deadline_item(
@@ -56,10 +56,10 @@ class DeadlineItemService:
     def create_deadline_item(
         self, request, deadline: Deadline, **fields
     ) -> DeadlineItem:
-        # logger.debug("ITEM: %s", fields)
-        sub_category: SubCategory = fields.get("item_sub_category", None)
-        check: Check = fields.get("item_check", None)
-        flag: DeadlineFlag = fields.get("item_flag", None)
+        logger.debug("ITEM: %s", fields)
+        sub_category: dict = fields.get("item_sub_category", None)
+        check: dict = fields.get("item_check", None)
+        flag: dict = fields.get("item_flag", None)
 
         instance = DeadlineItem()
 
@@ -84,6 +84,8 @@ class DeadlineItemService:
             )
             if not item_check:
                 raise ValidationError("Check not found: {}".format(check[0]))
+
+            instance.item_check = item_check
         elif flag:
             instance.deadline_item_type = DeadlineItemType.DEADLINE
             instance.item_flag = self.deadline_flag_service.get_or_create_flag(**flag)
