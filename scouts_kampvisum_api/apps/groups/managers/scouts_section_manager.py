@@ -21,21 +21,6 @@ class ScoutsSectionManager(models.Manager):
     def get_queryset(self):
         return ScoutsSectionQuerySet(self.model, using=self._db)
 
-    def get_by_natural_key(self, group, name):
-        logger.trace(
-            "GET BY NATURAL KEY %s: (group: %s (%s), name: %s (%s))",
-            "ScoutsSection",
-            group,
-            type(group).__name__,
-            name,
-            type(name).__name__,
-        )
-
-        if isinstance(group, ScoutsGroup):
-            return self.get(group=group, name=name)
-
-        return self.get(group__group_admin_id=group, name=name)
-
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         group = kwargs.get("group", None)
@@ -71,3 +56,18 @@ class ScoutsSectionManager(models.Manager):
                 )
             )
         return None
+
+    def get_by_natural_key(self, group, name):
+        logger.trace(
+            "GET BY NATURAL KEY %s: (group: %s (%s), name: %s (%s))",
+            "ScoutsSection",
+            group,
+            type(group).__name__,
+            name,
+            type(name).__name__,
+        )
+
+        if isinstance(group, ScoutsGroup):
+            return self.get(group=group, name=name)
+
+        return self.get(group__group_admin_id=group, name=name)

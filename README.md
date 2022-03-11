@@ -38,7 +38,7 @@ For setup through other means, the following commands should be run, in the foll
 - loadsubcategories
 - loadchecks
 - createcategorysets
-- loaddeadlines
+- loaddefaultdeadlines
 - createdeadlinesets  
 
 ## **SETTINGS**  
@@ -295,11 +295,11 @@ In frontend repo: `/src/locales/nl.json`
       - Defines the checks that are linked to sub-categories.  
   12. **DEADLINES:**  
       - FIXTURE: `scouts_kampvisum_api/apps/deadlines/fixtures/deadlines.json`  
-      - COMMAND: `django-manage.py loaddeadlines`  
+      - COMMAND: `django-manage.py loaddefaultdeadlines`  
       - Defines LinkedSubCategory, LinkedChecked and plain deadlines.  
   13. **CAMP REGISTRATION DEADLINE:**  
       - FIXTURE: `scouts_kampvisum_api/apps/deadlines/fixtures/camp_registration_deadlines.json` 
-      - COMMAND: `django-manage.py loaddeadlines`  
+      - COMMAND: `django-manage.py loaddefaultdeadlines`  
       - Defines the deadlines that apply for the custom camp registration deadline.  
   14. **DEADLINE SETS:**  
       - FIXTURE: `scouts_kampvisum_api/apps/deadlines/fixtures/deadline_sets.json`  

@@ -133,23 +133,4 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         self.scouts_function_service.create_or_update_scouts_functions(user=user)
 
-        # for user_function in user.functions:
-        #     for function in functions:
-        #         if function.group_admin_id == user_function.function:
-        #             for grouping in function.groupings:
-        #                 if (
-        #                     grouping.name
-        #                     == GroupadminSettings.get_section_leader_identifier()
-        #                 ):
-        #                     logger.debug(
-        #                         "Setting user as section leader for group %s",
-        #                         user_function.scouts_group.group_admin_id,
-        #                     )
-        #                     user_function.groups_section_leader[
-        #                         user_function.scouts_group.group_admin_id
-        #                     ] = True
-
-        # user.full_clean()
-        # user.save()
-
         return user

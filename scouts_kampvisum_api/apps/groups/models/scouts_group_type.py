@@ -3,7 +3,7 @@ from django.db import models
 from apps.groups.managers import ScoutsGroupTypeManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import RequiredCharField
+from scouts_auth.inuits.models.fields import RequiredCharField, UniqueBooleanField
 
 
 # LOGGING
@@ -22,6 +22,7 @@ class ScoutsGroupType(AbstractBaseModel):
 
     group_type = RequiredCharField(max_length=64)
     parent = models.ForeignKey("ScoutsGroupType", null=True, on_delete=models.CASCADE)
+    is_default = UniqueBooleanField(default=False)
 
     class Meta:
         ordering = ["group_type"]

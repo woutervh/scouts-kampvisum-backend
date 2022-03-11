@@ -2,7 +2,8 @@
 	{
 		"model": "groups.ScoutsGroupType",
 		"fields": {
-			"group_type": "Groep"
+			"group_type": "Groep",
+			"is_default": true
 		}
 	},
 	{

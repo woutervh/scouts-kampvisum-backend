@@ -352,3 +352,25 @@ class RequiredEmailField(models.EmailField):
         kwargs["blank"] = False
         kwargs["null"] = False
         super().__init__(*args, **kwargs)
+
+
+class UniqueBooleanField(models.BooleanField):
+    """
+    Initializes a models.BooleanField as unique.
+
+    All other objects will have their boolean field set to False when saving or
+    updating an object with that boolean value True.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def pre_save(self, model_instance, add):
+        objects = model_instance.__class__.objects
+        # If True then set all others as False
+        if getattr(model_instance, self.attname):
+            objects.update(**{self.attname: False})
+        # If no true object exists that isnt saved model, save as True
+        elif not objects.exclude(id=model_instance.id).filter(**{self.attname: True}):
+            return True
+        return getattr(model_instance, self.attname)

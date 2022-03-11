@@ -46,6 +46,25 @@ class ScoutsFunctionService:
             group_group_admin_id=abstract_group.group_admin_id,
         )
 
+        # for user_function in user.functions:
+        #     for function in functions:
+        #         if function.group_admin_id == user_function.function:
+        #             for grouping in function.groupings:
+        #                 if (
+        #                     grouping.name
+        #                     == GroupadminSettings.get_section_leader_identifier()
+        #                 ):
+        #                     logger.debug(
+        #                         "Setting user as section leader for group %s",
+        #                         user_function.scouts_group.group_admin_id,
+        #                     )
+        #                     user_function.groups_section_leader[
+        #                         user_function.scouts_group.group_admin_id
+        #                     ] = True
+
+        # user.full_clean()
+        # user.save()
+
         if scouts_function:
             if abstract_function.end and (
                 not scouts_function.end or abstract_function.end != scouts_function.end
