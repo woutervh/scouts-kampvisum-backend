@@ -28,6 +28,7 @@ class DefaultScoutsSectionNameManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         group_type = kwargs.get("group_type", None)
         name = kwargs.get("name", None)
+        gender = kwargs.get("gender", None)
         return_list = kwargs.get("return_list", False)
         raise_error = kwargs.get("raise_error", False)
 
@@ -44,9 +45,13 @@ class DefaultScoutsSectionNameManager(models.Manager):
                 except:
                     pass
 
-            if return_list:
+            if return_list and gender:
                 try:
-                    return self.get_queryset().filter(group_type=group_type).distinct()
+                    return (
+                        self.get_queryset()
+                        .filter(group_type=group_type, name__gender=gender)
+                        .distinct()
+                    )
                 except:
                     pass
 
