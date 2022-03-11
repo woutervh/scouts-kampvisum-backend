@@ -174,7 +174,7 @@ class ScoutsSectionService:
                     group.group_admin_id,
                     group.sections.count(),
                 )
-                return created_sections
+                pass
 
             logger.debug(
                 "Linking sections to GROUP: %s (%s)",
