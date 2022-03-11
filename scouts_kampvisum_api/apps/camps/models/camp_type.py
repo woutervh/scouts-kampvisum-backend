@@ -3,7 +3,7 @@ from django.db import models
 from apps.camps.managers import CampTypeManager
 
 from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import RequiredCharField
+from scouts_auth.inuits.models.fields import RequiredCharField, UniqueBooleanField
 from scouts_auth.inuits.models.interfaces import Indexable, Explainable, Translatable
 
 # LOGGING
@@ -19,7 +19,7 @@ class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
 
     camp_type = RequiredCharField()
     is_base = models.BooleanField(default=False)
-    is_default = models.BooleanField(default=False)
+    is_default = UniqueBooleanField(default=False)
 
     class Meta:
         ordering = ["index", "camp_type"]

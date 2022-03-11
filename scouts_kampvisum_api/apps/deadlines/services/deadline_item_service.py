@@ -68,14 +68,22 @@ class DeadlineItemService:
 
         if sub_category:
             instance.deadline_item_type = DeadlineItemType.LINKED_SUB_CATEGORY
-            instance.item_sub_category = SubCategory.objects.get_by_natural_key(
+            item_sub_category: SubCategory = SubCategory.objects.get_by_natural_key(
                 name=sub_category[0], category=sub_category[1]
             )
+            if not item_sub_category:
+                raise ValidationError(
+                    "SubCategory not found: {}".format(sub_category[0])
+                )
+
+            instance.item_sub_category = item_sub_category
         elif check:
             instance.deadline_item_type = DeadlineItemType.LINKED_CHECK
-            instance.item_check = Check.objects.get_by_natural_key(
+            item_check = Check.objects.get_by_natural_key(
                 name=check[0], sub_category=check[1]
             )
+            if not item_check:
+                raise ValidationError("Check not found: {}".format(check[0]))
         elif flag:
             instance.deadline_item_type = DeadlineItemType.DEADLINE
             instance.item_flag = self.deadline_flag_service.get_or_create_flag(**flag)
