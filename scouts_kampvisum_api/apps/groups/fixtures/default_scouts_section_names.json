@@ -19,6 +19,32 @@
 				"Groep"
 			],
 			"name": [
+				"kapoenen",
+				"F",
+				6
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Groep"
+			],
+			"name": [
+				"kapoenen",
+				"I",
+				6
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Groep"
+			],
+			"name": [
 				"welpen",
 				"M",
 				9
@@ -137,8 +163,60 @@
 			],
 			"name": [
 				"jins",
+				"M",
+				17
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Groep"
+			],
+			"name": [
+				"jins",
+				"F",
+				17
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Groep"
+			],
+			"name": [
+				"jins",
 				"I",
 				17
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Groep"
+			],
+			"name": [
+				"leiding",
+				"M",
+				100
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Groep"
+			],
+			"name": [
+				"leiding",
+				"F",
+				100
 			]
 		}
 	},
@@ -163,8 +241,60 @@
 			],
 			"name": [
 				"zeehondjes",
+				"M",
+				6
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"zeehondjes",
+				"F",
+				6
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"zeehondjes",
 				"I",
 				6
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"zeewelpen",
+				"M",
+				9
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"zeewelpen",
+				"F",
+				9
 			]
 		}
 	},
@@ -189,8 +319,60 @@
 			],
 			"name": [
 				"scheepsmakkers",
+				"M",
+				11
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"scheepsmakkers",
+				"F",
+				11
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"scheepsmakkers",
 				"I",
 				11
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"zeeverkenners",
+				"M",
+				14
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"zeeverkenners",
+				"F",
+				14
 			]
 		}
 	},
@@ -215,8 +397,60 @@
 			],
 			"name": [
 				"loodsen",
+				"M",
+				17
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"loodsen",
+				"F",
+				17
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"loodsen",
 				"I",
 				17
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"leiding",
+				"M",
+				100
+			]
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Zeescouts"
+			],
+			"name": [
+				"leiding",
+				"F",
+				100
 			]
 		}
 	},
