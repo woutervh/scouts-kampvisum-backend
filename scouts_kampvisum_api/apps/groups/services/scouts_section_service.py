@@ -183,7 +183,7 @@ class ScoutsSectionService:
             )
             default_scouts_section_names: List[
                 DefaultScoutsSectionName
-            ] = self.default_section_name_service.load_for_type(
+            ] = self.default_section_name_service.load_for_group(
                 request=request, group=group
             )
 
