@@ -19,7 +19,7 @@ class Command(BaseCommand):
         "loadcategories",
         "loadsubcategories",
         "loadchecks",
-        "loaddeadlines",
+        "loaddefaultdeadlines",
     ]
 
     def handle(self, *args, **kwargs):

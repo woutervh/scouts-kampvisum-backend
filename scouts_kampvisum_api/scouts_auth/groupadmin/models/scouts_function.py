@@ -89,3 +89,16 @@ class ScoutsFunction(AuditedBaseModel):
                 fields=["group_admin_id"], name="unique_group_admin_id"
             )
         ]
+
+    def is_section_leader(self, is_active: bool = True) -> bool:
+        if is_active:
+            return self.is_active_section_leader()
+
+    def is_active_section_leader(self) -> bool:
+        pass
+
+    def is_group_leader(self) -> bool:
+        pass
+
+    def is_district_commissioner(self) -> bool:
+        pass

@@ -28,7 +28,12 @@ class DefaultScoutsSectionName(AbstractBaseModel):
     name = models.ForeignKey(ScoutsSectionName, null=True, on_delete=models.DO_NOTHING)
 
     class Meta:
-        unique_together = ("group_type", "name")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["group_type", "name"],
+                name="unique_group_type_and_name_for_default_scouts_section_name",
+            )
+        ]
 
     def clean(self):
         if self.group_type is None or self.name is None:

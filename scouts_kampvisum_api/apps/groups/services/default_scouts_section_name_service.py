@@ -21,13 +21,15 @@ class DefaultScoutsSectionNameService:
             "Loading DefaultScoutsSectionName instances for type '%s'",
             group_type.group_type,
         )
-        types = DefaultScoutsSectionName.objects.filter(
-            group_type=group_type
-        ).distinct()
+        names: List[
+            DefaultScoutsSectionName
+        ] = DefaultScoutsSectionName.objects.safe_get_list(group_type=group_type)
 
-        if not types or types.count() == 0:
-            types = DefaultScoutsSectionName.objects.filter(
-                group_type__parent=group_type
-            ).distinct()
+        if not names or names.count() == 0:
+            names: List[
+                DefaultScoutsSectionName
+            ] = DefaultScoutsSectionName.objects.safe_get_list(
+                group_type=group_type.parent
+            )
 
-        return types
+        return names
