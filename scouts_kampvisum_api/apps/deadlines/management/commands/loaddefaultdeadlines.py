@@ -118,13 +118,13 @@ class Command(BaseCommand):
                             previous_item_index = previous_item_index + 1
                             item["index"] = previous_item_index
 
+                            logger.debug("item: %s", item)
                             deadline_item: DeadlineItem = (
                                 deadline_item_service.create_or_update_deadline_item(
                                     request=None, deadline=deadline, **item
                                 )
                             )
-
-                        model.get("fields").pop("items")
+                    model.get("fields").pop("items")
 
                     logger.trace("MODEL: %s", model)
 

@@ -90,7 +90,7 @@ LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
 # LOGGING_LEVEL = "API"
 # LOGGING_LEVEL = "TRACE"
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
-LOGGING_LEVEL_DB = "INFO"
+LOGGING_LEVEL_DB = "DEBUG"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
