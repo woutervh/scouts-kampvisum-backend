@@ -110,12 +110,16 @@ class ScoutsFunctionService:
         scouts_function: ScoutsFunction = ScoutsFunction()
 
         scouts_function.group_admin_id = abstract_function.group_admin_id
-        scouts_function.code = abstract_function.code
-        scouts_function.type = abstract_function.type
-        scouts_function.description = abstract_function.description
+        scouts_function.code = abstract_function.code if abstract_function.code else ""
+        scouts_function.type = abstract_function.type if abstract_function.type else ""
+        scouts_function.description = (
+            abstract_function.description if abstract_function.description else ""
+        )
         scouts_function.group = scouts_group
-        scouts_function.begin = abstract_function.begin
-        scouts_function.end = abstract_function.end
+        scouts_function.begin = (
+            abstract_function.begin if abstract_function.begin else None
+        )
+        scouts_function.end = abstract_function.end if abstract_function.end else None
         scouts_function.created_by = created_by
 
         scouts_function.full_clean()

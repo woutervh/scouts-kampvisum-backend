@@ -44,18 +44,18 @@ class AbstractScoutsFunction(AbstractNonModel):
 
     def __init__(
         self,
-        group_admin_id: str = "",
-        type: str = "",
+        group_admin_id: str = None,
+        type: str = None,
         scouts_group: AbstractScoutsGroup = None,
-        function: str = "",
+        function: str = None,
         scouts_groups: List[AbstractScoutsGroup] = None,
         groupings: List[AbstractScoutsGrouping] = None,
         begin: datetime = None,
         end: datetime = None,
         max_birth_date: date = None,
-        code: str = "",
-        description: str = "",
-        adjunct: str = "",
+        code: str = None,
+        description: str = None,
+        adjunct: str = None,
         links: List[AbstractScoutsLink] = None,
         groups_section_leader: Dict[str, bool] = None,
         groups_group_leader: Dict[str, bool] = None,
@@ -77,8 +77,6 @@ class AbstractScoutsFunction(AbstractNonModel):
             groups_section_leader if groups_section_leader else {}
         )
         self.groups_group_leader = groups_group_leader if groups_group_leader else {}
-
-        # super().__init__([], {})
 
     @property
     def function_code(self):
