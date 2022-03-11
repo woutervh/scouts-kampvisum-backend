@@ -80,7 +80,7 @@ class ScoutsGroup(AuditedBaseModel):
 
     @property
     def gender(self) -> Gender:
-        identifier = self.name.upper()[-1]
+        identifier = self.number.upper().strip()[-1]
         if identifier == GroupadminSettings().get_group_gender_identifier_male():
             return Gender.MALE
         if identifier == GroupadminSettings.get_group_gender_identifier_female():
