@@ -99,6 +99,22 @@
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "jins",
+			"gender": "M",
+			"age_group": 17
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "jins",
+			"gender": "F",
+			"age_group": 17
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "jins",
 			"gender": "I",
 			"age_group": 17
 		}
