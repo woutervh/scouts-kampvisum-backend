@@ -96,4 +96,4 @@ class Command(BaseCommand):
         call_command("loaddata", tmp_path)
 
         logger.debug("REMOVING adjusted fixture %s", tmp_path)
-        # os.remove(tmp_path)
+        os.remove(tmp_path)

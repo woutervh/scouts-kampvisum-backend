@@ -1,12 +1,17 @@
 from django.db import models
 
-from apps.deadlines.models import DefaultDeadline, DeadlineItem
+from apps.camps.models import CampYear, CampType
+
 from apps.deadlines.managers import DeadlineManager
 
-from apps.visums.models import CampVisum
-
-
 from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.fields import RequiredCharField
+from scouts_auth.inuits.models.interfaces import (
+    Describable,
+    Explainable,
+    Indexable,
+    Translatable,
+)
 
 
 # LOGGING
@@ -16,33 +21,47 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class Deadline(AuditedBaseModel):
+class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseModel):
 
     objects = DeadlineManager()
 
-    parent = models.ForeignKey(
-        DefaultDeadline, on_delete=models.CASCADE, related_name="deadline"
+    name = RequiredCharField()
+    is_important = models.BooleanField(default=False)
+    camp_year = models.ForeignKey(
+        CampYear, on_delete=models.CASCADE, related_name="deadline_set"
     )
-    visum = models.ForeignKey(
-        CampVisum, on_delete=models.CASCADE, related_name="deadlines"
-    )
-    items = models.ManyToManyField(DeadlineItem, related_name="deadline")
+    camp_types = models.ManyToManyField(CampType, related_name="deadlines")
 
     class Meta:
-        unique_together = ("parent", "visum")
+        ordering = [
+            "index",
+            "due_date__date_year",
+            "due_date__date_month",
+            "due_date__date_day",
+            "is_important",
+            "name",
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "camp_year"],
+                name="unique_name__camp_year",
+            )
+        ]
 
-    def __str__(self):
-        return "visum ({}), parent({})".format(self.visum.id, self.parent)
+    def natural_key(self):
+        logger.trace("NATURAL KEY CALLED Deadline")
+        return (self.name, self.camp_year)
 
-
-class DeadlineFactory:
-    @staticmethod
-    def get_deadline_fields(default_deadline: DefaultDeadline) -> dict:
-        return {
-            "name": default_deadline.name,
-            "label": default_deadline.label,
-            "description": default_deadline.description,
-            "explanation": default_deadline.explanation,
-            "is_important": default_deadline.is_important,
-            "deadline_type": default_deadline.deadline_type,
-        }
+    def __str__(self) -> str:
+        return "id ({}), name ({}), camp_year({}), camp_types ({}), is_important ({}), label ({}), description ({}), explanation ({})".format(
+            self.id,
+            self.name,
+            self.camp_year.year,
+            ",".join(
+                camp_type.to_readable_str() for camp_type in self.camp_types.all()
+            ),
+            self.is_important,
+            self.label,
+            self.description,
+            self.explanation,
+        )

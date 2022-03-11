@@ -1,13 +1,21 @@
 from rest_framework import serializers
 
 from apps.deadlines.models import DeadlineFlag
-from apps.deadlines.serializers import DefaultDeadlineFlagSerializer
 
 
 class DeadlineFlagSerializer(serializers.ModelSerializer):
-
-    parent = DefaultDeadlineFlagSerializer()
-
     class Meta:
         model = DeadlineFlag
-        fields = "__all__"
+        exclude = ["flag"]
+
+    def to_internal_value(self, data: dict) -> dict:
+        instance = DeadlineFlag.objects.safe_get(**data)
+        if instance:
+            data = {
+                "id": instance.id,
+                "name": instance.name,
+            }
+
+        data = super().to_internal_value(data)
+
+        return data

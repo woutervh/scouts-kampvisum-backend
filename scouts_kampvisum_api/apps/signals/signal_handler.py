@@ -1,7 +1,9 @@
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 
+from apps.groups.models import ScoutsSection
 from apps.groups.services import ScoutsSectionService
 
 from scouts_auth.auth.signals import (
@@ -195,7 +197,38 @@ class SignalHandler:
         persisted_group_count: int = user.persisted_scouts_groups.count()
         function_count: int = len(user.functions)
         persisted_function_count: int = user.persisted_scouts_functions.count()
-        section_count: int = 0
+        section_count: int = ScoutsSection.objects.all().filter(
+            group__in=user.persisted_scouts_groups.all()
+        )
+
+        if group_count == 0:
+            raise ValidationError(
+                "No AbstractScoutsGroup instances loaded from groupadmin for user {}".format(
+                    user.username
+                )
+            )
+        if persisted_group_count == 0:
+            raise ValidationError(
+                "No ScoutsGroup instances were persisted for user {}".format(
+                    user.username
+                )
+            )
+        if function_count == 0:
+            raise ValidationError(
+                "No AbstractScoutsFunction instances loaded from groupadmin for user {}".format(
+                    user.username
+                )
+            )
+        if persisted_function_count == 0:
+            raise ValidationError(
+                "No ScoutsFunction instances were persisted for user {}".format(
+                    user.username
+                )
+            )
+        if section_count == 0:
+            raise ValidationError(
+                "No ScoutsSection instances found for user {}".format(user.username)
+            )
 
         logger.debug(user.to_descriptive_string())
 

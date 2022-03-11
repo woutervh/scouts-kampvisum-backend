@@ -27,7 +27,7 @@ COMMANDS=(
 	"loadcategories"
 	"loadsubcategories"
 	"loadchecks"
-	"loaddefaultdeadlines"
+	"loaddeadlines"
 )
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }

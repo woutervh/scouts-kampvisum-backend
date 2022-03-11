@@ -3,7 +3,7 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-from apps.deadlines.models import DefaultDeadline
+from apps.deadlines.models import Deadline
 from apps.deadlines.managers import DeadlineDateManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
@@ -23,8 +23,8 @@ class DeadlineDate(AbstractBaseModel):
 
     objects = DeadlineDateManager()
 
-    default_deadline = models.OneToOneField(
-        DefaultDeadline, on_delete=models.CASCADE, related_name="due_date"
+    deadline = models.OneToOneField(
+        Deadline, on_delete=models.CASCADE, related_name="due_date"
     )
     date_day = OptionalIntegerField()
     date_month = OptionalIntegerField()
@@ -34,14 +34,12 @@ class DeadlineDate(AbstractBaseModel):
     class Meta:
         ordering = ["date_year", "date_month", "date_day"]
         constraints = [
-            models.UniqueConstraint(
-                fields=["default_deadline"], name="unique_default_deadline"
-            )
+            models.UniqueConstraint(fields=["deadline"], name="unique_deadline")
         ]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED DeadlineDate")
-        return (self.default_deadline,)
+        return (self.deadline,)
 
     def to_date(self) -> datetime.date:
         day = self.day if self.day else 1

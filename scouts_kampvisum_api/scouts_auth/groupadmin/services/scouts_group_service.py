@@ -1,8 +1,10 @@
 from typing import List
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup, ScoutsGroup
+from scouts_auth.groupadmin.services import GroupAdmin
 
 
 # LOGGING
@@ -13,6 +15,27 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsGroupService:
+
+    groupadmin = GroupAdmin()
+
+    def create_or_update_scouts_groups_for_user(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> settings.AUTH_USER_MODEL:
+        abstract_groups: List[AbstractScoutsGroup] = self.groupadmin.get_groups(
+            active_user=user
+        ).scouts_groups
+        user.scouts_groups = abstract_groups
+
+        logger.debug(
+            "SCOUTS AUTHORIZATION SERVICE: Found %d groups(s) for user %s",
+            len(abstract_groups),
+            user.username,
+        )
+
+        self.create_or_update_scouts_groups(user=user)
+
+        return user
+
     def create_or_update_scouts_groups(
         self, user: settings.AUTH_USER_MODEL
     ) -> List[ScoutsGroup]:
@@ -44,8 +67,20 @@ class ScoutsGroupService:
             )
 
     def create_scouts_group(
-        self, created_by: settings.AUTH_USER_MODEL, abstract_group: AbstractScoutsGroup
+        self,
+        created_by: settings.AUTH_USER_MODEL,
+        abstract_group: AbstractScoutsGroup,
+        group_admin_id=None,
     ) -> ScoutsGroup:
+        if not abstract_group:
+            if not group_admin_id:
+                raise ValidationError(
+                    "Can't load scouts group from GroupAdmin without a group_admin_id"
+                )
+            abstract_group: AbstractScoutsGroup = self.groupadmin.get_group(
+                active_user=created_by, group_group_admin_id=group_admin_id
+            )
+
         logger.debug(
             "Creating scouts group with group_admin_id %s and name %s",
             abstract_group.group_admin_id,

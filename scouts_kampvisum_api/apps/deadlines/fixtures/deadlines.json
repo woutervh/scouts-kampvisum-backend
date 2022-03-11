@@ -1,6 +1,6 @@
 [
     {
-        "model": "deadlines.DefaultDeadline",
+        "model": "deadlines.Deadline",
         "fields": {
             "name": "camp_location",
             "label": "Kampplaats",
@@ -30,7 +30,7 @@
         }
     },
     {
-        "model": "deadlines.DefaultDeadline",
+        "model": "deadlines.Deadline",
         "fields": {
             "name": "transport",
             "label": "Vervoer",
@@ -57,7 +57,7 @@
         }
     },
     {
-        "model": "deadlines.DefaultDeadline",
+        "model": "deadlines.Deadline",
         "fields": {
             "name": "contact_cities",
             "label": "Contact met de gemeenten",
@@ -87,7 +87,7 @@
         }
     },
     {
-        "model": "deadlines.DefaultDeadline",
+        "model": "deadlines.Deadline",
         "fields": {
             "name": "forest_license",
             "label": "Bosaanvraag",

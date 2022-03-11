@@ -1,9 +1,14 @@
 from rest_framework import serializers
 
-from apps.deadlines.models import Deadline
-from apps.deadlines.serializers import DefaultDeadlineSerializer, DeadlineItemSerializer
+from apps.camps.models import CampType
+from apps.camps.serializers import CampYearSerializer, CampTypeSerializer
+from apps.camps.services import CampYearService
 
-from apps.visums.serializers import CampVisumSerializer
+from apps.deadlines.models import Deadline
+from apps.deadlines.serializers import (
+    DeadlineDateSerializer,
+    DeadlineItemSerializer,
+)
 
 
 # LOGGING
@@ -15,8 +20,9 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class DeadlineSerializer(serializers.ModelSerializer):
 
-    parent = DefaultDeadlineSerializer(required=False)
-    visum = CampVisumSerializer(required=False)
+    due_date = DeadlineDateSerializer()
+    camp_year = CampYearSerializer(required=False)
+    camp_types = CampTypeSerializer(many=True, required=False)
     items = DeadlineItemSerializer(many=True)
 
     class Meta:
@@ -24,47 +30,26 @@ class DeadlineSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        # logger.trace("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
-        parent = data.pop("parent", {})
+        camp_year = data.get("camp_year", None)
+        if not camp_year:
+            camp_year = CampYearService().get_or_create_current_camp_year()
+            data["camp_year"] = {"id": camp_year.id, "year": camp_year.year}
 
-        data["items"] = []
+        camp_types = data.get("camp_types", None)
+        if not camp_types:
+            default_camp_type = CampType.objects.get_default()
+            default_camp_type = {
+                "id": default_camp_type.id,
+                "camp_type": default_camp_type.camp_type,
+            }
+            data["camp_types"] = [default_camp_type]
 
-        logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
-        data = super().to_internal_value(data)
-        logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
-
-        data["parent"] = parent
-        logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
-
-        return data
-
-    def to_representation(self, obj: Deadline) -> dict:
-        logger.debug("DEADLINE SERIALIZER TO_REPRESENTATION: %s", obj)
-
-        visum = obj.visum.id
-        obj.visum = None
-
-        data = super().to_representation(obj)
-
-        data["visum"] = visum
-
-        return data
-
-
-class DeadlineInputSerializer(serializers.Serializer):
-
-    parent = DefaultDeadlineSerializer(required=False)
-    visum = CampVisumSerializer(required=False)
-    items = DeadlineItemSerializer(many=True)
-
-    class Meta:
-        model = Deadline
-        fields = "__all__"
-
-    def to_internal_value(self, data: dict) -> dict:
-        data["items"] = []
+        # logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         data = super().to_internal_value(data)
+
+        # logger.debug("DEADLINE SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         return data

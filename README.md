@@ -38,8 +38,8 @@ For setup through other means, the following commands should be run, in the foll
 - loadsubcategories
 - loadchecks
 - createcategorysets
-- loaddefaultdeadlines
-- createdefaultdeadlinesets  
+- loaddeadlines
+- createdeadlinesets  
 
 ## **SETTINGS**  
    - `ACTIVITY_EPOCH`  
@@ -293,18 +293,18 @@ In frontend repo: `/src/locales/nl.json`
       - FIXTURE: `scouts_kampvisum_api/apps/visums/fixtures/checks.json`  
       - COMMAND: `django-manage.py loadchecks`  
       - Defines the checks that are linked to sub-categories.  
-  12. **DEFAULT DEADLINES:**  
-      - FIXTURE: `scouts_kampvisum_api/apps/deadlines/fixtures/default_deadlines.json`  
-      - COMMAND: `django-manage.py loaddefaultdeadlines`  
+  12. **DEADLINES:**  
+      - FIXTURE: `scouts_kampvisum_api/apps/deadlines/fixtures/deadlines.json`  
+      - COMMAND: `django-manage.py loaddeadlines`  
       - Defines LinkedSubCategory, LinkedChecked and plain deadlines.  
   13. **CAMP REGISTRATION DEADLINE:**  
       - FIXTURE: `scouts_kampvisum_api/apps/deadlines/fixtures/camp_registration_deadlines.json` 
-      - COMMAND: `django-manage.py loaddefaultdeadlines`  
-      - Defines the default deadlines that apply for the custom camp registration deadline.  
-  14. **DEFAULT DEADLINE SETS:**  
-      - FIXTURE: `scouts_kampvisum_api/apps/deadlines/fixtures/default_deadline_sets.json`  
-      - COMMAND: `django-manage.py createdefaultdeadlinesets`  
-      - Bundles default deadlines into sets for a particular camp year and camp types.  
+      - COMMAND: `django-manage.py loaddeadlines`  
+      - Defines the deadlines that apply for the custom camp registration deadline.  
+  14. **DEADLINE SETS:**  
+      - FIXTURE: `scouts_kampvisum_api/apps/deadlines/fixtures/deadline_sets.json`  
+      - COMMAND: `django-manage.py createdeadlinesets`  
+      - Bundles deadlines into sets for a particular camp year and camp types.  
 
 ## **COMMANDS**  
 

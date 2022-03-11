@@ -1,6 +1,6 @@
 [
     {
-        "model": "deadlines.DefaultDeadline",
+        "model": "deadlines.Deadline",
         "fields": {
             "name": "camp_registration",
             "label": "Kampregistratie",
