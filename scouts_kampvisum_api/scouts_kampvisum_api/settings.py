@@ -90,7 +90,7 @@ LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
 # LOGGING_LEVEL = "API"
 # LOGGING_LEVEL = "TRACE"
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
-LOGGING_LEVEL_DB = "DEBUG"
+LOGGING_LEVEL_DB = "INFO"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
@@ -592,6 +592,7 @@ if USE_S3_STORAGE:
     AWS_DEFAULT_ACL = None
     AWS_S3_FILE_OVERWRITE = OVERWRITE_EXISTING_FILE
     AWS_S3_SIGNATURE_VERSION = "s3v4"
+    AWS_S3_REGION_NAME = env.str("AWS_S3_REGION_NAME", "eu-west-1")
 
 
 # ############################################################################ #
