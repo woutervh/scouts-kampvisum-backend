@@ -2,8 +2,9 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.settings import GroupadminSettings
 
-from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models import AuditedBaseModel, Gender
 from scouts_auth.inuits.models.fields import RequiredCharField, OptionalCharField
 
 
@@ -76,6 +77,15 @@ class ScoutsGroup(AuditedBaseModel):
                 fields=["group_admin_id"], name="unique_group_admin_id_for_group"
             )
         ]
+
+    @property
+    def gender(self) -> Gender:
+        identifier = self.name.upper()[-1]
+        if identifier == GroupadminSettings().get_group_gender_identifier_male():
+            return Gender.MALE
+        if identifier == GroupadminSettings.get_group_gender_identifier_female():
+            return Gender.FEMALE
+        return Gender.MIXED
 
     @staticmethod
     def from_abstract_scouts_group(abstract_group: AbstractScoutsGroup):

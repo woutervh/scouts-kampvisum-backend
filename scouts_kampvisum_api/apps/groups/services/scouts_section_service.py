@@ -181,17 +181,16 @@ class ScoutsSectionService:
                 group.group_admin_id,
                 group.name,
             )
-            group_type = ScoutsGroupType.objects.safe_get(
-                group_type=group.group_type, is_default=True, raise_error=True
-            )
             default_scouts_section_names: List[
                 DefaultScoutsSectionName
-            ] = self.default_section_name_service.load_for_type(request, group_type)
+            ] = self.default_section_name_service.load_for_type(
+                request=request, group=group
+            )
 
             if len(default_scouts_section_names) == 0:
                 raise ValidationError(
                     "No DefaultScoutsSectionName instances found for group_type {}".format(
-                        group_type.group_type
+                        group.group_type
                     )
                 )
             for name in default_scouts_section_names:

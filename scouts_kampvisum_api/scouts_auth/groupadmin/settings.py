@@ -99,16 +99,24 @@ class GroupadminSettings(SettingsHelper):
 
     @staticmethod
     def get_administrator_groups() -> List[str]:
-        return settings.KNOWN_ADMIN_GROUPS
+        return SettingsHelper.get("KNOWN_ADMIN_GROUPS")
 
     @staticmethod
     def get_test_groups() -> List[str]:
-        return settings.KNOWN_TEST_GROUPS
+        return SettingsHelper.get("KNOWN_TEST_GROUPS")
 
     @staticmethod
     def get_roles() -> List[str]:
-        return settings.KNOWN_ROLES
+        return SettingsHelper.get("KNOWN_ROLES")
 
     @staticmethod
     def get_section_leader_identifier() -> str:
-        return settings.SECTION_LEADER_IDENTIFIER
+        return SettingsHelper.get("SECTION_LEADER_IDENTIFIER")
+
+    @staticmethod
+    def get_group_gender_identifier_male() -> str:
+        return SettingsHelper.get("GROUP_GENDER_IDENTIFIER_MALE")
+
+    @staticmethod
+    def get_group_gender_identifier_female() -> str:
+        return SettingsHelper.get("GROUP_GENDER_IDENTIFIER_FEMALE")

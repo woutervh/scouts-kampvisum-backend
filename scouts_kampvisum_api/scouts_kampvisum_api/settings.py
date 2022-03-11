@@ -536,6 +536,9 @@ PROFILE_REFRESH_GROUPS = env.int("PROFILE_REFRESH_GROUPS", PROFILE_REFRESH)
 KNOWN_ADMIN_GROUPS = env.list("KNOWN_ADMIN_GROUPS")
 KNOWN_TEST_GROUPS = env.list("KNOWN_TEST_GROUPS")
 KNOWN_ROLES = env.list("KNOWN_ROLES")
+SECTION_LEADER_IDENTIFIER = env.str("SECTION_LEADER_IDENTIFIER")
+GROUP_GENDER_IDENTIFIER_MALE = "S"
+GROUP_GENDER_IDENTIFIER_FEMALE = "M"
 
 
 # ############################################################################ #
@@ -544,7 +547,6 @@ KNOWN_ROLES = env.list("KNOWN_ROLES")
 #                                                                              #
 # ############################################################################ #
 GROUP_ADMIN_BASE_URL = env.str("GROUP_ADMIN_BASE_URL")
-SECTION_LEADER_IDENTIFIER = env.str("SECTION_LEADER_IDENTIFIER")
 GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/"
 GROUP_ADMIN_PROFILE_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid/profiel"
 GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/zoeken"
