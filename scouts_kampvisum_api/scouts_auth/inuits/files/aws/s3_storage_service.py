@@ -14,7 +14,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class S3StorageService(CustomStorage, S3Boto3Storage):
 
     bucket_name = StorageSettings.get_s3_bucket_name()
-    default_acl = StorageSettings.get_s3_default_acl()
+    # default_acl = StorageSettings.get_s3_default_acl()
     file_overwrite = StorageSettings.get_s3_file_overwrite()
 
     local_storage = FileSystemStorage()
