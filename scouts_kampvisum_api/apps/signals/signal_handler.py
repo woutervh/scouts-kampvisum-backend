@@ -174,20 +174,36 @@ class SignalHandler:
         #         "SIGNAL handling for '%s' -> Loading additional user groups", signal
         #     )
         #     user = authorization_service.load_user_scouts_groups(user=user)
-        logger.debug(
-            "SIGNAL handling for '%s' -> Loading additional user groups", signal
-        )
-        user = authorization_service.load_user_scouts_groups(user=user)
+        try:
+            logger.debug(
+                "SIGNAL handling for '%s' -> Loading additional user groups", signal
+            )
+            user = authorization_service.load_user_scouts_groups(user=user)
+        except Exception as exc:
+            raise ValidationError(
+                "An error occured while loading user scouts groups", exc
+            )
         # if OIDCUserHelper.requires_function_loading(user=user):
         #     logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
         #     user = authorization_service.load_user_functions(user=user)
-        logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
-        user = authorization_service.load_user_functions(user=user)
-        logger.debug(
-            "SIGNAL handling for '%s' -> Setting up sections for user's groups",
-            signal,
-        )
-        section_service.setup_default_sections(user=user)
+        try:
+            logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
+            user = authorization_service.load_user_functions(user=user)
+        except Exception as exc:
+            raise ValidationError(
+                "An error occured while loading user scouts functions", exc
+            )
+
+        try:
+            logger.debug(
+                "SIGNAL handling for '%s' -> Setting up sections for user's groups",
+                signal,
+            )
+            section_service.setup_default_sections(user=user)
+        except Exception as exc:
+            raise ValidationError(
+                "An error occured while setting up default scouts sections", exc
+            )
 
         user: settings.AUTH_USER_MODEL = SignalHandler._cache_user_data(
             user=user, signal=signal
