@@ -16,7 +16,7 @@ def validate_uploaded_file(value):
     if value.size > StorageSettings.get_max_file_size():
         raise ValidationError(
             "File size ({}) exceeds max file size defined in {}",
-            value._size,
+            value.size,
             StorageSettings.FILE_UPLOAD_MAX_SIZE,
         )
     configured_allowed_extensions: List[
