@@ -123,8 +123,40 @@
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "zeehondjes",
+			"gender": "M",
+			"age_group": 6
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "zeehondjes",
+			"gender": "F",
+			"age_group": 6
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "zeehondjes",
 			"gender": "I",
 			"age_group": 6
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "zeewelpen",
+			"gender": "M",
+			"age_group": 9
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "zeewelpen",
+			"gender": "F",
+			"age_group": 9
 		}
 	},
 	{
@@ -139,8 +171,40 @@
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "scheepsmakkers",
+			"gender": "M",
+			"age_group": 11
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "scheepsmakkers",
+			"gender": "F",
+			"age_group": 11
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "scheepsmakkers",
 			"gender": "I",
 			"age_group": 11
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "zeeverkenners",
+			"gender": "M",
+			"age_group": 14
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "zeeverkenners",
+			"gender": "F",
+			"age_group": 14
 		}
 	},
 	{
@@ -155,8 +219,42 @@
 		"model": "groups.ScoutsSectionName",
 		"fields": {
 			"name": "loodsen",
+			"gender": "M",
+			"age_group": 17
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "loodsen",
+			"gender": "F",
+			"age_group": 17
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "loodsen",
 			"gender": "I",
 			"age_group": 17
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "leiding",
+			"gender": "M",
+			"age_group": 100,
+			"hidden": true
+		}
+	},
+	{
+		"model": "groups.ScoutsSectionName",
+		"fields": {
+			"name": "leiding",
+			"gender": "F",
+			"age_group": 100,
+			"hidden": true
 		}
 	},
 	{

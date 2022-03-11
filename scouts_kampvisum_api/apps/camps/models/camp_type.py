@@ -19,7 +19,7 @@ class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
 
     camp_type = RequiredCharField()
     is_base = models.BooleanField(default=False)
-    is_default = UniqueBooleanField()
+    is_default = UniqueBooleanField(default=False)
 
     class Meta:
         ordering = ["index", "camp_type"]
