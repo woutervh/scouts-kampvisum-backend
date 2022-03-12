@@ -3,6 +3,8 @@ from django.db import transaction
 from apps.deadlines.models import LinkedDeadline, DeadlineFlag, LinkedDeadlineFlag
 from apps.deadlines.services import DeadlineFlagService
 
+from apps.signals.services import ChangeHandlerService
+
 
 # LOGGING
 import logging
@@ -14,6 +16,13 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class LinkedDeadlineFlagService:
 
     deadline_flag_service = DeadlineFlagService()
+    change_handler_service = ChangeHandlerService()
+
+    def notify_change(self, instance: LinkedDeadlineFlag, data_changed: bool = False):
+        if data_changed and instance.parent.has_change_handlers():
+            self.change_handler_service.handle_changes(change_handlers=instance.parent.change_handlers, instance=instance)
+
+        return instance
 
     @transaction.atomic
     def get_or_create_linked_deadline_flag(
@@ -53,11 +62,13 @@ class LinkedDeadlineFlagService:
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
+        
+        old_value = instance.flag
 
         instance.flag = data.get("flag", instance.flag)
         instance.updated_by = request.user
 
         instance.full_clean()
         instance.save()
-
-        return instance
+        
+        return self.notify_change(instance=instance, data_changed=data.get("flag", None) is not None and data.get("flag") != old_value)

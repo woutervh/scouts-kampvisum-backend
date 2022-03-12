@@ -39,6 +39,7 @@ class Command(BaseCommand):
         all_camp_types: List[str] = [
             [camp_type.camp_type] for camp_type in CampType.objects.all().selectable()
         ]
+        default_change_handler = settings.CHECK_CHANGED
 
         logger.debug("Loading checks from %s", path)
 
@@ -86,6 +87,20 @@ class Command(BaseCommand):
                 elif len(camp_types) > 1 and default_camp_type in camp_types:
                     camp_types.remove(default_camp_type)
                 model.get("fields")["camp_types"] = [camp_types]
+                
+                # Add change handlers
+                change_handlers: str = model.get("fields").get("change_handlers", None)
+                if not change_handlers:
+                    change_handlers = default_change_handler
+                else:
+                    results = []
+                    change_handlers = change_handlers.split(",")
+                    for change_handler in change_handlers:
+                        change_handler = change_handler.strip()
+                        if not change_handler == default_change_handler:
+                            results.append(change_handler)
+                    change_handlers = "{},{}".format(default_change_handler, ",".join(results))
+                model.get("fields")["change_handlers"] = change_handlers
 
                 logger.trace("MODEL DATA: %s", model)
 

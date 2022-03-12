@@ -18,3 +18,6 @@ class LinkedDeadlineFlag(AuditedBaseModel):
 
     parent = models.ForeignKey(DeadlineFlag, on_delete=models.CASCADE)
     flag = models.BooleanField(default=False)
+    
+    def is_checked(self) -> bool:
+        return self.flag

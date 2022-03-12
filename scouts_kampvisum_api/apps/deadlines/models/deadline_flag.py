@@ -3,8 +3,8 @@ from django.db import models
 from apps.deadlines.managers import DeadlineFlagManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import RequiredCharField
-from scouts_auth.inuits.models.interfaces import Indexable, Translatable
+from scouts_auth.inuits.models.fields import RequiredCharField, OptionalCharField
+from scouts_auth.inuits.models.interfaces import Changeable, Indexable, Translatable
 
 
 # LOGGING
@@ -14,7 +14,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class DeadlineFlag(Indexable, Translatable, AbstractBaseModel):
+class DeadlineFlag(Changeable, Indexable, Translatable, AbstractBaseModel):
 
     objects = DeadlineFlagManager()
 

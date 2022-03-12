@@ -21,6 +21,7 @@ class LinkedDeadlineManager(models.Manager):
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         parent = kwargs.get("parent", None)
+        parent_name = kwargs.get("parent_name", None)
         visum = kwargs.get("visum", None)
         raise_error = kwargs.get("raise_error", False)
 
@@ -35,11 +36,17 @@ class LinkedDeadlineManager(models.Manager):
                 return self.get_queryset().get(parent=parent, visum=visum)
             except:
                 pass
+        
+        if parent_name and visum:
+            try:
+                return self.get_queryset().get(parent__name=parent_name, visum=visum)
+            except:
+                pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate LinkedDeadline instance with provided params (pk: {}, (parent: {}, visum: {}))".format(
-                    pk, parent, visum
+                "Unable to locate LinkedDeadline instance with provided params (pk: {}, (parent: {}, visum: {}), (parent_name: {}, visum: {}))".format(
+                    pk, parent, visum, parent_name, visum
                 )
             )
         return None

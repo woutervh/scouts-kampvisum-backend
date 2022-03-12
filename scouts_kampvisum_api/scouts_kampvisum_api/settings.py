@@ -516,6 +516,15 @@ OIDC_OP_JWKS_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOI
 
 # ############################################################################ #
 #                                                                              #
+# CHANGE HANDLERS                                                              #
+#                                                                              #
+# ############################################################################ #
+CAMP_REGISTRATION_DEADLINE = "camp_registration"
+DEADLINE_FLAG_CHANGED = "default_deadline_flag_changed"
+CHECK_CHANGED = "default_check_changed"
+
+# ############################################################################ #
+#                                                                              #
 # SCOUTS                                                                       #
 #                                                                              #
 # ############################################################################ #

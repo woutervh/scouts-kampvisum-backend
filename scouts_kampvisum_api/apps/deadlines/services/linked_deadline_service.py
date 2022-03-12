@@ -2,6 +2,7 @@ from typing import List
 
 from django.utils import timezone
 from django.db import transaction
+from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from apps.camps.models import CampYear, CampType
@@ -34,6 +35,19 @@ class LinkedDeadlineService:
 
     deadline_service = DeadlineService()
     linked_deadline_item_service = LinkedDeadlineItemService()
+    
+    def get_camp_registration_deadline(self, visum: CampVisum) -> LinkedDeadline:
+        return LinkedDeadline.objects.safe_get(parent_name=settings.CAMP_REGISTRATION_DEADLINE, visum=visum, raise_error=True)
+    
+    def are_camp_registration_deadline_items_checked(self, visum: CampVisum) -> bool:
+        linked_deadline: LinkedDeadline = self.get_camp_registration_deadline(visum=visum)
+        items: List[LinkedDeadlineItem] = linked_deadline.items.all()
+        
+        for item in items:
+            if not item.is_checked():
+                return False
+        
+        return True
 
     @transaction.atomic
     def create_or_update_linked_deadline(

@@ -1095,7 +1095,7 @@
             "check_type": [
                 "ParticipantResponsibleCheck"
             ],
-            "change_handler": "change_camp_responsible",
+            "change_handlers": ["change_camp_responsible"],
             "label": "Contactgegevens kampverantwoordelijke",
             "explanation": "De kampverantwoordelijke is iemand van de leidingsploeg die als verantwoordelijke het kamp ‘trekt’."
         }

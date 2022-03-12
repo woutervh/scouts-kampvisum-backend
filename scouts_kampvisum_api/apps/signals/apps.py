@@ -13,6 +13,6 @@ class SignalsConfig(AppConfig):
 
     def ready(self):
         import scouts_auth.auth.signals
-        from .signal_handler import SignalHandler
+        from .services.signal_handler_service import SignalHandlerService
 
         logger.debug("App is ready")

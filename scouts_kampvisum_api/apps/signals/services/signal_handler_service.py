@@ -27,7 +27,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class SignalHandler:
+class SignalHandlerService:
 
     handling_login = False
     handling_refresh = False
@@ -44,7 +44,7 @@ class SignalHandler:
         logger.debug(
             "SIGNAL received: '%s' from %s", signal, ScoutsAuthSignalSender.sender
         )
-        if not SignalHandler._is_initial_db_ready():
+        if not SignalHandlerService._is_initial_db_ready():
             logger.debug(
                 "Will not attempt to populate user permissions until migrations have been performed."
             )
@@ -71,9 +71,9 @@ class SignalHandler:
         Some user data necessary for permissions can only be loaded by a groupadmin profile call after authentication.
         This method handles a signal for the basic oidc authentication, then makes the necessary additional calls.
         """
-        if SignalHandler.handling_login:
+        if SignalHandlerService.handling_login:
             return
-        SignalHandler.handling_login = True
+        SignalHandlerService.handling_login = True
         signal = "oidc_login"
 
         logger.debug(
@@ -81,11 +81,11 @@ class SignalHandler:
         )
         logger.debug("LOGGED IN USER: %s (%s)", user.username, type(user).__name__)
 
-        user: settings.AUTH_USER_MODEL = SignalHandler._check_user_data(
+        user: settings.AUTH_USER_MODEL = SignalHandlerService._check_user_data(
             user=user, signal=signal
         )
 
-        SignalHandler.handling_login = False
+        SignalHandlerService.handling_login = False
 
         return user
 
@@ -98,9 +98,9 @@ class SignalHandler:
     def handle_oidc_refresh(
         user: settings.AUTH_USER_MODEL, **kwargs
     ) -> settings.AUTH_USER_MODEL:
-        if SignalHandler.handling_refresh:
+        if SignalHandlerService.handling_refresh:
             return
-        SignalHandler.handling_refresh = True
+        SignalHandlerService.handling_refresh = True
         signal = "oidc_refresh"
 
         logger.debug(
@@ -108,11 +108,11 @@ class SignalHandler:
         )
         logger.debug("REFRESHED USER: %s (%s)", user.username, type(user).__name__)
 
-        user: settings.AUTH_USER_MODEL = SignalHandler._check_user_data(
+        user: settings.AUTH_USER_MODEL = SignalHandlerService._check_user_data(
             user=user, signal=signal
         )
 
-        SignalHandler.handling_refresh = False
+        SignalHandlerService.handling_refresh = False
 
         return user
 
@@ -131,9 +131,9 @@ class SignalHandler:
         Some user data necessary for permissions can only be loaded by a groupadmin profile call after authentication.
         This method handles a signal for the basic oidc authentication, then makes the necessary additional calls.
         """
-        if SignalHandler.handling_authentication:
+        if SignalHandlerService.handling_authentication:
             return
-        SignalHandler.handling_authentication = True
+        SignalHandlerService.handling_authentication = True
         signal = "oidc_authenticated"
 
         logger.debug(
@@ -141,7 +141,7 @@ class SignalHandler:
         )
         logger.debug("AUTHENTICATED USER: %s (%s)", user.username, type(user).__name__)
 
-        SignalHandler.handling_authentication = False
+        SignalHandlerService.handling_authentication = False
 
         return user
 
@@ -205,7 +205,7 @@ class SignalHandler:
                 "An error occured while setting up default scouts sections", exc
             )
 
-        user: settings.AUTH_USER_MODEL = SignalHandler._cache_user_data(
+        user: settings.AUTH_USER_MODEL = SignalHandlerService._cache_user_data(
             user=user, signal=signal
         )
 

@@ -18,7 +18,8 @@ from apps.visums.models import (
     LinkedCommentCheck,
     LinkedNumberCheck,
 )
-from apps.visums.services import ChangeHandlerService
+
+from apps.signals.services import ChangeHandlerService
 
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.models import PersistedFile
@@ -48,10 +49,8 @@ class LinkedCheckService:
         return check
 
     def notify_change(self, instance: LinkedCheck, data_changed: bool = False):
-        if data_changed and instance.parent.has_change_handler():
-            getattr(self.change_handler_service, instance.parent.change_handler)(
-                instance=instance
-            )
+        if data_changed and instance.parent.has_change_handlers():
+            self.change_handler_service.handle_changes(change_handlers=instance.parent.change_handlers, instance=instance)
 
         return instance
 

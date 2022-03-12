@@ -54,3 +54,13 @@ class LinkedDeadlineItem(AbstractBaseModel):
 
     def is_check_deadline(self):
         return self.parent.is_check_deadline()
+    
+    def is_checked(self) -> bool:
+        if self.is_deadline():
+            return self.flag.flag
+        
+        if self.is_sub_category_deadline():
+            return self.linked_sub_category.is_checked()
+
+        if self.is_check_deadline():
+            return self.check.is_checked()
