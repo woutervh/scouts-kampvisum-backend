@@ -87,10 +87,21 @@ class CampVisumService:
             camp_types=camp_types
         )
 
-        logger.debug("Updating camp %s for visum with id %s", camp.name, instance.id)
+        logger.debug(
+            "Updating camp %s for visum with id %s and camp types (%s)",
+            camp.name,
+            instance.id,
+            ", ".join([camp_type.camp_type for camp_type in camp_types]),
+        )
         instance.camp = self.camp_service.camp_update(
             request, instance=camp, **camp_fields
         )
+        instance.full_clean()
+        instance.save()
+
+        instance.camp_types.clear()
+        for camp_type in camp_types:
+            instance.camp_types.add(camp_type)
 
         logger.debug(
             "Updating LinkedCategorySet with id %s for visum with id %s",
@@ -104,11 +115,5 @@ class CampVisumService:
                 visum=instance,
             )
         )
-
-        instance.full_clean()
-        instance.save()
-
-        # existing_camp_types = instance.category_set.parent.camp_type
-        camp_types = fields.get("camp_types", [])
 
         return instance

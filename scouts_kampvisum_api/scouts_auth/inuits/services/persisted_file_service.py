@@ -13,7 +13,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PersistedFileService:
-    def save(self, request, **data):
+    def save(self, request, data):
         uploaded_file = data.get("file", None)
 
         if uploaded_file is None:

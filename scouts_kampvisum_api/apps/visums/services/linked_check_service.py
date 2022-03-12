@@ -306,6 +306,7 @@ class LinkedCheckService:
             raise ValidationError("Can't link an empty list of files")
 
         for file in files:
+            logger.debug("FILE: %s (%s)", file, type(file).__name__)
             instance.value.add(file)
 
         instance.full_clean()

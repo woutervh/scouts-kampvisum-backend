@@ -48,7 +48,7 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("PERSISTED FILE CREATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.persisted_file_service.save(request, **validated_data)
+        instance = self.persisted_file_service.save(request, validated_data)
 
         output_serializer = PersistedFileSerializer(
             instance, context={"request": request}
