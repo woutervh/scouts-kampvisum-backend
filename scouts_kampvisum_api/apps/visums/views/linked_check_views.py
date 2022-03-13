@@ -691,7 +691,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                     )
                 )
                 .distinct()
-                .filter(Q(file__icontains=term))
+                .filter(Q(original_name__icontains=term))
             )
 
             page = self.paginate_queryset(instances)
