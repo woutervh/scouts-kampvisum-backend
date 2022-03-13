@@ -28,7 +28,7 @@ class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
         ]
 
     def natural_key(self):
-        logger.trace("NATURAL KEY CALLED CampType")
+        # logger.trace("NATURAL KEY CALLED CampType")
         return (self.camp_type,)
 
     def __str__(self):

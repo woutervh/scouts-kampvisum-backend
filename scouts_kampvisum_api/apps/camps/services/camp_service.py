@@ -42,7 +42,7 @@ class CampService:
         camp.full_clean()
         camp.save()
 
-        logger.debug("Linking %d section(s) to camp '%s'", len(sections), camp.name)
+        # logger.debug("Linking %d section(s) to camp '%s'", len(sections), camp.name)
         # section_objects = ScoutsSection.objects.filter(id__in=sections)
 
         for section in sections:
@@ -57,7 +57,7 @@ class CampService:
         """
         Updates an existing Camp object in the DB.
         """
-        logger.debug("Camp update fields: %s", fields)
+        # logger.debug("Camp update fields: %s", fields)
         # Required arguments:
         instance.name = fields.get("name", instance.name)
         sections = fields.get("sections")

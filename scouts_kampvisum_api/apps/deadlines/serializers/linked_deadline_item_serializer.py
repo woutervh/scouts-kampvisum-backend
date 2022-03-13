@@ -29,7 +29,7 @@ class LinkedDeadlineItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, obj: LinkedDeadlineItem) -> dict:
-        logger.debug("LINKED DEADLINE ITEM: %s", obj)
+        # logger.debug("LINKED DEADLINE ITEM: %s", obj)
         data = super().to_representation(obj)
 
         if obj.is_sub_category_deadline():

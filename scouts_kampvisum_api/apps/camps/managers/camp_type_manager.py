@@ -56,12 +56,12 @@ class CampTypeManager(models.Manager):
         return self.get_queryset().get(is_default=True)
 
     def get_by_natural_key(self, camp_type):
-        logger.trace(
-            "GET BY NATURAL KEY %s: (camp_type: %s (%s))",
-            "CampType",
-            camp_type,
-            type(camp_type).__name__,
-        )
+        # logger.trace(
+        #     "GET BY NATURAL KEY %s: (camp_type: %s (%s))",
+        #     "CampType",
+        #     camp_type,
+        #     type(camp_type).__name__,
+        # )
 
         if camp_type.strip() == "*":
             logger.trace("GET BY NATURAL KEY WITH expander (*)")

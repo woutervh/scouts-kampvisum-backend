@@ -32,7 +32,7 @@ class CampYear(AuditedBaseModel):
         constraints = [models.UniqueConstraint(fields=["year"], name="unique_year")]
 
     def natural_key(self):
-        logger.trace("NATURAL KEY CALLED CampYear")
+        # logger.trace("NATURAL KEY CALLED CampYear")
         return (self.year,)
 
     def __str__(self):

@@ -2,6 +2,7 @@ import jwt
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
 from scouts_auth.auth.signals import ScoutsAuthSignalSender
@@ -64,6 +65,10 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         member: AbstractScoutsMember = self._load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self._merge_member_data(user, member, claims)
+
+        user.last_refreshed = timezone.now()
+        user.full_clean()
+        user.save()
 
         logger.debug(
             "SCOUTS OIDC AUTHENTICATION: Updated a user with username %s ",

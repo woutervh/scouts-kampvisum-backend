@@ -30,11 +30,11 @@ class PermissionService:
         roles_package = OIDCSettings.get_authorization_roles_config_package()
         roles_yaml = OIDCSettings.get_authorization_roles_config_yaml()
 
-        logger.debug(
-            "SCOUTS_AUTH: importing roles and permissions from %s/%s",
-            roles_package,
-            roles_yaml,
-        )
+        # logger.debug(
+        #     "SCOUTS_AUTH: importing roles and permissions from %s/%s",
+        #     roles_package,
+        #     roles_yaml,
+        # )
 
         importlib.import_module(roles_package)
         yaml_data = pkg_resources.read_text(roles_package, roles_yaml)
@@ -50,9 +50,9 @@ class PermissionService:
                     group, group_permissions, permissions
                 )
 
-                logger.debug(
-                    "Adding %d PERMISSIONS to group %s", len(permissions), group_name
-                )
+                # logger.debug(
+                #     "Adding %d PERMISSIONS to group %s", len(permissions), group_name
+                # )
                 for permission in permissions:
                     self._add_permission_by_name(
                         group,
@@ -102,12 +102,12 @@ class PermissionService:
 
             # If we're here, then the group permission has been revoked
             if remove_permission:
-                logger.debug(
-                    "Removing permission %s.%s from group %s",
-                    group_permission.content_type.app_label,
-                    group_permission.codename,
-                    group.name,
-                )
+                # logger.debug(
+                #     "Removing permission %s.%s from group %s",
+                #     group_permission.content_type.app_label,
+                #     group_permission.codename,
+                #     group.name,
+                # )
                 group_permission.delete()
 
         for remove_permission in remove_permissions:

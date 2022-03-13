@@ -95,6 +95,9 @@ class ScoutsUser(User):
     #
     last_authenticated: datetime = TimezoneAwareDateTimeField(default=datetime.now)
     last_refreshed: datetime = TimezoneAwareDateTimeField(default=datetime.now)
+    last_updated: datetime = TimezoneAwareDateTimeField(default=datetime.now)
+    last_updated_groups: datetime = TimezoneAwareDateTimeField(default=datetime.now)
+    last_updated_funtions: datetime = TimezoneAwareDateTimeField(default=datetime.now)
 
     #
     # Fields inherited from scouts_auth.auth.models.User that may need to be updated after a call to groupadmin
@@ -280,9 +283,10 @@ class ScoutsUser(User):
             "addresses",
             " || ".join(address.to_descriptive_string() for address in self.addresses),
             "functions",
-            " || ".join(
-                function.to_descriptive_string() for function in self.functions
-            ),
+            # " || ".join(
+            #     function.to_descriptive_string() for function in self.functions
+            # ),
+            len(self.functions),
             "PERMISSIONS",
             ", ".join(permission for permission in self.get_all_permissions()),
             "AUTH GROUPS",

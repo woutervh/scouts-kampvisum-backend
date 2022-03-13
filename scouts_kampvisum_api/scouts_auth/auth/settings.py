@@ -45,12 +45,16 @@ class OIDCSettings(SettingsHelper):
         return SettingsHelper.get("OIDC_PROXY", default_value)
 
     @staticmethod
-    def get_profile_refresh_time(default_value=24):
+    def get_profile_refresh_time(default_value=15):
         return SettingsHelper.get_int("PROFILE_REFRESH", default_value)
 
     @staticmethod
-    def get_profile_refresh_groups_time(default_value=24):
+    def get_profile_refresh_groups_time(default_value=15):
         return SettingsHelper.get_int("PROFILE_REFRESH_GROUPS", default_value)
+
+    @staticmethod
+    def get_profile_refresh_functions_time(default_value=15):
+        return SettingsHelper.get_int("PROFILE_REFRESH_FUNCTIONS", default_value)
 
     @staticmethod
     def get_secret_key(default_value=None):

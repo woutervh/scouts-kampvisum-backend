@@ -46,12 +46,12 @@ class ScoutsSectionService:
         if not user:
             user = request.user
 
-        logger.debug(
-            "Querying existing ScoutsSection instances with group admin id %s and name %s (%s)",
-            group.group_admin_id,
-            name,
-            type(name).__name__,
-        )
+        # logger.debug(
+        #     "Querying existing ScoutsSection instances with group admin id %s and name %s (%s)",
+        #     group.group_admin_id,
+        #     name,
+        #     type(name).__name__,
+        # )
         name_instance = ScoutsSectionName.objects.safe_get(
             id=name.id, name=name.name, gender=name.gender, age_group=name.age_group
         )
@@ -66,19 +66,19 @@ class ScoutsSectionService:
             return None
 
         if count == 0:
-            logger.debug(
-                "Creating ScoutsSection with name '%s' for group %s",
-                name,
-                group.group_admin_id,
-            )
+            # logger.debug(
+            #     "Creating ScoutsSection with name '%s' for group %s",
+            #     name,
+            #     group.group_admin_id,
+            # )
             return self._section_create(request, user, group, name, hidden)
         if count == 1:
             instance = qs[0]
-            logger.debug(
-                "Updating ScoutsSection with name '%s' for group %s",
-                instance.name.name,
-                group.group_admin_id,
-            )
+            # logger.debug(
+            #     "Updating ScoutsSection with name '%s' for group %s",
+            #     instance.name.name,
+            #     group.group_admin_id,
+            # )
             return self._section_update(request, user, instance, group, name, hidden)
 
     def _section_create(
@@ -106,7 +106,7 @@ class ScoutsSectionService:
         return instance
 
     def update_section(self, request, instance: ScoutsSection, **data) -> ScoutsSection:
-        logger.debug("SCOUTS SECTION SERVICE UPDATE DATA: %s", data)
+        # logger.debug("SCOUTS SECTION SERVICE UPDATE DATA: %s", data)
         group: ScoutsGroup = data.get("group")
         name: ScoutsSectionName = self.section_name_service.update_name(
             request,
@@ -144,7 +144,7 @@ class ScoutsSectionService:
         if not user:
             user = request.user
 
-        logger.debug("Updating Section with name '%s'", instance.name.name)
+        # logger.debug("Updating Section with name '%s'", instance.name.name)
 
         instance.group = group
         instance.name = name
@@ -169,18 +169,18 @@ class ScoutsSectionService:
 
         for group in groups:
             if group.default_sections_loaded:
-                logger.debug(
-                    "Default sections for group %s already loaded (%d section(s))",
-                    group.group_admin_id,
-                    group.sections.count(),
-                )
-                pass
+                # logger.debug(
+                #     "Default sections for group %s already loaded (%d section(s))",
+                #     group.group_admin_id,
+                #     group.sections.count(),
+                # )
+                continue
 
-            logger.debug(
-                "Linking sections to GROUP: %s (%s)",
-                group.group_admin_id,
-                group.name,
-            )
+            # logger.debug(
+            #     "Linking sections to GROUP: %s (%s)",
+            #     group.group_admin_id,
+            #     group.name,
+            # )
             default_scouts_section_names: List[
                 DefaultScoutsSectionName
             ] = self.default_section_name_service.load_for_group(

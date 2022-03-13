@@ -54,7 +54,7 @@ class CampYearService:
             start_date,
             end_date,
         ) = ScoutsTemporalDetails.get_start_and_end_date_of_camp_year(date)
-        logger.debug("Start date of camp year for date %s: %s", date, start_date)
+        # logger.debug("Start date of camp year for date %s: %s", date, start_date)
         qs = CampYear.objects.filter(start_date__lte=start_date, end_date__gte=end_date)
         if qs.count() == 1:
             logger.debug("Found a year: %s", qs[0])
@@ -68,12 +68,12 @@ class CampYearService:
         start_date = ScoutsTemporalDetails.get_start_of_camp_year(date)
         end_date = ScoutsTemporalDetails.get_end_of_camp_year(date)
 
-        logger.debug(
-            "Creating camp year %s with start date %s and end date %s",
-            end_date.year,
-            start_date,
-            end_date,
-        )
+        # logger.debug(
+        #     "Creating camp year %s with start date %s and end date %s",
+        #     end_date.year,
+        #     start_date,
+        #     end_date,
+        # )
 
         instance.start_date = datetime.datetime(
             start_date.year, start_date.month, start_date.day
@@ -96,14 +96,14 @@ class CampYearService:
         """
         current = datetime.date.today()
 
-        logger.debug("CURRENT: %s", current)
+        # logger.debug("CURRENT: %s", current)
 
         year = self._get_year(current)
 
         if not year:
-            logger.debug("Creating CampYear for calendar year %s", current.year)
+            # logger.debug("Creating CampYear for calendar year %s", current.year)
             return [self._create_year(current)]
 
-        logger.debug("CampYear for date (%s) already exists: %s", current, year)
+        # logger.debug("CampYear for date (%s) already exists: %s", current, year)
 
         return [year]

@@ -2,6 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.dispatch import receiver
+from django.utils import timezone
 
 from apps.groups.models import ScoutsSection
 from apps.groups.services import ScoutsSectionService
@@ -51,7 +52,7 @@ class SignalHandlerService:
             return
 
         try:
-            logger.debug("Populating user permissions")
+            # logger.debug("Populating user permissions")
             PermissionService().populate_roles()
         except Exception as exc:
             logger.error("Unable to populate user roles", exc)
@@ -79,7 +80,7 @@ class SignalHandlerService:
         logger.debug(
             "SIGNAL received: '%s' from %s", signal, ScoutsAuthSignalSender.sender
         )
-        logger.debug("LOGGED IN USER: %s (%s)", user.username, type(user).__name__)
+        # logger.debug("LOGGED IN USER: %s (%s)", user.username, type(user).__name__)
 
         user: settings.AUTH_USER_MODEL = SignalHandlerService._check_user_data(
             user=user, signal=signal
@@ -106,7 +107,7 @@ class SignalHandlerService:
         logger.debug(
             "SIGNAL received: '%s' from %s", signal, ScoutsAuthSignalSender.sender
         )
-        logger.debug("REFRESHED USER: %s (%s)", user.username, type(user).__name__)
+        # logger.debug("REFRESHED USER: %s (%s)", user.username, type(user).__name__)
 
         user: settings.AUTH_USER_MODEL = SignalHandlerService._check_user_data(
             user=user, signal=signal
@@ -139,7 +140,7 @@ class SignalHandlerService:
         logger.debug(
             "SIGNAL received: '%s' from %s", signal, ScoutsAuthSignalSender.sender
         )
-        logger.debug("AUTHENTICATED USER: %s (%s)", user.username, type(user).__name__)
+        # logger.debug("AUTHENTICATED USER: %s (%s)", user.username, type(user).__name__)
 
         SignalHandlerService.handling_authentication = False
 
@@ -169,36 +170,47 @@ class SignalHandlerService:
         if not OIDCUserHelper.requires_data_loading(user=user):
             return user
 
-        # if OIDCUserHelper.requires_group_loading(user=user):
-        #     logger.debug(
-        #         "SIGNAL handling for '%s' -> Loading additional user groups", signal
-        #     )
-        #     user = authorization_service.load_user_scouts_groups(user=user)
-        try:
-            logger.debug(
-                "SIGNAL handling for '%s' -> Loading additional user groups", signal
-            )
+        if OIDCUserHelper.requires_group_loading(user=user):
+            # logger.debug(
+            #     "SIGNAL handling for '%s' -> Loading additional user groups", signal
+            # )
             user = authorization_service.load_user_scouts_groups(user=user)
-        except Exception as exc:
-            raise ValidationError(
-                "An error occured while loading user scouts groups", exc
-            )
-        # if OIDCUserHelper.requires_function_loading(user=user):
-        #     logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
-        #     user = authorization_service.load_user_functions(user=user)
-        try:
-            logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
+            try:
+                # logger.debug(
+                #     "SIGNAL handling for '%s' -> Loading additional user groups", signal
+                # )
+                user = authorization_service.load_user_scouts_groups(user=user)
+            except Exception as exc:
+                raise ValidationError(
+                    "An error occured while loading user scouts groups", exc
+                )
+
+            user.last_updated_groups = timezone.now()
+            user.full_clean()
+            user.save()
+
+        if OIDCUserHelper.requires_function_loading(user=user):
+            # logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
             user = authorization_service.load_user_functions(user=user)
-        except Exception as exc:
-            raise ValidationError(
-                "An error occured while loading user scouts functions", exc
-            )
+            try:
+                # logger.debug(
+                #     "SIGNAL handling for '%s' -> Loading scouts functions", signal
+                # )
+                user = authorization_service.load_user_functions(user=user)
+            except Exception as exc:
+                raise ValidationError(
+                    "An error occured while loading user scouts functions", exc
+                )
+
+            user.last_updated_functions = timezone.now()
+            user.full_clean()
+            user.save()
 
         try:
-            logger.debug(
-                "SIGNAL handling for '%s' -> Setting up sections for user's groups",
-                signal,
-            )
+            # logger.debug(
+            #     "SIGNAL handling for '%s' -> Setting up sections for user's groups",
+            #     signal,
+            # )
             section_service.setup_default_sections(user=user)
         except Exception as exc:
             raise ValidationError(
@@ -213,9 +225,6 @@ class SignalHandlerService:
         persisted_group_count: int = user.persisted_scouts_groups.count()
         function_count: int = len(user.functions)
         persisted_function_count: int = user.persisted_scouts_functions.count()
-        section_count: int = ScoutsSection.objects.all().filter(
-            group__in=user.persisted_scouts_groups.all()
-        )
 
         if group_count == 0:
             raise ValidationError(
@@ -241,10 +250,13 @@ class SignalHandlerService:
                     user.username
                 )
             )
-        if section_count == 0:
-            raise ValidationError(
-                "No ScoutsSection instances found for user {}".format(user.username)
-            )
+
+        for group in user.persisted_scouts_groups.all():
+            section_count: int = ScoutsSection.objects.all().filter(group=group)
+            if section_count == 0:
+                raise ValidationError(
+                    "No ScoutsSection instances found for user {}".format(user.username)
+                )
 
         logger.debug(user.to_descriptive_string())
 

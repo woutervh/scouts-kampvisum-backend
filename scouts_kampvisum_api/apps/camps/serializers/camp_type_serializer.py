@@ -17,15 +17,15 @@ class CampTypeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.trace("CAMP TYPE SERIALIZER TO INTERNAL VALUE: %s", data)
+        # logger.trace("CAMP TYPE SERIALIZER TO INTERNAL VALUE: %s", data)
 
         data = super().to_internal_value(data)
-        logger.trace("CAMP TYPE SERIALIZER TO INTERNAL VALUE: %s", data)
+        # logger.trace("CAMP TYPE SERIALIZER TO INTERNAL VALUE: %s", data)
 
         return data
 
     def validate(self, data: dict) -> CampType:
-        logger.trace("CAMP TYPE SERIALIZER VALIDATE: %s", data)
+        # logger.trace("CAMP TYPE SERIALIZER VALIDATE: %s", data)
         # Safe to raise an error, because this serializer will not be used to create a CampType
         return CampType.objects.safe_get(
             id=data.get("id", None),

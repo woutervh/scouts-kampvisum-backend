@@ -7,6 +7,7 @@ from mozilla_django_oidc.contrib.drf import OIDCAuthentication
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group
+from django.utils import timezone
 
 from rest_framework import exceptions
 
@@ -30,13 +31,13 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         this method.
         """
 
-        logger.debug(
-            "User info requested with access_token %s, "
-            + ", id_token %s and payload %s",
-            access_token,
-            id_token,
-            payload,
-        )
+        # logger.debug(
+        #     "User info requested with access_token %s, "
+        #     + ", id_token %s and payload %s",
+        #     access_token,
+        #     id_token,
+        #     payload,
+        # )
 
         user_response = requests.get(
             OIDCSettings.get_oidc_op_user_endpoint(),
@@ -130,6 +131,10 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
                 (user, token) = result
 
                 # logger.debug("USER: (%s) %s", type(user).__name__, user)
+
+                user.last_authenticated = timezone.now()
+                user.full_clean()
+                user.save()
 
                 ScoutsAuthSignalSender().send_oidc_authenticated(user)
 

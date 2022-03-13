@@ -58,10 +58,10 @@ class CampYearManager(models.Manager):
         return None
 
     def get_by_natural_key(self, year):
-        logger.trace(
-            "GET BY NATURAL KEY %s: (year: %s (%s))",
-            "CampYear",
-            year,
-            type(year).__name__,
-        )
+        # logger.trace(
+        #     "GET BY NATURAL KEY %s: (year: %s (%s))",
+        #     "CampYear",
+        #     year,
+        #     type(year).__name__,
+        # )
         return self.get(year=year)

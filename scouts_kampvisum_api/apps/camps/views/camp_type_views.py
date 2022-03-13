@@ -37,14 +37,14 @@ class CampTypeViewSet(viewsets.GenericViewSet):
         """
         Creates a new CampType instance.
         """
-        logger.debug("CAMP TYPE CREATE REQUEST DATA: %s", request.data)
+        # logger.debug("CAMP TYPE CREATE REQUEST DATA: %s", request.data)
         input_serializer = CampTypeSerializer(
             data=request.data, context={"request": request}
         )
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
-        logger.debug("CAMP TYPE CREATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("CAMP TYPE CREATE VALIDATED DATA: %s", validated_data)
 
         instance = self.camp_type_service.create(request, **validated_data)
 
@@ -74,7 +74,7 @@ class CampTypeViewSet(viewsets.GenericViewSet):
 
         instance = self.get_object()
 
-        logger.debug("CAMP TYPE UPDATE REQUEST DATA: %s", request.data)
+        # logger.debug("CAMP TYPE UPDATE REQUEST DATA: %s", request.data)
         serializer = CampTypeSerializer(
             data=request.data,
             instance=instance,
@@ -84,7 +84,7 @@ class CampTypeViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("CAMP TYPE UPDATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("CAMP TYPE UPDATE VALIDATED DATA: %s", validated_data)
 
         updated_instance = self.camp_type_service.update(
             request, instance=instance, **validated_data

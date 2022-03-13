@@ -36,13 +36,13 @@ class CampYearViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: CampYearSerializer},
     )
     def create(self, request):
-        logger.debug("CAMP YEAR CREATE REQUEST DATA: %s", request.data)
+        # logger.debug("CAMP YEAR CREATE REQUEST DATA: %s", request.data)
 
         serializer = CampYearSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("CAMP YEAR CREATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("CAMP YEAR CREATE VALIDATED DATA: %s", validated_data)
 
         camp = self.camp_year_service.create_year(request, **validated_data)
 
@@ -69,7 +69,7 @@ class CampYearViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        logger.debug("Updating CampYear with id %s", pk)
+        # logger.debug("Updating CampYear with id %s", pk)
 
         updated_camp = self.camp_year_service.camp_update(
             request, instance=camp, **serializer.validated_data
@@ -85,7 +85,7 @@ class CampYearViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
     def delete(self, request, pk):
-        logger.debug("Deleting CampYear with id %s", pk)
+        # logger.debug("Deleting CampYear with id %s", pk)
 
         camp = get_object_or_404(CampYear.objects, pk=pk)
         camp.delete()

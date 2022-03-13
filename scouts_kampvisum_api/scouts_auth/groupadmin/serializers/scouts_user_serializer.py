@@ -1,6 +1,10 @@
 from rest_framework import serializers
 
 from scouts_auth.groupadmin.models import ScoutsUser
+from scouts_auth.groupadmin.serializers import (
+    ScoutsGroupSerializer,
+    ScoutsFunctionSerializer,
+)
 
 
 class ScoutsUserSerializer(serializers.ModelSerializer):
@@ -8,6 +12,8 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
     user_permissions = serializers.SerializerMethodField()
     scouts_groups = serializers.SerializerMethodField()
     functions = serializers.SerializerMethodField()
+    persisted_scouts_groups = ScoutsGroupSerializer(many=True, required=False)
+    persisted_scouts_functions = ScoutsFunctionSerializer(many=True, required=False)
 
     class Meta:
         model = ScoutsUser
