@@ -22,6 +22,7 @@ from apps.visums.models import (
     Check,
     LinkedCheck,
 )
+from apps.visums.settings import VisumSettings
 
 
 # LOGGING
@@ -38,7 +39,7 @@ class LinkedDeadlineService:
 
     def get_camp_registration_deadline(self, visum: CampVisum) -> LinkedDeadline:
         return LinkedDeadline.objects.safe_get(
-            parent_name=settings.CAMP_REGISTRATION_DEADLINE,
+            parent_name=VisumSettings.get_camp_registration_deadline_name(),
             visum=visum,
             raise_error=True,
         )

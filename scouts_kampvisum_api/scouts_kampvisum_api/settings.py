@@ -519,7 +519,7 @@ OIDC_OP_JWKS_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOI
 # CHANGE HANDLERS                                                              #
 #                                                                              #
 # ############################################################################ #
-CAMP_REGISTRATION_DEADLINE = "camp_registration"
+CAMP_REGISTRATION_DEADLINE_NAME = "camp_registration"
 DEADLINE_FLAG_CHANGED = "default_deadline_flag_changed"
 CHECK_CHANGED = "default_check_changed"
 
@@ -663,6 +663,10 @@ USE_SENDINBLUE = env.bool("USE_SENDINBLUE", False)
 # SCOUTS KAMPVISUM EMAIL SETTINGS
 # @TINUS moet toegevoegd worden in env of gewoon in settings ?
 EMAIL_FROM = env.str("EMAIL_FROM", "kamp@scoutsengidsenvlaanderen.be")
+EMAIL_REGISTRATION_BCC = env.str(
+    "EMAIL_REGISTRATION_BCC", "bosaanvragen@scoutsengidsenvlaanderen.be"
+)
+EMAIL_REGISTRATION_SUBJECT = env.str("EMAIL_REGISTRATION_SUBJECT", "Kampregistratie {}")
 EMAIL_TEMPLATE = None
 TMP_FOLDER = RESOURCES_PATH + "temp"
 ANYMAIL = {}

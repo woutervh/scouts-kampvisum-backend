@@ -26,6 +26,18 @@ class VisumSettings(SettingsHelper):
         return SettingsHelper.get("EMAIL_FROM")
 
     @staticmethod
+    def get_email_registration_bcc():
+        return SettingsHelper.get("EMAIL_REGISTRATION_BCC")
+
+    @staticmethod
+    def get_email_registration_subject():
+        return SettingsHelper.get("EMAIL_REGISTRATION_SUBJECT")
+
+    @staticmethod
+    def get_camp_registration_deadline_name():
+        return SettingsHelper.get("CAMP_REGISTRATION_DEADLINE_NAME")
+
+    @staticmethod
     def get_camp_registration_deadline():
         # The deadline for camp registrations
         value = SettingsHelper.get("CAMP_REGISTRATION_DEADLINE")

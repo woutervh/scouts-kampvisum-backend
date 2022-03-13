@@ -49,7 +49,7 @@ class EmailService:
         if bcc is None:
             bcc = []
         if reply_to is None:
-            reply_to = to
+            reply_to = from_email
 
         logger.debug(
             "VALIDATE (from_email: %s, to: %s, cc: %s, bcc: %s, reply_to: %s)",
@@ -57,7 +57,7 @@ class EmailService:
             ",".join(to),
             ",".join(cc),
             ",".join(bcc),
-            ",".join(reply_to),
+            reply_to,
         )
 
         return from_email, to, cc, bcc, reply_to

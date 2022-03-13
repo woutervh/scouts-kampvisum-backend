@@ -208,6 +208,11 @@ class LinkedParticipantCheck(LinkedCheck):
             "participant_check_type", ParticipantType.PARTICIPANT
         )
 
+    def first(self) -> VisumParticipant:
+        if self.participants.count() == 0:
+            return None
+        return self.participants.first()
+
     def has_value(self) -> bool:
         if len(self.participants.all()) > 0:
             return True

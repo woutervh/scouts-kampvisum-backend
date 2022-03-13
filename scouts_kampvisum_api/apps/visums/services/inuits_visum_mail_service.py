@@ -63,24 +63,58 @@ class InuitsVisumMailService(EmailService):
             address=recipient, send_to=recipient
         )
 
+        cc = []
+        responsible_main = (
+            LinkedParticipantCheck.objects.filter(
+                sub_category__category__category_set__visum=visum,
+                parent__name="members_leaders_responsible_main",
+            )
+            .first()
+            .first()
+            .participant.email
+        )
+        cc.append(
+            VisumSettings.get_camp_registration_notification_to(
+                address=responsible_main, send_to=responsible_main
+            )
+        )
+        responsible_adjunct = (
+            LinkedParticipantCheck.objects.filter(
+                sub_category__category__category_set__visum=visum,
+                parent__name="members_leaders_responsible_adjunct",
+            )
+            .first()
+            .first()
+            .participant.email
+        )
+        cc.append(
+            VisumSettings.get_camp_registration_notification_to(
+                address=responsible_adjunct, send_to=responsible_adjunct
+            )
+        )
+
+        template = self.template_camp_registration_before_deadline
+        if VisumSettings.get_camp_registration_deadline_date() >= timezone.now().date():
+            template = self.template_camp_registration_after_deadline
+
         logger.debug(
             "Preparing to send camp registration notification to %s (debug: %s, test: %s, acceptance: %s), using template %s",
             recipient,
             VisumSettings.is_debug(),
             VisumSettings.is_test(),
             VisumSettings.is_acceptance(),
-            self.template_camp_registration,
+            template,
         )
-
-        template = self.template_camp_registration_before_deadline
-        if VisumSettings.get_camp_registration_deadline_date() < timezone.now.date():
-            template = self.template_camp_registration_after_deadline
 
         self._send_prepared_email(
             template_path=template,
             dictionary=dictionary,
-            subject="Kampregistratie",
+            subject=VisumSettings.get_email_registration_subject().format(
+                visum.camp.name
+            ),
             to=recipient,
+            cc=cc,
+            bcc=VisumSettings.get_email_registration_bcc(),
         )
 
     def _prepare_dictionary_responsible_changed(self, visum: CampVisum):
