@@ -1,3 +1,6 @@
+import datetime
+
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 
 from scouts_auth.inuits.utils import SettingsHelper
@@ -23,8 +26,28 @@ class VisumSettings(SettingsHelper):
         return SettingsHelper.get("EMAIL_FROM")
 
     @staticmethod
-    def get_camp_registration_template():
-        return SettingsHelper.get("RESOURCES_TEMPLATE_CAMP_REGISTRATION")
+    def get_camp_registration_deadline():
+        # The deadline for camp registrations
+        value = SettingsHelper.get("CAMP_REGISTRATION_DEADLINE")
+        month, day = value.split("-")
+
+        return (int(month), int(day))
+
+    @staticmethod
+    def get_camp_registration_deadline_date():
+        month, day = VisumSettings.get_camp_registration_deadline()
+
+        return datetime.datetime(timezone.now().date().year, month, day).date()
+
+    @staticmethod
+    def get_camp_registration_before_deadline_template():
+        return SettingsHelper.get(
+            "RESOURCES_TEMPLATE_CAMP_REGISTRATION_BEFORE_DEADLINE"
+        )
+
+    @staticmethod
+    def get_camp_registration_after_deadline_template():
+        return SettingsHelper.get("RESOURCES_TEMPLATE_CAMP_REGISTRATION_AFTER_DEADLINE")
 
     @staticmethod
     def get_camp_registration_notification_to(

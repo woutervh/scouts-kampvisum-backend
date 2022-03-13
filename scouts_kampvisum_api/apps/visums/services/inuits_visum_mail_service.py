@@ -1,6 +1,7 @@
 from typing import List
 
 from django.conf import settings
+from django.utils import timezone
 
 from apps.participants.models import VisumParticipant
 
@@ -31,7 +32,12 @@ class InuitsVisumMailService(EmailService):
 
     template_id = settings.EMAIL_TEMPLATE
 
-    template_camp_registration = VisumSettings.get_camp_registration_template()
+    template_camp_registration_before_deadline = (
+        VisumSettings.get_camp_registration_before_deadline_template()
+    )
+    template_camp_registration_after_deadline = (
+        VisumSettings.get_camp_registration_after_deadline_template()
+    )
 
     def notify_responsible_changed(self, check: LinkedParticipantCheck):
         visum: CampVisum = check.sub_category.category.category_set.visum
@@ -66,8 +72,12 @@ class InuitsVisumMailService(EmailService):
             self.template_camp_registration,
         )
 
+        template = self.template_camp_registration_before_deadline
+        if VisumSettings.get_camp_registration_deadline_date() < timezone.now.date():
+            template = self.template_camp_registration_after_deadline
+
         self._send_prepared_email(
-            template_path=self.template_camp_registration,
+            template_path=template,
             dictionary=dictionary,
             subject="Kampregistratie",
             to=recipient,
