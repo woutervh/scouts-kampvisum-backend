@@ -196,14 +196,14 @@ class ParticipantViewSet(viewsets.GenericViewSet):
                     "participant_type": participant_type,
                     "active_leader": True,
                     "only_scouts_members": True,
-                    "include_inactive": False,
+                    "include_inactive": True,
                 }
             elif ParticipantType.is_responsible(participant_type):
                 presets = {
                     "participant_type": participant_type,
                     "active_leader": True,
                     "only_scouts_members": True,
-                    "include_inactive": False,
+                    "include_inactive": True,
                 }
             elif ParticipantType.is_adult(participant_type):
                 presets = {

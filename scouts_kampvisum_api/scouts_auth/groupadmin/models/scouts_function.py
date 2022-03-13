@@ -94,14 +94,20 @@ class ScoutsFunction(AuditedBaseModel):
             )
         ]
 
-    def is_section_leader(self, is_active: bool = True) -> bool:
+    def was_section_leader(self, is_active: bool = True) -> bool:
         if is_active:
             return self.is_active_section_leader()
 
-    def is_active_section_leader(self) -> bool:
+    def is_section_leader(self) -> bool:
+        pass
+
+    def was_group_leader(self) -> bool:
         pass
 
     def is_group_leader(self) -> bool:
+        pass
+
+    def was_district_commissioner(self) -> bool:
         pass
 
     def is_district_commissioner(self) -> bool:

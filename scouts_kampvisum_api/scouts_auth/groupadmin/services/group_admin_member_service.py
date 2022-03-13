@@ -82,9 +82,9 @@ class GroupAdminMemberService(GroupAdmin):
             active_leader = preset_active_leader
 
         members: List[AbstractScoutsMember] = []
-        for partial_member in response.members:
+        for response_member in response.members:
             member: AbstractScoutsMember = self.get_member_info(
-                active_user=active_user, group_admin_id=partial_member.group_admin_id
+                active_user=active_user, group_admin_id=response_member.group_admin_id
             )
 
             if group_group_admin_id:
@@ -114,19 +114,24 @@ class GroupAdminMemberService(GroupAdmin):
                     continue
 
             if not include_inactive:
-                logger.debug(
-                    "Examining if member %s %s has been active since %s",
-                    member.first_name,
-                    member.last_name,
-                    activity_epoch,
-                )
-                if not self._filter_by_activity(
-                    member=member,
-                    include_inactive=include_inactive,
-                    current_datetime=current_datetime,
-                    activity_epoch=activity_epoch,
-                ):
-                    continue
+                if not group_group_admin_id:
+                    logger.debug(
+                        "Wanted to check for activity status, but no group admin id given for the group"
+                    )
+                else:
+                    logger.debug(
+                        "Examining if member %s %s has been active since %s",
+                        member.first_name,
+                        member.last_name,
+                        activity_epoch,
+                    )
+                    if not self._filter_by_activity(
+                        member=member,
+                        include_inactive=include_inactive,
+                        current_datetime=current_datetime,
+                        activity_epoch=activity_epoch,
+                    ):
+                        continue
 
             if min_age >= 0 or max_age >= 0:
                 logger.debug(
