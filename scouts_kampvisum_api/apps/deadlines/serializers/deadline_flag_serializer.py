@@ -6,7 +6,7 @@ from apps.deadlines.models import DeadlineFlag
 class DeadlineFlagSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeadlineFlag
-        exclude = ["flag"]
+        exclude = ["flag", "change_handlers"]
 
     def to_internal_value(self, data: dict) -> dict:
         instance = DeadlineFlag.objects.safe_get(**data)

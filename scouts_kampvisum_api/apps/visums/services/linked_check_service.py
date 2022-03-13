@@ -40,17 +40,12 @@ class LinkedCheckService:
     groupadmin = GroupAdminMemberService()
     change_handler_service = ChangeHandlerService()
 
-    @staticmethod
-    def get_value_type(check: LinkedCheck):
-        concrete_type = LinkedCheck.get_concrete_check_type(check.parent)
-
-        check = concrete_type.__class__.objects.get(linkedcheck_ptr=check.id)
-
-        return check
-
     def notify_change(self, instance: LinkedCheck, data_changed: bool = False):
+        data_changed = True
         if data_changed and instance.parent.has_change_handlers():
-            self.change_handler_service.handle_changes(change_handlers=instance.parent.change_handlers, instance=instance)
+            self.change_handler_service.handle_changes(
+                change_handlers=instance.parent.change_handlers, instance=instance
+            )
 
         return instance
 
@@ -109,13 +104,20 @@ class LinkedCheckService:
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
-        instance.start_date = data.get("start_date", None)
-        instance.end_date = data.get("end_date", None)
+        start_date = data.get("start_date", None)
+        end_date = data.get("end_date", None)
+
+        data_changed = False
+        if instance.start_date != start_date or instance.end_date != end_date:
+            data_changed = True
+
+        instance.start_date = start_date
+        instance.end_date = end_date
 
         instance.full_clean()
         instance.save()
 
-        return self.notify_change(instance)
+        return self.notify_change(instance, data_changed=data_changed)
 
     def get_location_check(self, check_id):
         try:

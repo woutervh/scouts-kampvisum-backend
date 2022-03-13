@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 
 from apps.deadlines.models import DeadlineItem, DeadlineFlag
 
+from apps.signals.services import ChangeHandlerService
+
 
 # LOGGING
 import logging
@@ -28,21 +30,11 @@ class DeadlineFlagService:
         name = fields.get("name", None)
         if not name:
             raise ValidationError("A deadline flag requires a name, None given")
-                            
+
         # Add change handlers
-        default_change_handler = settings.DEADLINE_FLAG_CHANGED
-        change_handlers: str = fields.get("change_handlers", None)
-        if not change_handlers:
-            change_handlers = default_change_handler
-        else:
-            results = []
-            change_handlers = change_handlers.split(",")
-            for change_handler in change_handlers:
-                change_handler = change_handler.strip()
-                if not change_handler == default_change_handler:
-                    results.append(change_handler)
-            change_handlers = "{},{}".format(default_change_handler, ",".join(results))
-        fields["change_handlers"] = change_handlers
+        fields["change_handlers"] = ChangeHandlerService.parse_change_handlers(
+            data=fields
+        )
 
         instance = DeadlineFlag.objects.safe_get(deadline_item=deadline_item, name=name)
         if instance:
@@ -67,7 +59,9 @@ class DeadlineFlagService:
         instance.label = fields.get("label", instance.label)
         instance.index = fields.get("index", instance.index)
         instance.flag = fields.get("flag", instance.flag)
-        instance.change_handlers = fields.get("change_handlers", instance.change_handlers)
+        instance.change_handlers = fields.get(
+            "change_handlers", instance.change_handlers
+        )
 
         instance.full_clean()
         instance.save()

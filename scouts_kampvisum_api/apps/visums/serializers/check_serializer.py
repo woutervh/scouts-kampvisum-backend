@@ -21,7 +21,7 @@ class CheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = Check
         # fields = "__all__"
-        exclude = ["sub_category", "change_handler", "camp_types"]
+        exclude = ["sub_category", "change_handlers", "camp_types"]
 
     def to_internal_value(self, data: dict) -> dict:
         logger.debug("CHECK SERIALIZER TO_INTERNAL_VALUE: %s", data)

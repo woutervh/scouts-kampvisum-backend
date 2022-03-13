@@ -70,8 +70,6 @@ class CampVisumService:
         logger.debug("Linking deadline set to visum")
         self.linked_deadline_service.link_to_visum(request=request, visum=visum)
 
-        self.mail_service.notify_camp_registered(visum=visum)
-
         return visum
 
     @transaction.atomic

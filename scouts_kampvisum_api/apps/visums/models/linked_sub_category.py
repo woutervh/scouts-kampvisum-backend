@@ -27,10 +27,10 @@ class LinkedSubCategory(AuditedArchiveableBaseModel):
     @property
     def readable_name(self):
         return "{}".format(self.parent.name)
-    
+
     def is_checked(self) -> bool:
-        for check in self.checks:
-            if not check.is_checked:
+        for check in self.checks.all():
+            if not check.get_value_type().is_checked():
                 return False
-        
+
         return True

@@ -25,6 +25,13 @@ class InuitsParticipantSerializer(serializers.ModelSerializer):
         id = data.get("id", None)
 
         if group_admin_id:
+            participant = InuitsParticipant.objects.safe_get(
+                group_admin_id=group_admin_id
+            )
+
+            if participant:
+                return participant
+
             member: AbstractScoutsMember = GroupAdminMemberService().get_member_info(
                 active_user=self.context.get("request").user,
                 group_admin_id=group_admin_id,

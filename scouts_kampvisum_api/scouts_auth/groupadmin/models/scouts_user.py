@@ -2,6 +2,8 @@ from typing import List, Tuple
 from datetime import date, datetime
 
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.contrib.auth.models import UserManager
 
 from scouts_auth.auth.models import User
 
@@ -20,7 +22,61 @@ from scouts_auth.inuits.models import Gender
 from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
 
 
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+
+logger: InuitsLogger = logging.getLogger(__name__)
+
+
+class ScoutsUserManager(UserManager):
+    def safe_get(self, *args, **kwargs):
+        pk = kwargs.get("id", kwargs.get("pk", None))
+        username = kwargs.get("username", None)
+        group_admin_id = kwargs.get("group_admin_id", None)
+        raise_error = kwargs.get("raise_error", False)
+
+        if pk:
+            try:
+                return self.get_queryset().get(pk=pk)
+            except:
+                pass
+
+        if username:
+            try:
+                return self.get_by_natural_key(username)
+            except:
+                pass
+
+        if group_admin_id:
+            try:
+                return self.get_queryset().get(group_admin_id=group_admin_id)
+            except:
+                pass
+
+        if raise_error:
+            raise ValidationError(
+                "Unable to locate ScoutsGroup instance(s) with the provided params: (id: {}, group_admin_id: {})".format(
+                    pk,
+                    group_admin_id,
+                )
+            )
+        return None
+
+    def get_by_natural_key(self, username):
+        logger.trace(
+            "GET BY NATURAL KEY %s: (username: %s (%s))",
+            "ScoutsUser",
+            username,
+            type(username).__name__,
+        )
+
+        return super().get_by_natural_key(username)
+
+
 class ScoutsUser(User):
+
+    objects = ScoutsUserManager()
 
     #
     # Fields from the groupadmin member record

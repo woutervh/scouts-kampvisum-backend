@@ -1,3 +1,4 @@
+from xml.sax.handler import property_declaration_handler
 from django.db import models
 
 from apps.deadlines.models import DeadlineItem, LinkedDeadlineFlag
@@ -46,6 +47,17 @@ class LinkedDeadlineItem(AbstractBaseModel):
     class Meta:
         ordering = ["parent__index"]
 
+    @property
+    def name(self) -> str:
+        if self.is_deadline():
+            return self.flag.parent.name
+
+        if self.is_sub_category_deadline():
+            return self.linked_sub_category.parent.name
+
+        if self.is_check_deadline():
+            return self.check.parent.name
+
     def is_deadline(self):
         return self.parent.is_deadline()
 
@@ -54,13 +66,13 @@ class LinkedDeadlineItem(AbstractBaseModel):
 
     def is_check_deadline(self):
         return self.parent.is_check_deadline()
-    
+
     def is_checked(self) -> bool:
         if self.is_deadline():
             return self.flag.flag
-        
+
         if self.is_sub_category_deadline():
             return self.linked_sub_category.is_checked()
 
         if self.is_check_deadline():
-            return self.check.is_checked()
+            return self.linked_check.get_value_type().is_checked()

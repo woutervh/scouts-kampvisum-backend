@@ -128,9 +128,17 @@ class AbstractScoutsMember(AbstractNonModel):
         group_specific_fields: List[AbstractScoutsGroupSpecificField] = None,
         links: List[AbstractScoutsLink] = None,
     ):
-        self.personal_data = personal_data
-        self.group_admin_data = group_admin_data
-        self.scouts_data = scouts_data
+        self.personal_data = (
+            personal_data if personal_data else AbstractScoutsMemberPersonalData()
+        )
+        self.group_admin_data = (
+            group_admin_data
+            if group_admin_data
+            else AbstractScoutsMemberGroupAdminData()
+        )
+        self.scouts_data = (
+            scouts_data if scouts_data else AbstractScoutsMemberScoutsData()
+        )
         self.email = email
         self.username = username
         self.group_admin_id = group_admin_id
@@ -168,13 +176,27 @@ class AbstractScoutsMember(AbstractNonModel):
     def first_name(self):
         return self.group_admin_data.first_name
 
+    @first_name.setter
+    def first_name(self, first_name: str):
+        self.group_admin_data.first_name = first_name
+
     @property
     def last_name(self):
         return self.group_admin_data.last_name
 
+    @last_name.setter
+    def last_name(self, last_name: str):
+        self.group_admin_data.last_name = last_name
+
     @property
     def birth_date(self):
         return self.group_admin_data.birth_date
+
+    @birth_date.setter
+    def birth_date(self, birth_date):
+        if isinstance(birth_date, datetime.datetime):
+            birth_date = birth_date.date()
+        self.group_admin_data.birth_date = birth_date
 
     @property
     def membership_number(self):

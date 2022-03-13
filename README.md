@@ -208,10 +208,11 @@ In frontend repo: `/src/locales/nl.json`
      - **`link`** (**OPTIONAL**, default: _""_):  
        A remainder from a previous implementation iteration, but kept for possible future changes. This could set a hyperlink on the check label for instance. Currently unused.
        Use HTML links in the explanation to provide links to external resources.
-     - **`change_handler`** (**OPTIONAL**, default: _""_)
-       Should not be defined by users as it refers to a method in the class `ChangeHandlerService` (`apps/visums/services/change_handler_service.py`) and will cause an error if it refers to a non-existent method.
+     - **`change_handlers`** (**OPTIONAL**, default: _["default_check_changed"]_)
+       Should not be defined by users as it refers to methods in the class `ChangeHandlerService` (`apps/visums/services/change_handler_service.py`) and will cause an error if it refers to a non-existent method.
        This is used to trigger further actions when a check is changed.
        Currently only used for the camp responsible check, since it may require emails to be sent.
+       The value defined in `settings.CHECK_CHANGED` is always added to the change_handlers.
      - **`is_multiple`** (**OPTIONAL**, default: false)
        A boolean that determines if the check allows for a single instance to be added, or multiple.
        Mainly used for the different participant checks, where they determine if the check sets a single or a list of particpants.
@@ -323,3 +324,7 @@ In frontend repo: `/src/locales/nl.json`
       11. **CATEGORY SETS:**  
           - COMMAND: `django-manage.py createcategorysets`  
           - Links the categories, camp types and camp year into category sets.  
+
+2. **`insomnia`**  
+   Sets up test data and returns a dict of uuid's to use in insomnia.  
+   This command should only be ran in a development environment, as it makes some changes to the db.  

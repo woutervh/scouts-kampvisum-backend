@@ -77,6 +77,8 @@ class InuitsParticipant(InuitsPerson):
 
     @staticmethod
     def from_scouts_member(scouts_member: AbstractScoutsMember, instance=None):
+        if not scouts_member:
+            raise ValidationError("AbstractScoutsMember not initialized")
         if not scouts_member.group_admin_id:
             raise ValidationError(
                 "Can't create an InuitsParticipant without a valid group admin id"
@@ -101,7 +103,9 @@ class InuitsParticipant(InuitsPerson):
             scouts_member.cell_number if scouts_member.cell_number else ""
         )
         participant.email = scouts_member.email if scouts_member.email else ""
-        participant.birth_date = scouts_member.birth_date if scouts_member else None
+        participant.birth_date = (
+            scouts_member.birth_date if scouts_member.birth_date else None
+        )
         participant.gender = (
             scouts_member.gender if scouts_member.gender else GenderHelper.UNKNOWN
         )

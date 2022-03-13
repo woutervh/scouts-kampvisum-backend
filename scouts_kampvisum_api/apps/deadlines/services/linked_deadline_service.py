@@ -35,18 +35,29 @@ class LinkedDeadlineService:
 
     deadline_service = DeadlineService()
     linked_deadline_item_service = LinkedDeadlineItemService()
-    
+
     def get_camp_registration_deadline(self, visum: CampVisum) -> LinkedDeadline:
-        return LinkedDeadline.objects.safe_get(parent_name=settings.CAMP_REGISTRATION_DEADLINE, visum=visum, raise_error=True)
-    
+        return LinkedDeadline.objects.safe_get(
+            parent_name=settings.CAMP_REGISTRATION_DEADLINE,
+            visum=visum,
+            raise_error=True,
+        )
+
     def are_camp_registration_deadline_items_checked(self, visum: CampVisum) -> bool:
-        linked_deadline: LinkedDeadline = self.get_camp_registration_deadline(visum=visum)
+        from apps.visums.services import LinkedCheckService
+
+        linked_deadline: LinkedDeadline = self.get_camp_registration_deadline(
+            visum=visum
+        )
         items: List[LinkedDeadlineItem] = linked_deadline.items.all()
-        
+
         for item in items:
             if not item.is_checked():
+                logger.debug(
+                    "ITEM: %s (%s) - %s", type(item).__name__, item.id, item.name
+                )
                 return False
-        
+
         return True
 
     @transaction.atomic

@@ -42,17 +42,13 @@ class LinkedCheck(AuditedArchiveableBaseModel):
     class Meta:
         ordering = ["parent__index"]
 
-    # def has_value(self) -> bool:
-    #     raise NotImplementedError("Subclasses should implement their own has_value method")
+    def is_required_for_validation(self) -> bool:
+        return self.parent.is_required_for_validation
 
     def is_checked(self) -> bool:
         if self.should_be_checked():
-            value = self.has_value()
-            return value
+            return self.has_value()
         return True
-
-    def is_required_for_validation(self) -> bool:
-        return self.parent.is_required_for_validation
 
     def should_be_checked(self) -> bool:
         check_type: CheckType = self.parent.check_type
@@ -69,6 +65,13 @@ class LinkedCheck(AuditedArchiveableBaseModel):
             return True
         if check_type.is_file_upload_check() or check_type.is_comment_check():
             return False
+
+    def get_value_type(self):
+        concrete_type = LinkedCheck.get_concrete_check_type(self.parent)
+
+        check = concrete_type.__class__.objects.get(linkedcheck_ptr=self.id)
+
+        return check
 
     @staticmethod
     def get_concrete_check_type_by_id(check_id):

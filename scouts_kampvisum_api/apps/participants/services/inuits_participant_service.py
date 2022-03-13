@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 
 from apps.participants.models import InuitsParticipant
 
+from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -22,6 +23,7 @@ class InuitsParticipantService:
         participant: any,
         user: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
+        scouts_member: AbstractScoutsMember = None,
     ):
         if not isinstance(participant, InuitsParticipant):
             participant = InuitsParticipant(**participant)
@@ -39,6 +41,7 @@ class InuitsParticipantService:
                 updated_participant=participant,
                 updated_by=user,
                 skip_validation=skip_validation,
+                scouts_member=scouts_member,
             )
         else:
             logger.debug("Creating participant %s", participant.email)
@@ -46,13 +49,16 @@ class InuitsParticipantService:
                 participant=participant,
                 created_by=user,
                 skip_validation=skip_validation,
+                scouts_member=scouts_member,
             )
 
     def create_or_update_member_participant(
         self,
-        participant: InuitsParticipant,
         user: settings.AUTH_USER_MODEL,
+        participant: InuitsParticipant,
         instance: InuitsParticipant = None,
+        skip_validation: bool = False,
+        scouts_member: AbstractScoutsMember = None,
     ) -> InuitsParticipant:
         member_participant = None
         if participant.has_group_admin_id():
@@ -60,12 +66,13 @@ class InuitsParticipantService:
                 "Looking for participant member with group admin id %s",
                 participant.group_admin_id,
             )
-            member_participant = InuitsParticipant.objects.safe_get(
+            member_participant: InuitsParticipant = InuitsParticipant.objects.safe_get(
                 group_admin_id=participant.group_admin_id
             )
-            scouts_member = self.groupadmin.get_member_info(
-                active_user=user, group_admin_id=participant.group_admin_id
-            )
+            if not scouts_member:
+                scouts_member: AbstractScoutsMember = self.groupadmin.get_member_info(
+                    active_user=user, group_admin_id=participant.group_admin_id
+                )
 
             if not scouts_member:
                 raise ValidationError(
@@ -93,6 +100,7 @@ class InuitsParticipantService:
         participant: InuitsParticipant,
         created_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
+        scouts_member: AbstractScoutsMember = None,
     ) -> InuitsParticipant:
         logger.debug("Creating InuitsParticipant with email %s", participant.email)
         # Check if the instance already exists
@@ -115,7 +123,10 @@ class InuitsParticipantService:
         )
 
         member = self.create_or_update_member_participant(
-            participant=participant, user=created_by
+            participant=participant,
+            user=created_by,
+            skip_validation=skip_validation,
+            scouts_member=scouts_member,
         )
         if member:
             return member
@@ -162,6 +173,7 @@ class InuitsParticipantService:
         updated_participant: InuitsParticipant,
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
+        scouts_member: AbstractScoutsMember = None,
     ) -> InuitsParticipant:
         logger.debug(
             "Updating InuitsParticipant with id %s and group_admin_id %s and e-mail %s",
@@ -170,7 +182,10 @@ class InuitsParticipantService:
             participant.email,
         )
         member: InuitsParticipant = self.create_or_update_member_participant(
-            participant=updated_participant, user=updated_by
+            participant=updated_participant,
+            user=updated_by,
+            skip_validation=skip_validation,
+            scouts_member=scouts_member,
         )
         if member:
             logger.debug(

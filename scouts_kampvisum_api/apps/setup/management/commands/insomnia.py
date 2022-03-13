@@ -3,6 +3,7 @@ from types import SimpleNamespace
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 from apps.camps.models import Camp, CampYear, CampType
 
@@ -34,7 +35,7 @@ from apps.deadlines.models import (
     LinkedDeadlineFlag,
 )
 
-from scouts_auth.groupadmin.models import ScoutsUser
+from scouts_auth.groupadmin.models import ScoutsUser, AbstractScoutsMember
 
 from scouts_auth.inuits.models import PersistedFile, Gender
 from scouts_auth.inuits.services import PersistedFileService
@@ -103,6 +104,34 @@ class Command(BaseCommand):
         data["ga_member_jeroen_wouters"] = "1f59774b-e89b-4617-aa7e-2e55fb1045b0"
         data["ga_member_ricardo_acosta_torres"] = "5b4bda13-df27-45f6-bd9c-d7d22a5f7d07"
         data["ga_member_stijn_verholen"] = "b91ba6e9-ab51-49ce-86e8-e77a7224971e"
+        scouts_jeroen_budts, member_jeroen_budts = self.add_member(
+            user=user,
+            group_admin_id=data["ga_member_jeroen_budts"],
+            first_name="Jeroen",
+            last_name="Budts",
+            email="jeroen@inuits.eu",
+        )
+        scouts_jeroen_wouters, member_jeroen_wouters = self.add_member(
+            user=user,
+            group_admin_id=data["ga_member_jeroen_wouters"],
+            first_name="Jeroen",
+            last_name="Wouters",
+            email="jeroen.wouters@inuits.eu",
+        )
+        scouts_ricardo_acosta_torres, member_ricardo_acosta_torres = self.add_member(
+            user=user,
+            group_admin_id=data["ga_member_ricardo_acosta_torres"],
+            first_name="Ricardo",
+            last_name="Acosta Torres",
+            email="ricardo@inuits.eu",
+        )
+        scouts_stijn_verholen, member_stijn_verholen = self.add_member(
+            user=user,
+            group_admin_id=data["ga_member_stijn_verholen"],
+            first_name="Stijn",
+            last_name="Verholen",
+            email="boro@inuits.eu",
+        )
         # CampType
         data["camp_type_first"] = str(CampType.objects.first().id)
         data["camp_type_last"] = str(CampType.objects.last().id)
@@ -146,9 +175,10 @@ class Command(BaseCommand):
             LinkedLocationCheck.objects.filter(is_camp_location=False).last().id
         )
         # CampLocationCheck
-        data["linked_check_camp_location_first"] = str(
-            LinkedLocationCheck.objects.filter(is_camp_location=True).first().id
-        )
+        camp_location: LinkedLocationCheck = LinkedLocationCheck.objects.filter(
+            is_camp_location=True
+        ).first()
+        data["linked_check_camp_location_first"] = str(camp_location.id)
         data["linked_check_camp_location_last"] = str(
             LinkedLocationCheck.objects.filter(is_camp_location=True).last().id
         )
@@ -173,12 +203,45 @@ class Command(BaseCommand):
             .first()
             .id
         )
+        # ParticipantCheck
+        responsible_main = LinkedParticipantCheck.objects.filter(
+            parent__name="members_leaders_responsible_main"
+        ).first()
+        data["linked_check_participant_camp_responsible_main"] = str(
+            responsible_main.id
+        )
+        # ParticipantCheck
+        responsible_adjunct = LinkedParticipantCheck.objects.filter(
+            parent__name="members_leaders_responsible_adjunct"
+        ).first()
+        data["linked_check_participant_camp_responsible_adjunct"] = str(
+            responsible_adjunct.id
+        )
+        # ParticipantCheck
+        data["linked_check_participant_camp_responsible_main"] = str(
+            LinkedParticipantCheck.objects.filter(
+                parent__name="members_leaders_responsible_main"
+            )
+            .first()
+            .id
+        )
         # CommentCheck
         data["linked_check_comment_first"] = str(LinkedCommentCheck.objects.first().id)
         data["linked_check_comment_last"] = str(LinkedCommentCheck.objects.last().id)
         # NumberCheck
         data["linked_check_number_first"] = str(LinkedNumberCheck.objects.first().id)
         data["linked_check_number_last"] = str(LinkedNumberCheck.objects.last().id)
+
+        leaders_estimate: LinkedNumberCheck = LinkedNumberCheck.objects.get(
+            parent__name="members_leaders_leaders_estimate"
+        )
+        cooks_estimate: LinkedNumberCheck = LinkedNumberCheck.objects.get(
+            parent__name="members_leaders_cooks_estimate"
+        )
+        members_estimate: LinkedNumberCheck = LinkedNumberCheck.objects.get(
+            parent__name="members_leaders_members_estimate"
+        )
+
         # FileUploadCheck
         data["linked_check_file_upload_first"] = str(
             LinkedFileUploadCheck.objects.first().id
@@ -209,12 +272,37 @@ class Command(BaseCommand):
             )
         )
 
+        self.almost_complete_camp_registration(
+            user=user,
+            camp_location=camp_location,
+            main=responsible_main,
+            main_member=member_jeroen_budts,
+            main_scouts=scouts_jeroen_budts,
+            adjunct=responsible_adjunct,
+            adjunct_member=member_jeroen_wouters,
+            adjunct_scouts=scouts_jeroen_wouters,
+            leaders_estimate=leaders_estimate,
+            cooks_estimate=cooks_estimate,
+            members_estimate=members_estimate,
+        )
+
         print(json.dumps(data, indent=2))
 
     def setup_admin_user(self):
-        try:
-            return ScoutsUser.objects.get(username="ADMIN")
-        except:
+        user: ScoutsUser = None
+
+        known_usernames = ["jeroen.wouters"]
+
+        for known_username in known_usernames:
+            try:
+                user = ScoutsUser.objects.safe_get(username=known_username)
+
+                if user:
+                    return user
+            except:
+                pass
+
+        if not user:
             user: ScoutsUser = ScoutsUser()
 
             user.group_admin_id = uuid.uuid4()
@@ -311,6 +399,31 @@ class Command(BaseCommand):
             skip_validation=True,
         )
 
+    def add_member(
+        self,
+        user: settings.AUTH_USER_MODEL,
+        group_admin_id: str,
+        first_name: str,
+        last_name: str,
+        email: str,
+    ) -> InuitsParticipant:
+        service = InuitsParticipantService()
+        participant = InuitsParticipant(group_admin_id=group_admin_id)
+        scouts_member = AbstractScoutsMember()
+
+        scouts_member.first_name = first_name
+        scouts_member.last_name = last_name
+        scouts_member.email = email
+        scouts_member.group_admin_id = group_admin_id
+        scouts_member.birth_date = timezone.now()
+
+        return (
+            scouts_member,
+            service.create_or_update_member_participant(
+                user=user, participant=participant, scouts_member=scouts_member
+            ),
+        )
+
     def link_participant(
         self, user: settings.AUTH_USER_MODEL, check_id, inuits_participant_id
     ):
@@ -324,7 +437,110 @@ class Command(BaseCommand):
                 "participants": [
                     {"participant": InuitsParticipant(id=inuits_participant_id)}
                 ]
-            }
+            },
         )
 
         return check.participants.first().id
+
+    def almost_complete_camp_registration(
+        self,
+        user: settings.AUTH_USER_MODEL,
+        camp_location: LinkedLocationCheck,
+        main: LinkedParticipantCheck,
+        main_member: InuitsParticipant,
+        main_scouts: AbstractScoutsMember,
+        adjunct: LinkedParticipantCheck,
+        adjunct_member: InuitsParticipant,
+        adjunct_scouts: AbstractScoutsMember,
+        leaders_estimate: LinkedNumberCheck,
+        cooks_estimate: LinkedNumberCheck,
+        members_estimate: LinkedNumberCheck,
+    ):
+        service = LinkedCheckService()
+
+        service.update_participant_check(
+            request=SimpleNamespace(user=user),
+            instance=main,
+            **{
+                "participants": [
+                    {
+                        "participant": main_member,
+                        "skip_validation": True,
+                        "scouts_member": main_scouts,
+                    }
+                ]
+            },
+            # **{
+            #     "participants": [
+            #         {"participant": {"group_admin_id": main_member.group_admin_id}}
+            #     ]
+            # },
+        )
+        service.update_participant_check(
+            request=SimpleNamespace(user=user),
+            instance=adjunct,
+            **{
+                "participants": [
+                    {
+                        "participant": adjunct_member,
+                        "skip_validation": True,
+                        "scouts_member": adjunct_scouts,
+                    }
+                ]
+            },
+            # **{
+            #     "participants": [
+            #         {"participant": {"group_admin_id": adjunct_member.group_admin_id}}
+            #     ]
+            # },
+        )
+
+        service.update_camp_location_check(
+            request=SimpleNamespace(user=user),
+            instance=camp_location,
+            **{
+                "locations": [
+                    {
+                        "name": "Kampplaats scouts Durbuy",
+                        "contact_name": "Jean Fermier",
+                        "contact_phone": "+32000000000",
+                        "contact_email": "jean@fermedurbuy.be",
+                        "locations": [
+                            {
+                                "name": "Slaapplaats",
+                                "address": "Rue du ferme 73",
+                                "latitude": 50.329825,
+                                "longitude": 5.454962,
+                                "is_main_location": True,
+                            },
+                            {
+                                "name": "Parking",
+                                "address": "Rue du ferme 71",
+                                "latitude": 50.329695,
+                                "longitude": 5.455413,
+                            },
+                            {
+                                "name": "Refter",
+                                "address": "Rue du ferme 73",
+                                "latitude": 50.330345,
+                                "longitude": 5.455209,
+                            },
+                        ],
+                    }
+                ]
+            },
+        )
+
+        service.update_number_check(
+            request=SimpleNamespace(user=user),
+            instance=leaders_estimate,
+            **{"value": 6},
+        )
+        service.update_number_check(
+            request=SimpleNamespace(user=user), instance=cooks_estimate, **{"value": 3}
+        )
+        service.update_number_check(
+            request=SimpleNamespace(user=user),
+            instance=members_estimate,
+            **{"value": 30},
+        )

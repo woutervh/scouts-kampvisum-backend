@@ -8,6 +8,8 @@ from apps.participants.services import InuitsParticipantService
 
 from apps.visums.models import LinkedParticipantCheck
 
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+
 
 # LOGGING
 import logging
@@ -27,6 +29,7 @@ class VisumParticipantService:
         participant_type: ParticipantType = ParticipantType.PARTICIPANT,
         check: LinkedParticipantCheck = None,
         skip_validation: bool = False,
+        scouts_member: AbstractScoutsMember = None,
         **fields: dict,
     ) -> VisumParticipant:
         logger.debug("FIELDS: %s", fields)
@@ -46,6 +49,7 @@ class VisumParticipantService:
                 updated_visum_participant=visum_participant,
                 updated_by=user,
                 skip_validation=skip_validation,
+                scouts_member=scouts_member,
             )
         else:
             logger.debug("Creating visum participant")
@@ -54,6 +58,7 @@ class VisumParticipantService:
                 participant_type=participant_type,
                 created_by=user,
                 skip_validation=skip_validation,
+                scouts_member=scouts_member,
             )
 
     @transaction.atomic
@@ -63,6 +68,7 @@ class VisumParticipantService:
         visum_participant: VisumParticipant,
         participant_type: ParticipantType = ParticipantType.PARTICIPANT,
         skip_validation: bool = False,
+        scouts_member: AbstractScoutsMember = None,
     ) -> VisumParticipant:
         participant = None
         if hasattr(visum_participant, "participant"):
@@ -74,6 +80,7 @@ class VisumParticipantService:
             participant=participant,
             user=created_by,
             skip_validation=skip_validation,
+            scouts_member=scouts_member,
         )
 
         logger.debug(
@@ -103,6 +110,7 @@ class VisumParticipantService:
         updated_visum_participant: VisumParticipant,
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
+        scouts_member: AbstractScoutsMember = None,
     ) -> VisumParticipant:
         logger.debug(
             "Updating VisumParticipant with id %s and group_admin_id %s and e-mail %s",

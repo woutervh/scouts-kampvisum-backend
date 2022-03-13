@@ -21,7 +21,6 @@ from apps.visums.models import (
 )
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CheckSerializer
-from apps.visums.services import LinkedCheckService
 from apps.visums.urls import LinkedCheckEndpointFactory
 
 from scouts_auth.inuits.serializers import PersistedFileSerializer
@@ -57,7 +56,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
     def get_value(self, obj: LinkedCheck):
         # logger.debug("Getting value for %s with id %s", type(obj).__name__, obj.id)
-        check: LinkedCheck = LinkedCheckService.get_value_type(obj)
+        check: LinkedCheck = obj.get_value_type()
 
         if check.parent.check_type.is_simple_check():
             value = LinkedSimpleCheckSerializer.get_value(check)
@@ -106,7 +105,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
         if id and len(data.keys()) == 1:
             linked_check = LinkedCheck.objects.safe_get(id=id)
             if linked_check:
-                check = LinkedCheckService.get_value_type(linked_check)
+                check = linked_check.get_value_type()
                 if check:
                     return check
 
