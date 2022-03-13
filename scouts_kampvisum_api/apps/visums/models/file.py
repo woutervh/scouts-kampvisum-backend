@@ -1,2 +1,0 @@
-class CampVisumFileModel:
-    pass

@@ -1,3 +1,5 @@
+import os
+import uuid
 import mimetypes
 
 from django.http import Http404
@@ -31,7 +33,12 @@ class PersistedFileService:
         if not instance:
             instance = PersistedFile()
 
-        instance.file.save(name=name, content=content)
+        name, extension = os.path.splitext(name)
+
+        instance.original_name = "{}.{}".format(name, extension)
+        instance.file.save(
+            name="{}.{}".format(str(uuid.uuid4()), extension), content=content
+        )
         instance.content_type = content_type
 
         instance.full_clean()

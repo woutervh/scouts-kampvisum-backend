@@ -32,6 +32,10 @@ class PersistedFileSerializer(serializers.ModelSerializer):
         if file:
             return file
 
+        original_name = data.get("original_name", None)
+        if not original_name:
+            data["original_name"] = data.get("file").name
+
         data = super().to_internal_value(data)
 
         logger.debug("PERSISTED FILE SERIALIZER TO INTERNAL VALUE: %s", data)
@@ -43,10 +47,11 @@ class PersistedFileSerializer(serializers.ModelSerializer):
             return get_storage_class()().url(obj.file.name)
 
     def get_name(self, obj: PersistedFile):
-        if obj and hasattr(obj, "file") and obj.file and hasattr(obj.file, "name"):
-            return obj.file.name
+        # if obj and hasattr(obj, "file") and obj.file and hasattr(obj.file, "name"):
+        #     return obj.file.name
 
-        return None
+        # return None
+        return obj.original_name
 
     def get_size(self, obj: PersistedFile):
         if obj and hasattr(obj, "file") and obj.file and hasattr(obj.file, "size"):

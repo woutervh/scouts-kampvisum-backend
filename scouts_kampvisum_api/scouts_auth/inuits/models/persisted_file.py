@@ -2,6 +2,7 @@ from django.db import models
 
 from scouts_auth.inuits.files.validators import validate_uploaded_file
 from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.fields import RequiredCharField
 
 # LOGGING
 import logging
@@ -35,6 +36,7 @@ class PersistedFileManager(models.Manager):
 class PersistedFile(AuditedBaseModel):
     objects = PersistedFileManager()
 
+    original_name = RequiredCharField()
     file = models.FileField(
         validators=[validate_uploaded_file],
         null=True,
