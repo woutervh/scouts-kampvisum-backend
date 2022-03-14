@@ -60,7 +60,7 @@ class CampService:
         # logger.debug("Camp update fields: %s", fields)
         # Required arguments:
         instance.name = fields.get("name", instance.name)
-        sections = fields.get("sections")
+        sections = fields.get("sections", instance.sections.all())
 
         # Optional arguments:
         instance.start_date = fields.get("start_date", instance.start_date)

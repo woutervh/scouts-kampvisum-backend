@@ -78,12 +78,17 @@ class CampVisumService:
         Updates an existing CampVisum object in the DB.
         """
         camp = instance.camp
-        camp_fields = fields.pop("camp")
+        camp_fields = fields.pop("camp", None)
+        if not camp_fields:
+            camp_fields = {}
 
-        camp_types = fields.get("camp_types", [])
-        camp_types: List[CampType] = self.camp_type_service.get_camp_types(
-            camp_types=camp_types
-        )
+        camp_types = fields.get("camp_types", None)
+        if not camp_types:
+            camp_types = instance.camp_types.all()
+        else:
+            camp_types: List[CampType] = self.camp_type_service.get_camp_types(
+                camp_types=camp_types
+            )
 
         logger.debug(
             "Updating camp %s for visum with id %s and camp types (%s)",
