@@ -258,6 +258,11 @@ class ScoutsUser(User):
             "{:<24}: {}\n"  # district commissioner ?
             "{:<24}: {}\n"  # group leader
             "{:<24}: {}\n"  # section leader
+            "{:<24}: {}\n"  # last authenticated
+            "{:<24}: {}\n"  # last refreshed
+            "{:<24}: {}\n"  # last updated
+            "{:<24}: {}\n"  # last updated groups
+            "{:<24}: {}\n"  # last updated functions
         ).format(
             "USER INFO",
             "username",
@@ -306,4 +311,14 @@ class ScoutsUser(User):
             ", ".join(
                 group.group_admin_id for group in self.get_section_leader_groups()
             ),
+            "last authenticated",
+            self.last_authenticated,
+            "last refreshed",
+            self.last_refreshed,
+            "last updated",
+            self.last_updated,
+            "last updated groups",
+            self.last_updated_groups,
+            "last updated functions",
+            self.last_updated_functions,
         )
