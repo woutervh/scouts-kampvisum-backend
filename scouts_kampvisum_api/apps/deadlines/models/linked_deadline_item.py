@@ -56,7 +56,7 @@ class LinkedDeadlineItem(AbstractBaseModel):
             return self.linked_sub_category.parent.name
 
         if self.is_check_deadline():
-            return self.check.parent.name
+            return self.linked_check.parent.name
 
     def is_deadline(self):
         return self.parent.is_deadline()
