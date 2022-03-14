@@ -61,7 +61,10 @@ class Category(
             self.index,
             self.description,
             self.explanation,
-            ", ".join(camp_type.camp_type for camp_type in self.camp_types)
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all())
             if self.camp_types
             else "[]",
         )
+
+    def to_simple_str(self):
+        return "{} ({})".format(self.name, self.id)

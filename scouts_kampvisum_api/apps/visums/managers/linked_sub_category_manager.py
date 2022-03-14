@@ -24,8 +24,10 @@ class LinkedSubCategoryManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        category = kwargs.get("category", None)
         parent = kwargs.get("parent", None)
         visum = kwargs.get("visum", None)
+        is_archived = kwargs.get("is_archived", False)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -34,18 +36,30 @@ class LinkedSubCategoryManager(models.Manager):
             except:
                 pass
 
+        if category and parent:
+            try:
+                return self.get_queryset().get(parent=parent, category=category)
+            except:
+                pass
+
         if parent and visum:
             try:
                 return self.get_queryset().get(
-                    parent__id=parent.id, category__category_set__visum__id=visum.id
+                    parent__id=parent.id,
+                    category__category_set__visum__id=visum.id,
+                    is_archived=is_archived,
                 )
             except:
                 pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate LinkedSubCategory instance(s) with provided params (id: {}, (parent: {}, visum: {})".format(
-                    pk, parent.to_simple_str(), visum
+                "Unable to locate LinkedSubCategory instance(s) with provided params (id: {}, (category: {}, parent: {}), (parent: {}, visum: {})".format(
+                    pk,
+                    category.to_simple_str() if category else None,
+                    parent.to_simple_str() if parent else None,
+                    parent.to_simple_str() if parent else None,
+                    visum,
                 )
             )
         return None

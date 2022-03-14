@@ -97,13 +97,15 @@ class CampVisumService:
         instance.full_clean()
         instance.save()
 
+        current_camp_types = instance.camp_types.all()
         instance.camp_types.clear()
         for camp_type in camp_types:
             instance.camp_types.add(camp_type)
 
         logger.debug(
-            "Updating LinkedCategorySet with id %s for visum with id %s",
+            "Updating LinkedCategorySet with id %s for visum %s (%s)",
             instance.category_set.id,
+            instance.camp.name,
             instance.id,
         )
         category_set: LinkedCategorySet = (
@@ -111,6 +113,7 @@ class CampVisumService:
                 request=request,
                 instance=instance.category_set,
                 visum=instance,
+                current_camp_types=current_camp_types,
             )
         )
 

@@ -28,3 +28,6 @@ class LinkedCategory(AuditedArchiveableBaseModel):
     @property
     def readable_name(self):
         return "{}".format(self.parent.name)
+
+    def to_simple_str(self) -> str:
+        return "{} ({})".format(self.parent.name, self.id)

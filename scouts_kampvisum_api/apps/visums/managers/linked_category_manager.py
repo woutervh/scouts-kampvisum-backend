@@ -25,7 +25,8 @@ class LinkedCategoryManager(models.Manager):
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         category_set = kwargs.get("category_set", None)
-        category = kwargs.get("category", None)
+        parent = kwargs.get("parent", None)
+        is_archived = kwargs.get("is_archived", False)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -34,18 +35,20 @@ class LinkedCategoryManager(models.Manager):
             except:
                 pass
 
-        if category_set and category:
+        if category_set and parent:
             try:
                 return self.get_queryset().get(
-                    category_set=category_set, parent=category
+                    category_set=category_set,
+                    parent=parent,
+                    is_archived=is_archived,
                 )
             except:
                 pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate LinkedCategory instance(s) with provided params (id: {}, category: {})".format(
-                    pk, category
+                "Unable to locate LinkedCategory instance(s) with provided params (id: {}, (category_set: {}, parent: {}))".format(
+                    pk, parent.to_simple_str() if parent else None
                 )
             )
         return None

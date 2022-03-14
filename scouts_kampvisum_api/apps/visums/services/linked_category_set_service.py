@@ -1,12 +1,14 @@
+from typing import List
+
 from django.db import transaction
 
-from apps.camps.services import CampTypeService
+from apps.camps.models import CampType
 
 from apps.visums.models import (
     CampVisum,
     LinkedCategorySet,
 )
-from apps.visums.services import CategoryService
+from apps.visums.services import LinkedCategoryService
 
 
 # LOGGING
@@ -21,8 +23,7 @@ class LinkedCategorySetService:
     Service for managing category sets.
     """
 
-    camp_type_service = CampTypeService()
-    category_service = CategoryService()
+    linked_category_service = LinkedCategoryService()
 
     @transaction.atomic
     def create_linked_category_set(
@@ -35,7 +36,7 @@ class LinkedCategorySetService:
         linked_category_set.full_clean()
         linked_category_set.save()
 
-        return self.category_service.create_linked_categories(
+        return self.linked_category_service.create_linked_categories(
             request=request,
             linked_category_set=linked_category_set,
         )
@@ -46,8 +47,10 @@ class LinkedCategorySetService:
         request,
         instance: LinkedCategorySet,
         visum: CampVisum,
+        current_camp_types: List[CampType] = None,
     ) -> LinkedCategorySet:
-        return self.category_service.update_linked_categories(
+        return self.linked_category_service.update_linked_categories(
             request=request,
             linked_category_set=instance,
+            current_camp_types=current_camp_types,
         )

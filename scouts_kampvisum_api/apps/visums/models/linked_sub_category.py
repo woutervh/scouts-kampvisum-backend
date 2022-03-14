@@ -34,3 +34,6 @@ class LinkedSubCategory(AuditedArchiveableBaseModel):
                 return False
 
         return True
+
+    def to_simple_str(self) -> str:
+        return "{} ({})".format(self.parent.name, self.id)

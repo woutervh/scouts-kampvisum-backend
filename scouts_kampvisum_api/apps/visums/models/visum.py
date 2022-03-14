@@ -19,3 +19,6 @@ class CampVisum(AuditedBaseModel):
 
     def __str__(self):
         return "{}".format(self.id)
+
+    def to_simple_str(self):
+        return "{} ({})".format(self.camp.name, self.id)

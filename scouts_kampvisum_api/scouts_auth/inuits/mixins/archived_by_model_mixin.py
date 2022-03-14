@@ -3,6 +3,8 @@ from django.conf import settings
 
 
 class ArchivedByModelMixin(models.Model):
+    """Stores the user that archived the object (field name: archived_by)"""
+
     archived_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="Archived by",

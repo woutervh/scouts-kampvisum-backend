@@ -3,6 +3,8 @@ from django.conf import settings
 
 
 class UpdatedByModelMixin(models.Model):
+    """Stores the user that updated the object (field name: updated_by)"""
+
     updated_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="updated by",

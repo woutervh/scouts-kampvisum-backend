@@ -23,7 +23,12 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Check(
-    Changeable, Explainable, Indexable, Linkable, Translatable, ArchiveableAbstractBaseModel
+    Changeable,
+    Explainable,
+    Indexable,
+    Linkable,
+    Translatable,
+    ArchiveableAbstractBaseModel,
 ):
 
     objects = CheckManager()
@@ -53,7 +58,10 @@ class Check(
             str(self.sub_category),
             str(self.check_type),
             self.is_multiple,
-            ", ".join(camp_type.camp_type for camp_type in self.camp_types)
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all())
             if self.camp_types
             else "[]",
         )
+
+    def to_simple_str(self) -> str:
+        return "{} ({})".format(self.name, self.id)

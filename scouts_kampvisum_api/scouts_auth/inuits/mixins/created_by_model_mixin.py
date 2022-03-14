@@ -3,6 +3,8 @@ from django.conf import settings
 
 
 class CreatedByModelMixin(models.Model):
+    """Stores the user that created the object (field name: created_by)"""
+
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="Created by",
