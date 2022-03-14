@@ -43,7 +43,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
             except:
                 logger.error("Unable to decode JWT token - Do you need a refresh ?")
         username = username if username else member.username
-        logger.debug("USER: create user %s", username)
+        # logger.debug("USER: create user %s", username)
 
         member: AbstractScoutsMember = self._load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self.UserModel.objects.create_user(
@@ -66,7 +66,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Update existing user with new claims if necessary, save, and return the updated user object.
         """
-        logger.debug("USER: update user")
+        # logger.debug("USER: update user")
 
         member: AbstractScoutsMember = self._load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self._merge_member_data(user, member, claims)
