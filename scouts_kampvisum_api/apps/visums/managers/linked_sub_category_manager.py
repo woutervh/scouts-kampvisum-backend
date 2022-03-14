@@ -13,6 +13,9 @@ class LinkedSubCategoryQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def all(self, *args, **kwargs):
+        return super().all(args, is_archived=False, **kwargs)
+
 
 class LinkedSubCategoryManager(models.Manager):
     """

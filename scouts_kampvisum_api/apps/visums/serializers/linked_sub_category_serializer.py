@@ -31,6 +31,9 @@ class LinkedSubCategorySerializer(serializers.ModelSerializer):
         return super().to_internal_value(data)
 
     def to_representation(self, obj: LinkedSubCategory) -> dict:
+        if obj.is_archived:
+            return None
+
         data = super().to_representation(obj)
 
         data["state"] = CheckState.CHECKED

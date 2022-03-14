@@ -83,19 +83,17 @@ class LinkedCategoryService:
         linked_category_set: LinkedCategorySet,
         current_camp_types: List[CampType] = None,
     ) -> LinkedCategorySet:
+        camp_types: List[CampType] = linked_category_set.visum.camp_types.all()
         categories: List[Category] = Category.objects.safe_get(
             camp_year=linked_category_set.visum.camp.year,
-            camp_types=linked_category_set.visum.camp_types.all(),
+            camp_types=camp_types,
             raise_error=True,
         )
         logger.debug(
             "Found %d Category instance(s) for camp_year %d and camp_types %s that should be linked to visum %s (%s)",
             len(categories),
             linked_category_set.visum.camp.year.year,
-            ",".join(
-                camp_type.camp_type
-                for camp_type in linked_category_set.visum.camp_types.all()
-            ),
+            ",".join(camp_type.camp_type for camp_type in camp_types),
             linked_category_set.visum.camp.name,
             linked_category_set.visum.camp.name,
         )
@@ -110,10 +108,7 @@ class LinkedCategoryService:
             "Found %d Category instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_categories),
             linked_category_set.visum.camp.year.year,
-            ",".join(
-                camp_type.camp_type
-                for camp_type in linked_category_set.visum.camp_types.all()
-            ),
+            ",".join(camp_type.camp_type for camp_type in camp_types),
             linked_category_set.visum.camp.name,
             linked_category_set.visum.id,
         )
@@ -131,14 +126,29 @@ class LinkedCategoryService:
                     linked_category_set=linked_category_set,
                     category=category,
                 )
-            # Updated Category
+            # Updated or re-added Category
             else:
-                self.update_linked_category(
-                    request=request,
-                    instance=linked_category,
-                    category=category,
-                    current_camp_types=current_camp_types,
-                )
+                if (
+                    linked_category.is_archived
+                    and len(
+                        [
+                            camp_type
+                            for camp_type in linked_category.parent.camp_types.all()
+                            if camp_type in camp_types
+                        ]
+                    )
+                    > 0
+                ):
+                    self.undelete_linked_category(
+                        request=request, instance=linked_category
+                    )
+                else:
+                    self.update_linked_category(
+                        request=request,
+                        instance=linked_category,
+                        category=category,
+                        current_camp_types=current_camp_types,
+                    )
 
                 for current_category in current_categories:
                     if current_category.id == category.id:
@@ -169,6 +179,7 @@ class LinkedCategoryService:
             instance.category_set.visum.camp.name,
             instance.category_set.visum.id,
         )
+
         self.linked_sub_category_service.update_linked_sub_categories(
             request,
             linked_category=instance,
@@ -190,6 +201,23 @@ class LinkedCategoryService:
         instance.save()
 
         self.linked_sub_category_service.delete_linked_sub_categories(
+            request=request, linked_category=instance
+        )
+
+        return instance
+
+    @transaction.atomic
+    def undelete_linked_category(
+        self, request, instance: LinkedCategory
+    ) -> LinkedCategory:
+        instance.is_archived = False
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
+
+        instance.full_clean()
+        instance.save()
+
+        self.linked_sub_category_service.undelete_linked_sub_categories(
             request=request, linked_category=instance
         )
 

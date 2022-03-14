@@ -22,6 +22,9 @@ class LinkedCategorySerializer(serializers.ModelSerializer):
         exclude = ["category_set"]
 
     def to_representation(self, obj: LinkedCategory) -> dict:
+        if obj.is_archived:
+            return None
+
         # logger.debug("LINKED CATEGORY TO_REPRESENTATION: %s", obj)
 
         data = super().to_representation(obj)

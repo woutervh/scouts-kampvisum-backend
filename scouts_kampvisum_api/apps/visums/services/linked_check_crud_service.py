@@ -75,19 +75,19 @@ class LinkedCheckCRUDService:
         sub_category: SubCategory,
         current_camp_types: List[CampType] = None,
     ) -> LinkedSubCategory:
+        camp_types: List[
+            CampType
+        ] = linked_sub_category.category.category_set.visum.camp_types.all()
         checks: List[Check] = Check.objects.safe_get(
             sub_category=sub_category,
-            camp_types=linked_sub_category.category.category_set.visum.camp_types.all(),
+            camp_types=camp_types,
             raise_error=True,
         )
         logger.debug(
             "Found %d Check instance(s) for camp_year %d and camp_types %s that should be linked to visum %s (%s)",
             len(checks),
             linked_sub_category.category.category_set.visum.camp.year.year,
-            ",".join(
-                camp_type.camp_type
-                for camp_type in linked_sub_category.category.category_set.visum.camp_types.all()
-            ),
+            ",".join(camp_type.camp_type for camp_type in camp_types),
             linked_sub_category.category.category_set.visum.camp.name,
             linked_sub_category.category.category_set.visum.camp.name,
         )
@@ -98,10 +98,7 @@ class LinkedCheckCRUDService:
             "Found %d Check instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_checks),
             linked_sub_category.category.category_set.visum.camp.year.year,
-            ",".join(
-                camp_type.camp_type
-                for camp_type in linked_sub_category.category.category_set.visum.camp_types.all()
-            ),
+            ",".join(camp_type.camp_type for camp_type in camp_types),
             linked_sub_category.category.category_set.visum.camp.name,
             linked_sub_category.category.category_set.visum.id,
         )
@@ -119,14 +116,27 @@ class LinkedCheckCRUDService:
                     linked_sub_category=linked_sub_category,
                     check=check,
                 )
-            # Updated Check
+            # Updated or re-added Check
             else:
-                self.update_linked_check(
-                    request=request,
-                    instance=linked_check,
-                    check=check,
-                    current_camp_types=current_camp_types,
-                )
+                if (
+                    linked_check.is_archived
+                    and len(
+                        [
+                            camp_type
+                            for camp_type in linked_check.parent.camp_types.all()
+                            if camp_type in camp_types
+                        ]
+                    )
+                    > 0
+                ):
+                    self.undelete_linked_check(request=request, instance=linked_check)
+                else:
+                    self.update_linked_check(
+                        request=request,
+                        instance=linked_check,
+                        check=check,
+                        current_camp_types=current_camp_types,
+                    )
 
                 for current_check in current_checks:
                     if current_check.id == check.id:
@@ -134,7 +144,7 @@ class LinkedCheckCRUDService:
 
         # Deleted Check
         logger.debug(
-            "REMAING CURRENT CHECKS: %s",
+            "REMAINING CURRENT CHECKS: %s",
             ",".join(current_check.name for current_check in current_checks),
         )
         for linked_check in current_linked_checks:
@@ -149,7 +159,7 @@ class LinkedCheckCRUDService:
         request,
         instance: LinkedCheck,
         check: Check,
-        current_camp_types: List[CampType],
+        current_camp_types: List[CampType] = None,
     ) -> LinkedCheck:
         logger.debug(
             "Updating LinkedCheck '%s' for visum '%s' (%s)",
@@ -172,6 +182,24 @@ class LinkedCheckCRUDService:
         instance.is_archived = True
         instance.archived_by = request.user
         instance.archived_on = timezone.now()
+
+        instance.full_clean()
+        instance.save()
+
+        return instance
+
+    @transaction.atomic
+    def undelete_linked_checks(
+        self, request, linked_sub_category: LinkedSubCategory
+    ) -> LinkedCheck:
+        for linked_check in linked_sub_category.checks.all():
+            self.undelete_linked_check(request=request, instance=linked_check)
+
+    @transaction.atomic
+    def undelete_linked_check(self, request, instance: LinkedCheck) -> LinkedCheck:
+        instance.is_archived = False
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()
