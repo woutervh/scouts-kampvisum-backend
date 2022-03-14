@@ -169,18 +169,18 @@ class ScoutsSectionService:
 
         for group in groups:
             if group.default_sections_loaded:
-                # logger.debug(
-                #     "Default sections for group %s already loaded (%d section(s))",
-                #     group.group_admin_id,
-                #     group.sections.count(),
-                # )
+                logger.debug(
+                    "Default sections for group %s already loaded (%d section(s))",
+                    group.group_admin_id,
+                    group.sections.count(),
+                )
                 continue
 
-            # logger.debug(
-            #     "Linking sections to GROUP: %s (%s)",
-            #     group.group_admin_id,
-            #     group.name,
-            # )
+            logger.debug(
+                "Linking sections to GROUP: %s (%s)",
+                group.group_admin_id,
+                group.name,
+            )
             default_scouts_section_names: List[
                 DefaultScoutsSectionName
             ] = self.default_section_name_service.load_for_group(

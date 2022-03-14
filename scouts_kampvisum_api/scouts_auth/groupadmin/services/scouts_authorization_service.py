@@ -63,6 +63,7 @@ class ScoutsAuthorizationService(AuthorizationService):
     def load_user_scouts_groups(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
+        logger.debug("SCOUTS AUTHORIZATION: loading user groups for %s", user.username)
         user = self.scouts_group_service.create_or_update_scouts_groups_for_user(
             user=user
         )
