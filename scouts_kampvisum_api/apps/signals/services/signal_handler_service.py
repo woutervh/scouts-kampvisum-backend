@@ -189,7 +189,7 @@ class SignalHandlerService:
             user.full_clean()
             user.save()
 
-        if OIDCUserHelper.requires_function_loading(user=user):
+        if OIDCUserHelper.requires_functions_loading(user=user):
             # logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
             user = authorization_service.load_user_functions(user=user)
             try:

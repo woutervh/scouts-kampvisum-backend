@@ -131,6 +131,6 @@ class OIDCUserHelper:
 
         return True
 
-    @staticmethod
-    def requires_function_loading(user: settings.AUTH_USER_MODEL):
-        return True
+    # @staticmethod
+    # def requires_function_loading(user: settings.AUTH_USER_MODEL):
+    #     return True
