@@ -32,6 +32,12 @@ class AbstractScoutsResponseSerializer(NonModelSerializer):
             ),
         }
 
+        logger.debug("validated: %s", validated_data)
+
+        remaining_keys = data.keys()
+        if len(remaining_keys) > 0:
+            logger.debug("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+
         return validated_data
 
     def save(self) -> AbstractScoutsResponse:

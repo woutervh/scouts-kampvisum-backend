@@ -45,9 +45,12 @@ class GroupAdminMemberService(GroupAdmin):
             active_user, term
         )
         logger.debug(
-            "GA returned a list of %d member(s) for search term %s",
+            "GA returned a list of %d member(s) for search term %s (count: %d, total: %d -> %d more on GA)",
             len(response.members),
             term,
+            response.count,
+            response.total,
+            (response.total - response.count),
         )
 
         current_datetime: datetime = datetime.now()

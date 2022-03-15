@@ -8,6 +8,7 @@ from django.contrib.auth.models import UserManager
 from scouts_auth.auth.models import User
 
 from scouts_auth.groupadmin.models import (
+    AbstractScoutsMember,
     AbstractScoutsAddress,
     AbstractScoutsFunction,
     AbstractScoutsGroupSpecificField,
@@ -327,3 +328,49 @@ class ScoutsUser(User):
             "last updated functions",
             self.last_updated_functions,
         )
+
+    @staticmethod
+    def from_abstract_member(user=None, abstract_member: AbstractScoutsMember = None):
+        if not abstract_member:
+            raise ValidationError(
+                "Can't load user data without an AbstractScoutsMember"
+            )
+        user = user if user else ScoutsUser()
+
+        user.group_admin_id = abstract_member.group_admin_id
+        user.gender = (
+            abstract_member.gender if abstract_member.gender else Gender.UNKNOWN
+        )
+        user.phone_number = (
+            abstract_member.phone_number if abstract_member.phone_number else ""
+        )
+        user.membership_number = (
+            abstract_member.membership_number
+            if abstract_member.membership_number
+            else ""
+        )
+        user.customer_number = (
+            abstract_member.customer_number if abstract_member.customer_number else ""
+        )
+        user.birth_date = (
+            abstract_member.birth_date if abstract_member.birth_date else None
+        )
+        user.first_name = (
+            abstract_member.first_name if abstract_member.first_name else ""
+        )
+        user.last_name = abstract_member.last_name if abstract_member.last_name else ""
+        user.email = abstract_member.email
+
+        user.scouts_groups = (
+            abstract_member.scouts_groups if abstract_member.scouts_groups else []
+        )
+        user.addresses = abstract_member.addresses if abstract_member.addresses else []
+        user.functions = abstract_member.functions if abstract_member.functions else []
+        user.group_specific_fields = (
+            abstract_member.group_specific_fields
+            if abstract_member.group_specific_fields
+            else []
+        )
+        user.links = abstract_member.links if abstract_member.links else []
+
+        return user

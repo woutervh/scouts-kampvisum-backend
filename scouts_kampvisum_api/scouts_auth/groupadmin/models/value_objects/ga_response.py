@@ -9,29 +9,29 @@ class AbstractScoutsResponse(AbstractNonModel):
     Class to capture composite responses, that typically contain a list of links and a list of objects.
     """
 
-    count: int
-    total: int
-    offset: int
-    filter_criterium: str
-    criteria: dict
-    links: List[AbstractScoutsLink]
+    count: int = 0
+    total: int = 0
+    offset: int = 0
+    filter_criterium: str = ""
+    criteria: dict = {}
+    links: List[AbstractScoutsLink] = []
 
     class Meta:
         abstract = True
 
     def __init__(
         self,
-        count: int = 0,
-        total: int = 0,
-        offset: int = 0,
-        filter_criterium: str = "",
-        criteria: dict = None,
-        links: List[AbstractScoutsLink] = None,
+        count: int = None,
+        total: int = None,
+        offset: int = None,
+        filter_criterium: str = None,
+        criteria: dict = {},
+        links: List[AbstractScoutsLink] = [],
     ):
-        self.count = count
-        self.total = total
-        self.offset = offset
-        self.filter_criterium = filter_criterium
+        self.count = count if count else 0
+        self.total = total if total else 0
+        self.offset = offset if offset else 0
+        self.filter_criterium = filter_criterium if filter_criterium else ""
         self.criteria = criteria if criteria else {}
         self.links = links if links else []
 
