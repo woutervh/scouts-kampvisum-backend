@@ -235,11 +235,11 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             presets,
         )
 
-        search_term = (
-            "{} {}".format(search_term, "|")
-            if search_term.strip()[-1] != "|"
-            else search_term
-        )
+        # search_term = (
+        #     "{} {}".format(search_term, "|")
+        #     if search_term.strip()[-1] != "|"
+        #     else search_term
+        # )
         members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
             active_user=request.user,
             term=search_term,

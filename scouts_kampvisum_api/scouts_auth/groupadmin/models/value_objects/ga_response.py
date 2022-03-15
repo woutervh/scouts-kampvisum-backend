@@ -9,8 +9,8 @@ class AbstractScoutsResponse(AbstractNonModel):
     Class to capture composite responses, that typically contain a list of links and a list of objects.
     """
 
-    count: int = 0
-    total: int = 0
+    _count: int = 0
+    _total: int = 0
     offset: int = 0
     filter_criterium: str = ""
     criteria: dict = {}
@@ -36,6 +36,22 @@ class AbstractScoutsResponse(AbstractNonModel):
         self.links = links if links else []
 
         # super().__init__([], {})
+
+    @property
+    def count(self) -> int:
+        return self._count if self._count else 0
+
+    @count.setter
+    def count(self, count):
+        self._count = count
+
+    @property
+    def total(self) -> int:
+        return self._total if self._total else 0
+
+    @total.setter
+    def total(self, total):
+        self._total = total
 
     def __str__(self):
         return "count({}), total({}), offset({}), filter_criterium({}), criteria({}), links: ({})".format(
