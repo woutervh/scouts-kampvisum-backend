@@ -29,6 +29,8 @@ class OIDCUserHelper:
 
     @staticmethod
     def requires_data_loading(user: settings.AUTH_USER_MODEL):
+        if not user.last_updated:
+            return True
         (
             now,
             last_updated,
@@ -54,6 +56,9 @@ class OIDCUserHelper:
 
     @staticmethod
     def requires_group_loading(user: settings.AUTH_USER_MODEL):
+        if not user.last_updated_groups:
+            return True
+
         (
             now,
             last_updated,
@@ -82,6 +87,9 @@ class OIDCUserHelper:
 
     @staticmethod
     def requires_functions_loading(user: settings.AUTH_USER_MODEL):
+        if not user.last_updated_functions:
+            return True
+
         (
             now,
             last_updated,
@@ -110,6 +118,9 @@ class OIDCUserHelper:
 
     @staticmethod
     def requires_group_refresh(user: settings.AUTH_USER_MODEL):
+        if not user.last_refreshed:
+            return True
+
         now: timezone.datetime = timezone.now()
         last_refreshed: datetime = user.last_refreshed
 

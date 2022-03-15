@@ -99,11 +99,11 @@ class ScoutsUser(User):
     #
     # Convenience fields to avoid a profile call to groupadmin at every authentication event.
     #
-    last_authenticated: datetime = TimezoneAwareDateTimeField(default=datetime.now)
-    last_refreshed: datetime = TimezoneAwareDateTimeField(default=datetime.now)
-    last_updated: datetime = TimezoneAwareDateTimeField(default=datetime.now)
-    last_updated_groups: datetime = TimezoneAwareDateTimeField(default=datetime.now)
-    last_updated_functions: datetime = TimezoneAwareDateTimeField(default=datetime.now)
+    last_authenticated: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
+    last_refreshed: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
+    last_updated: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
+    last_updated_groups: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
+    last_updated_functions: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
 
     #
     # Fields inherited from scouts_auth.auth.models.User that may need to be updated after a call to groupadmin
