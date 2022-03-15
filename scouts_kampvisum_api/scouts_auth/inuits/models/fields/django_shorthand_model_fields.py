@@ -26,15 +26,16 @@ class OptionalCharField(models.CharField):
     """
 
     def __init__(self, *args, **kwargs):
-        if "default" in kwargs:
-            default_value = kwargs.pop("default", None)
-            warning = "A default value '{}' was passed to {} and was discarded. Use DefaultCharField if this field needs a default.".format(
-                default_value, self.__class__.__name__
-            )
-            warnings.warn(warning)
+        # if "default" in kwargs:
+        #     default_value = kwargs.pop("default", None)
+        #     warning = "A default value '{}' was passed to {} and was discarded. Use DefaultCharField if this field needs a default.".format(
+        #         default_value, self.__class__.__name__
+        #     )
+        #     warnings.warn(warning)
         if "max_length" not in kwargs:
             kwargs["max_length"] = DEFAULT_CHAR_FIELD_LENGTH
         kwargs["blank"] = True
+        kwargs["default"] = kwargs.get("default", "")
         super().__init__(*args, **kwargs)
 
 
@@ -111,14 +112,15 @@ class OptionalTextField(models.TextField):
     """
 
     def __init__(self, *args, **kwargs):
-        if "default" in kwargs:
-            default_value = kwargs.pop("default", None)
-            if default_value is not None and len(default_value.strip()) > 0:
-                warning = "A default value '{}' was passed to {} and was discarded. Use models.TextField if this field needs a default.".format(
-                    default_value, self.__class__.__name__
-                )
-                warnings.warn(warning)
+        # if "default" in kwargs:
+        #     default_value = kwargs.pop("default", None)
+        #     if default_value is not None and len(default_value.strip()) > 0:
+        #         warning = "A default value '{}' was passed to {} and was discarded. Use models.TextField if this field needs a default.".format(
+        #             default_value, self.__class__.__name__
+        #         )
+        #         warnings.warn(warning)
         kwargs["blank"] = True
+        kwargs["default"] = kwargs.get("default", "")
         super().__init__(*args, **kwargs)
 
 

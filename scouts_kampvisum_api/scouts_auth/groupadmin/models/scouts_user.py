@@ -19,7 +19,12 @@ from scouts_auth.groupadmin.models import (
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
 from scouts_auth.inuits.models import Gender
-from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
+from scouts_auth.inuits.models.fields import (
+    OptionalCharField,
+    RequiredCharField,
+    DefaultCharField,
+    TimezoneAwareDateTimeField,
+)
 
 
 # LOGGING
@@ -81,13 +86,13 @@ class ScoutsUser(User):
     #
     # Fields from the groupadmin member record
     #
-    group_admin_id: str = models.CharField(max_length=48, db_column="ga_id", blank=True)
-    gender: Gender = models.CharField(
+    group_admin_id: str = RequiredCharField(max_length=48, db_column="ga_id")
+    gender: Gender = DefaultCharField(
         max_length=16, choices=Gender.choices, default=Gender.UNKNOWN
     )
-    phone_number: str = models.CharField(max_length=48, blank=True)
-    membership_number: str = models.CharField(max_length=48, blank=True)
-    customer_number: str = models.CharField(max_length=48, blank=True)
+    phone_number: str = OptionalCharField(max_length=48)
+    membership_number: str = OptionalCharField(max_length=48)
+    customer_number: str = OptionalCharField(max_length=48)
     birth_date: date = models.DateField(blank=True, null=True)
 
     #
