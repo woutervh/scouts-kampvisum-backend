@@ -103,7 +103,7 @@ class ScoutsUser(User):
     last_refreshed: datetime = TimezoneAwareDateTimeField(default=datetime.now)
     last_updated: datetime = TimezoneAwareDateTimeField(default=datetime.now)
     last_updated_groups: datetime = TimezoneAwareDateTimeField(default=datetime.now)
-    last_updated_funtions: datetime = TimezoneAwareDateTimeField(default=datetime.now)
+    last_updated_functions: datetime = TimezoneAwareDateTimeField(default=datetime.now)
 
     #
     # Fields inherited from scouts_auth.auth.models.User that may need to be updated after a call to groupadmin
