@@ -220,7 +220,7 @@ class SignalHandlerService:
         function_count: int = len(user.functions)
         persisted_function_count: int = user.persisted_scouts_functions.count()
 
-        if group_count == 0:
+        if group_count == 0 and persisted_group_count == 0:
             raise ValidationError(
                 "No AbstractScoutsGroup instances loaded from groupadmin for user {}".format(
                     user.username
@@ -232,7 +232,7 @@ class SignalHandlerService:
                     user.username
                 )
             )
-        if function_count == 0:
+        if function_count == 0 and persisted_function_count == 0:
             raise ValidationError(
                 "No AbstractScoutsFunction instances loaded from groupadmin for user {}".format(
                     user.username
