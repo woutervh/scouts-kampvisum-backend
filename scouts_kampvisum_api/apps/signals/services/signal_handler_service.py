@@ -171,14 +171,11 @@ class SignalHandlerService:
             return user
 
         if OIDCUserHelper.requires_group_loading(user=user):
-            # logger.debug(
-            #     "SIGNAL handling for '%s' -> Loading additional user groups", signal
-            # )
+            logger.debug(
+                "SIGNAL handling for '%s' -> Loading additional user groups", signal
+            )
             user = authorization_service.load_user_scouts_groups(user=user)
             try:
-                # logger.debug(
-                #     "SIGNAL handling for '%s' -> Loading additional user groups", signal
-                # )
                 user = authorization_service.load_user_scouts_groups(user=user)
             except Exception as exc:
                 raise ValidationError(
@@ -190,12 +187,9 @@ class SignalHandlerService:
             user.save()
 
         if OIDCUserHelper.requires_functions_loading(user=user):
-            # logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
+            logger.debug("SIGNAL handling for '%s' -> Loading scouts functions", signal)
             user = authorization_service.load_user_functions(user=user)
             try:
-                # logger.debug(
-                #     "SIGNAL handling for '%s' -> Loading scouts functions", signal
-                # )
                 user = authorization_service.load_user_functions(user=user)
             except Exception as exc:
                 raise ValidationError(
@@ -207,10 +201,10 @@ class SignalHandlerService:
             user.save()
 
         try:
-            # logger.debug(
-            #     "SIGNAL handling for '%s' -> Setting up sections for user's groups",
-            #     signal,
-            # )
+            logger.debug(
+                "SIGNAL handling for '%s' -> Setting up sections for user's groups",
+                signal,
+            )
             section_service.setup_default_sections(user=user)
         except Exception as exc:
             raise ValidationError(
