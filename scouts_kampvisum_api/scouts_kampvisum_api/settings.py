@@ -586,7 +586,20 @@ DEFAULT_FILE_STORAGE = env.str("DEFAULT_FILE_STORAGE")
 # FILE_UPLOAD_ALLOWED_EXTENSIONS=jpg,jpeg,png,webp,odt,ods,odp,docx,pdf,pptx,xlsx
 FILE_UPLOAD_ALLOWED_EXTENSIONS = env.list(
     "FILE_UPLOAD_ALLOWED_EXTENSIONS",
-    ["jpg", "jpeg", "png", "webp", "odt", "ods", "odp", "docx", "pdf", "pptx", "xlsx"],
+    [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp",
+        "odt",
+        "ods",
+        "odp",
+        "docx",
+        "doc",
+        "pdf",
+        "pptx",
+        "xlsx",
+    ],
 )
 # FILE_UPLOAD_MAX_SIZE=20971520 (20 MB)
 FILE_UPLOAD_MAX_SIZE = env.int("FILE_UPLOAD_MAX_SIZE", 20971520)
