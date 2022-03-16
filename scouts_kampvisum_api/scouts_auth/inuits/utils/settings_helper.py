@@ -49,7 +49,17 @@ class SettingsHelper:
         attribute_default_value: list = None,
         module_default_value: list = None,
     ) -> list:
-        value = SettingsHelper.get_attribute(attribute_name, attribute_default_value)
+        try:
+            value = SettingsHelper.get_attribute(
+                attribute_name, attribute_default_value
+            )
+        except:
+            try:
+                value = SettingsHelper.get_attribute(
+                    attribute_name, module_default_value
+                )
+            except:
+                value = []
 
         if isinstance(value, str):
             return list(value)

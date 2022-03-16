@@ -674,6 +674,7 @@ EMAIL_HOST = env.str("EMAIL_HOST")
 EMAIL_PORT = env.str("EMAIL_PORT")
 # SENDINBLUE EMAIL SETTINGS
 USE_SENDINBLUE = env.bool("USE_SENDINBLUE", False)
+SENDINBLUE_MAIL_TAGS = env.list("SENDINBLUE_MAIL_TAGS", ["Kampvisum"])
 # SCOUTS KAMPVISUM EMAIL SETTINGS
 # @TINUS moet toegevoegd worden in env of gewoon in settings ?
 EMAIL_FROM = env.str("EMAIL_FROM", "kamp@scoutsengidsenvlaanderen.be")

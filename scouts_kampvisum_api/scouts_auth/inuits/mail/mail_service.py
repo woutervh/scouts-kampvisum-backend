@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -97,6 +98,7 @@ class EmailService:
             template_id=mail.template_id,
             attachments=mail.attachments,
             is_html=mail.is_html,
+            tags=mail.tags,
         )
 
     def send_email(
@@ -113,6 +115,7 @@ class EmailService:
         attachments: list = None,
         template_id: str = None,
         is_html: bool = False,
+        tags: List[str] = None,
     ):
         """Decides wether to send email through the django backend or SendInBlue."""
         logger.debug("Sending mail through backend %s", self.backend)
@@ -140,6 +143,7 @@ class EmailService:
                 attachments=attachments,
                 template_id=template_id,
                 is_html=is_html,
+                tags=tags,
             )
         else:
             return self.send_django_email(
@@ -154,6 +158,7 @@ class EmailService:
                 attachment_paths=attachment_paths,
                 attachments=attachments,
                 is_html=is_html,
+                tags=tags,
             )
 
     def send_django_email(
@@ -169,6 +174,7 @@ class EmailService:
         attachment_paths: list = None,
         attachments: list = None,
         is_html: bool = False,
+        tags: List[str] = None,
     ):
         message = EmailMultiAlternatives(
             subject=subject,
@@ -215,13 +221,14 @@ class EmailService:
         attachments: list = None,
         template_id: str = None,
         is_html: bool = False,
+        tags: List[str] = None,
     ):
         message = AnymailMessage(
             subject=subject,
             body=body,
             from_email=from_email,
             to=to,
-            tags=["Schadeclaim"],  # Anymail extra in constructor
+            tags=tags if tags else [],  # Anymail extra in constructor
         )
         # if is_html:
         #     message.extra_headers["Content-Type"] = "text/html; charset=UTF8"

@@ -34,6 +34,10 @@ class VisumSettings(SettingsHelper):
         return SettingsHelper.get("EMAIL_REGISTRATION_SUBJECT")
 
     @staticmethod
+    def get_sendinblue_tags():
+        return SettingsHelper.get_list("SENDINBLUE_MAIL_TAGS", [])
+
+    @staticmethod
     def get_camp_registration_deadline_name():
         return SettingsHelper.get("CAMP_REGISTRATION_DEADLINE_NAME")
 

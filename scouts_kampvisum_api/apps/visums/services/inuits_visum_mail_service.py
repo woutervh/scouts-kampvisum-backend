@@ -173,6 +173,7 @@ class InuitsVisumMailService(EmailService):
             reply_to=reply_to,
             template_id=template_id,
             is_html=True,
+            tags=VisumSettings.get_sendinblue_tags(),
         )
 
         self.send(mail)
