@@ -228,6 +228,8 @@ class EmailService:
             body=body,
             from_email=from_email,
             to=to,
+            cc=cc,
+            bcc=bcc,
             tags=tags if tags else [],  # Anymail extra in constructor
         )
         # if is_html:
