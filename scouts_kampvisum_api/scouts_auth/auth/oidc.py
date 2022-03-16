@@ -1,4 +1,6 @@
 import requests
+import jwt
+
 from requests.exceptions import HTTPError
 
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
@@ -14,6 +16,8 @@ from rest_framework import exceptions
 from scouts_auth.auth.models import User
 from scouts_auth.auth.settings import OIDCSettings
 from scouts_auth.auth.signals import ScoutsAuthSignalSender
+
+from scouts_auth.groupadmin.models import ScoutsUser
 
 
 # LOGGING
@@ -118,8 +122,35 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
         even without www-authenticate.
         """
         try:
-            logger.debug("Authenticating user with OIDC backend")
+            logger.debug("OIDC AUTHENTICATION: Authenticating user with OIDC backend")
+            # auth = request.headers.get("Authorization", None)
 
+            # if auth:
+            #     access_token = auth.split(" ")[1]
+            #     decoded = jwt.decode(
+            #         access_token,
+            #         algorithms=["RS256"],
+            #         verify=False,
+            #         options={"verify_signature": False},
+            #     )
+            #     username = decoded.get("preferred_username", None)
+            #     logger.debug("USERNAME: %s", username)
+
+            #     if username:
+            #         logger.debug("SETTING USERNAME on request")
+            #         user = ScoutsUser.objects.safe_get(username=username)
+
+            # access_token = self.get_access_token(request)
+            # logger.debug("ACCESS TOKEN: %s", access_token)
+
+            # logger.debug("")
+            # logger.debug("")
+            # logger.debug("")
+            # logger.debug("")
+            # logger.debug("")
+            # logger.debug("")
+            # logger.debug("")
+            # logger.debug("AUTHENTICATE")
             result = super().authenticate(request)
 
             if result is None:

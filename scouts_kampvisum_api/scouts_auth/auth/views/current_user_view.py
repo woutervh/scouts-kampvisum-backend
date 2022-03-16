@@ -30,9 +30,9 @@ class CurrentUserView(views.APIView):
 
             logger.debug("USER: %s", user.username)
 
-            group_data = self.service.get_groups(request.user)
-            scouts_groups: List[AbstractScoutsGroup] = group_data.scouts_groups
-            user.scouts_groups = scouts_groups
+            # group_data = self.service.get_groups(request.user)
+            # scouts_groups: List[AbstractScoutsGroup] = group_data.scouts_groups
+            # user.scouts_groups = scouts_groups
 
             serializer = ScoutsUserSerializer(request.user)
             data = serializer.data

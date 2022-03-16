@@ -51,8 +51,8 @@ class OIDCUserHelper:
                 OIDCSettings.get_profile_refresh_time(),
                 delta_seconds,
             )
-            return False
-        return True
+            return True
+        return False
 
     @staticmethod
     def requires_group_loading(user: settings.AUTH_USER_MODEL):
@@ -82,8 +82,8 @@ class OIDCUserHelper:
                     OIDCSettings.get_profile_refresh_groups_time(),
                     delta_seconds,
                 )
-                return False
-        return True
+                return True
+        return False
 
     @staticmethod
     def requires_functions_loading(user: settings.AUTH_USER_MODEL):
@@ -113,35 +113,5 @@ class OIDCUserHelper:
                     OIDCSettings.get_profile_refresh_functions_time(),
                     delta_seconds,
                 )
-                return False
-        return True
-
-    @staticmethod
-    def requires_group_refresh(user: settings.AUTH_USER_MODEL):
-        if not user.last_refreshed:
-            return True
-
-        now: timezone.datetime = timezone.now()
-        last_refreshed: datetime = user.last_refreshed
-
-        delta_seconds = int(now.timestamp()) - int(last_refreshed.timestamp())
-
-        if delta_seconds * 60 < OIDCSettings.get_profile_refresh_groups_time():
-            if user.persisted_scouts_groups.count() > 0:
-                logger.debug(
-                    "User has persisted scouts groups (%d) and last refreshed: %s (%s) compared to now: %s (%s) is less than the refresh limit: %s minutes (delta: %s minutes) - No need to reload user groups",
-                    user.persisted_scouts_groups.count(),
-                    last_refreshed,
-                    type(last_refreshed).__name__,
-                    now,
-                    type(now).__name__,
-                    OIDCSettings.get_profile_refresh_time(),
-                    delta_seconds,
-                )
-                return False
-
-        return True
-
-    # @staticmethod
-    # def requires_function_loading(user: settings.AUTH_USER_MODEL):
-    #     return True
+                return True
+        return False

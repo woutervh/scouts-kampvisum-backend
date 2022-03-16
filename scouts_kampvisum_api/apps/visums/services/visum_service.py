@@ -48,6 +48,7 @@ class CampVisumService:
 
         visum = CampVisum()
 
+        visum.group = camp.sections.first().group
         visum.camp = camp
         visum.created_by = request.user
 

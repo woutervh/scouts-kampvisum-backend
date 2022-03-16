@@ -8,7 +8,6 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 from apps.camps.models import CampType
 from apps.camps.services import CampTypeService
 from apps.camps.serializers import CampTypeSerializer
-from apps.camps.filters import CampTypeFilter
 
 
 # LOGGING
@@ -24,7 +23,6 @@ class CampTypeViewSet(viewsets.GenericViewSet):
     """
 
     serializer_class = CampTypeSerializer
-    filterset_class = CampTypeFilter
     queryset = CampType.objects.all().selectable()
 
     camp_type_service = CampTypeService()
@@ -115,7 +113,8 @@ class CampTypeViewSet(viewsets.GenericViewSet):
         Gets all CampType instances (filtered).
         """
 
-        instances = self.filter_queryset(self.get_queryset())
+        # instances = self.filter_queryset(self.get_queryset())
+        instances = CampType.objects.all()
         page = self.paginate_queryset(instances)
 
         if page is not None:

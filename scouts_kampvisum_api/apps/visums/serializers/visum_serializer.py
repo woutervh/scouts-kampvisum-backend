@@ -1,8 +1,11 @@
 from rest_framework import serializers
 
 from apps.camps.serializers import CampSerializer, CampTypeSerializer
+
 from apps.visums.models import CampVisum
 from apps.visums.serializers import LinkedCategorySetSerializer
+
+from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
 
 
 # LOGGING
@@ -14,6 +17,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class CampVisumSerializer(serializers.ModelSerializer):
 
+    group = ScoutsGroupSerializer(required=False)
     camp = CampSerializer()
     camp_types = CampTypeSerializer(many=True)
     category_set = LinkedCategorySetSerializer()
@@ -30,6 +34,13 @@ class CampVisumSerializer(serializers.ModelSerializer):
         if instance:
             return instance
 
+        # group = data.get("group", None)
+
+        # if not group:
+        #     sections = data.get("camp", {}).get("sections", [])
+        #     if sections and len(sections) > 0:
+        #         data["group"] = {"group_admin_id": sections[0]}
+        logger.debug("DATA: %s", data)
         data = super().to_internal_value(data)
 
         return data

@@ -87,6 +87,10 @@ class ScoutsGroup(AuditedBaseModel):
             return Gender.FEMALE
         return Gender.MIXED
 
+    @property
+    def full_name(self):
+        return "{} {}".format(self.name, self.group_admin_id)
+
     @staticmethod
     def from_abstract_scouts_group(abstract_group: AbstractScoutsGroup):
         group = ScoutsGroup()

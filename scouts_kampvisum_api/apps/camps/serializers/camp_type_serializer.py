@@ -24,7 +24,10 @@ class CampTypeSerializer(serializers.ModelSerializer):
 
         return data
 
-    def validate(self, data: dict) -> CampType:
+    def validate(self, data) -> CampType:
+        if isinstance(data, CampType):
+            return data
+
         # logger.trace("CAMP TYPE SERIALIZER VALIDATE: %s", data)
         # Safe to raise an error, because this serializer will not be used to create a CampType
         return CampType.objects.safe_get(

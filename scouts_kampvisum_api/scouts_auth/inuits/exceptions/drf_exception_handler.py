@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import (
     ValidationError as DRFValidationError,
+    AuthenticationFailed as DRFAuthenticationFailed,
 )
 from rest_framework.views import exception_handler
 
@@ -16,7 +17,9 @@ logger: InuitsLogger = logging.getLogger(__name__)
 def drf_exception_handler(exc, context):
     """Handle Django ValidationError as an accepted exception"""
     logger.error("EXC: %s", exc)
-    if isinstance(exc, DjangoValidationError):
+    if isinstance(exc, DRFAuthenticationFailed):
+        logger.debug("AUTHENTICATION FAILED")
+    elif isinstance(exc, DjangoValidationError):
         try:
             detail = exc.message_dict
         except Exception:

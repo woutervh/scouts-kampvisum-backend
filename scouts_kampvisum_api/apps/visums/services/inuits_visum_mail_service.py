@@ -56,6 +56,8 @@ class InuitsVisumMailService(EmailService):
         dictionary = self._prepare_dictionary_responsible_changed()
 
     def notify_camp_registered(self, visum: CampVisum):
+        if visum.camp_registration_mail_sent_before_deadline:
+            return
 
         dictionary = self._prepare_dictionary_camp_registered(visum=visum)
         recipient = visum.created_by.email
@@ -119,7 +121,7 @@ class InuitsVisumMailService(EmailService):
             template,
         )
 
-        self._send_prepared_email(
+        result = self._send_prepared_email(
             template_path=template,
             dictionary=dictionary,
             subject=VisumSettings.get_email_registration_subject().format(
@@ -129,6 +131,11 @@ class InuitsVisumMailService(EmailService):
             cc=cc,
             bcc=bcc,
         )
+
+        visum.camp_registration_mail_sent_before_deadline = result
+
+        visum.full_clean()
+        visum.save()
 
     def _prepare_dictionary_responsible_changed(self, visum: CampVisum):
         return {
@@ -161,7 +168,7 @@ class InuitsVisumMailService(EmailService):
         bcc: list = None,
         reply_to: str = None,
         template_id: str = None,
-    ):
+    ) -> bool:
         dictionary["title_mail"] = subject
 
         body = None
@@ -189,4 +196,9 @@ class InuitsVisumMailService(EmailService):
             tags=VisumSettings.get_sendinblue_tags(),
         )
 
-        self.send(mail)
+        try:
+            self.send(mail)
+
+            return True
+        except:
+            return False

@@ -158,7 +158,8 @@ class ScoutsUser(User):
         ]
 
     def get_group_names(self) -> List[str]:
-        return [group.group_admin_id for group in self.scouts_groups]
+        # return [group.group_admin_id for group in self.scouts_groups]
+        return [group.group_admin_id for group in self.persisted_scouts_groups.all()]
 
     def has_role_section_leader(self, group: AbstractScoutsGroup) -> bool:
         """
@@ -337,6 +338,7 @@ class ScoutsUser(User):
             )
         user = user if user else ScoutsUser()
 
+        # user.id = abstract_member.group_admin_id
         user.group_admin_id = abstract_member.group_admin_id
         user.gender = (
             abstract_member.gender if abstract_member.gender else Gender.UNKNOWN
