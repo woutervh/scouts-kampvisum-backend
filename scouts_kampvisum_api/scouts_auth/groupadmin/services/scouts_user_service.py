@@ -112,6 +112,8 @@ class ScoutsUserService:
             logger.debug("Not reloading user functions")
 
         try:
+            # Test to trigger a build on ACC :)
+            # This code should be moved
             section_service = ScoutsSectionService()
             section_service.setup_default_sections(user=user)
         except Exception as exc:
