@@ -6,6 +6,13 @@ from django.core.exceptions import ValidationError
 from scouts_auth.inuits.utils import SettingsHelper
 
 
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+
+logger: InuitsLogger = logging.getLogger(__name__)
+
+
 class VisumSettings(SettingsHelper):
     @staticmethod
     def get_home():
@@ -76,21 +83,33 @@ class VisumSettings(SettingsHelper):
         On acceptance: the camp registrant
         On development: the debug address
         """
+        processed_address = address
+        debug_address = None
+
         if SettingsHelper.is_test():
             # When on acceptance, send everything to the registrant
             if SettingsHelper.is_acceptance():
                 if not send_to:
                     raise ValidationError("Registrant email is not set")
-                return send_to
-
-            address = SettingsHelper.get("EMAIL_DEBUG_RECIPIENT", None)
+                processed_address = send_to
+            else:
+                debug_address = SettingsHelper.get("EMAIL_DEBUG_RECIPIENT", None)
+                if not debug_address:
+                    raise ValidationError("EMAIL_DEBUG_RECIPIENT is not set !")
+                processed_address = debug_address
+        else:
             if not address:
-                raise ValidationError("EMAIL_DEBUG_RECIPIENT is not set !")
-            return address
+                raise ValidationError(
+                    "Email recipient for camp registration notification is not set"
+                )
+            processed_address = address
 
-        if not address:
-            raise ValidationError(
-                "Email recipient for camp registration notification is not set"
-            )
+        # logger.debug(
+        #     "MAIL - address: %s, send_to: %s, debug_address: %s, processed_address (actual receiver): %s",
+        #     address,
+        #     send_to,
+        #     debug_address,
+        #     processed_address,
+        # )
 
-        return address
+        return processed_address
