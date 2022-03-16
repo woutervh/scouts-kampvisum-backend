@@ -74,7 +74,7 @@ class VisumSettings(SettingsHelper):
 
     @staticmethod
     def get_camp_registration_notification_to(
-        address: str = None, send_to: str = None
+        address: str = None, send_to: str = None, label: str = None
     ) -> str:
         """
         Determines who the recipient of a camp registration notification is.
@@ -104,12 +104,13 @@ class VisumSettings(SettingsHelper):
                 )
             processed_address = address
 
-        # logger.debug(
-        #     "MAIL - address: %s, send_to: %s, debug_address: %s, processed_address (actual receiver): %s",
-        #     address,
-        #     send_to,
-        #     debug_address,
-        #     processed_address,
-        # )
+        logger.debug(
+            "MAIL (%s) - address: %s, send_to: %s, debug_address: %s, processed_address (actual receiver): %s",
+            label if label else "",
+            address,
+            send_to,
+            debug_address,
+            processed_address,
+        )
 
         return processed_address

@@ -60,7 +60,7 @@ class InuitsVisumMailService(EmailService):
         dictionary = self._prepare_dictionary_camp_registered(visum=visum)
         recipient = visum.created_by.email
         recipient = VisumSettings.get_camp_registration_notification_to(
-            address=recipient, send_to=recipient
+            address=recipient, send_to=recipient, label="CAMP REGISTRATION: recipient"
         )
 
         cc = []
@@ -75,7 +75,9 @@ class InuitsVisumMailService(EmailService):
         )
         cc.append(
             VisumSettings.get_camp_registration_notification_to(
-                address=responsible_main, send_to=responsible_main
+                address=responsible_main,
+                send_to=responsible_main,
+                label="CAMP REGISTRATION: cc",
             )
         )
         responsible_adjunct = (
@@ -89,7 +91,18 @@ class InuitsVisumMailService(EmailService):
         )
         cc.append(
             VisumSettings.get_camp_registration_notification_to(
-                address=responsible_adjunct, send_to=responsible_adjunct
+                address=responsible_adjunct,
+                send_to=responsible_adjunct,
+                label="CAMP REGISTRATION: cc",
+            )
+        )
+
+        bcc = []
+        bcc.append(
+            VisumSettings.get_camp_registration_notification_to(
+                address=VisumSettings.get_email_registration_bcc(),
+                send_to=VisumSettings.get_email_registration_bcc(),
+                label="CAMP REGISTRATION: bcc",
             )
         )
 
@@ -114,7 +127,7 @@ class InuitsVisumMailService(EmailService):
             ),
             to=recipient,
             cc=cc,
-            bcc=VisumSettings.get_email_registration_bcc(),
+            bcc=bcc,
         )
 
     def _prepare_dictionary_responsible_changed(self, visum: CampVisum):
