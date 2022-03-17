@@ -17,6 +17,9 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
     # default_acl = StorageSettings.get_s3_default_acl()
     file_overwrite = StorageSettings.get_s3_file_overwrite()
 
+    # access_id = StorageSettings.get_s3_access_id()
+    # access_key = StorageSettings.get_s3_access_key()
+
     local_storage = FileSystemStorage()
 
     # @TODO remove s3 specific code from this model
@@ -57,13 +60,35 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         return self.local_storage.path(file_dest_path)
 
     def copy(self, src_bucket, src_key, dst_bucket, dst_key):
-        copy_source = {"Bucket": src_bucket, "Key": src_key}
-        self.bucket.meta.client.copy(copy_source, dst_bucket, dst_key)
+        from_path = self._normalize_name(self._clean_name(src_key))
+        to_path = self._normalize_name(self._clean_name(dst_key))
 
-        # super().delete(src_key)
-        # super().delete
+        copy_result = self.connection.meta.client.copy_object(
+            Bucket=self.bucket_name,
+            CopySource=self.bucket_name + "/" + from_path,
+            Key=to_path,
+        )
 
-        return dst_key
+        if copy_result["ResponseMetadata"]["HTTPStatusCode"] == 200:
+            return True
+
+        return False
+        # s3 = boto3.resource(
+        #     "s3",
+        #     aws_access_key_id=self.access_id,
+        #     aws_secret_access_key=self.access_key,
+        # )
+        # copy_source = {"Bucket": src_bucket, "Key": src_key}
+        # # self.bucket.meta.client.copy(copy_source, dst_bucket, dst_key)
+        # # s3.meta.client.copy(copy_source, dst_bucket, dst_key)
+        # # s3.meta.client.copy(Bucket=dst_bucket, CopySource=copy_source, Key=dst_key)
+
+        # bucket = s3.Bucket(self.bucket_name)
+        # bucket.copy(copy_source, dst_key)
+        # # super().delete(src_key)
+        # # super().delete
+
+        # return dst_key
         # super().Object(self.bucket_name, dst_key).copy_from(CopySource="{}/{}".format(self.bucket_name, src_key))
         # super().Object(self.bucket_name, src_key).delete()
 
