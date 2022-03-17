@@ -91,6 +91,7 @@ LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
 # LOGGING_LEVEL = "TRACE"
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
 LOGGING_LEVEL_DB = "INFO"
+LOGGING_LEVEL_S3 = "INFO"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
@@ -149,6 +150,11 @@ LOGGING = {
         "drf-yasg2": {
             "handlers": ["console"],
             "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+        "botocore": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL_S3,
             "propagate": False,
         },
         "django.db.backends": {

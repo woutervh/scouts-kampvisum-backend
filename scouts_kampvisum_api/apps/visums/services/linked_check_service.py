@@ -24,6 +24,7 @@ from apps.signals.services import ChangeHandlerService
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.services import PersistedFileService
+from scouts_auth.inuits.files import StorageService
 
 # LOGGING
 import logging
@@ -36,6 +37,7 @@ class LinkedCheckService:
 
     location_service = CampLocationService()
     persisted_file_service = PersistedFileService()
+    storage_service = StorageService()
     participant_service = VisumParticipantService()
     groupadmin = GroupAdminMemberService()
     change_handler_service = ChangeHandlerService()
@@ -309,7 +311,23 @@ class LinkedCheckService:
             raise ValidationError("Can't link an empty list of files")
 
         for file in files:
-            logger.debug("FILE: %s (%s)", file, type(file).__name__)
+            new_name = "{}/{}/{}".format(
+                instance.sub_category.category.category_set.visum.group.group_admin_id,
+                instance.sub_category.category.category_set.visum.camp.name,
+                file.original_name,
+            )
+            logger.debug(
+                "FILE: %s (%s) -> new name: %s", file, type(file).__name__, new_name
+            )
+            renamed_file = self.storage_service.rename_file(
+                file_src_path=file.file.name, file_dest_path=new_name
+            )
+
+            file.file = renamed_file
+
+            # file.full_clean()
+            file.save()
+
             instance.value.add(file)
 
         instance.full_clean()

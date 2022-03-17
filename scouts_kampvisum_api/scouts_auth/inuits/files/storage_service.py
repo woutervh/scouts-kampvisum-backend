@@ -187,3 +187,8 @@ class StorageService(Storage):
 
     def copy_file(self, file_src_path: str, file_dest_path: str = None):
         return self.storage.copy_file(file_src_path, file_dest_path)
+
+    def rename_file(self, file_src_path: str, file_dest_path: str):
+        return self.storage.rename_file(
+            file_src_path=file_src_path, file_dest_path=file_dest_path
+        )

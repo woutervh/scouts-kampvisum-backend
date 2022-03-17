@@ -4,6 +4,7 @@ import mimetypes
 
 from django.http import Http404
 from django.core.files.base import File
+from django.core.exceptions import ValidationError
 
 from scouts_auth.inuits.models import PersistedFile
 
@@ -54,3 +55,9 @@ class PersistedFileService:
             logger.debug("PATH: %s - MIME: %s", path, mime)
             print("PATH: {} - MIME: {}".format(path, mime))
             return self.save_file(name=file.name, content=file, content_type=mime)
+
+    def rename(self, file: PersistedFile, newName: str):
+        if not newName.strip():
+            raise ValidationError("New name not set !")
+
+        file.file.copy()

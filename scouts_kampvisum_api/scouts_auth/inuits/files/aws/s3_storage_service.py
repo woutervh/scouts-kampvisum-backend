@@ -55,3 +55,28 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         self.local_storage.save(file_dest_path, ContentFile(remote_file_contents))
 
         return self.local_storage.path(file_dest_path)
+
+    def copy(self, src_bucket, src_key, dst_bucket, dst_key):
+        copy_source = {"Bucket": src_bucket, "Key": src_key}
+        self.bucket.meta.client.copy(copy_source, dst_bucket, dst_key)
+
+        super().delete(src_key)
+
+        return dst_key
+
+    def rename_file(self, file_src_path: str, file_dest_path: str):
+        """
+        Renames a file on S3.
+
+        @see https://docs.aws.amazon.com/AmazonS3/latest/userguide/copy-object.html
+        """
+
+        self.copy(
+            src_bucket=self.bucket_name,
+            src_key=file_src_path,
+            dst_bucket=self.bucket_name,
+            dst_key=file_dest_path,
+        )
+        super().delete(file_src_path)
+
+        return file_dest_path
