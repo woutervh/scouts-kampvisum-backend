@@ -42,7 +42,7 @@ def validate_uploaded_file(value):
 
     if not extension in allowed_extensions:
         raise ValidationError(
-            "File extensions '{}' not allowed for upload by setting {}, only [{}]".format(
+            "File extension '{}' not allowed for upload by setting {}, only [{}]".format(
                 extension,
                 StorageSettings.FILE_UPLOAD_ALLOWED_EXTENSIONS,
                 ", ".join(allowed_extensions),
