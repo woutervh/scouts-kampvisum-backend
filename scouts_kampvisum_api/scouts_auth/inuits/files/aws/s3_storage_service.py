@@ -80,6 +80,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
             dst_bucket=self.bucket_name,
             dst_key=file_dest_path,
         )
+
         super().delete(file_src_path)
 
         return file_dest_path

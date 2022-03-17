@@ -317,7 +317,10 @@ class LinkedCheckService:
                 file.original_name,
             )
             logger.debug(
-                "FILE: %s (%s) -> new name: %s", file, type(file).__name__, new_name
+                "FILE: %s (%s) -> new name: %s",
+                file.file.name,
+                type(file).__name__,
+                new_name,
             )
             renamed_file = self.storage_service.rename_file(
                 file_src_path=file.file.name, file_dest_path=new_name
