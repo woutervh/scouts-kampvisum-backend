@@ -35,9 +35,9 @@ class PersistedFileService:
 
         name, extension = os.path.splitext(name)
 
-        instance.original_name = "{}.{}".format(name, extension)
+        instance.original_name = "{}{}".format(name, extension)
         instance.file.save(
-            name="{}.{}".format(str(uuid.uuid4()), extension), content=content
+            name="{}{}".format(str(uuid.uuid4()), extension), content=content
         )
         instance.content_type = content_type
 
