@@ -4,7 +4,7 @@
         "fields": {
             "name": "camp_registration",
             "label": "Kampregistratie",
-            "description": "Zorg dat alle basis-informatie voorhanden is voor de kampregistratie",
+            "description": "Vul deze gegevens tijdig in, dan doen wij voor jou de bosaanvraag:",
             "explanation": "Is je kampregistratie ingevuld, ben je te bereiken bij een noodgeval (ongeval, problemen op het thuisfront, natuurrampen, gezondheidsrisico's of andere onvoorziene omstandigheden) ? De mensen die de noodlijn van Scouts en Gidsen Vlaanderen opvolgen kunnen je zo bereiken.",
             "is_important": true,
             "due_date": {
