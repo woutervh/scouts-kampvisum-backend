@@ -87,7 +87,7 @@ class ScoutsUser(User):
     #
     # Fields from the groupadmin member record
     #
-    group_admin_id: str = RequiredCharField(max_length=48, db_column="ga_id")
+    group_admin_id: str = RequiredCharField(max_length=48)
     gender: Gender = DefaultCharField(
         max_length=16, choices=Gender.choices, default=Gender.UNKNOWN
     )
@@ -338,7 +338,7 @@ class ScoutsUser(User):
             )
         user = user if user else ScoutsUser()
 
-        # user.id = abstract_member.group_admin_id
+        user.id = abstract_member.group_admin_id
         user.group_admin_id = abstract_member.group_admin_id
         user.gender = (
             abstract_member.gender if abstract_member.gender else Gender.UNKNOWN

@@ -126,7 +126,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         member: AbstractScoutsMember = self._load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self.UserModel.objects.create_user(
-            username=username, email=member.email
+            id=member.group_admin_id, username=username, email=member.email
         )
         user = self._merge_member_data(user, member, claims)
 
@@ -169,9 +169,11 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
     def _merge_member_data(
         self, user: settings.AUTH_USER_MODEL, member: AbstractScoutsMember, claims: dict
     ) -> settings.AUTH_USER_MODEL:
+        logger.debug("user id: %s", str(user.id))
         user: ScoutsUser = ScoutsUser.from_abstract_member(
             user=user, abstract_member=member
         )
+        logger.debug("user.id: %s", user.id)
 
         user.access_token = claims.get("access_token")
         user = self.map_user_with_claims(user=user)
