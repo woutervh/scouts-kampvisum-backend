@@ -1,6 +1,6 @@
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
-from storages.backends.s3boto3 import S3Boto3Storage
+from storages.backends.s3boto3 import boto3, S3Boto3Storage
 
 from scouts_auth.inuits.files import CustomStorage, StorageSettings
 
@@ -60,9 +60,12 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         copy_source = {"Bucket": src_bucket, "Key": src_key}
         self.bucket.meta.client.copy(copy_source, dst_bucket, dst_key)
 
-        super().delete(src_key)
+        # super().delete(src_key)
+        # super().delete
 
         return dst_key
+        # super().Object(self.bucket_name, dst_key).copy_from(CopySource="{}/{}".format(self.bucket_name, src_key))
+        # super().Object(self.bucket_name, src_key).delete()
 
     def rename_file(self, file_src_path: str, file_dest_path: str):
         """
