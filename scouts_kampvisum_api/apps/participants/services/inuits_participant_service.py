@@ -26,11 +26,15 @@ class InuitsParticipantService:
         scouts_member: AbstractScoutsMember = None,
     ):
         if not isinstance(participant, InuitsParticipant):
-            participant = InuitsParticipant(**participant)
+            # participant = InuitsParticipant(**participant)
+            raise ValidationError(
+                "Serializer should have returned an InuitsParticipant instance"
+            )
 
         existing_participant = InuitsParticipant.objects.safe_get(
             id=participant.id,
             group_admin_id=participant.group_admin_id,
+            group_group_admin_id=participant.group_group_admin_id,
             email=participant.email,
         )
 
@@ -51,49 +55,6 @@ class InuitsParticipantService:
                 skip_validation=skip_validation,
                 scouts_member=scouts_member,
             )
-
-    def create_or_update_member_participant(
-        self,
-        user: settings.AUTH_USER_MODEL,
-        participant: InuitsParticipant,
-        instance: InuitsParticipant = None,
-        skip_validation: bool = False,
-        scouts_member: AbstractScoutsMember = None,
-    ) -> InuitsParticipant:
-        member_participant = None
-        if participant.has_group_admin_id():
-            logger.debug(
-                "Looking for participant member with group admin id %s",
-                participant.group_admin_id,
-            )
-            member_participant: InuitsParticipant = InuitsParticipant.objects.safe_get(
-                group_admin_id=participant.group_admin_id
-            )
-            if not scouts_member:
-                scouts_member: AbstractScoutsMember = self.groupadmin.get_member_info(
-                    active_user=user, group_admin_id=participant.group_admin_id
-                )
-
-            if not scouts_member:
-                raise ValidationError(
-                    "Invalid group admin id for member: {}".format(
-                        participant.group_admin_id
-                    )
-                )
-
-            member_participant = InuitsParticipant.from_scouts_member(
-                scouts_member, member_participant
-            )
-
-            member_participant.is_member = True
-            member_participant.group_group_admin_id = None
-            member_participant.comment = participant.comment
-            member_participant.created_by = user
-
-            member_participant.full_clean()
-            member_participant.save()
-
-        return member_participant
 
     def create(
         self,
@@ -176,10 +137,13 @@ class InuitsParticipantService:
         scouts_member: AbstractScoutsMember = None,
     ) -> InuitsParticipant:
         logger.debug(
-            "Updating InuitsParticipant with id %s and group_admin_id %s and e-mail %s",
+            "Updating InuitsParticipant (id %s) %s %s with group_admin_id %s and e-mail %s in group %s",
             participant.id,
+            participant.first_name,
+            participant.last_name,
             participant.group_admin_id,
             participant.email,
+            participant.group_group_admin_id,
         )
         member: InuitsParticipant = self.create_or_update_member_participant(
             participant=updated_participant,
@@ -194,10 +158,18 @@ class InuitsParticipantService:
             )
             return member
         logger.debug(
-            "InuitsParticipant %s %s (%s) is a non-member, updating",
+            "InuitsParticipant (id %s) %s %s with group_admin_id %s and e-mail %s in group %s is a non-member, updating to %s %s with group_admin_id %s and e-mail %s in group %s",
+            participant.id,
             participant.first_name,
             participant.last_name,
+            participant.group_admin_id,
             participant.email,
+            participant.group_group_admin_id,
+            updated_participant.first_name,
+            updated_participant.last_name,
+            updated_participant.group_admin_id,
+            updated_participant.email,
+            updated_participant.group_group_admin_id,
         )
 
         if participant.equals_participant(updated_participant):
@@ -205,6 +177,8 @@ class InuitsParticipantService:
                 "No differences between existing participant and updated participant"
             )
             return updated_participant
+
+        logger.debug("UPDATE PARTICIPANT: %s", updated_participant)
 
         # Update the InuitsParticipant instance
         participant.group_group_admin_id = (
@@ -283,3 +257,46 @@ class InuitsParticipantService:
         logger.debug("InuitsParticipant instance updated (%s)", participant.id)
 
         return participant
+
+    def create_or_update_member_participant(
+        self,
+        user: settings.AUTH_USER_MODEL,
+        participant: InuitsParticipant,
+        instance: InuitsParticipant = None,
+        skip_validation: bool = False,
+        scouts_member: AbstractScoutsMember = None,
+    ) -> InuitsParticipant:
+        member_participant = None
+        if participant.has_group_admin_id():
+            logger.debug(
+                "Looking for participant member with group admin id %s",
+                participant.group_admin_id,
+            )
+            member_participant: InuitsParticipant = InuitsParticipant.objects.safe_get(
+                group_admin_id=participant.group_admin_id
+            )
+            if not scouts_member:
+                scouts_member: AbstractScoutsMember = self.groupadmin.get_member_info(
+                    active_user=user, group_admin_id=participant.group_admin_id
+                )
+
+            if not scouts_member:
+                raise ValidationError(
+                    "Invalid group admin id for member: {}".format(
+                        participant.group_admin_id
+                    )
+                )
+
+            member_participant = InuitsParticipant.from_scouts_member(
+                scouts_member, member_participant
+            )
+
+            member_participant.is_member = True
+            member_participant.group_group_admin_id = None
+            member_participant.comment = participant.comment
+            member_participant.created_by = user
+
+            member_participant.full_clean()
+            member_participant.save()
+
+        return member_participant

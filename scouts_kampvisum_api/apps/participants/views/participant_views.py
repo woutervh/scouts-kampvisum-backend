@@ -37,7 +37,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     ordering_fields = ["id"]
     ordering = ["id"]
 
-    service = InuitsParticipantService()
+    participant_service = InuitsParticipantService()
     groupadmin = GroupAdminMemberService()
 
     def get_queryset(self):
@@ -57,7 +57,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("PARTICIPANT CREATE VALIDATED REQUEST DATA: %s", validated_data)
 
-        participant = self.service.create_or_update_participant(
+        participant = self.participant_service.create_or_update_participant(
             participant=validated_data, user=request.user
         )
 
@@ -104,7 +104,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("PARTICIPANT PARTIAL UPDATE VALIDATED DATA: %s", validated_data)
 
-        participant = self.service.update(
+        participant = self.participant_service.update(
             participant=participant,
             updated_participant=validated_data,
             updated_by=request.user,

@@ -38,6 +38,7 @@ class VisumParticipantService:
             id=visum_participant.id,
             check_id=check.id,
             group_admin_id=visum_participant.participant.group_admin_id,
+            inuits_participant_id=visum_participant.participant.id,
         )
 
         if existing_visum_participant:
@@ -112,12 +113,21 @@ class VisumParticipantService:
         skip_validation: bool = False,
         scouts_member: AbstractScoutsMember = None,
     ) -> VisumParticipant:
-        logger.debug(
-            "Updating VisumParticipant with id %s and group_admin_id %s and e-mail %s",
-            visum_participant.id,
-            visum_participant.participant.group_admin_id,
-            visum_participant.participant.email,
+        participant = self.participant_service.create_or_update_participant(
+            participant=updated_visum_participant.participant,
+            user=updated_by,
+            skip_validation=skip_validation,
+            scouts_member=scouts_member,
         )
+        logger.debug(
+            "Updating VisumParticipant with id %s and group_admin_id %s and e-mail %s (for group %s)",
+            visum_participant.id,
+            participant.group_admin_id,
+            participant.email,
+            participant.group_group_admin_id,
+        )
+
+        updated_visum_participant.participant = participant
 
         if visum_participant.equals_visum_participant(updated_visum_participant):
             logger.debug(

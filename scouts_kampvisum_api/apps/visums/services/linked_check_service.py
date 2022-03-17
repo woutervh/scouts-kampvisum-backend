@@ -262,7 +262,9 @@ class LinkedCheckService:
         participant = VisumParticipant.objects.safe_get(id=visum_participant_id)
         if not participant:
             participant = VisumParticipant.objects.safe_get(
-                check_id=instance.id, inuits_participant_id=visum_participant_id
+                check_id=instance.id,
+                inuits_participant_id=visum_participant_id,
+                raise_error=True,
             )
 
         logger.debug(

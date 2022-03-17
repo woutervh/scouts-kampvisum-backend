@@ -46,7 +46,7 @@ class VisumParticipantManager(models.Manager):
         if check and inuits_participant:
             try:
                 return self.get_queryset().get(
-                    checks=check, participant=inuits_participant
+                    checks=check, participant__id=inuits_participant
                 )
             except:
                 pass

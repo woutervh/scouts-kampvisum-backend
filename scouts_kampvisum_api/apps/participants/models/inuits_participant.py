@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 
 from apps.participants.managers import InuitsParticipantManager
@@ -29,7 +30,11 @@ class InuitsParticipant(InuitsPerson):
     class Meta:
         ordering = ["first_name", "last_name", "birth_date", "group_group_admin_id"]
         constraints = [
-            models.UniqueConstraint(fields=["email"], name="unique_email"),
+            models.UniqueConstraint(
+                fields=["group_group_admin_id", "email"],
+                name="unique_group_and_email_if_email_present",
+                condition=Q(email__isnull=False) & ~Q(email__exact=""),
+            ),
         ]
 
     def __init__(self, *args, **kwargs):
@@ -43,17 +48,20 @@ class InuitsParticipant(InuitsPerson):
 
     def equals_participant(self, updated_participant):
         if updated_participant is None:
-            logger.debug("here ! 1")
             return False
 
-        if not type(updated_participant).__class__.__name__ == self.__class__.__name__:
-            logger.debug(
-                "here ! 2 %s, %s",
-                type(updated_participant).__class__.__name__,
-                self.__class__.__name__,
-            )
+        if (
+            not isinstance(updated_participant, InuitsParticipant)
+            or not type(updated_participant).__class__.__name__
+            == self.__class__.__name__
+            and type(updated_participant).__class__.__name__ != "ModelBase"
+        ):
+            # logger.debug(
+            #     type(updated_participant).__class__.__name__,
+            #     self.__class__.__name__,
+            # )
             return False
-        logger.debug("here ! 3")
+
         return (
             self.equals_person(updated_participant)
             and self.group_group_admin_id == updated_participant.group_group_admin_id

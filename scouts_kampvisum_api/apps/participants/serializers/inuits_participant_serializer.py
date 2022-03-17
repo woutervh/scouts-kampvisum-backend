@@ -18,36 +18,30 @@ class InuitsParticipantSerializer(serializers.ModelSerializer):
         model = InuitsParticipant
         fields = "__all__"
 
-    def to_internal_value(self, data: dict) -> any:
-        logger.debug("PARTICIPANT SERIALIZER TO INTERNAL VALUE: %s", data)
-        # If the data dict contains a group admin id, forget the rest and load the object from GA
+    def to_internal_value(self, data: dict) -> dict:
+        # logger.debug("PARTICIPANT SERIALIZER TO INTERNAL VALUE: %s", data)
+
         group_admin_id = data.get("group_admin_id", None)
         id = data.get("id", None)
+        group_group_admin_id = data.get("group_group_admin_id", None)
+        email = data.get("email", None)
 
-        if group_admin_id:
-            participant = InuitsParticipant.objects.safe_get(
-                group_admin_id=group_admin_id
-            )
+        participant = InuitsParticipant.objects.safe_get(
+            id=id,
+            group_admin_id=group_admin_id,
+            group_group_admin_id=group_group_admin_id,
+            email=email,
+        )
 
-            if participant:
-                return participant
-
-            member: AbstractScoutsMember = GroupAdminMemberService().get_member_info(
-                active_user=self.context.get("request").user,
-                group_admin_id=group_admin_id,
-            )
-
-            if member:
-                return InuitsParticipant.from_scouts_member(member)
-
-        # If the data dict contains an id, assume it's simple object input
-        if id and len(data.keys()) == 1:
-            instance = InuitsParticipant.objects.safe_get(pk=id)
-            if instance:
-                return instance
-
-        # Assume it's regular non-member create input
         data = super().to_internal_value(data)
-        logger.debug("DATA: %s", data)
+
+        if participant:
+            data["id"] = participant.id
 
         return data
+
+    def validate(self, data: any) -> InuitsParticipant:
+        if isinstance(data, InuitsParticipant):
+            return data
+
+        return InuitsParticipant(**data)
