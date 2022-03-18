@@ -1,3 +1,5 @@
+import ntpath
+
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from storages.backends.s3boto3 import boto3, S3Boto3Storage
@@ -34,7 +36,9 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         return self.file.path
 
     def construct_file_path(self, path):
-        return self._normalize_name(self._clean_name(path))
+        dir = ntpath.dirname(path)
+        file = ntpath.basename(path)
+        return "{}/{}".format(self._normalize_name(self._clean_name(dir)), file)
 
     def get_file_contents(self, file_src_path: str):
         """Returns the binary contents of a file on S3."""
@@ -71,6 +75,14 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         #     CopySource=src_bucket + "/" + src_key,
         #     Key=dst_key,
         # )
+        logger.debug(
+            "Copying file %s (bucket: %s)(arg: src_bucket(%s), src_key(%s), dst_bucket(%s), dst_key(%s)) to %s (bucket: %s)",
+            src_key,
+            src_bucket,
+            dst_key,
+            dst_bucket,
+        )
+
         return self.bucket.copy({"Bucket": src_bucket, "Key": src_key}, dst_key)
 
         # if copy_result["ResponseMetadata"]["HTTPStatusCode"] == 200:
@@ -103,13 +115,6 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         @see https://docs.aws.amazon.com/AmazonS3/latest/userguide/copy-object.html
         """
 
-        logger.debug(
-            "Copying file %s (bucket: %s) to %s (bucket: %s)",
-            file_src_path,
-            self.bucket_name,
-            file_dest_path,
-            self.bucket_name,
-        )
         self.copy(
             src_bucket=self.bucket_name,
             src_key=file_src_path,
