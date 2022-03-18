@@ -33,6 +33,9 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
     def get_absolute_path(self):
         return self.file.path
 
+    def construct_file_path(self, path):
+        return self._normalize_name(self._clean_name(path))
+
     def get_file_contents(self, file_src_path: str):
         """Returns the binary contents of a file on S3."""
 
@@ -60,12 +63,12 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         return self.local_storage.path(file_dest_path)
 
     def copy(self, src_bucket, src_key, dst_bucket, dst_key):
-        from_path = self._normalize_name(self._clean_name(src_key))
-        to_path = self._normalize_name(self._clean_name(dst_key))
+        from_path = self.construct_file_path(src_key)
+        to_path = self.construct_file_path(dst_key)
 
         copy_result = self.connection.meta.client.copy_object(
-            Bucket=self.bucket_name,
-            CopySource=self.bucket_name + "/" + from_path,
+            Bucket=dst_bucket,
+            CopySource=src_bucket + "/" + from_path,
             Key=to_path,
         )
 
