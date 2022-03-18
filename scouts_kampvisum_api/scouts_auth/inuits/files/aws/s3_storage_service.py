@@ -70,11 +70,6 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         src_key = self.construct_file_path(src_key)
         dst_key = self.construct_file_path(dst_key)
 
-        # copy_result = self.connection.meta.client.copy_object(
-        #     Bucket=dst_bucket,
-        #     CopySource=src_bucket + "/" + src_key,
-        #     Key=dst_key,
-        # )
         logger.debug(
             "Copying file %s (bucket: %s)(arg: src_bucket(%s), src_key(%s), dst_bucket(%s), dst_key(%s)) to %s (bucket: %s)",
             src_key,
@@ -84,29 +79,6 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         )
 
         return self.bucket.copy({"Bucket": src_bucket, "Key": src_key}, dst_key)
-
-        # if copy_result["ResponseMetadata"]["HTTPStatusCode"] == 200:
-        #     return True
-
-        # return False
-        # s3 = boto3.resource(
-        #     "s3",
-        #     aws_access_key_id=self.access_id,
-        #     aws_secret_access_key=self.access_key,
-        # )
-        # copy_source = {"Bucket": src_bucket, "Key": src_key}
-        # # self.bucket.meta.client.copy(copy_source, dst_bucket, dst_key)
-        # # s3.meta.client.copy(copy_source, dst_bucket, dst_key)
-        # # s3.meta.client.copy(Bucket=dst_bucket, CopySource=copy_source, Key=dst_key)
-
-        # bucket = s3.Bucket(self.bucket_name)
-        # bucket.copy(copy_source, dst_key)
-        # # super().delete(src_key)
-        # # super().delete
-
-        # return dst_key
-        # super().Object(self.bucket_name, dst_key).copy_from(CopySource="{}/{}".format(self.bucket_name, src_key))
-        # super().Object(self.bucket_name, src_key).delete()
 
     def rename_file(self, file_src_path: str, file_dest_path: str):
         """
