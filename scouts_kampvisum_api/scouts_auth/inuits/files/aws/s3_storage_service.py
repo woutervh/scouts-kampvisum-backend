@@ -83,7 +83,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
             dst_bucket,
         )
 
-        return self.bucket.copy({"Bucket": src_bucket, "Key": "/" + src_key}, dst_key)
+        return self.bucket.copy({"Bucket": src_bucket, "Key": src_key}, dst_key)
 
         # if copy_result["ResponseMetadata"]["HTTPStatusCode"] == 200:
         #     return True
