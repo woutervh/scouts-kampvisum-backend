@@ -39,7 +39,7 @@ class PersistedFileService:
 
         instance.original_name = "{}{}".format(name, extension)
         instance.file.save(
-            name="{}/{}{}".format(settings.FILE_UPLOAD_TMP_FOLDER, name, extension),
+            name="{}/{}{}".format(uuid.uuid4(), name, extension),
             content=content,
         )
         instance.content_type = content_type

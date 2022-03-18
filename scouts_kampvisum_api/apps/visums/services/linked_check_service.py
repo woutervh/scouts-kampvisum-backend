@@ -311,25 +311,25 @@ class LinkedCheckService:
             raise ValidationError("Can't link an empty list of files")
 
         for file in files:
-            new_name = "{}/{}/{}".format(
-                instance.sub_category.category.category_set.visum.group.group_admin_id,
-                instance.sub_category.category.category_set.visum.camp.name,
-                file.original_name,
-            )
-            logger.debug(
-                "FILE: %s (%s) -> new name: %s",
-                file.file.name,
-                type(file).__name__,
-                new_name,
-            )
-            renamed_file = self.storage_service.rename_file(
-                file_src_path=file.file.name, file_dest_path=new_name
-            )
+            # new_name = "{}/{}/{}".format(
+            #     instance.sub_category.category.category_set.visum.group.group_admin_id,
+            #     instance.sub_category.category.category_set.visum.camp.name,
+            #     file.original_name,
+            # )
+            # logger.debug(
+            #     "FILE: %s (%s) -> new name: %s",
+            #     file.file.name,
+            #     type(file).__name__,
+            #     new_name,
+            # )
+            # renamed_file = self.storage_service.rename_file(
+            #     file_src_path=file.file.name, file_dest_path=new_name
+            # )
 
-            file.file = renamed_file
+            # file.file = renamed_file
 
-            # file.full_clean()
-            file.save()
+            # # file.full_clean()
+            # file.save()
 
             instance.value.add(file)
 
