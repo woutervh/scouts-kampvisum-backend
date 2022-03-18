@@ -100,7 +100,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         """
 
         logger.debug(
-            "Copying file %s (bucket: s) to %s (bucket: %s)",
+            "Copying file %s (bucket: %s) to %s (bucket: %s)",
             file_src_path,
             self.bucket_name,
             file_dest_path,
