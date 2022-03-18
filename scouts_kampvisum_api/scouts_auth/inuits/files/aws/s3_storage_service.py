@@ -66,16 +66,17 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         src_key = self.construct_file_path(src_key)
         dst_key = self.construct_file_path(dst_key)
 
-        copy_result = self.connection.meta.client.copy_object(
-            Bucket=dst_bucket,
-            CopySource=src_bucket + "/" + src_key,
-            Key=dst_key,
-        )
+        # copy_result = self.connection.meta.client.copy_object(
+        #     Bucket=dst_bucket,
+        #     CopySource=src_bucket + "/" + src_key,
+        #     Key=dst_key,
+        # )
+        return self.bucket.copy({"Bucket": src_bucket, "Key": src_key}, dst_key)
 
-        if copy_result["ResponseMetadata"]["HTTPStatusCode"] == 200:
-            return True
+        # if copy_result["ResponseMetadata"]["HTTPStatusCode"] == 200:
+        #     return True
 
-        return False
+        # return False
         # s3 = boto3.resource(
         #     "s3",
         #     aws_access_key_id=self.access_id,
