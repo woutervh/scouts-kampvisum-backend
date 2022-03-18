@@ -72,6 +72,7 @@ class ScoutsGroup(AuditedBaseModel):
     default_sections_loaded = models.BooleanField(default=False)
 
     class Meta:
+        ordering = ["number"]
         constraints = [
             models.UniqueConstraint(
                 fields=["group_admin_id"], name="unique_group_admin_id_for_group"
