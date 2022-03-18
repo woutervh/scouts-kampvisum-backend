@@ -99,6 +99,13 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         @see https://docs.aws.amazon.com/AmazonS3/latest/userguide/copy-object.html
         """
 
+        logger.debug(
+            "Copying file %s (bucket: s) to %s (bucket: %s)",
+            file_src_path,
+            self.bucket_name,
+            file_dest_path,
+            self.bucket_name,
+        )
         self.copy(
             src_bucket=self.bucket_name,
             src_key=file_src_path,
@@ -106,6 +113,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
             dst_key=file_dest_path,
         )
 
+        logger.debug("Removing file %s", file_src_path)
         super().delete(file_src_path)
 
         return file_dest_path
