@@ -63,13 +63,13 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         return self.local_storage.path(file_dest_path)
 
     def copy(self, src_bucket, src_key, dst_bucket, dst_key):
-        from_path = self.construct_file_path(src_key)
-        to_path = self.construct_file_path(dst_key)
+        src_key = self.construct_file_path(src_key)
+        dst_key = self.construct_file_path(dst_key)
 
         copy_result = self.connection.meta.client.copy_object(
             Bucket=dst_bucket,
-            CopySource=src_bucket + "/" + from_path,
-            Key=to_path,
+            CopySource=src_bucket + "/" + src_key,
+            Key=dst_key,
         )
 
         if copy_result["ResponseMetadata"]["HTTPStatusCode"] == 200:
