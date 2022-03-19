@@ -31,6 +31,7 @@ class ScoutsFunctionManager(models.Manager):
         pk = kwargs.get("id", kwargs.get("pk", None))
         group_admin_id = kwargs.get("group_admin_id", None)
         group_group_admin_id = kwargs.get("group_group_admin_id", None)
+        user = kwargs.get("user", None)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:

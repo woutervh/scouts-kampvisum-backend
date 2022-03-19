@@ -71,6 +71,10 @@ class CampVisumService:
         logger.debug("Linking deadline set to visum")
         self.linked_deadline_service.link_to_visum(request=request, visum=visum)
 
+        logger.info(
+            "CampVisum created %s (%s)", visum.camp.name, visum.id, user=request.user
+        )
+
         return visum
 
     @transaction.atomic

@@ -34,14 +34,14 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         this method.
         """
 
-        now = timezone.now()
-        logger.debug("SCOUTS OIDC AUTHENTICATION: requesting user info (%s)", now)
+        # now = timezone.now()
+        # logger.debug("SCOUTS OIDC AUTHENTICATION: requesting user info (%s)", now)
         result = super().get_userinfo(access_token, id_token, payload)
-        after = timezone.now()
-        logger.debug("SCOUTS OIDC AUTHENTICATION: user info requested (%s)", after)
-        logger.debug(
-            "SCOUTS OIDC AUTHENTICATION: user info request took %s", after - now
-        )
+        # after = timezone.now()
+        # logger.debug("SCOUTS OIDC AUTHENTICATION: user info requested (%s)", after)
+        # logger.debug(
+        #     "SCOUTS OIDC AUTHENTICATION: user info request took %s", after - now
+        # )
 
         return result
 
@@ -130,10 +130,10 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         )
         user = self._merge_member_data(user, member, claims)
 
-        logger.debug(
-            "SCOUTS OIDC AUTHENTICATION: Created a user with username %s from member %s",
-            user.username,
+        logger.info(
+            "SCOUTS OIDC AUTHENTICATION: Created user from group admin member %s",
             member.group_admin_id,
+            user=user,
         )
         self.scouts_user_service.handle_oidc_login(user=user)
 
@@ -150,9 +150,9 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         member: AbstractScoutsMember = self._load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self._merge_member_data(user, member, claims)
 
-        logger.debug(
-            "SCOUTS OIDC AUTHENTICATION: Updated a user with username %s ",
-            user.username,
+        logger.info(
+            "SCOUTS OIDC AUTHENTICATION: Updated user",
+            user=user,
         )
         self.scouts_user_service.handle_oidc_refresh(user=user)
 
@@ -169,11 +169,9 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
     def _merge_member_data(
         self, user: settings.AUTH_USER_MODEL, member: AbstractScoutsMember, claims: dict
     ) -> settings.AUTH_USER_MODEL:
-        logger.debug("user id: %s", str(user.id))
         user: ScoutsUser = ScoutsUser.from_abstract_member(
             user=user, abstract_member=member
         )
-        logger.debug("user.id: %s", user.id)
 
         user.access_token = claims.get("access_token")
         user = self.map_user_with_claims(user=user)
@@ -189,5 +187,5 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Override the mapping in InuitsOIDCAuthenticationBackend to handle scouts-specific data.
         """
-        logger.debug("SCOUTS OIDC AUTHENTICATION: mapping user with claims")
+        logger.debug("SCOUTS OIDC AUTHENTICATION: mapping user claims", user=user)
         return self.authorization_service.update_user_authorizations(user=user)

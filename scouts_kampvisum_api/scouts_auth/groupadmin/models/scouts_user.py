@@ -126,6 +126,7 @@ class ScoutsUser(User):
     scouts_groups: List[AbstractScoutsGroup] = []
     addresses: List[AbstractScoutsAddress] = []
     functions: List[AbstractScoutsFunction] = []
+    function_descriptions: List[AbstractScoutsFunction] = []
     group_specific_fields: List[AbstractScoutsGroupSpecificField] = []
     links: List[AbstractScoutsLink] = []
 
@@ -217,7 +218,7 @@ class ScoutsUser(User):
     def __str__(self):
         return (
             super().__str__()
-            + "group_admin_id({}), gender ({}), phone_number({}), membership_number({}), customer_number({}), birth_date({}), scouts_groups({}), addresses({}), functions({}), group_specific_fields({}), links({})"
+            + "group_admin_id({}), gender ({}), phone_number({}), membership_number({}), customer_number({}), birth_date({}), scouts_groups({}), addresses({}), functions({}), function_descriptions({}), group_specific_fields({}), links({})"
         ).format(
             self.group_admin_id,
             self.gender,
@@ -233,6 +234,12 @@ class ScoutsUser(User):
             else "[]",
             ", ".join(function.to_descriptive_string() for function in self.functions)
             if self.functions
+            else "[]",
+            ", ".join(
+                function.to_descriptive_string()
+                for function in self.function_descriptions
+            )
+            if self.function_descriptions
             else "[]",
             ", ".join(
                 str(group_specific_field)

@@ -27,9 +27,10 @@ class ScoutsGroupService:
         user.scouts_groups = abstract_groups
 
         logger.debug(
-            "SCOUTS AUTHORIZATION SERVICE: Found %d groups(s) for user %s",
+            "SCOUTS GROUP SERVICE: Found %d groups(s)",
             len(abstract_groups),
             user.username,
+            user=user,
         )
 
         self.create_or_update_scouts_groups(user=user)

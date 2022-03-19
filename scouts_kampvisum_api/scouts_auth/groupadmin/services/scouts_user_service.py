@@ -84,7 +84,7 @@ class ScoutsUserService:
             user.full_clean()
             user.save()
 
-            logger.debug("Not reloading user data")
+            logger.debug("Not reloading user data", user=user)
 
         if OIDCUserHelper.requires_group_loading(user=user):
             try:
@@ -99,7 +99,7 @@ class ScoutsUserService:
             user.full_clean()
             user.save()
         else:
-            logger.debug("Not reloading user groups")
+            logger.debug("Not reloading user groups", user=user)
 
         if OIDCUserHelper.requires_functions_loading(user=user):
             try:
@@ -116,7 +116,7 @@ class ScoutsUserService:
             user.full_clean()
             user.save()
         else:
-            logger.debug("Not reloading user functions")
+            logger.debug("Not reloading user functions", user=user)
 
         try:
             # Test to trigger a build on ACC :)

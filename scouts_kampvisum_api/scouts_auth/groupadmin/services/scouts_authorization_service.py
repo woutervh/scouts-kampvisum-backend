@@ -64,7 +64,7 @@ class ScoutsAuthorizationService(AuthorizationService):
     def load_user_scouts_groups(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
-        logger.debug("SCOUTS AUTHORIZATION: loading user groups for %s", user.username)
+        logger.debug("SCOUTS AUTHORIZATION SERVICE: loading user groups", user=user)
         user = self.scouts_group_service.create_or_update_scouts_groups_for_user(
             user=user
         )
@@ -79,7 +79,7 @@ class ScoutsAuthorizationService(AuthorizationService):
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
         logger.debug(
-            "SCOUTS AUTHORIZATION: updating user authorizations for %s", user.username
+            "SCOUTS AUTHORIZATION SERVICE: updating user authorizations", user=user
         )
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
@@ -121,18 +121,12 @@ class ScoutsAuthorizationService(AuthorizationService):
     def load_user_functions(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
-        functions: List[AbstractScoutsFunction] = self.service.get_functions(
-            active_user=user
-        ).functions
-
         logger.debug(
-            "SCOUTS AUTHORIZATION SERVICE: Found %d function(s) for user %s",
-            len(functions),
-            user.username,
+            "SCOUTS AUTHORIZATION SERVICE: loading user functions",
+            user=user,
         )
-
-        user.functions = functions
-
-        self.scouts_function_service.create_or_update_scouts_functions(user=user)
+        user = self.scouts_function_service.create_or_update_scouts_functions_for_user(
+            user=user
+        )
 
         return user
