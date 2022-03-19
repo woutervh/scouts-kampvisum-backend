@@ -79,6 +79,11 @@ class ScoutsUserService:
         if not OIDCUserHelper.requires_data_loading(user=user):
             return user
         else:
+            user.last_updated = timezone.now()
+
+            user.full_clean()
+            user.save()
+
             logger.debug("Not reloading user data")
 
         if OIDCUserHelper.requires_group_loading(user=user):
@@ -90,6 +95,7 @@ class ScoutsUserService:
                 )
 
             user.last_updated_groups = timezone.now()
+
             user.full_clean()
             user.save()
         else:
@@ -106,6 +112,7 @@ class ScoutsUserService:
                 )
 
             user.last_updated_functions = timezone.now()
+
             user.full_clean()
             user.save()
         else:
