@@ -1,5 +1,4 @@
 from django.db import models
-from safedelete.models import HARD_DELETE
 
 from apps.groups.managers import ScoutsSectionNameManager
 
@@ -30,9 +29,6 @@ class ScoutsSectionName(AbstractBaseModel):
     """
 
     objects = ScoutsSectionNameManager()
-
-    # Setting to HARD_DELETE because a section name may be incorrect
-    _safedelete_policy = HARD_DELETE
 
     name = RequiredCharField(max_length=128)
     gender = DefaultCharField(

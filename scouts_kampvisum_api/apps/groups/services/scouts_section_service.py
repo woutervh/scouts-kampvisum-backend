@@ -18,6 +18,8 @@ from apps.groups.services import (
 from scouts_auth.groupadmin.models import AbstractScoutsGroup, ScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
+from scouts_auth.inuits.models import Gender
+
 
 # LOGGING
 import logging
@@ -35,94 +37,69 @@ class ScoutsSectionService:
     def section_create_or_update(
         self,
         request=None,
-        user: settings.AUTH_USER_MODEL = None,
+        instance: ScoutsSection = None,
         group: ScoutsGroup = None,
-        name: ScoutsSectionName = None,
+        section_name: ScoutsSectionName = None,
+        name: str = None,
+        gender: Gender = Gender.MIXED,
+        age_group: int = 0,
         hidden: bool = False,
     ) -> ScoutsSection:
         """
         Creates or updates a ScoutsSection instance.
         """
-        if not user:
-            user = request.user
+        self.fix_92074(request=request, group=group)
 
-        # logger.debug(
-        #     "Querying existing ScoutsSection instances with group admin id %s and name %s (%s)",
-        #     group.group_admin_id,
-        #     name,
-        #     type(name).__name__,
-        # )
-        name_instance = ScoutsSectionName.objects.safe_get(
-            id=name.id, name=name.name, gender=name.gender, age_group=name.age_group
-        )
-        if name_instance is None:
-            qs = ScoutsSection.objects.filter(group=group, name__name=name)
+        if instance is None:
+            instance = ScoutsSection.objects.safe_get(
+                group=group, name=name, gender=gender, age_group=age_group
+            )
+
+        if instance is None:
+            return self._section_create(
+                request=request,
+                group=group,
+                name=name,
+                gender=gender,
+                age_group=age_group,
+                hidden=hidden,
+            )
         else:
-            qs = ScoutsSection.objects.filter(group=group, name=name_instance)
-        count = qs.count()
-
-        if count > 0:
-            warnings.warn("Attempted to create or update multiple objects")
-            return None
-
-        if count == 0:
-            # logger.debug(
-            #     "Creating ScoutsSection with name '%s' for group %s",
-            #     name,
-            #     group.group_admin_id,
-            # )
-            return self._section_create(request, user, group, name, hidden)
-        if count == 1:
-            instance = qs[0]
-            # logger.debug(
-            #     "Updating ScoutsSection with name '%s' for group %s",
-            #     instance.name.name,
-            #     group.group_admin_id,
-            # )
-            return self._section_update(request, user, instance, group, name, hidden)
+            return self._section_update(
+                request=request,
+                instance=instance,
+                group=group,
+                name=name,
+                gender=gender,
+                age_group=age_group,
+                hidden=hidden,
+            )
 
     def _section_create(
         self,
         request=None,
-        user: settings.AUTH_USER_MODEL = None,
         group: ScoutsGroup = None,
-        name: ScoutsSectionName = None,
+        name: str = None,
+        gender: Gender = Gender.MIXED,
+        age_group: int = 0,
         hidden: bool = False,
     ) -> ScoutsSection:
-        if not user:
-            user = request.user
+        logger.debug(
+            "Creating a ScoutsSection with name '%s', gender %s and age_group %s for group %s",
+            name,
+            gender,
+            age_group,
+            group.group_admin_id,
+            user=request.user,
+        )
 
         instance = ScoutsSection()
 
         instance.group = group
-        instance.name = self.section_name_service.get_or_create_name(
-            request=request, section_name=name
-        )
-        instance.hidden = hidden
-
-        instance.full_clean()
-        instance.save()
-
-        return instance
-
-    def update_section(self, request, instance: ScoutsSection, **data) -> ScoutsSection:
-        # logger.debug("SCOUTS SECTION SERVICE UPDATE DATA: %s", data)
-        group: ScoutsGroup = data.get("group")
-        name: ScoutsSectionName = self.section_name_service.update_name(
-            request,
-            instance=ScoutsSectionName.objects.safe_get(
-                id=data.get("name").id, raise_error=True
-            ),
-            updated_instance=data.get("name"),
-        )
-
-        instance = ScoutsSection.objects.safe_get(
-            id=instance.id, group=group, name=name
-        )
-
-        instance.group = group
         instance.name = name
-        instance.hidden = data.get("hidden", instance.hidden)
+        instance.gender = gender
+        instance.age_group = age_group
+        instance.hidden = hidden
 
         instance.full_clean()
         instance.save()
@@ -132,22 +109,33 @@ class ScoutsSectionService:
     def _section_update(
         self,
         request=None,
-        user: settings.AUTH_USER_MODEL = None,
         instance: ScoutsSection = None,
         group: ScoutsGroup = None,
-        name: ScoutsSectionName = None,
+        name: str = None,
+        gender: Gender = None,
+        age_group: int = None,
         hidden=False,
     ) -> ScoutsSection:
         """
         Updates an existing Section instance.
         """
-        if not user:
-            user = request.user
+        name = name if name else instance.name
+        gender = gender if gender else instance.gender
+        age_group = age_group if age_group else instance.age_group
 
-        # logger.debug("Updating Section with name '%s'", instance.name.name)
+        logger.debug(
+            "Updating Section with name '%s', gender %s and age_group %s in group %s",
+            name,
+            gender,
+            age_group,
+            group.group_admin_id,
+            user=request.user,
+        )
 
         instance.group = group
         instance.name = name
+        instance.gender = gender
+        instance.age_group = age_group
         instance.hidden = hidden
 
         instance.full_clean()
@@ -162,12 +150,13 @@ class ScoutsSectionService:
         Links default sections to a group.
         """
         if not user:
-            user: settings.AUTH_USER_MODEL = request.user
+            user = request.user
 
         groups: List[ScoutsGroup] = user.persisted_scouts_groups.all()
         created_sections = list()
 
         for group in groups:
+            self.fix_92074(request=request, group=group)
             if group.default_sections_loaded:
                 logger.debug(
                     "Default sections for group %s already loaded (%d section(s))",
@@ -193,19 +182,20 @@ class ScoutsSectionService:
                         group.group_type
                     )
                 )
-            for name in default_scouts_section_names:
+            for default_name in default_scouts_section_names:
                 logger.debug(
                     "Linking DefaultSectionName %s to group %s",
-                    name.name,
+                    default_name.name.name,
                     group.group_admin_id,
                 )
                 created_sections.append(
                     self.section_create_or_update(
                         request=request,
-                        user=user,
                         group=group,
-                        name=name.name,
-                        hidden=name.name.hidden,
+                        name=default_name.name.name,
+                        gender=default_name.name.gender,
+                        age_group=default_name.name.age_group,
+                        hidden=default_name.name.hidden,
                     )
                 )
 
@@ -217,3 +207,31 @@ class ScoutsSectionService:
             group.save()
 
         return created_sections
+
+    def fix_92074(self, request, group: ScoutsGroup):
+        # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
+        group: ScoutsGroup = ScoutsGroup.objects.safe_get(
+            group_admin_id=group.group_admin_id
+        )
+        if group.default_sections_loaded:
+            sections: List[ScoutsSection] = group.sections.all()
+
+            for section in sections:
+                section_name = section.section_name
+                if section.name:
+                    section_name = ScoutsSectionName.objects.safe_get(id=section.name)
+                # logger.debug("SECTION NAME: %s (%s)", section.name, section_name)
+
+                if not (section.name and section.gender and section.age_group):
+                    logger.debug(
+                        "Fixing #92074 for group %s and section %s",
+                        group.group_admin_id,
+                        section_name.name,
+                        user=request.user,
+                    )
+                    section.name = section_name.name
+                    section.gender = section_name.gender
+                    section.age_group = section_name.age_group
+
+                    section.full_clean()
+                    section.save()

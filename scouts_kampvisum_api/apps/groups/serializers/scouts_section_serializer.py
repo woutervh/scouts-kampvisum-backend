@@ -23,7 +23,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
 
     # group_type = ScoutsGroupTypeSerializer()
     group = ScoutsGroupSerializer()
-    name = ScoutsSectionNameSerializer()
+    section_name = ScoutsSectionNameSerializer(required=False)
     hidden = serializers.BooleanField(default=False)
 
     class Meta:
@@ -42,9 +42,27 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         if not group and group_group_admin_id:
             data["group"] = {"group_admin_id": group_group_admin_id}
 
+        name = data.get("name", {})
+        data["name"] = name.get("name")
+        data["gender"] = name.get("gender")
+        data["age_group"] = name.get("age_group")
+
         data = super().to_internal_value(data)
 
         # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
+
+        return data
+
+    def to_representation(self, obj: ScoutsSection) -> dict:
+        section_name = {
+            "name": obj.name,
+            "gender": obj.gender,
+            "age_group": obj.age_group,
+        }
+
+        data = super().to_representation(obj)
+
+        data["name"] = section_name
 
         return data
 

@@ -60,11 +60,13 @@ class Command(BaseCommand):
         data["scouts_section_name_first"] = str(ScoutsSectionName.objects.first().id)
         data["scouts_section_name_last"] = str(ScoutsSectionName.objects.last().id)
         data["scouts_section_name_kapoenen"] = str(
-            ScoutsSectionName.objects.safe_get(name="kapoenen", gender=Gender.MIXED).id
+            ScoutsSectionName.objects.safe_get(
+                name="kapoenen", age_group=6, gender=Gender.MIXED
+            ).id
         )
         data["scouts_section_name_welpen"] = str(
             ScoutsSectionName.objects.safe_get(
-                name="kabouters en welpen", gender=Gender.MIXED
+                name="kabouters en welpen", age_group=9, gender=Gender.MIXED
             ).id
         )
         # ScoutsSection

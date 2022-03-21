@@ -81,7 +81,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_instance = self.section_service.update_section(
+        updated_instance = self.section_service.section_create_or_update(
             request, instance=instance, **serializer.validated_data
         )
 

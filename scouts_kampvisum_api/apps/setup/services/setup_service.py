@@ -86,13 +86,13 @@ class Setup:
                 function="setup_camp_years",
                 args=[request],
             ),
-            SetupItem(
-                "sections",
-                namespace="apps.groups.services",
-                module="ScoutsSectionService",
-                function="setup_default_sections",
-                args=[request],
-            ),
+            # SetupItem(
+            #     "sections",
+            #     namespace="apps.groups.services",
+            #     module="ScoutsSectionService",
+            #     function="setup_default_sections",
+            #     args=[request],
+            # ),
         ]
 
         for item in self.items:

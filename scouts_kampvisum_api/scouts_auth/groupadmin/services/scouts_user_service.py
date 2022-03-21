@@ -1,4 +1,5 @@
-from django.contrib.contenttypes.models import ContentType
+from types import SimpleNamespace
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -37,30 +38,18 @@ class ScoutsUserService:
         Some user data necessary for permissions can only be loaded by a groupadmin profile call after authentication.
         This method handles a signal for the basic oidc authentication, then makes the necessary additional calls.
         """
-        if self.handling_login:
-            return
-        self.handling_login = True
-
         user: settings.AUTH_USER_MODEL = self._check_user_data(user=user)
         user: settings.AUTH_USER_MODEL = self._validate_user_data(user=user)
         user: settings.AUTH_USER_MODEL = self._cache_user_data(user=user)
-
-        self.handling_login = False
 
         return user
 
     def handle_oidc_refresh(
         self, user: settings.AUTH_USER_MODEL, **kwargs
     ) -> settings.AUTH_USER_MODEL:
-        if self.handling_refresh:
-            return
-        self.handling_refresh = True
-
         user: settings.AUTH_USER_MODEL = self._check_user_data(user=user)
         user: settings.AUTH_USER_MODEL = self._validate_user_data(user=user)
         user: settings.AUTH_USER_MODEL = self._cache_user_data(user=user)
-
-        self.handling_refresh = False
 
         return user
 
@@ -77,14 +66,14 @@ class ScoutsUserService:
     ) -> settings.AUTH_USER_MODEL:
 
         if not OIDCUserHelper.requires_data_loading(user=user):
-            return user
-        else:
+            logger.debug("Not reloading user data", user=user)
+
             user.last_updated = timezone.now()
 
             user.full_clean()
             user.save()
 
-            logger.debug("Not reloading user data", user=user)
+            return user
 
         if OIDCUserHelper.requires_group_loading(user=user):
             try:
@@ -118,15 +107,15 @@ class ScoutsUserService:
         else:
             logger.debug("Not reloading user functions", user=user)
 
-        try:
-            # Test to trigger a build on ACC :)
-            # This code should be moved
-            section_service = ScoutsSectionService()
-            section_service.setup_default_sections(user=user)
-        except Exception as exc:
-            raise ValidationError(
-                "An error occured while setting up default scouts sections", exc
-            )
+        section_service = ScoutsSectionService()
+        section_service.setup_default_sections(request=SimpleNamespace(user=user))
+        # try:
+        #     section_service = ScoutsSectionService()
+        #     section_service.setup_default_sections(user=user)
+        # except Exception as exc:
+        #     raise ValidationError(
+        #         "An error occured while setting up default scouts sections", exc
+        #     )
 
         return user
 

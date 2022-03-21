@@ -16,19 +16,6 @@ class ScoutsSectionNameManager(models.Manager):
     This is useful for defining fixtures.
     """
 
-    def get_by_natural_key(self, name, gender, age_group):
-        logger.trace(
-            "GET BY NATURAL KEY %s: (name: %s (%s), gender: %s (%s), age_group: %s (%s))",
-            "ScoutsSectionName",
-            name,
-            type(name).__name__,
-            gender,
-            type(gender).__name__,
-            age_group,
-            type(age_group).__name__,
-        )
-        return self.get(name=name, gender=gender, age_group=age_group)
-
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         name = kwargs.get("name", None)
@@ -70,3 +57,16 @@ class ScoutsSectionNameManager(models.Manager):
                 )
             )
         return None
+
+    def get_by_natural_key(self, name, gender, age_group):
+        logger.trace(
+            "GET BY NATURAL KEY %s: (name: %s (%s), gender: %s (%s), age_group: %s (%s))",
+            "ScoutsSectionName",
+            name,
+            type(name).__name__,
+            gender,
+            type(gender).__name__,
+            age_group,
+            type(age_group).__name__,
+        )
+        return self.get(name=name, gender=gender, age_group=age_group)

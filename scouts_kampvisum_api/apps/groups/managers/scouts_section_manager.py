@@ -23,9 +23,11 @@ class ScoutsSectionManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        name = kwargs.get("name", None)
+        gender = kwargs.get("gender", None)
+        age_group = kwargs.get("age_group", None)
         group = kwargs.get("group", None)
         group_group_admin_id = kwargs.get("group_group_admin_id", None)
-        name = kwargs.get("name", None)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -34,40 +36,59 @@ class ScoutsSectionManager(models.Manager):
             except:
                 pass
 
-        if name:
+        if name and gender and age_group:
             if group:
                 try:
-                    return self.get_queryset().get(group=group, name=name)
+                    return self.get_queryset().get(
+                        group=group, name=name, gender=gender, age_group=age_group
+                    )
                 except:
                     pass
 
             if group_group_admin_id:
                 try:
                     return self.get_queryset().get(
-                        group__group_admin_id=group_group_admin_id, name=name
+                        group__group_admin_id=group_group_admin_id,
+                        name=name,
+                        gender=gender,
+                        age_group=age_group,
                     )
                 except:
                     pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate ScoutsSection instance with the provided params: (pk: ({}), (group: ({}), name: ({})), (group_group_admin_id: ({}), name ({})))".format(
-                    pk, group, name, group_group_admin_id, name
+                "Unable to locate ScoutsSection instance with the provided params: (pk: ({}), (group: ({}), name: ({}), gender: ({}), age_group: ({})), (group_group_admin_id: ({}), name ({}), gender({}), age_group({})))".format(
+                    pk,
+                    group,
+                    name,
+                    gender,
+                    age_group,
+                    group_group_admin_id,
+                    name,
+                    gender,
+                    age_group,
                 )
             )
         return None
 
-    def get_by_natural_key(self, group, name):
+    def get_by_natural_key(self, group, name, gender, age_group):
         logger.trace(
-            "GET BY NATURAL KEY %s: (group: %s (%s), name: %s (%s))",
+            "GET BY NATURAL KEY %s: (group: %s (%s), name: %s (%s), gender: %s (%s), age_group: %s (%s))",
             "ScoutsSection",
             group,
             type(group).__name__,
             name,
             type(name).__name__,
+            gender,
+            type(gender).__name__,
+            age_group,
+            type(age_group).__name__,
         )
 
         if isinstance(group, ScoutsGroup):
-            return self.get(group=group, name=name)
+            return self.get(group=group, name=name, gender=gender, age_group=age_group)
 
-        return self.get(group__group_admin_id=group, name=name)
+        return self.get(
+            group__group_admin_id=group, name=name, gender=gender, age_group=age_group
+        )

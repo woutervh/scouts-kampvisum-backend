@@ -5,8 +5,12 @@ from apps.groups.managers import ScoutsSectionManager
 
 from scouts_auth.groupadmin.models import ScoutsGroup
 
-from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import RequiredCharField
+from scouts_auth.inuits.models import AbstractBaseModel, Gender
+from scouts_auth.inuits.models.fields import (
+    DefaultCharField,
+    RequiredCharField,
+    DefaultIntegerField,
+)
 
 
 # LOGGING
@@ -26,18 +30,28 @@ class ScoutsSection(AbstractBaseModel):
     group = models.ForeignKey(
         ScoutsGroup, on_delete=models.CASCADE, related_name="sections"
     )
-    name = models.ForeignKey(ScoutsSectionName, on_delete=models.DO_NOTHING)
+    section_name = models.ForeignKey(
+        ScoutsSectionName, on_delete=models.DO_NOTHING, null=True, blank=True
+    )
+    name = RequiredCharField(max_length=128)
+    gender = DefaultCharField(
+        choices=Gender.choices,
+        default=Gender.UNKNOWN,
+        max_length=1,
+    )
+    age_group = DefaultIntegerField(default=0)
+    hidden = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ["name__age_group"]
+        ordering = ["age_group"]
         constraints = [
             models.UniqueConstraint(
-                fields=["group", "name"],
-                name="unique_group_and_name_for_section",
+                fields=["group", "name", "gender", "age_group"],
+                name="unique_group_name_gender_age_group_for_section",
             )
         ]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED ScoutsSection")
-        return (self.group, self.name)
+        return (self.group, self.name, self.gender, self.age_group)
