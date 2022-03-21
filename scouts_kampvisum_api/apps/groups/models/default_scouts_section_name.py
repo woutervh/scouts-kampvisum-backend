@@ -30,7 +30,7 @@ class DefaultScoutsSectionName(AbstractBaseModel):
     objects = DefaultScoutsSectionNameManager()
 
     group_type = models.ForeignKey(ScoutsGroupType, null=True, on_delete=models.CASCADE)
-    name = RequiredCharField(max_length=128)
+    name = RequiredCharField(max_length=128, default="")
     gender = DefaultCharField(
         choices=Gender.choices,
         default=Gender.UNKNOWN,
