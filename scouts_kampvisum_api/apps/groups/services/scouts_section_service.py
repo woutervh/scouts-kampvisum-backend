@@ -229,6 +229,7 @@ class ScoutsSectionService:
                         section_name.name,
                         user=request.user,
                     )
+                    section.section_name = None
                     section.name = section_name.name
                     section.gender = section_name.gender
                     section.age_group = section_name.age_group
