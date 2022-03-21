@@ -41,7 +41,6 @@ class ScoutsSection(AbstractBaseModel):
     )
     age_group = DefaultIntegerField(default=0)
     hidden = models.BooleanField(default=False)
-    hidden = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["age_group"]

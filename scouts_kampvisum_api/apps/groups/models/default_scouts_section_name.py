@@ -2,9 +2,14 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 from apps.groups.managers import DefaultScoutsSectionNameManager
-from apps.groups.models import ScoutsSectionName, ScoutsGroupType
+from apps.groups.models import ScoutsGroupType
 
-from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models import AbstractBaseModel, Gender
+from scouts_auth.inuits.models.fields import (
+    RequiredCharField,
+    DefaultCharField,
+    DefaultIntegerField,
+)
 
 
 # LOGGING
@@ -25,13 +30,20 @@ class DefaultScoutsSectionName(AbstractBaseModel):
     objects = DefaultScoutsSectionNameManager()
 
     group_type = models.ForeignKey(ScoutsGroupType, null=True, on_delete=models.CASCADE)
-    name = models.ForeignKey(ScoutsSectionName, null=True, on_delete=models.DO_NOTHING)
+    name = RequiredCharField(max_length=128)
+    gender = DefaultCharField(
+        choices=Gender.choices,
+        default=Gender.UNKNOWN,
+        max_length=1,
+    )
+    age_group = DefaultIntegerField(default=0)
+    hidden = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["group_type", "name"],
-                name="unique_group_type_and_name_for_default_scouts_section_name",
+                fields=["group_type", "name", "gender", "age_group"],
+                name="unique_group_type_and_name_gender_age_group_for_default_scouts_section_name",
             )
         ]
 
@@ -43,4 +55,4 @@ class DefaultScoutsSectionName(AbstractBaseModel):
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED DefaultScoutsSectionName")
-        return (self.group_type, self.name)
+        return (self.group_type, self.name, self.gender, self.age_group)

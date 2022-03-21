@@ -1,4 +1,3 @@
-import warnings
 from typing import List
 
 from django.conf import settings
@@ -6,16 +5,11 @@ from django.core.exceptions import ValidationError
 
 from apps.groups.models import (
     DefaultScoutsSectionName,
-    ScoutsGroupType,
-    ScoutsSectionName,
     ScoutsSection,
 )
-from apps.groups.services import (
-    DefaultScoutsSectionNameService,
-    ScoutsSectionNameService,
-)
+from apps.groups.services import DefaultScoutsSectionNameService
 
-from scouts_auth.groupadmin.models import AbstractScoutsGroup, ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.models import Gender
@@ -32,14 +26,12 @@ class ScoutsSectionService:
 
     groupadmin = GroupAdmin()
     default_section_name_service = DefaultScoutsSectionNameService()
-    section_name_service = ScoutsSectionNameService()
 
     def section_create_or_update(
         self,
         request=None,
         instance: ScoutsSection = None,
         group: ScoutsGroup = None,
-        section_name: ScoutsSectionName = None,
         name: str = None,
         gender: Gender = Gender.MIXED,
         age_group: int = 0,
@@ -48,8 +40,6 @@ class ScoutsSectionService:
         """
         Creates or updates a ScoutsSection instance.
         """
-        self.fix_92074(request=request, group=group)
-
         if instance is None:
             instance = ScoutsSection.objects.safe_get(
                 group=group, name=name, gender=gender, age_group=age_group
@@ -156,7 +146,6 @@ class ScoutsSectionService:
         created_sections = list()
 
         for group in groups:
-            self.fix_92074(request=request, group=group)
             if group.default_sections_loaded:
                 logger.debug(
                     "Default sections for group %s already loaded (%d section(s))",
@@ -207,32 +196,3 @@ class ScoutsSectionService:
             group.save()
 
         return created_sections
-
-    def fix_92074(self, request, group: ScoutsGroup):
-        # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
-        group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-            group_admin_id=group.group_admin_id
-        )
-        if group.default_sections_loaded:
-            sections: List[ScoutsSection] = group.sections.all()
-
-            for section in sections:
-                section_name = section.section_name
-                if section.name:
-                    section_name = ScoutsSectionName.objects.safe_get(id=section.name)
-                # logger.debug("SECTION NAME: %s (%s)", section.name, section_name)
-
-                if not (section.name and section.gender and section.age_group):
-                    logger.debug(
-                        "Fixing #92074 for group %s and section %s",
-                        group.group_admin_id,
-                        section_name.name,
-                        user=request.user,
-                    )
-                    section.section_name = None
-                    section.name = section_name.name
-                    section.gender = section_name.gender
-                    section.age_group = section_name.age_group
-
-                    section.full_clean()
-                    section.save()

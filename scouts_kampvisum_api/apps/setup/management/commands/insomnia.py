@@ -256,8 +256,8 @@ class Command(BaseCommand):
         data["linked_deadline_first"] = str(LinkedDeadline.objects.first().id)
         data["linked_deadline_last"] = str(LinkedDeadline.objects.last().id)
         # DeadlineFlag
-        data["linked_deadline_flag_first"] = str(LinkedDeadlineFlag.objects.first().id)
-        data["linked_deadline_flag_last"] = str(LinkedDeadlineFlag.objects.last().id)
+        # data["linked_deadline_flag_first"] = str(LinkedDeadlineFlag.objects.first().id)
+        # data["linked_deadline_flag_last"] = str(LinkedDeadlineFlag.objects.last().id)
 
         data["visum_participant_first"] = str(
             self.link_participant(

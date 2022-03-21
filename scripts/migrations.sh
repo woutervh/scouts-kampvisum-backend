@@ -21,13 +21,16 @@ APPS=(
 # 	"category_priorities.json"
 # 	"check_types.json"
 # )
+# COMMANDS=(
+# 	"runfixtures"
+# 	"setupcampyears"
+# 	"loadcategories"
+# 	"loadsubcategories"
+# 	"loadchecks"
+# 	"loaddefaultdeadlines"
+# )
 COMMANDS=(
-	"runfixtures"
-	"setupcampyears"
-	"loadcategories"
-	"loadsubcategories"
-	"loadchecks"
-	"loaddefaultdeadlines"
+	"runfixturesandcommands"
 )
 # RETURN IF CALLED TO IMPORT VARIABLES
 [[ "${#BASH_SOURCE[@]}" -gt "1" ]] && { return 0; }

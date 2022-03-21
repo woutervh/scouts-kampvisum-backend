@@ -5,11 +5,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"kapoenen",
-				"M",
-				6
-			]
+			"name": "kapoenen",
+			"gender": "M",
+			"age_group": 6
 		}
 	},
 	{
@@ -18,11 +16,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"kapoenen",
-				"F",
-				6
-			]
+			"name": "kapoenen",
+			"gender": "F",
+			"age_group": 6
 		}
 	},
 	{
@@ -31,11 +27,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"kapoenen",
-				"I",
-				6
-			]
+			"name": "kapoenen",
+			"gender": "I",
+			"age_group": 6
 		}
 	},
 	{
@@ -44,11 +38,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"welpen",
-				"M",
-				9
-			]
+			"name": "welpen",
+			"gender": "M",
+			"age_group": 9
 		}
 	},
 	{
@@ -57,11 +49,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"kabouters",
-				"F",
-				9
-			]
+			"name": "kabouters",
+			"gender": "F",
+			"age_group": 9
 		}
 	},
 	{
@@ -70,11 +60,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"kabouters en welpen",
-				"I",
-				9
-			]
+			"name": "kabouters en welpen",
+			"gender": "I",
+			"age_group": 9
 		}
 	},
 	{
@@ -83,11 +71,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"jongverkenners",
-				"M",
-				11
-			]
+			"name": "jongverkenners",
+			"gender": "M",
+			"age_group": 11
 		}
 	},
 	{
@@ -96,11 +82,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"jonggidsen",
-				"F",
-				11
-			]
+			"name": "jonggidsen",
+			"gender": "F",
+			"age_group": 11
 		}
 	},
 	{
@@ -109,11 +93,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"jonggivers",
-				"I",
-				11
-			]
+			"name": "jonggivers",
+			"gender": "I",
+			"age_group": 11
 		}
 	},
 	{
@@ -122,11 +104,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"verkenners",
-				"M",
-				14
-			]
+			"name": "verkenners",
+			"gender": "M",
+			"age_group": 14
 		}
 	},
 	{
@@ -135,11 +115,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"gidsen",
-				"F",
-				14
-			]
+			"name": "gidsen",
+			"gender": "F",
+			"age_group": 14
 		}
 	},
 	{
@@ -148,11 +126,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"givers",
-				"I",
-				14
-			]
+			"name": "givers",
+			"gender": "I",
+			"age_group": 14
 		}
 	},
 	{
@@ -161,11 +137,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"jins",
-				"M",
-				17
-			]
+			"name": "jins",
+			"gender": "M",
+			"age_group": 17
 		}
 	},
 	{
@@ -174,11 +148,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"jins",
-				"F",
-				17
-			]
+			"name": "jins",
+			"gender": "F",
+			"age_group": 17
 		}
 	},
 	{
@@ -187,11 +159,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"jins",
-				"I",
-				17
-			]
+			"name": "jins",
+			"gender": "I",
+			"age_group": 17
 		}
 	},
 	{
@@ -200,11 +170,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"leiding",
-				"M",
-				100
-			]
+			"name": "leiding",
+			"gender": "M",
+			"age_group": 100
 		}
 	},
 	{
@@ -213,11 +181,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"leiding",
-				"F",
-				100
-			]
+			"name": "leiding",
+			"gender": "F",
+			"age_group": 100
 		}
 	},
 	{
@@ -226,11 +192,9 @@
 			"group_type": [
 				"Groep"
 			],
-			"name": [
-				"leiding",
-				"I",
-				100
-			]
+			"name": "leiding",
+			"gender": "I",
+			"age_group": 100
 		}
 	},
 	{
@@ -239,11 +203,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"zeehondjes",
-				"M",
-				6
-			]
+			"name": "zeehondjes",
+			"gender": "M",
+			"age_group": 6
 		}
 	},
 	{
@@ -252,11 +214,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"zeehondjes",
-				"F",
-				6
-			]
+			"name": "zeehondjes",
+			"gender": "F",
+			"age_group": 6
 		}
 	},
 	{
@@ -265,11 +225,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"zeehondjes",
-				"I",
-				6
-			]
+			"name": "zeehondjes",
+			"gender": "I",
+			"age_group": 6
 		}
 	},
 	{
@@ -278,11 +236,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"zeewelpen",
-				"M",
-				9
-			]
+			"name": "zeewelpen",
+			"gender": "M",
+			"age_group": 9
 		}
 	},
 	{
@@ -291,11 +247,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"zeewelpen",
-				"F",
-				9
-			]
+			"name": "zeewelpen",
+			"gender": "F",
+			"age_group": 9
 		}
 	},
 	{
@@ -304,11 +258,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"zeewelpen",
-				"I",
-				9
-			]
+			"name": "zeewelpen",
+			"gender": "I",
+			"age_group": 9
 		}
 	},
 	{
@@ -317,11 +269,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"scheepsmakkers",
-				"M",
-				11
-			]
+			"name": "scheepsmakkers",
+			"gender": "M",
+			"age_group": 11
 		}
 	},
 	{
@@ -330,11 +280,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"scheepsmakkers",
-				"F",
-				11
-			]
+			"name": "scheepsmakkers",
+			"gender": "F",
+			"age_group": 11
 		}
 	},
 	{
@@ -343,11 +291,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"scheepsmakkers",
-				"I",
-				11
-			]
+			"name": "scheepsmakkers",
+			"gender": "I",
+			"age_group": 11
 		}
 	},
 	{
@@ -356,11 +302,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"zeeverkenners",
-				"M",
-				14
-			]
+			"name": "zeeverkenners",
+			"gender": "M",
+			"age_group": 14
 		}
 	},
 	{
@@ -369,11 +313,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"zeeverkenners",
-				"F",
-				14
-			]
+			"name": "zeeverkenners",
+			"gender": "F",
+			"age_group": 14
 		}
 	},
 	{
@@ -382,11 +324,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"zeeverkenners",
-				"I",
-				14
-			]
+			"name": "zeeverkenners",
+			"gender": "I",
+			"age_group": 14
 		}
 	},
 	{
@@ -395,11 +335,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"loodsen",
-				"M",
-				17
-			]
+			"name": "loodsen",
+			"gender": "M",
+			"age_group": 17
 		}
 	},
 	{
@@ -408,11 +346,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"loodsen",
-				"F",
-				17
-			]
+			"name": "loodsen",
+			"gender": "F",
+			"age_group": 17
 		}
 	},
 	{
@@ -421,11 +357,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"loodsen",
-				"I",
-				17
-			]
+			"name": "loodsen",
+			"gender": "I",
+			"age_group": 17
 		}
 	},
 	{
@@ -434,11 +368,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"leiding",
-				"M",
-				100
-			]
+			"name": "leiding",
+			"gender": "M",
+			"age_group": 100
 		}
 	},
 	{
@@ -447,11 +379,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"leiding",
-				"F",
-				100
-			]
+			"name": "leiding",
+			"gender": "F",
+			"age_group": 100
 		}
 	},
 	{
@@ -460,11 +390,9 @@
 			"group_type": [
 				"Zeescouts"
 			],
-			"name": [
-				"leiding",
-				"I",
-				100
-			]
+			"name": "leiding",
+			"gender": "I",
+			"age_group": 100
 		}
 	},
 	{
@@ -473,11 +401,9 @@
 			"group_type": [
 				"Test"
 			],
-			"name": [
-				"kapoenen",
-				"I",
-				6
-			]
+			"name": "kapoenen",
+			"gender": "I",
+			"age_group": 6
 		}
 	},
 	{
@@ -486,11 +412,9 @@
 			"group_type": [
 				"Test"
 			],
-			"name": [
-				"kabouters en welpen",
-				"I",
-				9
-			]
+			"name": "kabouters en welpen",
+			"gender": "I",
+			"age_group": 9
 		}
 	},
 	{
@@ -499,11 +423,9 @@
 			"group_type": [
 				"Test"
 			],
-			"name": [
-				"jonggivers",
-				"I",
-				11
-			]
+			"name": "jonggivers",
+			"gender": "I",
+			"age_group": 11
 		}
 	},
 	{
@@ -512,11 +434,9 @@
 			"group_type": [
 				"Test"
 			],
-			"name": [
-				"givers",
-				"I",
-				14
-			]
+			"name": "givers",
+			"gender": "I",
+			"age_group": 14
 		}
 	},
 	{
@@ -525,11 +445,9 @@
 			"group_type": [
 				"Test"
 			],
-			"name": [
-				"jins",
-				"I",
-				17
-			]
+			"name": "jins",
+			"gender": "I",
+			"age_group": 17
 		}
 	},
 	{
@@ -538,11 +456,9 @@
 			"group_type": [
 				"Test"
 			],
-			"name": [
-				"leiding",
-				"I",
-				100
-			]
+			"name": "leiding",
+			"gender": "I",
+			"age_group": 100
 		}
 	}
 ]
