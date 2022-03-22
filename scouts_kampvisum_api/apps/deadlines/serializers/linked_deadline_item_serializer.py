@@ -32,7 +32,9 @@ class LinkedDeadlineItemSerializer(serializers.ModelSerializer):
         # logger.debug("LINKED DEADLINE ITEM: %s", obj)
         data = super().to_representation(obj)
 
+        state = CheckState.UNCHECKED
         if obj.is_sub_category_deadline():
+            state = data.get("linked_sub_category").get("state", CheckState.UNCHECKED)
             data["linked_sub_category"]["category"] = {
                 # "id": obj.linked_sub_category.category.id,
                 # "name": obj.linked_sub_category.category.parent.name,
@@ -45,11 +47,10 @@ class LinkedDeadlineItemSerializer(serializers.ModelSerializer):
                     "name": obj.linked_sub_category.category.parent.name,
                     "label": obj.linked_sub_category.category.parent.label,
                 },
-                "state": data.get("linked_sub_category").get(
-                    "state", CheckState.UNCHECKED
-                ),
+                "state": state,
             }
         elif obj.is_check_deadline():
+            state = data.get("linked_check").get("state", CheckState.UNCHECKED)
             data["linked_check"]["category"] = {
                 # "id": obj.linked_check.sub_category.category.id,
                 # "name": obj.linked_check.sub_category.category.parent.name,
@@ -62,7 +63,11 @@ class LinkedDeadlineItemSerializer(serializers.ModelSerializer):
                     "name": obj.linked_check.sub_category.category.parent.name,
                     "label": obj.linked_check.sub_category.category.parent.label,
                 },
-                "state": data.get("linked_check").get("state", CheckState.UNCHECKED),
+                "state": state,
             }
+        elif obj.is_deadline():
+            state = CheckState.CHECKED if obj.flag.flag else CheckState.UNCHECKED
+
+        data["state"] = state
 
         return data
