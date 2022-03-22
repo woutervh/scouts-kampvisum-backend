@@ -77,19 +77,36 @@ class Command(BaseCommand):
 
                     from apps.groups.models import ScoutsSectionName
 
-                    section_name = section.section_name
-                    if section.name:
+                    still_linked_to_section_name = False
+                    section_name = (
+                        section.section_name
+                        if section.section_name
+                        else section.name
+                        if section.name
+                        else None
+                    )
+                    if section_name:
                         # the migration has set the (now) string name with the (previous) foreign key on ScoutsSectionName
                         section_name = ScoutsSectionName.objects.safe_get(
-                            id=section.name
+                            id=section_name
                         )
+                        if section_name:
+                            still_linked_to_section_name = True
 
-                    name = section_name.name
-                    gender = section.gender if section.gender else section_name.gender
+                    name = (
+                        section_name.name
+                        if still_linked_to_section_name
+                        else section.name
+                    )
+                    gender = (
+                        section_name.gender
+                        if still_linked_to_section_name
+                        else section.gender
+                    )
                     age_group = (
-                        section.age_group
-                        if section.age_group
-                        else section_name.age_group
+                        section_name.age_group
+                        if still_linked_to_section_name
+                        else section.age_group
                     )
 
                     default_section_name: DefaultScoutsSectionName = (
@@ -100,14 +117,17 @@ class Command(BaseCommand):
                             age_group=age_group,
                         )
                     )
-
-                    if (
-                        section.section_name
-                        or section_name
-                        or (
-                            default_section_name
-                            and default_section_name.name != section.name
+                    if default_section_name:
+                        logger.debug(
+                            "Found a DefaultScoutsSectionName instance for gender %s and age_group %s: %s",
+                            gender,
+                            age_group,
+                            default_section_name.name,
                         )
+
+                    if still_linked_to_section_name or (
+                        default_section_name
+                        and default_section_name.name != section.name
                     ):
                         logger.debug(
                             "Fixing #92074 for group %s and section %s",
