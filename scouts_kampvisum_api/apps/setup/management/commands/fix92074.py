@@ -50,6 +50,10 @@ class Command(BaseCommand):
         # Now fix existing groups: reset section names to their defaults
         groups: List[ScoutsGroup] = ScoutsGroup.objects.all()
         logger.debug("Checking %d groups for fix 92074", len(groups))
+        logger.debug(
+            "Found %d DefaultScoutsSectionName instance(s)",
+            DefaultScoutsSectionName.objects.count(),
+        )
         for group in groups:
             if group.default_sections_loaded:
                 sections: List[ScoutsSection] = group.sections.all()
@@ -136,3 +140,4 @@ class Command(BaseCommand):
                             section.age_group,
                             section.hidden,
                         )
+        logger.debug("group: %s", group)
