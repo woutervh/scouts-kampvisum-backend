@@ -182,4 +182,4 @@ class Command(BaseCommand):
                             section.age_group,
                             section.hidden,
                         )
-        raise ValidationError("make this fail !")
+        # raise ValidationError("make this fail !")
