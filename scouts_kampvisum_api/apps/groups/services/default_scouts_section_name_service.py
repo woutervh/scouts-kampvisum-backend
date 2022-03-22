@@ -63,7 +63,7 @@ class DefaultScoutsSectionNameService:
         #     group_type.group_type,
         # )
         name: DefaultScoutsSectionName = DefaultScoutsSectionName.objects.safe_get(
-            group_type=group_type, name=name, gender=gender, age_group=age_group
+            group_type=group_type, gender=gender, age_group=age_group
         )
 
         if not name:
