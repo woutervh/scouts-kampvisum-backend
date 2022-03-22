@@ -127,11 +127,10 @@ class Command(BaseCommand):
                         )
                     else:
                         logger.debug(
-                            "Couldn't find a DefaultScoutsSectionName instance for group type %s, gender %s and age_group %s: %s",
+                            "Couldn't find a DefaultScoutsSectionName instance for group type %s, gender %s and age_group %s",
                             group.group_type,
                             gender,
                             age_group,
-                            default_section_name.name,
                         )
 
                     if still_linked_to_section_name or (
