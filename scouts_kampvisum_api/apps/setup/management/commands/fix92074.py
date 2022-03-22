@@ -140,4 +140,4 @@ class Command(BaseCommand):
                             section.age_group,
                             section.hidden,
                         )
-        logger.debug("group: %s", group)
+        raise ValidationError("make this fail !")
