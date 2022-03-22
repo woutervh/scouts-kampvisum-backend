@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import List
 
+from django.db import transaction
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
@@ -33,6 +34,7 @@ class Command(BaseCommand):
     DEFAULT_SECTION_NAMES = "default_scouts_section_names.json"
 
     # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
+    @transaction.atomic
     def handle(self, *args, **kwargs):
         parent_path = Path(settings.BASE_DIR)
 
@@ -89,9 +91,9 @@ class Command(BaseCommand):
                             #     age_group,
                             # )
                             section.section_name = None
-                            section.name = default_section_name.name
-                            section.gender = section_name.gender
-                            section.age_group = section_name.age_group
+                            section.name = name
+                            section.gender = gender
+                            section.age_group = age_group
                         else:
                             section.section_name = None
                             section.name = default_section_name.name
