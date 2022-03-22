@@ -402,8 +402,52 @@
 				"Test"
 			],
 			"name": "kapoenen",
+			"gender": "M",
+			"age_group": 6
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "kapoenen",
+			"gender": "F",
+			"age_group": 6
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "kapoenen",
 			"gender": "I",
 			"age_group": 6
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "welpen",
+			"gender": "M",
+			"age_group": 9
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "kabouters",
+			"gender": "F",
+			"age_group": 9
 		}
 	},
 	{
@@ -423,9 +467,53 @@
 			"group_type": [
 				"Test"
 			],
+			"name": "jongverkenners",
+			"gender": "M",
+			"age_group": 11
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "jonggidsen",
+			"gender": "F",
+			"age_group": 11
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
 			"name": "jonggivers",
 			"gender": "I",
 			"age_group": 11
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "verkenners",
+			"gender": "M",
+			"age_group": 14
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "gidsen",
+			"gender": "F",
+			"age_group": 14
 		}
 	},
 	{
@@ -446,8 +534,52 @@
 				"Test"
 			],
 			"name": "jins",
+			"gender": "M",
+			"age_group": 17
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "jins",
+			"gender": "F",
+			"age_group": 17
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "jins",
 			"gender": "I",
 			"age_group": 17
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "leiding",
+			"gender": "M",
+			"age_group": 100
+		}
+	},
+	{
+		"model": "groups.DefaultScoutsSectionName",
+		"fields": {
+			"group_type": [
+				"Test"
+			],
+			"name": "leiding",
+			"gender": "F",
+			"age_group": 100
 		}
 	},
 	{

@@ -40,26 +40,48 @@ class DefaultScoutsSectionNameManager(models.Manager):
                 pass
 
         if group_type:
-            if name and gender and age_group:
-                try:
-                    return self.get_queryset().get(
-                        group_type=group_type,
-                        name=name,
-                        gender=gender,
-                        age_group=age_group,
-                    )
-                except:
-                    pass
+            if type(group_type).__name__ == "ScoutsGroupType":
+                if name and gender and age_group:
+                    try:
+                        return self.get_queryset().get(
+                            group_type=group_type,
+                            name=name,
+                            gender=gender,
+                            age_group=age_group,
+                        )
+                    except:
+                        pass
 
-            if gender and age_group:
-                try:
-                    return self.get_queryset().get(
-                        group_type=group_type,
-                        gender=gender,
-                        age_group=age_group,
-                    )
-                except:
-                    pass
+                if gender and age_group:
+                    try:
+                        return self.get_queryset().get(
+                            group_type=group_type,
+                            gender=gender,
+                            age_group=age_group,
+                        )
+                    except:
+                        pass
+            else:
+                if name and gender and age_group:
+                    try:
+                        return self.get_queryset().get(
+                            group_type__group_type=group_type,
+                            name=name,
+                            gender=gender,
+                            age_group=age_group,
+                        )
+                    except:
+                        pass
+
+                if gender and age_group:
+                    try:
+                        return self.get_queryset().get(
+                            group_type__group_type=group_type,
+                            gender=gender,
+                            age_group=age_group,
+                        )
+                    except:
+                        pass
 
             if return_list and gender:
                 try:
