@@ -36,14 +36,15 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
-        parent_path = Path(settings.BASE_DIR)
 
         # First remove all existing DefaultScoutsSectionName instances
         DefaultScoutsSectionName.objects.all().delete()
 
         # Reload DefaultScoutsSectionName instances from the fixture, to be sure, to be sure
+        parent_path = Path(settings.BASE_DIR)
         data_path = "{}/{}".format(self.BASE_PATH, self.DEFAULT_SECTION_NAMES)
         path = os.path.join(parent_path, data_path)
+        logger.debug("Reloading DefaultScoutsSectionName instances from %s", path)
         call_command("loaddata", path)
 
         # Now fix existing groups: reset section names to their defaults
@@ -55,6 +56,19 @@ class Command(BaseCommand):
                 for section in sections:
                     if not hasattr(section, "section_name"):
                         continue
+
+                    logger.debug(
+                        "CURRENT SECTION: id (%s), group (%s), section_name (%s), name (%s), gender (%s), age_group (%s), hidden (%s)",
+                        section.id,
+                        section.group.group_admin_id,
+                        section.section_name.id
+                        if hasattr(section.section_name, "id")
+                        else section.section_name,
+                        section.name,
+                        section.gender,
+                        section.age_group,
+                        section.hidden,
+                    )
 
                     from apps.groups.models import ScoutsSectionName
 
@@ -84,6 +98,12 @@ class Command(BaseCommand):
                             )
                         )
                         if not default_section_name:
+                            logger.debug(
+                                "No DefaultSectionName instance found with arguments (group (%s), gender (%s), age_group (%s))",
+                                group.group_admin_id,
+                                gender,
+                                age_group,
+                            )
                             # raise ValidationError(
                             #     "Couldn't find DefaultScoutsSectionName with group type %s, gender %s and age_group %s",
                             #     group.type,
@@ -102,3 +122,16 @@ class Command(BaseCommand):
 
                         section.full_clean()
                         section.save()
+
+                        logger.debug(
+                            "FIXED SECTION: id (%s), group (%s), section_name (%s), name (%s), gender (%s), age_group (%s), hidden (%s)",
+                            section.id,
+                            section.group.group_admin_id,
+                            section.section_name.id
+                            if hasattr(section.section_name, "id")
+                            else section.section_name,
+                            section.name,
+                            section.gender,
+                            section.age_group,
+                            section.hidden,
+                        )
