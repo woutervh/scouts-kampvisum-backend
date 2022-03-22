@@ -84,24 +84,37 @@ class Command(BaseCommand):
                             id=section.name
                         )
 
-                    if section.section_name or section_name:
-                        name = section_name.name
-                        gender = section_name.gender
-                        age_group = section_name.age_group
+                    name = section_name.name
+                    gender = section.gender if section.gender else section_name.gender
+                    age_group = (
+                        section.age_group
+                        if section.age_group
+                        else section_name.age_group
+                    )
 
+                    default_section_name: DefaultScoutsSectionName = (
+                        self.default_section_name_service.load_name_for_group(
+                            request=None,
+                            group=group,
+                            gender=gender,
+                            age_group=age_group,
+                        )
+                    )
+
+                    if (
+                        section.section_name
+                        or section_name
+                        or (
+                            default_section_name
+                            and default_section_name.name != section.name
+                        )
+                    ):
                         logger.debug(
                             "Fixing #92074 for group %s and section %s",
                             group.group_admin_id,
                             name,
                         )
-                        default_section_name: DefaultScoutsSectionName = (
-                            self.default_section_name_service.load_name_for_group(
-                                request=None,
-                                group=group,
-                                gender=gender,
-                                age_group=age_group,
-                            )
-                        )
+
                         if not default_section_name:
                             logger.debug(
                                 "No DefaultSectionName instance found with arguments (group (%s), gender (%s), age_group (%s))",
