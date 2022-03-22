@@ -1,5 +1,6 @@
 import os, json
 from pathlib import Path
+from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -32,6 +33,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         parent_path = Path(settings.BASE_DIR)
+
+        existing_deadlines: List[Deadline] = list(Deadline.objects.all())
+        loaded_deadlines: List[Deadline] = []
 
         for FIXTURE in self.FIXTURES:
             TMP_FIXTURE = "{}_{}".format("adjusted", FIXTURE)
@@ -94,6 +98,7 @@ class Command(BaseCommand):
                         items=[],
                     )
                     model["pk"] = str(deadline.id)
+                    loaded_deadlines.append(deadline)
 
                     due_date: DeadlineDate = (
                         deadline_service.get_or_create_deadline_date(
@@ -136,3 +141,15 @@ class Command(BaseCommand):
 
             logger.debug("REMOVING adjusted fixture %s", tmp_path)
             os.remove(tmp_path)
+
+        logger.debug("Existing deadlines: %d", len(existing_deadlines))
+        logger.debug("Loaded deadlines: %d", len(loaded_deadlines))
+
+        for existing_deadline in existing_deadlines:
+            if existing_deadline not in loaded_deadlines:
+                logger.debug(
+                    "Removing deadline with id %s and name %s",
+                    existing_deadline.id,
+                    existing_deadline.name,
+                )
+                existing_deadline.delete()
