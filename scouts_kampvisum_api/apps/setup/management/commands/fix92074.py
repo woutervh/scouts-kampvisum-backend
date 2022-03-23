@@ -8,6 +8,8 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ValidationError
 
+from apps.camps.models import Camp
+
 from apps.groups.models import (
     DefaultScoutsSectionName,
     ScoutsSection,
@@ -15,6 +17,8 @@ from apps.groups.models import (
 from apps.groups.services import DefaultScoutsSectionNameService
 
 from scouts_auth.groupadmin.models import ScoutsGroup
+
+from scouts_auth.inuits.models import Gender
 
 
 # LOGGING
@@ -49,7 +53,7 @@ class Command(BaseCommand):
 
         # Now fix existing groups: reset section names to their defaults
         groups: List[ScoutsGroup] = ScoutsGroup.objects.all()
-        logger.debug("Checking %d groups for fix 92074", len(groups))
+        logger.debug("Checking %d groups for fix #92074", len(groups))
         logger.debug(
             "Found %d DefaultScoutsSectionName instance(s)",
             DefaultScoutsSectionName.objects.count(),
@@ -57,6 +61,8 @@ class Command(BaseCommand):
         for group in groups:
             if group.default_sections_loaded:
                 sections: List[ScoutsSection] = group.sections.all()
+                sections_to_update: List[List[any]] = []
+                sections_to_remove: List[ScoutsSection] = []
 
                 for section in sections:
                     if not hasattr(section, "section_name"):
@@ -143,7 +149,6 @@ class Command(BaseCommand):
                             name,
                         )
 
-                        updated_section = ScoutsSection()
                         if not default_section_name:
                             logger.debug(
                                 "No DefaultSectionName instance found with arguments (group (%s), gender (%s), age_group (%s))",
@@ -151,62 +156,190 @@ class Command(BaseCommand):
                                 gender,
                                 age_group,
                             )
-                            # raise ValidationError(
-                            #     "Couldn't find DefaultScoutsSectionName with group type %s, gender %s and age_group %s",
-                            #     group.type,
-                            #     gender,
-                            #     age_group,
-                            # )
-                            updated_section.group = group
-                            updated_section.section_name = None
-                            updated_section.name = name
-                            updated_section.gender = gender
-                            updated_section.age_group = age_group
                         else:
-                            updated_section.group = group
-                            updated_section.section_name = None
-                            updated_section.name = default_section_name.name
-                            updated_section.gender = default_section_name.gender
-                            updated_section.age_group = default_section_name.age_group
+                            name = default_section_name.name
+                            gender = default_section_name.gender
+                            age_group = default_section_name.age_group
 
                         if not (
-                            section.group == updated_section.group
-                            and section.name == updated_section.name
-                            and section.gender == updated_section.gender
-                            and section.age_group == updated_section.age_group
+                            section.group == group
+                            and section.name == name
+                            and section.gender == gender
+                            and section.age_group == age_group
                         ):
-                            section.group = updated_section.group
-                            section.name = updated_section.name
-                            section.gender = updated_section.gender
-                            section.age_group = updated_section.age_group
+                            # The existing section has a non-default name
+                            # OR
+                            # the group has created a new section with the default name
+                            #
+                            # -> Check if a section with the default name was created
+                            # -> If so, check if that section has been linked to a visum
+                            #    -> If so, delete the current section
+                            #    -> If not,
+                            # Check if the group has recreated a section with the default name
+                            recreated_sections: List[ScoutsSection] = list(
+                                ScoutsSection.objects.all().filter(
+                                    group=group,
+                                    name=name,
+                                    gender=gender,
+                                    age_group=age_group,
+                                )
+                            )
+                            logger.debug(
+                                "Found %d recreated sections for default name %s (current section name: %s)",
+                                len(recreated_sections),
+                                name,
+                                section.name,
+                            )
 
-                            try:
-                                section.full_clean()
-                                section.save()
+                            # Easy: Default name sections were not recreated, safe to update
+                            if not recreated_sections or len(recreated_sections) == 0:
+                                logger.debug(
+                                    "Found no recreated sections, updating the current section (%s -> %s)",
+                                    section.name,
+                                    name,
+                                )
+                                logger.debug("UPDATE ADD: %s -> %s", section.name, name)
+                                sections_to_update.append(
+                                    [section, group, name, gender, age_group]
+                                )
+                            # Default name sections were recreated, remove unlinked sections
+                            else:
+                                linked_sections: List[ScoutsSection] = []
+                                unlinked_sections: List[ScoutsSection] = []
+                                current_section_linked = False
+
+                                camps: List[Camp] = list(
+                                    Camp.objects.all().filter(sections__in=[section])
+                                )
+                                if camps and len(camps) != 0:
+                                    logger.debug(
+                                        "Current section %s is linked", section.name
+                                    )
+                                    current_section_linked = True
+
+                                for recreated_section in recreated_sections:
+                                    camps: List[Camp] = list(
+                                        Camp.objects.all().filter(
+                                            sections__in=[recreated_section]
+                                        )
+                                    )
+                                    # The section under investigation is linked to a camp, investigate later
+                                    if camps and len(camps) != 0:
+                                        linked_sections.append(recreated_section)
+                                    else:
+                                        unlinked_sections.append(recreated_section)
+
+                                    for camp in camps:
+                                        logger.debug(
+                                            "Recreated section(s) linked to camp %s: %s",
+                                            camp.name,
+                                            [
+                                                section.name
+                                                for section in camp.sections.all()
+                                                if section in recreated_sections
+                                            ],
+                                        )
 
                                 logger.debug(
-                                    "FIXED SECTION: id (%s), group (%s), section_name (%s), name (%s), gender (%s), age_group (%s), hidden (%s)",
-                                    section.id,
-                                    section.group.group_admin_id,
-                                    section.section_name.id
-                                    if hasattr(section.section_name, "id")
-                                    else section.section_name,
-                                    section.name,
-                                    section.gender,
-                                    section.age_group,
-                                    section.hidden,
-                                )
-                            except:
-                                logger.error(
-                                    "Group %s has already made a section with name %s, gender %s and age_group %s (updating with group (%s), name (%s), gender (%s), age_group(%s)",
-                                    group.group_admin_id,
-                                    section.name,
-                                    section.gender,
-                                    section.age_group,
-                                    updated_section.group.group_admin_id,
-                                    updated_section.name,
-                                    updated_section.gender,
-                                    updated_section.age_group,
+                                    "Found %d linked recreated section(s) and %d unlinked",
+                                    len(linked_sections),
+                                    len(unlinked_sections),
                                 )
 
-        # raise ValidationError("make this fail !")
+                                if not current_section_linked:
+                                    # Don't update, but remove the current section, because a recreated section exists that has been linked
+                                    if len(linked_sections) > 0:
+                                        # Don't touch the linked sections, but remove the current section
+                                        logger.debug("REMOVE ADD: %s", section.name)
+                                        sections_to_remove.append(section)
+                                    # Don't remove, but update the current section and remove the unlinked sections
+                                    else:
+                                        logger.debug(
+                                            "UPDATE ADD: %s -> %s", section.name, name
+                                        )
+                                        sections_to_update.append(
+                                            [section, group, name, gender, age_group]
+                                        )
+
+                                        for unlinked_section in unlinked_sections:
+                                            logger.debug(
+                                                "REMOVE ADD: %s", unlinked_section.name
+                                            )
+                                            sections_to_remove.append(unlinked_section)
+                                else:
+                                    # Current section is linked, update it if there are no linked recreated sections
+                                    if len(linked_sections) == 0:
+                                        logger.debug(
+                                            "UPDATE ADD: %s -> %s", section.name, name
+                                        )
+                                        sections_to_update.append(
+                                            [section, group, name, gender, age_group]
+                                        )
+
+                                    # Remove the unlinked sections
+                                    for unlinked_section in unlinked_sections:
+                                        logger.debug(
+                                            "REMOVE ADD: %s", unlinked_section.name
+                                        )
+                                        sections_to_remove.append(unlinked_section)
+
+                logger.debug(
+                    "Removing %d section(s) and updating %d",
+                    len(sections_to_remove),
+                    len(sections_to_update),
+                )
+                for section in sections_to_remove:
+                    self.remove_section(section)
+                for section in sections_to_update:
+                    self.update_section(
+                        section=section[0],
+                        group=section[1],
+                        name=section[2],
+                        gender=section[3],
+                        age_group=section[4],
+                    )
+
+    def update_section(
+        self,
+        section: ScoutsSection,
+        group: ScoutsGroup,
+        name: str,
+        gender: Gender,
+        age_group: int,
+    ) -> ScoutsSection:
+
+        logger.debug(
+            "Updating SECTION (%s) in GROUP %s: name (%s) -> (%s)",
+            section.id,
+            section.group.group_admin_id,
+            section.name,
+            name,
+        )
+
+        section.group = group
+        section.name = name
+        section.gender = gender
+        section.age_group = age_group
+
+        section.full_clean()
+        section.save()
+
+    def remove_section(self, section: ScoutsSection):
+        # The section could have already been removed -> check
+        section: ScoutsSection = ScoutsSection.objects.safe_get(id=section.id)
+
+        if not section:
+            logger.debug("Section (%d) was already removed", section.id)
+            return
+
+        # Double check that the section is not linked to any camp
+        camps: List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
+        if camps and len(camps) != 0:
+            logger.error(
+                "The section %s (%s) was linked to a camp, doing nothing",
+                section.name,
+                section.id,
+            )
+        else:
+            logger.debug("Removing section %s", section.name)
+            section.delete()
