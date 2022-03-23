@@ -11,6 +11,7 @@ from apps.visums.views import (
     CategoryViewSet,
     SubCategoryViewSet,
     CampVisumViewSet,
+    CampVisumApprovalViewSet,
     LinkedCheckViewSet,
     LinkedCategoryViewSet,
 )
@@ -121,5 +122,6 @@ router.register(r"sub_categories", SubCategoryViewSet, "sub_categories")
 router.register(r"visums", CampVisumViewSet, "visums")
 router.register(r"visums_categories", LinkedCategoryViewSet, "categories")
 router.register(r"checks", LinkedCheckViewSet, "checks")
+router.register(r"visums/approval", CampVisumApprovalViewSet, "approvals")
 
 urlpatterns += router.urls

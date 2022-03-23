@@ -95,6 +95,7 @@ class OIDCUserHelper:
 
     @staticmethod
     def requires_functions_loading(user: settings.AUTH_USER_MODEL):
+        return True
         count = user.persisted_scouts_functions.count()
         if count == 0:
             return True

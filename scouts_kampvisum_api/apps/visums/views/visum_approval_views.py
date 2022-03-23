@@ -19,7 +19,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class CampVisumViewSet(viewsets.GenericViewSet):
+class CampVisumApprovalViewSet(viewsets.GenericViewSet):
     """
     A viewset for viewing and editing camp instances.
     """
@@ -30,28 +30,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()
-
-    @swagger_auto_schema(
-        request_body=CampVisumSerializer,
-        responses={status.HTTP_201_CREATED: CampVisumSerializer},
-    )
-    def create(self, request):
-        data = request.data
-
-        logger.debug("CAMP VISUM CREATE REQUEST DATA: %s", data)
-        serializer = CampVisumSerializer(data=data, context={"request": request})
-        serializer.is_valid(raise_exception=True)
-
-        validated_data = serializer.validated_data
-        logger.debug("CAMP VISUM CREATE VALIDATED DATA: %s", validated_data)
-
-        visum: CampVisum = self.camp_visum_service.visum_create(
-            request, **validated_data
-        )
-
-        output_serializer = CampVisumSerializer(visum, context={"request": request})
-
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def retrieve(self, request, pk=None):
@@ -91,29 +69,3 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
-
-    @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
-    def list(self, request):
-        instances = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(instances)
-
-        if page is not None:
-            serializer = CampVisumSerializer(
-                page, many=True, context={"request": request}
-            )
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = CampVisumSerializer(
-                instances, many=True, context={"request": request}
-            )
-            return Response(serializer.data)
-
-    @swagger_auto_schema(
-        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
-    )
-    def destroy(self, request, pk):
-        instance = CampVisum.objects.safe_get(id=pk)
-
-        self.camp_visum_service.delete_visum(request=request, instance=instance)
-
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)

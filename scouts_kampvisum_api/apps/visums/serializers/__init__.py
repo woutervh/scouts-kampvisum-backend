@@ -23,4 +23,5 @@ from .linked_check_serializer import (
 from .linked_sub_category_serializer import LinkedSubCategorySerializer
 from .linked_category_serializer import LinkedCategorySerializer
 from .linked_category_set_serializer import LinkedCategorySetSerializer
+from .visum_approval_serializer import CampVisumApprovalSerializer
 from .visum_serializer import CampVisumSerializer

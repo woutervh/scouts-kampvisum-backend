@@ -91,14 +91,17 @@ class ScoutsUserService:
             logger.debug("Not reloading user groups", user=user)
 
         if OIDCUserHelper.requires_functions_loading(user=user):
-            try:
-                user: settings.AUTH_USER_MODEL = (
-                    self.authorization_service.load_user_functions(user=user)
-                )
-            except Exception as exc:
-                raise ValidationError(
-                    "An error occured while loading user scouts functions", exc
-                )
+            user: settings.AUTH_USER_MODEL = (
+                self.authorization_service.load_user_functions(user=user)
+            )
+            # try:
+            #     user: settings.AUTH_USER_MODEL = (
+            #         self.authorization_service.load_user_functions(user=user)
+            #     )
+            # except Exception as exc:
+            #     raise ValidationError(
+            #         "An error occured while loading user scouts functions", exc
+            #     )
 
             user.last_updated_functions = timezone.now()
 

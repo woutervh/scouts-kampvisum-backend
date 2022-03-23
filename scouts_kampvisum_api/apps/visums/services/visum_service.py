@@ -2,13 +2,17 @@ from typing import List
 
 from django.db import transaction
 
-from apps.camps.models import CampType
+from apps.camps.models import CampType, Camp
 from apps.camps.services import CampService, CampTypeService
 
 from apps.deadlines.services import LinkedDeadlineService
 
-from apps.visums.models import LinkedCategorySet, CampVisum
-from apps.visums.services import LinkedCategorySetService, InuitsVisumMailService
+from apps.visums.models import LinkedCategorySet, CampVisum, CampVisumApproval
+from apps.visums.services import (
+    LinkedCategorySetService,
+    InuitsVisumMailService,
+    CampVisumApprovalService,
+)
 
 
 # LOGGING
@@ -25,6 +29,7 @@ class CampVisumService:
     category_set_service = LinkedCategorySetService()
     linked_deadline_service = LinkedDeadlineService()
     mail_service = InuitsVisumMailService()
+    visum_approval_service = CampVisumApprovalService()
 
     @transaction.atomic
     def visum_create(self, request, **data) -> CampVisum:
@@ -40,6 +45,8 @@ class CampVisumService:
             camp_types=data.get("camp_types")
         )
 
+        approval: CampVisumApproval = self.visum_approval_service.create_approval()
+
         logger.debug(
             "Creating CampVisum instance for camp %s with camp type(s) (%s)",
             camp.name,
@@ -50,6 +57,7 @@ class CampVisumService:
 
         visum.group = camp.sections.first().group
         visum.camp = camp
+        visum.approval = approval
         visum.created_by = request.user
 
         visum.full_clean()
@@ -101,6 +109,10 @@ class CampVisumService:
             instance.id,
             ", ".join([camp_type.camp_type for camp_type in camp_types]),
         )
+
+        if not instance.approval:
+            instance.approval = self.visum_approval_service.create_approval()
+
         instance.camp = self.camp_service.camp_update(
             request, instance=camp, **camp_fields
         )
@@ -128,3 +140,19 @@ class CampVisumService:
         )
 
         return instance
+
+    @transaction.atomic
+    def delete_visum(self, request, instance: CampVisum):
+        logger.debug(
+            "Deleting CampVisum with id %s for camp %s", instance.id, instance.camp.name
+        )
+
+        camp: Camp = instance.camp
+        approval: CampVisumApproval = instance.approval
+
+        instance.delete()
+
+        if camp:
+            camp.delete()
+        if approval:
+            approval.delete()

@@ -21,6 +21,7 @@ class Command(BaseCommand):
         "loadchecks",
         "loaddefaultdeadlines",
         "fix92074",
+        "sprint7fix91022",
     ]
 
     def handle(self, *args, **kwargs):
