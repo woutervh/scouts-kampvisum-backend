@@ -180,19 +180,33 @@ class Command(BaseCommand):
                             section.gender = updated_section.gender
                             section.age_group = updated_section.age_group
 
-                            section.full_clean()
-                            section.save()
+                            try:
+                                section.full_clean()
+                                section.save()
 
-                            logger.debug(
-                                "FIXED SECTION: id (%s), group (%s), section_name (%s), name (%s), gender (%s), age_group (%s), hidden (%s)",
-                                section.id,
-                                section.group.group_admin_id,
-                                section.section_name.id
-                                if hasattr(section.section_name, "id")
-                                else section.section_name,
-                                section.name,
-                                section.gender,
-                                section.age_group,
-                                section.hidden,
-                            )
-        raise ValidationError("make this fail !")
+                                logger.debug(
+                                    "FIXED SECTION: id (%s), group (%s), section_name (%s), name (%s), gender (%s), age_group (%s), hidden (%s)",
+                                    section.id,
+                                    section.group.group_admin_id,
+                                    section.section_name.id
+                                    if hasattr(section.section_name, "id")
+                                    else section.section_name,
+                                    section.name,
+                                    section.gender,
+                                    section.age_group,
+                                    section.hidden,
+                                )
+                            except:
+                                logger.error(
+                                    "Group %s has already made a section with name %s, gender %s and age_group %s (updating with group (%s), name (%s), gender (%s), age_group(%s)",
+                                    group.group_admin_id,
+                                    section.name,
+                                    section.gender,
+                                    section.age_group,
+                                    updated_section.group.group_admin_id,
+                                    updated_section.name,
+                                    updated_section.gender,
+                                    updated_section.age_group,
+                                )
+
+        # raise ValidationError("make this fail !")
