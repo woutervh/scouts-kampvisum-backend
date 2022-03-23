@@ -44,7 +44,7 @@ class DefaultScoutsSectionNameManager(models.Manager):
                 try:
                     return (
                         self.get_queryset()
-                        .filter(group_type=group_type, name__gender=gender)
+                        .filter(group_type=group_type, gender=gender)
                         .distinct()
                     )
                 except:
