@@ -174,17 +174,17 @@ class ScoutsSectionService:
             for default_name in default_scouts_section_names:
                 logger.debug(
                     "Linking DefaultSectionName %s to group %s",
-                    default_name.name.name,
+                    default_name.name,
                     group.group_admin_id,
                 )
                 created_sections.append(
                     self.section_create_or_update(
                         request=request,
                         group=group,
-                        name=default_name.name.name,
-                        gender=default_name.name.gender,
-                        age_group=default_name.name.age_group,
-                        hidden=default_name.name.hidden,
+                        name=default_name.name,
+                        gender=default_name.gender,
+                        age_group=default_name.age_group,
+                        hidden=default_name.hidden,
                     )
                 )
 
