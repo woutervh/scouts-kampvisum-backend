@@ -6,7 +6,6 @@ from django.db import transaction
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.core.exceptions import ValidationError
 
 from apps.groups.models import (
     DefaultScoutsSectionName,
@@ -156,11 +155,13 @@ class Command(BaseCommand):
                             #     gender,
                             #     age_group,
                             # )
+                            section.group = group
                             section.section_name = None
                             section.name = name
                             section.gender = gender
                             section.age_group = age_group
                         else:
+                            section.group = group
                             section.section_name = None
                             section.name = default_section_name.name
                             section.gender = default_section_name.gender
