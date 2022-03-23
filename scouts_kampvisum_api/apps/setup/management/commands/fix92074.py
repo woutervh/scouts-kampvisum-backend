@@ -6,6 +6,7 @@ from django.db import transaction
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
+from django.core.exceptions import ValidationError
 
 from apps.groups.models import (
     DefaultScoutsSectionName,
@@ -194,4 +195,4 @@ class Command(BaseCommand):
                                 section.age_group,
                                 section.hidden,
                             )
-        # raise ValidationError("make this fail !")
+        raise ValidationError("make this fail !")
