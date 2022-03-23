@@ -142,6 +142,7 @@ class Command(BaseCommand):
                             name,
                         )
 
+                        updated_section = ScoutsSection()
                         if not default_section_name:
                             logger.debug(
                                 "No DefaultSectionName instance found with arguments (group (%s), gender (%s), age_group (%s))",
@@ -155,31 +156,42 @@ class Command(BaseCommand):
                             #     gender,
                             #     age_group,
                             # )
-                            section.group = group
-                            section.section_name = None
-                            section.name = name
-                            section.gender = gender
-                            section.age_group = age_group
+                            updated_section.group = group
+                            updated_section.section_name = None
+                            updated_section.name = name
+                            updated_section.gender = gender
+                            updated_section.age_group = age_group
                         else:
-                            section.group = group
-                            section.section_name = None
-                            section.name = default_section_name.name
-                            section.gender = default_section_name.gender
-                            section.age_group = default_section_name.age_group
+                            updated_section.group = group
+                            updated_section.section_name = None
+                            updated_section.name = default_section_name.name
+                            updated_section.gender = default_section_name.gender
+                            updated_section.age_group = default_section_name.age_group
 
-                        section.full_clean()
-                        section.save()
+                        if not (
+                            section.group == updated_section.group
+                            and section.name == updated_section.name
+                            and section.gender == updated_section.gender
+                            and section.age_group == updated_section.age_group
+                        ):
+                            section.group = updated_section.group
+                            section.name = updated_section.name
+                            section.gender = updated_section.gender
+                            section.age_group = updated_section.age_group
 
-                        logger.debug(
-                            "FIXED SECTION: id (%s), group (%s), section_name (%s), name (%s), gender (%s), age_group (%s), hidden (%s)",
-                            section.id,
-                            section.group.group_admin_id,
-                            section.section_name.id
-                            if hasattr(section.section_name, "id")
-                            else section.section_name,
-                            section.name,
-                            section.gender,
-                            section.age_group,
-                            section.hidden,
-                        )
+                            section.full_clean()
+                            section.save()
+
+                            logger.debug(
+                                "FIXED SECTION: id (%s), group (%s), section_name (%s), name (%s), gender (%s), age_group (%s), hidden (%s)",
+                                section.id,
+                                section.group.group_admin_id,
+                                section.section_name.id
+                                if hasattr(section.section_name, "id")
+                                else section.section_name,
+                                section.name,
+                                section.gender,
+                                section.age_group,
+                                section.hidden,
+                            )
         # raise ValidationError("make this fail !")
