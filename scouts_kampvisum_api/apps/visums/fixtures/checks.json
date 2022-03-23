@@ -1095,7 +1095,9 @@
             "check_type": [
                 "ParticipantResponsibleCheck"
             ],
-            "change_handlers": ["change_camp_responsible"],
+            "change_handlers": [
+                "change_camp_responsible"
+            ],
             "label": "Contactgegevens kampverantwoordelijke",
             "explanation": "De kampverantwoordelijke is iemand van de leidingsploeg die als verantwoordelijke het kamp ‘trekt’."
         }
@@ -1149,6 +1151,9 @@
             "check_type": [
                 "NumberCheck"
             ],
+            "validators": [
+                "validate_estimate"
+            ],
             "label": "Geschat aantal leiding"
         }
     },
@@ -1166,6 +1171,9 @@
             "check_type": [
                 "NumberCheck"
             ],
+            "validators": [
+                "validate_estimate"
+            ],
             "label": "Geschat aantal fouriers"
         }
     },
@@ -1182,6 +1190,9 @@
             ],
             "check_type": [
                 "NumberCheck"
+            ],
+            "validators": [
+                "validate_estimate"
             ],
             "label": "Geschat aantal leden"
         }

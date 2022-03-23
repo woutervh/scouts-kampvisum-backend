@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -13,6 +15,7 @@ from apps.visums.models import (
 )
 from apps.visums.models.enums import CheckState
 from apps.visums.managers import LinkedCheckManager
+from apps.visums.utils import CheckValidator
 
 from scouts_auth.inuits.models import AuditedArchiveableBaseModel, PersistedFile
 from scouts_auth.inuits.models.fields import (
@@ -45,11 +48,6 @@ class LinkedCheck(AuditedArchiveableBaseModel):
     def is_required_for_validation(self) -> bool:
         return self.parent.is_required_for_validation
 
-    def is_checked(self) -> bool:
-        if self.should_be_checked():
-            return self.has_value()
-        return True
-
     def should_be_checked(self) -> bool:
         check_type: CheckType = self.parent.check_type
 
@@ -65,6 +63,11 @@ class LinkedCheck(AuditedArchiveableBaseModel):
             return True
         if check_type.is_file_upload_check() or check_type.is_comment_check():
             return False
+
+    def is_checked(self) -> bool:
+        if self.should_be_checked():
+            return self.has_value()
+        return True
 
     def get_value_type(self):
         concrete_type = LinkedCheck.get_concrete_check_type(self.parent)
@@ -132,7 +135,9 @@ class LinkedSimpleCheck(LinkedCheck):
     value = DefaultCharField(choices=CheckState.choices, default=CheckState.EMPTY)
 
     def has_value(self) -> bool:
-        if CheckState.is_checked_or_irrelevant(self.value):
+        if CheckState.is_checked_or_irrelevant(self.value) and CheckValidator.validate(
+            self.parent.validators, self.value
+        ):
             return True
         return False
 
@@ -146,7 +151,7 @@ class LinkedDateCheck(LinkedCheck):
     value = DatetypeAwareDateField(null=True, blank=True)
 
     def has_value(self) -> bool:
-        if self.value:
+        if self.value and CheckValidator.validate(self.parent.validators, self.value):
             return True
         return False
 
@@ -214,9 +219,7 @@ class LinkedParticipantCheck(LinkedCheck):
         return self.participants.first()
 
     def has_value(self) -> bool:
-        if len(self.participants.all()) > 0:
-            return True
-        return False
+        return self.participants.count() > 0
 
 
 # ##############################################################################
@@ -242,7 +245,7 @@ class LinkedCommentCheck(LinkedCheck):
     value = OptionalCharField(max_length=300)
 
     def has_value(self) -> bool:
-        if self.value:
+        if self.value and CheckValidator.validate(self.parent.validators, self.value):
             return True
         return False
 
@@ -256,6 +259,4 @@ class LinkedNumberCheck(LinkedCheck):
     value = OptionalIntegerField()
 
     def has_value(self) -> bool:
-        if self.value:
-            return True
-        return False
+        return CheckValidator.validate(self.parent.validators, self.value)

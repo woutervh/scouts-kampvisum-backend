@@ -94,6 +94,10 @@ class Command(BaseCommand):
                     data=model.get("fields", {})
                 )
 
+                # Setup validators
+                validators = model.get("fields").get("validators", [])
+                model.get("fields")["validators"] = ",".join(validators)
+
                 logger.trace("MODEL DATA: %s", model)
 
             with open(tmp_path, "w") as o:

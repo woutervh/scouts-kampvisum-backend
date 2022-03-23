@@ -42,6 +42,7 @@ class Check(
     )
     check_type = models.ForeignKey(CheckType, on_delete=models.CASCADE)
     change_handlers = OptionalCharField()
+    validators = OptionalCharField()
     camp_types = models.ManyToManyField(CampType)
 
     class Meta:
