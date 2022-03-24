@@ -15,19 +15,18 @@ from scouts_auth.inuits.models.fields import (
 )
 
 
-class AbstractScoutsFunction(AbstractNonModel):
+class AbstractScoutsFunctionDescription(AbstractNonModel):
 
     group_admin_id = OptionalCharField()
-    function = OptionalCharField()
-    begin = OptionalDateTimeField()
-    end = OptionalDateTimeField()
-
+    type = OptionalCharField()
+    max_birth_date = OptionalDateField()
     code = OptionalCharField()
     description = OptionalCharField()
+    adjunct = OptionalCharField()
 
     # Declare as foreign keys in concrete subclasses
-    scouts_group: AbstractScoutsGroup
-
+    scouts_groups: List[AbstractScoutsGroup]
+    groupings: List[AbstractScoutsGrouping]
     links: List[AbstractScoutsLink]
 
     # Runtime data
@@ -42,24 +41,38 @@ class AbstractScoutsFunction(AbstractNonModel):
     def __init__(
         self,
         group_admin_id: str = None,
+        type: str = None,
         scouts_group: AbstractScoutsGroup = None,
         function: str = None,
+        scouts_groups: List[AbstractScoutsGroup] = None,
+        groupings: List[AbstractScoutsGrouping] = None,
         begin: datetime = None,
         end: datetime = None,
+        max_birth_date: date = None,
         code: str = None,
         description: str = None,
+        adjunct: str = None,
         links: List[AbstractScoutsLink] = None,
         groups_section_leader: Dict[str, bool] = None,
         groups_group_leader: Dict[str, bool] = None,
     ):
         self.group_admin_id = group_admin_id
+        self.type = type
         self.function = function
         self.scouts_group = scouts_group
+        self.scouts_groups = scouts_groups
+        self.groupings = groupings
         self.begin = begin
         self.end = end
+        self.max_birth_date = max_birth_date
         self.code = code
         self.description = description
+        self.adjunct = adjunct
         self.links = links if links else []
+        self.groups_section_leader = (
+            groups_section_leader if groups_section_leader else {}
+        )
+        self.groups_group_leader = groups_group_leader if groups_group_leader else {}
 
     @property
     def function_code(self):
@@ -80,14 +93,23 @@ class AbstractScoutsFunction(AbstractNonModel):
         return self.function_code.is_district_commissioner()
 
     def __str__(self):
-        return "group_admin_id ({}), function({}), scouts_group({}), begin({}), end ({}), code({}), description({}), links({})".format(
+        return "group_admin_id ({}), type ({}), function({}), scouts_group({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
             self.group_admin_id,
+            self.type,
             self.function,
             str(self.scouts_group),
+            ", ".join(str(group) for group in self.scouts_groups)
+            if self.scouts_groups
+            else "[]",
+            ", ".join(str(grouping) for grouping in self.groupings)
+            if self.groupings
+            else "[]",
             self.begin,
             self.end,
+            self.max_birth_date,
             self.code,
             self.description,
+            self.adjunct,
             ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 

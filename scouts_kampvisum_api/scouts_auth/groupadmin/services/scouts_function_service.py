@@ -31,7 +31,7 @@ class ScoutsFunctionService:
         # logger.debug("PRESENT FUNCTIONS: %s", user.functions, user=user)
         abstract_function_descriptions: List[
             AbstractScoutsFunction
-        ] = self.groupadmin.get_functions(active_user=user).functions
+        ] = self.groupadmin.get_function_descriptions(active_user=user).functions
         user.function_descriptions = abstract_function_descriptions
 
         # for user_function in user.functions:

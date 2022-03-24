@@ -8,6 +8,7 @@ from django.http import Http404
 from scouts_auth.groupadmin.models import (
     ScoutsAllowedCalls,
     AbstractScoutsFunction,
+    AbstractScoutsFunctionDescriptionListResponse,
     AbstractScoutsFunctionListResponse,
     AbstractScoutsGroup,
     AbstractScoutsGroupListResponse,
@@ -18,6 +19,7 @@ from scouts_auth.groupadmin.models import (
 from scouts_auth.groupadmin.serializers import (
     ScoutsAllowedCallsSerializer,
     AbstractScoutsFunctionSerializer,
+    AbstractScoutsFunctionDescriptionListResponseSerializer,
     AbstractScoutsFunctionListResponseSerializer,
     AbstractScoutsGroupSerializer,
     AbstractScoutsGroupListResponseSerializer,
@@ -259,7 +261,7 @@ class GroupAdmin:
         return False
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep{group_group_admin_id_fragment_start}
-    def get_functions_raw(
+    def get_function_descriptions_raw(
         self,
         active_user: settings.AUTH_USER_MODEL,
         group_group_admin_id_fragment: str = None,
@@ -279,21 +281,27 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_functions", url)
-        logger.trace("GA RESPONSE: %s", json_data)
+        logger.info("GA RESPONSE: %s", json_data)
 
         return json_data
 
-    def get_functions(
+    def get_function_descriptions(
         self,
         active_user: settings.AUTH_USER_MODEL,
         group_group_admin_id_fragment: str = None,
-    ) -> AbstractScoutsFunctionListResponse:
-        json_data = self.get_functions_raw(active_user, group_group_admin_id_fragment)
+    ) -> AbstractScoutsFunctionDescriptionListResponse:
+        json_data = self.get_function_descriptions_raw(
+            active_user, group_group_admin_id_fragment
+        )
 
-        serializer = AbstractScoutsFunctionListResponseSerializer(data=json_data)
+        serializer = AbstractScoutsFunctionDescriptionListResponseSerializer(
+            data=json_data
+        )
         serializer.is_valid(raise_exception=True)
 
-        function_response: AbstractScoutsFunctionListResponse = serializer.save()
+        function_response: AbstractScoutsFunctionDescriptionListResponse = (
+            serializer.save()
+        )
 
         return function_response
 
@@ -333,10 +341,11 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#leden-lid
         """
-        json_data = self.get(self.url_member_profile, active_user)
+        url = self.url_member_profile
+        json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_member_profile", self.url_function)
-        logger.trace("GA RESPONSE: %s", json_data)
+        logger.info("GA CALL: %s (%s)", "get_member_profile", url)
+        logger.info("GA RESPONSE: %s", json_data)
 
         return json_data
 

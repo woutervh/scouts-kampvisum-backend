@@ -11,6 +11,9 @@ from .ga_field_group_specific_serializer import (
 )
 from .ga_group_serializer import AbstractScoutsGroupSerializer
 from .ga_grouping_serializer import AbstractScoutsGroupingSerializer
+from .ga_function_description_serializer import (
+    AbstractScoutsFunctionDescriptionSerializer,
+)
 from .ga_function_serializer import AbstractScoutsFunctionSerializer
 from .ga_allowed_calls_serializer import ScoutsAllowedCallsSerializer
 from .ga_response_serializer import AbstractScoutsResponseSerializer
@@ -23,6 +26,9 @@ from .ga_member_serializer import (
     AbstractScoutsMemberFrontendSerializer,
 )
 from .ga_response_group_list_serializer import AbstractScoutsGroupListResponseSerializer
+from .ga_response_function_description_list_serializer import (
+    AbstractScoutsFunctionDescriptionListResponseSerializer,
+)
 from .ga_response_function_list_serializer import (
     AbstractScoutsFunctionListResponseSerializer,
 )
