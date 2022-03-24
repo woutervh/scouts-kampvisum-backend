@@ -21,6 +21,7 @@ class Command(BaseCommand):
         "loadchecks",
         "loaddefaultdeadlines",
         "fix92074",
+        "fix92074bis",
         "sprint7fix91022",
     ]
 

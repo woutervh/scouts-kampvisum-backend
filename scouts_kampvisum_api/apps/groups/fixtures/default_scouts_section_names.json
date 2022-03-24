@@ -172,7 +172,8 @@
 			],
 			"name": "leiding",
 			"gender": "M",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	},
 	{
@@ -183,7 +184,8 @@
 			],
 			"name": "leiding",
 			"gender": "F",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	},
 	{
@@ -194,7 +196,8 @@
 			],
 			"name": "leiding",
 			"gender": "I",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	},
 	{
@@ -370,7 +373,8 @@
 			],
 			"name": "leiding",
 			"gender": "M",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	},
 	{
@@ -381,7 +385,8 @@
 			],
 			"name": "leiding",
 			"gender": "F",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	},
 	{
@@ -392,7 +397,8 @@
 			],
 			"name": "leiding",
 			"gender": "I",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	},
 	{
@@ -568,7 +574,8 @@
 			],
 			"name": "leiding",
 			"gender": "M",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	},
 	{
@@ -579,7 +586,8 @@
 			],
 			"name": "leiding",
 			"gender": "F",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	},
 	{
@@ -590,7 +598,8 @@
 			],
 			"name": "leiding",
 			"gender": "I",
-			"age_group": 100
+			"age_group": 100,
+			"hidden": true
 		}
 	}
 ]
