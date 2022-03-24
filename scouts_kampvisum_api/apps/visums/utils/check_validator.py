@@ -15,7 +15,7 @@ class CheckValidator:
     def validate(validators: str, value: any) -> bool:
         validators: List[str] = validators.split(",")
 
-        logger.debug("VALIDATORS: %s", validators)
+        # logger.debug("VALIDATORS: %s", validators)
 
         for validator in validators:
             if len(validator.strip()) > 0:
@@ -25,12 +25,12 @@ class CheckValidator:
                             validator
                         )
                     )
-                logger.debug(
-                    "Validating value %s (%s) with validator %s",
-                    value,
-                    type(value).__name__,
-                    validator,
-                )
+                # logger.debug(
+                #     "Validating value %s (%s) with validator %s",
+                #     value,
+                #     type(value).__name__,
+                #     validator,
+                # )
                 if not getattr(CheckValidator, validator)(value=value):
                     return False
 
