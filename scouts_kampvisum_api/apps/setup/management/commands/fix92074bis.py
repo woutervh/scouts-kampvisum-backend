@@ -80,16 +80,24 @@ class Command(BaseCommand):
                         )
 
                         if default_scouts_section_name:
-                            sections_to_update.append(section)
+                            sections_to_update.append(
+                                [
+                                    section,
+                                    default_scouts_section_name.name,
+                                    default_scouts_section_name.gender,
+                                    default_scouts_section_name.age_group,
+                                    default_scouts_section_name.hidden,
+                                ]
+                            )
 
                 for section in sections_to_update:
                     self.update_section(
-                        section=section,
+                        section=section[0],
                         group=group,
-                        name=default_scouts_section_name.name,
-                        gender=default_scouts_section_name.gender,
-                        age_group=default_scouts_section_name.age_group,
-                        hidden=default_scouts_section_name.hidden,
+                        name=section[1],
+                        gender=section[2],
+                        age_group=section[3],
+                        hidden=section[4],
                     )
 
     def update_section(
@@ -127,6 +135,7 @@ class Command(BaseCommand):
                 )
                 return section
 
+        section.section_name = None
         section.group = group
         section.name = name
         section.gender = gender
