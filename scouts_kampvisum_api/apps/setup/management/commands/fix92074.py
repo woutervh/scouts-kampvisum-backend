@@ -331,7 +331,7 @@ class Command(BaseCommand):
             section.save()
         except:
             raise ValidationError(
-                "Unable to update ScoutsSection %s (group: %s, name: %s, gender: %s, age_group: %s) with values (group: %s, name: %s, gender: %s, age_group: %s)".format(
+                "Unable to update ScoutsSection {} (group: {}, name: {}, gender: {}, age_group: {}) with values (group: {}, name: {}, gender: {}, age_group: {})".format(
                     section.id,
                     current_group,
                     current_name,
