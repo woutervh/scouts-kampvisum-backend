@@ -308,6 +308,11 @@ class Command(BaseCommand):
         age_group: int,
     ) -> ScoutsSection:
 
+        current_group = section.group
+        current_name = section.name
+        current_gender = section.gender
+        current_age_group = section.age_group
+
         logger.debug(
             "Updating SECTION (%s) in GROUP %s: name (%s) -> (%s)",
             section.id,
@@ -321,8 +326,22 @@ class Command(BaseCommand):
         section.gender = gender
         section.age_group = age_group
 
-        section.full_clean()
-        section.save()
+        try:
+            section.full_clean()
+            section.save()
+        except:
+            raise ValidationError(
+                "Unable to update ScoutsSection %s (group: %s, name: %s, gender: %s, age_group: %s) with values (group: %s, name: %s, gender: %s, age_group: %s)",
+                section.id,
+                current_group,
+                current_name,
+                current_gender,
+                current_age_group,
+                group,
+                name,
+                gender,
+                age_group,
+            )
 
     def remove_section(self, section: ScoutsSection):
         # The section could have already been removed -> check
