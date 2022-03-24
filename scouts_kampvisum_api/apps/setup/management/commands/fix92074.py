@@ -331,16 +331,17 @@ class Command(BaseCommand):
             section.save()
         except:
             raise ValidationError(
-                "Unable to update ScoutsSection %s (group: %s, name: %s, gender: %s, age_group: %s) with values (group: %s, name: %s, gender: %s, age_group: %s)",
-                section.id,
-                current_group,
-                current_name,
-                current_gender,
-                current_age_group,
-                group,
-                name,
-                gender,
-                age_group,
+                "Unable to update ScoutsSection %s (group: %s, name: %s, gender: %s, age_group: %s) with values (group: %s, name: %s, gender: %s, age_group: %s)".format(
+                    section.id,
+                    current_group,
+                    current_name,
+                    current_gender,
+                    current_age_group,
+                    group,
+                    name,
+                    gender,
+                    age_group,
+                )
             )
 
     def remove_section(self, section: ScoutsSection):
