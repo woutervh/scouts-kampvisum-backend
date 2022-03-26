@@ -62,7 +62,6 @@ class Command(BaseCommand):
             if group.default_sections_loaded:
                 sections: List[ScoutsSection] = group.sections.all()
                 sections_to_remove: List[ScoutsSection] = []
-                sections_to_create: List[ScoutsSection] = []
 
                 # Remove unlinked sections
                 for section in sections:
@@ -93,6 +92,7 @@ class Command(BaseCommand):
                             default_scouts_section_name=default_scouts_section_name,
                         )
 
+    @transaction.atomic
     def update_section(
         self,
         section: ScoutsSection,
@@ -153,6 +153,7 @@ class Command(BaseCommand):
                 )
             )
 
+    @transaction.atomic
     def remove_section(self, section: ScoutsSection):
         # The section could have already been removed -> check
         section: ScoutsSection = ScoutsSection.objects.safe_get(id=section.id)
@@ -173,6 +174,7 @@ class Command(BaseCommand):
             logger.debug("Removing section %s", section.name)
             section.delete()
 
+    @transaction.atomic
     def create_section(
         self, group: ScoutsGroup, default_scouts_section_name: DefaultScoutsSectionName
     ) -> ScoutsSection:

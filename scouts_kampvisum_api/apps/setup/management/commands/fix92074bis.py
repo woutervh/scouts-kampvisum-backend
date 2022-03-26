@@ -100,6 +100,7 @@ class Command(BaseCommand):
                         hidden=section[4],
                     )
 
+    @transaction.atomic
     def update_section(
         self,
         section: ScoutsSection,
@@ -147,6 +148,7 @@ class Command(BaseCommand):
 
         return section
 
+    @transaction.atomic
     def remove_section(self, section: ScoutsSection):
         # The section could have already been removed -> check
         section: ScoutsSection = ScoutsSection.objects.safe_get(id=section.id)
@@ -167,6 +169,7 @@ class Command(BaseCommand):
             logger.debug("Removing section %s", section.name)
             section.delete()
 
+    @transaction.atomic
     def create_section(
         self, group: ScoutsGroup, default_scouts_section_name: DefaultScoutsSectionName
     ) -> ScoutsSection:
