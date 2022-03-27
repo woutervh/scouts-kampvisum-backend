@@ -29,8 +29,8 @@ class CampVisum(AuditedBaseModel):
         blank=True,
     )
 
-    # class Meta:
-    #     ordering = ["camp__sections__name__age_group"]
+    class Meta:
+        ordering = ["camp__sections__age_group"]
 
     def __str__(self):
         return "{}".format(self.id)

@@ -30,6 +30,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class ParticipantViewSet(viewsets.GenericViewSet):
 
+    serializer_class = InuitsParticipantSerializer
     pagination_class = InuitsParticipantPagination
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
