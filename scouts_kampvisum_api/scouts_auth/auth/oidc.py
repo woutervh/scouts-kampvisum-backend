@@ -1,6 +1,4 @@
-import requests
-import jwt
-
+from types import SimpleNamespace
 from requests.exceptions import HTTPError
 
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
@@ -14,10 +12,9 @@ from django.utils import timezone
 from rest_framework import exceptions
 
 from scouts_auth.auth.models import User
-from scouts_auth.auth.settings import OIDCSettings
-from scouts_auth.auth.signals import ScoutsAuthSignalSender
 
-from scouts_auth.groupadmin.models import ScoutsUser
+# from scouts_auth.auth.settings import OIDCSettings
+from scouts_auth.auth.signals import ScoutsAuthSignalSender
 
 
 # LOGGING
@@ -35,6 +32,8 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         this method.
         """
 
+        from scouts_auth.groupadmin.services import GroupAdmin
+
         # logger.debug(
         #     "User info requested with access_token %s, "
         #     + ", id_token %s and payload %s",
@@ -43,15 +42,19 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         #     payload,
         # )
 
-        user_response = requests.get(
-            OIDCSettings.get_oidc_op_user_endpoint(),
-            headers={"Authorization": "Bearer {0}".format(access_token)},
-            verify=self.get_settings("OIDC_VERIFY_SSL", True),
-            timeout=self.get_settings("OIDC_TIMEOUT", None),
-            proxies=self.get_settings("OIDC_PROXY", None),
+        # user_response = requests.get(
+        #     OIDCSettings.get_oidc_op_user_endpoint(),
+        #     headers={"Authorization": "Bearer {0}".format(access_token)},
+        #     verify=self.get_settings("OIDC_VERIFY_SSL", True),
+        #     timeout=self.get_settings("OIDC_TIMEOUT", None),
+        #     proxies=self.get_settings("OIDC_PROXY", None),
+        # )
+        # user_response.raise_for_status()
+        # result = user_response.json()
+
+        result = GroupAdmin().get_member_profile_raw(
+            active_user=SimpleNamespace(access_token=access_token)
         )
-        user_response.raise_for_status()
-        result = user_response.json()
 
         # Add token to user response so we can access it later
         result["access_token"] = access_token

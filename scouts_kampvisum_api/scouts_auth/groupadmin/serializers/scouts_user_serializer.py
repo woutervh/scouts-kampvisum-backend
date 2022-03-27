@@ -36,7 +36,6 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
     def get_functions(self, obj: ScoutsUser):
         return [
             {
-                "type": function.type,
                 "function": function.function,
                 "scouts_group": function.scouts_group.group_admin_id,
                 "code": function.code,

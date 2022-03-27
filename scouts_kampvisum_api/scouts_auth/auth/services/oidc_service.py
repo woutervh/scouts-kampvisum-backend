@@ -1,7 +1,6 @@
 from django.conf import settings
 
 from scouts_auth.auth.settings import OIDCSettings
-from scouts_auth.auth.signals import ScoutsAuthSignalSender
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
