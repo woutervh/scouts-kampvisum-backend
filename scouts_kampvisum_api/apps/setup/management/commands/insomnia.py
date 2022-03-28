@@ -14,6 +14,7 @@ from apps.participants.services import InuitsParticipantService
 
 from apps.visums.models import (
     CampVisum,
+    CampVisumApproval,
     Category,
     SubCategory,
     Check,
@@ -149,6 +150,8 @@ class Command(BaseCommand):
         # Visum
         data["visum_first"] = str(CampVisum.objects.first().id)
         data["visum_last"] = str(CampVisum.objects.last().id)
+        # VisumApproval
+        data["visum_approval_first"] = str(CampVisumApproval.objects.first().id)
         # LinkedCategory
         data["linked_category_first"] = str(LinkedCategory.objects.first().id)
         data["linked_category_last"] = str(LinkedCategory.objects.last().id)
@@ -234,14 +237,20 @@ class Command(BaseCommand):
         data["linked_check_number_first"] = str(LinkedNumberCheck.objects.first().id)
         data["linked_check_number_last"] = str(LinkedNumberCheck.objects.last().id)
 
-        leaders_estimate: LinkedNumberCheck = LinkedNumberCheck.objects.get(
-            parent__name="members_leaders_leaders_estimate"
+        leaders_estimate: LinkedNumberCheck = (
+            LinkedNumberCheck.objects.all()
+            .filter(parent__name="members_leaders_leaders_estimate")
+            .first()
         )
-        cooks_estimate: LinkedNumberCheck = LinkedNumberCheck.objects.get(
-            parent__name="members_leaders_cooks_estimate"
+        cooks_estimate: LinkedNumberCheck = (
+            LinkedNumberCheck.objects.all()
+            .filter(parent__name="members_leaders_cooks_estimate")
+            .first()
         )
-        members_estimate: LinkedNumberCheck = LinkedNumberCheck.objects.get(
-            parent__name="members_leaders_members_estimate"
+        members_estimate: LinkedNumberCheck = (
+            LinkedNumberCheck.objects.all()
+            .filter(parent__name="members_leaders_members_estimate")
+            .first()
         )
 
         # FileUploadCheck

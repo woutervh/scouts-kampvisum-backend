@@ -43,3 +43,12 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
             }
             for function in obj.functions
         ]
+
+    def to_internal_value(self, data: dict) -> dict:
+        group_admin_id = data.get("group_admin_id", None)
+        if group_admin_id:
+            return ScoutsUser.objects.safe_get(
+                group_admin_id=group_admin_id, raise_error=True
+            )
+
+        return super().to_internal_value(data)
