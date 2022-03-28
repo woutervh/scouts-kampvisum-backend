@@ -10,6 +10,7 @@ from scouts_auth.auth.models import User
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMember,
     AbstractScoutsAddress,
+    AbstractScoutsFunctionDescription,
     AbstractScoutsFunction,
     AbstractScoutsGroupSpecificField,
     AbstractScoutsLink,
@@ -126,7 +127,7 @@ class ScoutsUser(User):
     scouts_groups: List[AbstractScoutsGroup] = []
     addresses: List[AbstractScoutsAddress] = []
     functions: List[AbstractScoutsFunction] = []
-    function_descriptions: List[AbstractScoutsFunction] = []
+    function_descriptions: List[AbstractScoutsFunctionDescription] = []
     group_specific_fields: List[AbstractScoutsGroupSpecificField] = []
     links: List[AbstractScoutsLink] = []
 
@@ -154,48 +155,59 @@ class ScoutsUser(User):
 
     def get_group_functions(self) -> List[Tuple]:
         return [
-            (function.group.group_admin_id, function.code)
-            for function in self.functions
+            (scouts_group.group_admin_id, function.code)
+            for scouts_group in function.scouts_groups
+            for function in self.persisted_scouts_functions
         ]
 
     def get_group_names(self) -> List[str]:
         # return [group.group_admin_id for group in self.scouts_groups]
         return [group.group_admin_id for group in self.persisted_scouts_groups.all()]
 
-    def has_role_section_leader(self, group: AbstractScoutsGroup) -> bool:
+    def has_role_leader(self, group: ScoutsGroup) -> bool:
+        for function in self.persisted_scouts_functions.all():
+            if function.is_leader(scouts_group=group):
+                return True
+        return False
+
+    def has_role_section_leader(self, group: ScoutsGroup) -> bool:
         """
         Determines if the user is a section leader based on a function in the specified group
         """
-        for function in self.functions:
-            if function.is_section_leader(group):
+        for function in self.persisted_scouts_functions.all():
+            if function.is_section_leader(scouts_group=group):
                 return True
         return False
 
-    def get_section_leader_groups(self) -> List[AbstractScoutsGroup]:
+    def get_section_leader_groups(self) -> List[ScoutsGroup]:
         return [
-            group for group in self.scouts_groups if self.has_role_section_leader(group)
+            group
+            for group in self.persisted_scouts_groups.all()
+            if self.has_role_section_leader(group)
         ]
 
-    def has_role_group_leader(self, group: AbstractScoutsGroup) -> bool:
+    def has_role_group_leader(self, group: ScoutsGroup) -> bool:
         """
         Determines if the user is a group leader based on a function in the specified group
         """
-        for function in self.functions:
-            if function.is_group_leader(group):
+        for function in self.persisted_scouts_functions.all():
+            if function.is_group_leader(scouts_group=group):
                 return True
 
         return False
 
-    def get_group_leader_groups(self) -> List[AbstractScoutsGroup]:
+    def get_group_leader_groups(self) -> List[ScoutsGroup]:
         return [
-            group for group in self.scouts_groups if self.has_role_group_leader(group)
+            group
+            for group in self.persisted_scouts_groups.all()
+            if self.has_role_group_leader(group)
         ]
 
     def has_role_district_commissioner(self) -> bool:
         """
         Determines if the user is a district commissioner based on a function code
         """
-        for function in self.functions:
+        for function in self.persisted_scouts_functions.all():
             if function.is_district_commissioner():
                 return True
         return False
@@ -226,7 +238,7 @@ class ScoutsUser(User):
             self.membership_number,
             self.customer_number,
             self.birth_date,
-            ", ".join(group.group_admin_id for group in self.scouts_groups)
+            ", ".join(group.group_admin_id for group in self.persisted_scouts_groups)
             if self.scouts_groups
             else "[]",
             ", ".join(address.to_descriptive_string() for address in self.addresses)
@@ -252,7 +264,9 @@ class ScoutsUser(User):
 
     def to_descriptive_string(self):
         return (
+            "\n------------------------------------------------------------------------------------------------------------------------\n"
             "{}\n"
+            "------------------------------------------------------------------------------------------------------------------------\n"
             "{:<24}: {}\n"  # username
             "{:<24}: {}\n"  # first_name
             "{:<24}: {}\n"  # last_name
@@ -265,6 +279,7 @@ class ScoutsUser(User):
             "{:<24}: {}\n"  # customer_number
             "{:<24}: {}\n"  # addresses
             "{:<24}: {}\n"  # functions
+            "------------------------------------------------------------------------------------------------------------------------\n"
             "{:<24}: {}\n"  # permissions
             "{:<24}: {}\n"  # auth groups
             "{:<24}: {}\n"  # scouts groups
@@ -272,11 +287,13 @@ class ScoutsUser(User):
             "{:<24}: {}\n"  # district commissioner ?
             "{:<24}: {}\n"  # group leader
             "{:<24}: {}\n"  # section leader
+            "------------------------------------------------------------------------------------------------------------------------\n"
             "{:<24}: {}\n"  # last authenticated
             "{:<24}: {}\n"  # last refreshed
             "{:<24}: {}\n"  # last updated
             "{:<24}: {}\n"  # last updated groups
             "{:<24}: {}\n"  # last updated functions
+            "------------------------------------------------------------------------------------------------------------------------\n"
         ).format(
             "USER INFO",
             "username",
@@ -307,24 +324,31 @@ class ScoutsUser(User):
             # ),
             len(self.functions),
             "PERMISSIONS",
-            ", ".join(permission for permission in self.get_all_permissions()),
+            ", ".join(permission for permission in self.get_all_permissions())
+            if len(self.get_all_permissions()) > 0
+            else "None",
             "AUTH GROUPS",
-            ", ".join(group.name for group in self.groups.all()),
+            ", ".join(group.name for group in self.groups.all())
+            if len(self.groups.all()) > 0
+            else "None",
             "SCOUTS GROUPS",
             ", ".join(
-                (group.name + "(" + group.group_admin_id + ")")
-                for group in self.scouts_groups
+                group.group_admin_id for group in self.persisted_scouts_groups.all()
             ),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
             "DISTRICT COMMISSIONER ?",
             self.has_role_district_commissioner(),
             "GROUP LEADER",
-            ", ".join(group.group_admin_id for group in self.get_group_leader_groups()),
+            ", ".join(group.group_admin_id for group in self.get_group_leader_groups())
+            if len(self.get_group_leader_groups()) > 0
+            else "None",
             "SECTION LEADER",
             ", ".join(
                 group.group_admin_id for group in self.get_section_leader_groups()
-            ),
+            )
+            if len(self.get_section_leader_groups()) > 0
+            else "None",
             "last authenticated",
             self.last_authenticated,
             "last refreshed",
@@ -374,6 +398,11 @@ class ScoutsUser(User):
             abstract_member.scouts_groups if abstract_member.scouts_groups else []
         )
         user.addresses = abstract_member.addresses if abstract_member.addresses else []
+        # logger.debug(
+        #     "FUNCTIONS -> %d (%s)",
+        #     len(abstract_member.functions),
+        #     ", ".join(function.code for function in abstract_member.functions),
+        # )
         user.functions = abstract_member.functions if abstract_member.functions else []
         user.group_specific_fields = (
             abstract_member.group_specific_fields

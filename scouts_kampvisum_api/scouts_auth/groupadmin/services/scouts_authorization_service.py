@@ -90,6 +90,14 @@ class ScoutsAuthorizationService(AuthorizationService):
                 user, ScoutsAuthorizationService.DISTRICT_COMMISSIONER
             )
 
+        # if user.has_role_group_leader():
+        #     user = self.add_user_to_group(user, ScoutsAuthorizationService.GROUP_LEADER)
+
+        # if user.has_role_section_leader():
+        #     user = self.add_user_to_group(
+        #         user, ScoutsAuthorizationService.SECTION_LEADER
+        #     )
+
         if GroupadminSettings.is_debug():
             test_groups = GroupadminSettings.get_test_groups()
             if any(group in user.get_group_names() for group in test_groups):

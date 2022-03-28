@@ -25,7 +25,7 @@ class AbstractScoutsFunctionDescriptionListResponseSerializer(
             return None
 
         validated_data = {
-            "functions": AbstractScoutsFunctionDescriptionSerializer(
+            "function_descriptions": AbstractScoutsFunctionDescriptionSerializer(
                 many=True
             ).to_internal_value(data.pop("functies", [])),
             "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
@@ -50,9 +50,9 @@ class AbstractScoutsFunctionDescriptionListResponseSerializer(
 
         instance = AbstractScoutsFunctionDescriptionListResponse()
 
-        instance.functions = AbstractScoutsFunctionDescriptionSerializer(
+        instance.function_descriptions = AbstractScoutsFunctionDescriptionSerializer(
             many=True
-        ).create(validated_data.pop("functions", []))
+        ).create(validated_data.pop("function_descriptions", []))
         instance.links = AbstractScoutsLinkSerializer(many=True).create(
             validated_data.pop("links", [])
         )

@@ -1,4 +1,4 @@
 role_section_leader: []
 role_group_leader: []
 role_administrator: []
-role_super_admin: [] # Doesn't need permissions because is made super user in django
+role_super_admin: [] # Doesn't need permissions because is made super user in djang

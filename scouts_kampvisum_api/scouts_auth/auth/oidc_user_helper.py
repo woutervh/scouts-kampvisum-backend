@@ -29,6 +29,7 @@ class OIDCUserHelper:
 
     @staticmethod
     def requires_data_loading(user: settings.AUTH_USER_MODEL):
+        return True
         if (
             user.persisted_scouts_groups.count() == 0
             or user.persisted_scouts_functions.count() == 0

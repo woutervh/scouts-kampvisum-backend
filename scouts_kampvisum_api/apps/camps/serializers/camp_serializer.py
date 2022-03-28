@@ -39,8 +39,10 @@ class CampSerializer(serializers.ModelSerializer):
 
         return data
 
-    def validate(self, data: dict) -> dict:
+    def validate(self, data: any) -> any:
         # logger.debug("CAMP SERIALIZER VALIDATE: %s", data)
+        if isinstance(data, Camp):
+            return data
 
         if not data.get("name"):
             raise ValidationError("A Camp must have a name")

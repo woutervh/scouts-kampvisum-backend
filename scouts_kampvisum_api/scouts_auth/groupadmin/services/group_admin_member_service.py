@@ -6,6 +6,7 @@ from django.conf import settings
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMember,
     AbstractScoutsMemberSearchResponse,
+    AbstractScoutsFunctionDescription,
     AbstractScoutsFunction,
 )
 from scouts_auth.groupadmin.services import GroupAdmin
@@ -44,6 +45,8 @@ class GroupAdminMemberService(GroupAdmin):
         response: AbstractScoutsMemberSearchResponse = self.search_member(
             active_user, term
         )
+        if len(response.members) == 0:
+            return []
         logger.debug(
             "GA returned a list of %d member(s) for search term %s (count: %d, total: %d -> %d more on GA)",
             len(response.members),
@@ -84,6 +87,12 @@ class GroupAdminMemberService(GroupAdmin):
         if preset_active_leader:
             active_leader = preset_active_leader
 
+        function_descriptions: List[
+            AbstractScoutsFunctionDescription
+        ] = self.get_function_descriptions(
+            active_user=active_user
+        ).function_descriptions
+
         members: List[AbstractScoutsMember] = []
         for response_member in response.members:
             member: AbstractScoutsMember = self.get_member_info(
@@ -92,9 +101,10 @@ class GroupAdminMemberService(GroupAdmin):
 
             if group_group_admin_id:
                 logger.debug(
-                    "Examining if member %s %s is in group %s",
+                    "Examining if member %s %s (%s) is in group %s",
                     member.first_name,
                     member.last_name,
+                    member.email,
                     group_group_admin_id,
                 )
                 if not self._filter_by_group(
@@ -104,15 +114,17 @@ class GroupAdminMemberService(GroupAdmin):
 
             if active_leader:
                 logger.debug(
-                    "Examining if member %s %s is an active leader in group %s",
+                    "Examining if member %s %s (%s) is an active leader in group %s",
                     member.first_name,
                     member.last_name,
+                    member.email,
                     group_group_admin_id,
                 )
                 if not self._filter_by_active_leadership(
                     active_user=active_user,
                     member=member,
                     group_group_admin_id=group_group_admin_id,
+                    function_descriptions=function_descriptions,
                 ):
                     continue
 
@@ -123,9 +135,10 @@ class GroupAdminMemberService(GroupAdmin):
                     )
                 else:
                     logger.debug(
-                        "Examining if member %s %s has been active since %s",
+                        "Examining if member %s %s (%s) has been active since %s",
                         member.first_name,
                         member.last_name,
+                        member.email,
                         activity_epoch,
                     )
                     if not self._filter_by_activity(
@@ -138,9 +151,10 @@ class GroupAdminMemberService(GroupAdmin):
 
             if min_age >= 0 or max_age >= 0:
                 logger.debug(
-                    "Examining if member %s %s applies to the age (%s - %s) limit",
+                    "Examining if member %s %s (%s) applies to the age (%s - %s) limit",
                     member.first_name,
                     member.last_name,
+                    member.email,
                     min_age,
                     max_age,
                 )
@@ -151,9 +165,10 @@ class GroupAdminMemberService(GroupAdmin):
 
             if gender:
                 logger.debug(
-                    "Examing if member %s %s has the requested gender (%s)",
+                    "Examing if member %s %s (%s) has the requested gender (%s)",
                     member.first_name,
                     member.last_name,
+                    member.email,
                     gender,
                 )
                 if not self._filter_by_gender(member=member, gender=gender):
@@ -192,9 +207,10 @@ class GroupAdminMemberService(GroupAdmin):
         for function in member.functions:
             if function.scouts_group.group_admin_id == group_group_admin_id:
                 logger.debug(
-                    "INCLUDE: Member %s %s is in group %s",
+                    "INCLUDE: Member %s %s (%s) is in group %s",
                     member.first_name,
                     member.last_name,
+                    member.email,
                     group_group_admin_id,
                 )
                 member_in_group = True
@@ -202,9 +218,10 @@ class GroupAdminMemberService(GroupAdmin):
 
         if not member_in_group:
             logger.debug(
-                "EXCLUDE: Member %s %s is not in group %s",
+                "EXCLUDE: Member %s %s (%s) is not in group %s",
                 member.first_name,
                 member.last_name,
+                member.email,
                 group_group_admin_id,
             )
 
@@ -216,34 +233,48 @@ class GroupAdminMemberService(GroupAdmin):
         active_user: settings.AUTH_USER_MODEL,
         member: AbstractScoutsMember,
         group_group_admin_id: str,
+        function_descriptions: List[AbstractScoutsFunctionDescription],
     ) -> bool:
         active_leader_in_group = False
 
-        functions: List[AbstractScoutsFunction] = self.get_functions(
-            active_user=active_user
-        ).functions
+        member_profile = self.get_member_info(
+            active_user=active_user, group_admin_id=member.group_admin_id
+        )
 
-        for member_function in member.functions:
-            for function in functions:
-                if function.group_admin_id == member_function.function:
-                    for grouping in function.groupings:
-                        if (
-                            grouping.name
-                            == GroupadminSettings.get_section_leader_identifier()
-                        ):
-                            logger.debug(
-                                "INCLUDE: Member %s %s is an active leader in group %s",
-                                member.first_name,
-                                member.last_name,
-                                group_group_admin_id,
-                            )
-                            active_leader_in_group = True
+        logger.debug(
+            "Found %d functions in member profile of %s %s (%s) and %d function descriptions",
+            len(member_profile.functions),
+            member_profile.first_name,
+            member_profile.last_name,
+            member_profile.email,
+            len(function_descriptions),
+        )
+        for member_function in member_profile.functions:
+            if member_function.scouts_group.group_admin_id == group_group_admin_id:
+                for function_description in function_descriptions:
+                    if function_description.group_admin_id == member_function.function:
+                        for grouping in function_description.groupings:
+                            if (
+                                grouping.name
+                                == GroupadminSettings.get_section_leader_identifier()
+                            ):
+                                active_leader_in_group = True
+                                break
 
-        if not active_leader_in_group:
+        if active_leader_in_group:
             logger.debug(
-                "EXCLUDE: Member %s %s is not an active leader in group %s",
-                member.first_name,
-                member.last_name,
+                "INCLUDE: Member %s %s (%s) is an active leader in group %s",
+                member_profile.first_name,
+                member_profile.last_name,
+                member_profile.email,
+                group_group_admin_id,
+            )
+        else:
+            logger.debug(
+                "EXCLUDE: Member %s %s (%s) is not an active leader in group %s",
+                member_profile.first_name,
+                member_profile.last_name,
+                member_profile.email,
                 group_group_admin_id,
             )
 
@@ -286,9 +317,10 @@ class GroupAdminMemberService(GroupAdmin):
 
                     if include_inactive:
                         logger.debug(
-                            "INCLUDE: Member %s %s is inactive, but include_inactive is set to True, including",
+                            "INCLUDE: Member %s %s (%s) is inactive, but include_inactive is set to True, including",
                             member.first_name,
                             member.last_name,
+                            member.email,
                         )
                         member.inactive_member = True
                         return True
@@ -296,16 +328,18 @@ class GroupAdminMemberService(GroupAdmin):
         # The member is still active
         if end_of_activity_period_counter == 0:
             logger.debug(
-                "INCLUDE: Member %s %s is active",
+                "INCLUDE: Member %s %s (%s) is active",
                 member.first_name,
                 member.last_name,
+                member.email,
             )
             return True
         else:
             logger.debug(
-                "EXCLUDE: Member %s %s has been inactive for more than %d years",
+                "EXCLUDE: Member %s %s (%s) has been inactive for more than %d years",
                 member.first_name,
                 member.last_name,
+                member.email,
                 current_datetime.date().year - activity_epoch.year,
             )
 
@@ -330,18 +364,20 @@ class GroupAdminMemberService(GroupAdmin):
 
         if older_than_min_age and younger_than_max_age:
             logger.debug(
-                "INCLUDE: Member %s %s is in the desired age range (%s - %s)",
+                "INCLUDE: Member %s %s (%s) is in the desired age range (%s - %s)",
                 member.first_name,
                 member.last_name,
+                member.email,
                 min_age,
                 max_age,
             )
             return True
         else:
             logger.debug(
-                "EXCLUDE: Member %s %s does not match the desired age range (%s - %s)",
+                "EXCLUDE: Member %s %s (%s) does not match the desired age range (%s - %s)",
                 member.first_name,
                 member.last_name,
+                member.email,
                 min_age,
                 max_age,
             )
@@ -360,9 +396,10 @@ class GroupAdminMemberService(GroupAdmin):
 
         if member.gender == gender:
             logger.debug(
-                "INCLUDE: Member %s %s has the requested gender %s",
+                "INCLUDE: Member %s %s (%s) has the requested gender %s",
                 member.first_name,
                 member.last_name,
+                member.email,
                 gender,
             )
             return True

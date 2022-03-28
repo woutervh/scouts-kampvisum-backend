@@ -1,15 +1,18 @@
-from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
+from dry_rest_permissions.generics import DRYPermissions
 
 from apps.visums.models import CampVisum
 from apps.visums.serializers import CampVisumSerializer
 from apps.visums.filters import CampVisumFilter
 from apps.visums.services import CampVisumService
+
+from scouts_auth.groupadmin.models import ScoutsGroup
 
 
 # LOGGING
@@ -24,12 +27,24 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing camp instances.
     """
 
+    permission_classes = [
+        DRYPermissions,
+    ]
     serializer_class = CampVisumSerializer
     queryset = CampVisum.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [
+                permissions.IsAuthenticated(),
+                DRYPermissions(),
+            ]
+
+        return super().get_permissions()
 
     @swagger_auto_schema(
         request_body=CampVisumSerializer,
@@ -44,6 +59,26 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
         validated_data = serializer.validated_data
         logger.debug("CAMP VISUM CREATE VALIDATED DATA: %s", validated_data)
+
+        group = validated_data.get("group", None)
+        scouts_group = ScoutsGroup.objects.safe_get(group_admin_id=group)
+        if (
+            not group
+            or not group
+            in [
+                group.group_admin_id
+                for group in request.user.persisted_scouts_groups.all()
+            ]
+            or not scouts_group
+            or not request.user.has_role_leader(group=scouts_group)
+        ):
+            raise PermissionDenied(
+                {
+                    "message": "You don't have permission to create camps for group {}".format(
+                        group
+                    )
+                }
+            )
 
         visum: CampVisum = self.camp_visum_service.visum_create(
             request, **validated_data

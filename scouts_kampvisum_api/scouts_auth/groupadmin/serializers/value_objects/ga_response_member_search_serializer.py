@@ -77,7 +77,6 @@ class AbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSeriali
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
-        logger.debug("data: %s", data)
 
         validated_data = {
             "members": AbstractScoutsMemberSearchMemberSerializer(
@@ -89,7 +88,7 @@ class AbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSeriali
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.debug("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 

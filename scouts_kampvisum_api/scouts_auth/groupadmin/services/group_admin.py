@@ -281,7 +281,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_functions", url)
-        logger.info("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -345,7 +345,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_member_profile", url)
-        logger.info("GA RESPONSE: %s", json_data)
+        logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 

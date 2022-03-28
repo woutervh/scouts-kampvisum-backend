@@ -39,13 +39,13 @@ class ParticipantType(models.TextChoices):
     def _is_type(participant_type: any = None, compare=None) -> bool:
         if not participant_type or not compare:
             return False
-        logger.debug(
-            "TYPE: %s (%s) - COMPARE: %s (%s)",
-            participant_type,
-            type(participant_type).__name__,
-            compare,
-            type(compare).__name__,
-        )
+        # logger.debug(
+        #     "TYPE: %s (%s) - COMPARE: %s (%s)",
+        #     participant_type,
+        #     type(participant_type).__name__,
+        #     compare,
+        #     type(compare).__name__,
+        # )
 
         if (
             isinstance(participant_type, str)

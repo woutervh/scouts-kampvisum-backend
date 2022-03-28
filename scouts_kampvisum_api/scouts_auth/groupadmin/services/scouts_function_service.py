@@ -6,6 +6,7 @@ from django.db import transaction
 from scouts_auth.groupadmin.models import (
     AbstractScoutsGroup,
     ScoutsGroup,
+    AbstractScoutsFunctionDescription,
     AbstractScoutsFunction,
     ScoutsFunction,
 )
@@ -24,25 +25,26 @@ class ScoutsFunctionService:
     groupadmin = GroupAdmin()
     scouts_group_service = ScoutsGroupService()
 
-    @transaction.atomic
     def create_or_update_scouts_functions_for_user(
         self, user: settings.AUTH_USER_MODEL
     ):
         # logger.debug("PRESENT FUNCTIONS: %s", user.functions, user=user)
         abstract_function_descriptions: List[
             AbstractScoutsFunction
-        ] = self.groupadmin.get_function_descriptions(active_user=user).functions
+        ] = self.groupadmin.get_function_descriptions(
+            active_user=user
+        ).function_descriptions
         user.function_descriptions = abstract_function_descriptions
 
         # for user_function in user.functions:
         #     logger.debug("FUNCTION: %s", user_function)
 
-        logger.debug(
-            "SCOUTS FUNCTION SERVICE: Found %d function(s) and %d function description(s)",
-            len(user.functions),
-            len(user.function_descriptions),
-            user=user,
-        )
+        # logger.debug(
+        #     "SCOUTS FUNCTION SERVICE: Found %d (possibly duplicate) function(s) and %d function description(s)",
+        #     len(user.functions),
+        #     len(user.function_descriptions),
+        #     user=user,
+        # )
 
         self.create_or_update_scouts_functions(
             user=user,
@@ -50,12 +52,11 @@ class ScoutsFunctionService:
 
         return user
 
-    @transaction.atomic
     def create_or_update_scouts_functions(
         self,
         user: settings.AUTH_USER_MODEL,
         abstract_functions: List[AbstractScoutsFunction] = None,
-        abstract_function_descriptions: List[AbstractScoutsFunction] = None,
+        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = None,
     ) -> List[ScoutsFunction]:
         if not abstract_functions:
             abstract_functions = user.functions
@@ -70,28 +71,47 @@ class ScoutsFunctionService:
         #         abstract_function_description.description,
         #     )
 
-        # @TODO temporary fix: remove all existing scouts functions
-        user.persisted_scouts_functions.clear()
-
         functions_without_description: List[AbstractScoutsFunction] = []
         for abstract_function in abstract_functions:
+            abstract_function_description_found = False
             for abstract_function_description in abstract_function_descriptions:
                 if (
                     abstract_function_description.group_admin_id
                     == abstract_function.function
                 ):
-                    for abstract_group in abstract_function_description.scouts_groups:
-                        scouts_function: ScoutsFunction = self.create_or_update_scouts_function(
-                            user=user,
-                            abstract_function=abstract_function,
-                            abstract_function_description=abstract_function_description,
-                            abstract_group=abstract_group,
-                        )
-                else:
-                    if abstract_function.function not in [
-                        function.function for function in functions_without_description
-                    ]:
-                        functions_without_description.append(abstract_function)
+                    abstract_function_description_found = True
+                    # logger.debug(
+                    #     "Found %d groups (%s) for function %s (%s, %s)",
+                    #     len(abstract_function_description.scouts_groups),
+                    #     ", ".join(
+                    #         scouts_group.group_admin_id
+                    #         for scouts_group in abstract_function_description.scouts_groups
+                    #     ),
+                    #     abstract_function_description.group_admin_id,
+                    #     abstract_function_description.code,
+                    #     abstract_function_description.description,
+                    # )
+                    scouts_function: ScoutsFunction = self.create_or_update_scouts_function(
+                        user=user,
+                        abstract_function=abstract_function,
+                        abstract_function_description=abstract_function_description,
+                        abstract_scouts_groups=abstract_function_description.scouts_groups,
+                    )
+
+            # if not abstract_function_description_found:
+            #     if abstract_function.function not in [
+            #         function.function for function in functions_without_description
+            #     ]:
+            #         functions_without_description.append(abstract_function)
+
+        # if len(functions_without_description) > 0:
+        #     logger.error(
+        #         "No function description found for functions (%s)",
+        #         ", ".join(
+        #             abstract_function.function
+        #             for abstract_function in functions_without_description
+        #         ),
+        #     )
 
         # for function_without_description in functions_without_description:
         #     logger.debug(
@@ -101,6 +121,17 @@ class ScoutsFunctionService:
         #         function_without_description.code,
         #         function_without_description.description,
         #     )
+        # for abstract_function_description in abstract_function_descriptions:
+        #     logger.debug(
+        #         "FUNCTION DESCRIPTION: %s %s %s (%s)",
+        #         abstract_function_description.group_admin_id,
+        #         abstract_function_description.code,
+        #         abstract_function_description.description,
+        #         ", ".join(
+        #             scouts_group.group_admin_id
+        #             for scouts_group in abstract_function_description.scouts_groups
+        #         ),
+        #     )
 
         return user.persisted_scouts_functions.all()
 
@@ -109,52 +140,27 @@ class ScoutsFunctionService:
         self,
         user: settings.AUTH_USER_MODEL,
         abstract_function: AbstractScoutsFunction,
-        abstract_function_description: AbstractScoutsFunction,
-        abstract_group: AbstractScoutsGroup,
+        abstract_function_description: AbstractScoutsFunctionDescription,
+        abstract_scouts_groups: List[AbstractScoutsGroup],
     ) -> ScoutsFunction:
         scouts_function: ScoutsFunction = ScoutsFunction.objects.safe_get(
             group_admin_id=abstract_function_description.group_admin_id,
-            code=abstract_function_description.code,
-            group_group_admin_id=abstract_group.group_admin_id,
-            user=user,
         )
 
-        # for user_function in user.functions:
-        #     for function in functions:
-        #         if function.group_admin_id == user_function.function:
-        #             for grouping in function.groupings:
-        #                 if (
-        #                     grouping.name
-        #                     == GroupadminSettings.get_section_leader_identifier()
-        #                 ):
-        #                     logger.debug(
-        #                         "Setting user as section leader for group %s",
-        #                         user_function.scouts_group.group_admin_id,
-        #                     )
-        #                     user_function.groups_section_leader[
-        #                         user_function.scouts_group.group_admin_id
-        #                     ] = True
-
-        # user.full_clean()
-        # user.save()
-
         if scouts_function:
-            if abstract_function.end and (
-                not scouts_function.end or abstract_function.end != scouts_function.end
-            ):
-                scouts_function: ScoutsFunction = self.update_scouts_function(
-                    updated_by=user,
-                    instance=scouts_function,
-                    abstract_function=abstract_function,
-                    abstract_function_description=abstract_function_description,
-                    abstract_group=abstract_group,
-                )
+            scouts_function: ScoutsFunction = self.update_scouts_function(
+                updated_by=user,
+                instance=scouts_function,
+                abstract_function=abstract_function,
+                abstract_function_description=abstract_function_description,
+                abstract_scouts_groups=abstract_scouts_groups,
+            )
         else:
             scouts_function: ScoutsFunction = self.create_scouts_function(
                 created_by=user,
                 abstract_function=abstract_function,
                 abstract_function_description=abstract_function_description,
-                abstract_group=abstract_group,
+                abstract_scouts_groups=abstract_scouts_groups,
             )
 
         user.persisted_scouts_functions.add(scouts_function)
@@ -166,8 +172,8 @@ class ScoutsFunctionService:
         self,
         created_by: settings.AUTH_USER_MODEL,
         abstract_function: AbstractScoutsFunction,
-        abstract_function_description: AbstractScoutsFunction,
-        abstract_group: AbstractScoutsGroup,
+        abstract_function_description: AbstractScoutsFunctionDescription,
+        abstract_scouts_groups: List[AbstractScoutsGroup],
     ) -> ScoutsFunction:
         group_admin_id = (
             abstract_function_description.group_admin_id
@@ -197,24 +203,19 @@ class ScoutsFunctionService:
             if abstract_function.description
             else ""
         )
+        name = abstract_function_description.get_groupings_name()
         begin = abstract_function.begin if abstract_function.begin else None
         end = abstract_function.end if abstract_function.end else None
 
-        scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-            group_admin_id=abstract_group.group_admin_id
-        )
-        if not scouts_group:
-            # User has a function in a group that isn't the user's group list anymore
-            scouts_group: ScoutsGroup = self.scouts_group_service.create_scouts_group(
-                created_by=created_by, group_admin_id=abstract_group.group_admin_id
-            )
-
-        logger.debug(
-            "Creating scouts function with group_admin_id %s and code %s for group %s",
-            group_admin_id,
-            code,
-            scouts_group.group_admin_id,
-        )
+        # logger.debug(
+        #     "Creating scouts function with group_admin_id %s and code %s for groups %s",
+        #     group_admin_id,
+        #     code,
+        #     ", ".join(
+        #         abstract_scouts_group.group_admin_id
+        #         for abstract_scouts_group in abstract_scouts_groups
+        #     ),
+        # )
 
         scouts_function: ScoutsFunction = ScoutsFunction()
 
@@ -222,13 +223,17 @@ class ScoutsFunctionService:
         scouts_function.code = code
         scouts_function.type = type
         scouts_function.description = description
-        scouts_function.group = scouts_group
+        scouts_function.name = name
         scouts_function.begin = begin
         scouts_function.end = end
         scouts_function.created_by = created_by
 
         scouts_function.full_clean()
         scouts_function.save()
+
+        self.set_groups_for_function(
+            instance=scouts_function, abstract_scouts_groups=abstract_scouts_groups
+        )
 
         return scouts_function
 
@@ -238,8 +243,8 @@ class ScoutsFunctionService:
         updated_by: settings.AUTH_USER_MODEL,
         instance: ScoutsFunction,
         abstract_function: AbstractScoutsFunction,
-        abstract_function_description: AbstractScoutsFunction,
-        abstract_group: AbstractScoutsGroup,
+        abstract_function_description: AbstractScoutsFunctionDescription,
+        abstract_scouts_groups: List[AbstractScoutsGroup],
     ) -> ScoutsFunction:
         group_admin_id = (
             abstract_function_description.group_admin_id
@@ -269,6 +274,11 @@ class ScoutsFunctionService:
             if abstract_function.description
             else instance.description
         )
+        name = (
+            abstract_function_description.get_groupings_name()
+            if abstract_function_description.get_groupings_name()
+            else instance.name
+        )
         begin = (
             abstract_function_description.begin
             if abstract_function_description.begin
@@ -278,19 +288,31 @@ class ScoutsFunctionService:
         )
         end = abstract_function.end if abstract_function.end else instance.end
 
-        logger.debug(
-            "Updating scouts function with group_admin_id %s and code %s for group %s (existing function end date: %s - abstract function end date: %s",
-            group_admin_id,
-            code,
-            group_admin_id,
-            instance.end,
-            end,
-        )
+        # if abstract_function.end and (
+        #     not instance.end or abstract_function.end != instance.end
+        # ):
+        #     logger.debug(
+        #         "Not updating ScoutsFunction %s (%s, %s), no end date or end date already set (%s)",
+        #         instance.id,
+        #         instance.code,
+        #         instance.description,
+        #         instance.end,
+        #     )
+
+        # logger.debug(
+        #     "Updating scouts function with group_admin_id %s and code %s for group %s (existing function end date: %s - abstract function end date: %s)",
+        #     group_admin_id,
+        #     code,
+        #     group_admin_id,
+        #     instance.end,
+        #     end,
+        # )
 
         instance.group_admin_id = group_admin_id
         instance.code = code
         instance.type = type
         instance.description = description
+        instance.name = name
         instance.begin = begin
         instance.end = abstract_function.end if abstract_function.end else instance.end
         instance.updated_by = updated_by
@@ -298,4 +320,21 @@ class ScoutsFunctionService:
         instance.full_clean()
         instance.save()
 
+        self.set_groups_for_function(
+            instance=instance, abstract_scouts_groups=abstract_scouts_groups
+        )
+
         return instance
+
+    @transaction.atomic
+    def set_groups_for_function(
+        self,
+        instance: ScoutsFunction,
+        abstract_scouts_groups: List[AbstractScoutsGroup],
+    ):
+        for abstract_scouts_group in abstract_scouts_groups:
+            scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
+                group_admin_id=abstract_scouts_group.group_admin_id, raise_error=True
+            )
+
+            instance.scouts_groups.add(scouts_group)

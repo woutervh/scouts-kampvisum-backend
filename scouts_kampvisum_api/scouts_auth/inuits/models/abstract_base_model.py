@@ -9,8 +9,8 @@ class AbstractBaseModel(models.Model):
     class Meta:
         abstract = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
 
     def has_id(self):
         return hasattr(self, "id") and self.id

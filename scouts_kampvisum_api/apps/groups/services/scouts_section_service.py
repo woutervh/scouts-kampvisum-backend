@@ -147,11 +147,11 @@ class ScoutsSectionService:
 
         for group in groups:
             if group.default_sections_loaded:
-                logger.debug(
-                    "Default sections for group %s already loaded (%d section(s))",
-                    group.group_admin_id,
-                    group.sections.count(),
-                )
+                # logger.debug(
+                #     "Default sections for group %s already loaded (%d section(s))",
+                #     group.group_admin_id,
+                #     group.sections.count(),
+                # )
                 continue
 
             logger.debug(

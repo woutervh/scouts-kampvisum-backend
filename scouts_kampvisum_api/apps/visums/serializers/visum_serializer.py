@@ -39,14 +39,14 @@ class CampVisumSerializer(serializers.ModelSerializer):
         if instance:
             return instance
 
-        # group = data.get("group", None)
-
-        # if not group:
-        #     sections = data.get("camp", {}).get("sections", [])
-        #     if sections and len(sections) > 0:
-        #         data["group"] = {"group_admin_id": sections[0]}
-        # logger.debug("DATA: %s", data)
         data = super().to_internal_value(data)
+        logger.debug("DATA: %s", data)
+
+        group = data.get("group", None)
+        if not group:
+            sections = data.get("camp", {}).get("sections", [])
+            if sections and len(sections) > 0:
+                data["group"] = sections[0].group.group_admin_id
 
         return data
 

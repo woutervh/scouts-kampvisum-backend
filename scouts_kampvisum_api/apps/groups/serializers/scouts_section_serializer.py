@@ -85,4 +85,4 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
                     "A ScoutsSection can only be identified by either a uuid or the combination of a name and the group's group admin id"
                 )
 
-        return data
+        return ScoutsSection(**data)

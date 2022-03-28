@@ -33,7 +33,7 @@ class CampVisumService:
 
     @transaction.atomic
     def visum_create(self, request, **data) -> CampVisum:
-        logger.debug("Creating Campvisum with data: %s", data)
+        # logger.debug("Creating Campvisum with data: %s", data)
 
         camp_data = data.get("camp", {})
         camp_name = camp_data.get("name", None)

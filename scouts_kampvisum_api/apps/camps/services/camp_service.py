@@ -1,4 +1,5 @@
 import datetime
+from this import d
 
 from django.db import transaction
 
@@ -67,7 +68,6 @@ class CampService:
         instance.end_date = fields.get("end_date", instance.end_date)
 
         # sections = ScoutsSection.objects.filter(id__in=sections)
-        instance.sections.clear()
         for section in sections:
             instance.sections.add(section)
 

@@ -120,3 +120,7 @@ class GroupadminSettings(SettingsHelper):
     @staticmethod
     def get_group_gender_identifier_female() -> str:
         return SettingsHelper.get("GROUP_GENDER_IDENTIFIER_FEMALE")
+
+    @staticmethod
+    def get_camp_responsible_min_age() -> int:
+        return SettingsHelper.get_int("CAMP_RESPONSIBLE_MIN_AGE")

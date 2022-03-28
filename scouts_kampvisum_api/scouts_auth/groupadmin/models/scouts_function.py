@@ -2,6 +2,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
+from scouts_auth.groupadmin.settings import GroupadminSettings
 
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import (
@@ -30,8 +32,6 @@ class ScoutsFunctionManager(models.Manager):
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         group_admin_id = kwargs.get("group_admin_id", None)
-        group_group_admin_id = kwargs.get("group_group_admin_id", None)
-        user = kwargs.get("user", None)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -46,18 +46,10 @@ class ScoutsFunctionManager(models.Manager):
             except:
                 pass
 
-        if group_group_admin_id:
-            try:
-                return self.get_queryset().get(
-                    group__group_admin_id=group_group_admin_id
-                )
-            except:
-                pass
-
         if raise_error:
             raise ValidationError(
-                "Unable to locate ScoutsFunction instance(s) with the provided params: (id: {}, group_admin_id: {}, group_group_admin_id: {})".format(
-                    pk, group_admin_id, group_group_admin_id
+                "Unable to locate ScoutsFunction instance(s) with the provided params: (id: {}, group_admin_id: {})".format(
+                    pk, group_admin_id
                 )
             )
         return None
@@ -81,9 +73,8 @@ class ScoutsFunction(AuditedBaseModel):
     code = OptionalCharField()
     type = OptionalCharField()
     description = OptionalCharField()
-    group = models.ForeignKey(
-        ScoutsGroup, on_delete=models.CASCADE, related_name="functions"
-    )
+    name = OptionalCharField()
+    scouts_groups = models.ManyToManyField(ScoutsGroup)
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
 
@@ -95,21 +86,21 @@ class ScoutsFunction(AuditedBaseModel):
             )
         ]
 
-    def was_section_leader(self, is_active: bool = True) -> bool:
-        if is_active:
-            return self.is_active_section_leader()
+    def is_leader(self, scouts_group: ScoutsGroup) -> bool:
+        return (
+            scouts_group in self.scouts_groups.all()
+            and self.name.lower()
+            == GroupadminSettings.get_section_leader_identifier().lower()
+        )
 
-    def is_section_leader(self) -> bool:
-        pass
+    def is_section_leader(self, scouts_group: ScoutsGroup) -> bool:
+        return self.is_leader(scouts_group=scouts_group)
 
-    def was_group_leader(self) -> bool:
-        pass
-
-    def is_group_leader(self) -> bool:
-        pass
-
-    def was_district_commissioner(self) -> bool:
-        pass
+    def is_group_leader(self, scouts_group: ScoutsGroup) -> bool:
+        return (
+            self.is_leader(scouts_group=scouts_group)
+            and AbstractScoutsFunctionCode(code=self.code).is_group_leader()
+        )
 
     def is_district_commissioner(self) -> bool:
-        pass
+        return AbstractScoutsFunctionCode(code=self.code).is_district_commissioner()

@@ -182,37 +182,25 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         # Ticket #90610 https://redmine.inuits.eu/issues/90610
         presets = {}
         if participant_type:
+            presets["participant_type"] = participant_type
+            presets["include_inactive"] = False
+            presets["active_leader"] = False
+            presets["only_scouts_members"] = True
+
             if ParticipantType.is_member(participant_type):
-                presets = {
-                    "participant_type": participant_type,
-                    "only_scouts_members": True,
-                }
+                pass
             elif ParticipantType.is_cook(participant_type):
-                presets = {
-                    "participant_type": participant_type,
-                    "include_inactive": True,
-                }
+                pass
+
             elif ParticipantType.is_leader(participant_type):
-                presets = {
-                    "participant_type": participant_type,
-                    "active_leader": True,
-                    "only_scouts_members": True,
-                    "include_inactive": True,
-                }
+                presets["active_leader"] = True
+
             elif ParticipantType.is_responsible(participant_type):
-                presets = {
-                    "participant_type": participant_type,
-                    "active_leader": True,
-                    "only_scouts_members": True,
-                    "include_inactive": True,
-                }
+                presets["active_leader"] = True
+
             elif ParticipantType.is_adult(participant_type):
-                presets = {
-                    "participant_type": participant_type,
-                    "include_inactive": True,
-                }
-            elif ParticipantType.is_participant(participant_type):
-                presets = {"participant_type": participant_type}
+                presets["include_inactive"] = True
+                presets["min_age"] = GroupadminSettings.get_camp_responsible_min_age()
 
             if presets.get("active_leader", False) and not group_group_admin_id:
                 raise ValidationError(
