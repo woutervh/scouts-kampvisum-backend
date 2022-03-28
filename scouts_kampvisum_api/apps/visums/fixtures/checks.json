@@ -1550,7 +1550,7 @@
         "fields": {
             "name": "game_weather_hot",
             "sub_category": [
-                "game_inclusion",
+                "game_weather",
                 [
                     "game",
                     2022
@@ -1567,7 +1567,7 @@
         "fields": {
             "name": "game_weather_cold",
             "sub_category": [
-                "game_inclusion",
+                "game_weather",
                 [
                     "game",
                     2022
