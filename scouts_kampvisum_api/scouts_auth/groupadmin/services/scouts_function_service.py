@@ -2,6 +2,7 @@ from typing import List
 
 from django.conf import settings
 from django.db import transaction
+from django.core.exceptions import ValidationError
 
 from scouts_auth.groupadmin.models import (
     AbstractScoutsGroup,
@@ -333,7 +334,19 @@ class ScoutsFunctionService:
     ):
         for abstract_scouts_group in abstract_scouts_groups:
             scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-                group_admin_id=abstract_scouts_group.group_admin_id, raise_error=True
+                group_admin_id=abstract_scouts_group.group_admin_id
             )
+            # Users can have a function in a group that they're no longer a member of.
+            # If it's an inactive function, ignore, otherwise raise an exception
+            if not scouts_group:
+                if not instance.end:
+                    raise ValidationError(
+                        "Encountered an active ScoutsFunction %s (%s %s) for group %s and the user doesn't belong to that group".format(
+                            instance.group_admin_id,
+                            instance.code,
+                            instance.description,
+                            abstract_scouts_group.group_admin_id,
+                        )
+                    )
 
             instance.scouts_groups.add(scouts_group)
