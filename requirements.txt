@@ -129,9 +129,6 @@ djangorestframework==3.13.1; python_version >= "3.6" \
 drf-yasg2==1.19.4 \
     --hash=sha256:75e661ca5cf15eb44fcfab408c7b864f87c20794f564aa08b3a31817a857f19d \
     --hash=sha256:7037a8041eb5d1073fa504a284fc889685f93d0bfd008a963db1b366db786734
-dry-rest-permissions==0.1.10 \
-    --hash=sha256:1f40461184063390e5b24e9c5602eb8cc8c3c2433c796f39a5332065bfbddd2b \
-    --hash=sha256:f3fe685760004ce182801602819b43ebfa922e587036f1f5a5c10ffcfa646039
 environs==9.5.0; python_version >= "3.6" \
     --hash=sha256:1e549569a3de49c05f856f40bce86979e7d5ffbbc4398e7f338574c220189124 \
     --hash=sha256:a76307b36fbe856bdca7ee9161e6c466fd7fcffc297109a118c59b54e27e30c9

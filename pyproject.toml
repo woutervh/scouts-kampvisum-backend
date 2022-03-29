@@ -27,7 +27,6 @@ django-anymail = {extras = ["sendinblue"], version = "^8.4"}
 pdfrw = "^0.4"
 pyjwt = "^2.3.0"
 redis = "^4.1.4"
-dry-rest-permissions = "^0.1.10"
 
 [tool.poetry.dev-dependencies]
 
