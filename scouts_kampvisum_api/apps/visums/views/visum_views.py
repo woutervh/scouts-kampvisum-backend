@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
-from dry_rest_permissions.generics import DRYPermissions
 
 from apps.visums.models import CampVisum
 from apps.visums.serializers import CampVisumSerializer
@@ -27,9 +26,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing camp instances.
     """
 
-    permission_classes = [
-        DRYPermissions,
-    ]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = CampVisumSerializer
     queryset = CampVisum.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
@@ -37,14 +34,14 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     camp_visum_service = CampVisumService()
 
-    def get_permissions(self):
-        if self.action == "create":
-            return [
-                permissions.IsAuthenticated(),
-                DRYPermissions(),
-            ]
+    # def get_permissions(self):
+    #     if self.action == "create":
+    #         return [
+    #             permissions.IsAuthenticated(),
+    #             DRYPermissions(),
+    #         ]
 
-        return super().get_permissions()
+    #     return super().get_permissions()
 
     @swagger_auto_schema(
         request_body=CampVisumSerializer,

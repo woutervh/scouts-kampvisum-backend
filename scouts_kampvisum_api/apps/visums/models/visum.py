@@ -1,5 +1,4 @@
 from django.db import models
-from dry_rest_permissions.generics import authenticated_users
 
 from apps.camps.models import Camp, CampType
 
@@ -42,28 +41,6 @@ class CampVisum(AuditedBaseModel):
         permissions = [
             ("create_campvisum", "User can create a camp"),
         ]
-
-    @staticmethod
-    @authenticated_users
-    def has_read_permission(request):
-        return True
-
-    @authenticated_users
-    def has_object_read_permission(self, request):
-        return True
-
-    @staticmethod
-    @authenticated_users
-    def has_write_permission(request):
-        # logger.debug("DATA: %s", request.data)
-        return True
-
-    @authenticated_users
-    def has_object_write_permission(self, request):
-        if self.group in request.user.persisted_scouts_groups:
-            return True
-
-        return False
 
     def __str__(self):
         return "{}".format(self.id)

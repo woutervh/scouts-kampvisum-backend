@@ -304,14 +304,6 @@ tests = ["dj-database-url (>=0.4.2)", "django-cors-headers (>=3.0.2)", "django-f
 validation = ["swagger-spec-validator (>=2.1.0)"]
 
 [[package]]
-name = "dry-rest-permissions"
-version = "0.1.10"
-description = "Rules based permissions for the Django Rest Framework"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "environs"
 version = "9.5.0"
 description = "simplified environment variable parsing"
@@ -711,7 +703,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "e613f67bbca3c0a657f49adbf71d6f3cdafa653d37f2cd31d97a2a14c08a6bf0"
+content-hash = "669d345559e9a6a63a4819a0bf02ffa5cad0faf614c3e2a918fcb2c05eb6cbe3"
 
 [metadata.files]
 asgiref = [
@@ -866,10 +858,6 @@ djangorestframework = [
 drf-yasg2 = [
     {file = "drf_yasg2-1.19.4-py3-none-any.whl", hash = "sha256:75e661ca5cf15eb44fcfab408c7b864f87c20794f564aa08b3a31817a857f19d"},
     {file = "drf_yasg2-1.19.4.tar.gz", hash = "sha256:7037a8041eb5d1073fa504a284fc889685f93d0bfd008a963db1b366db786734"},
-]
-dry-rest-permissions = [
-    {file = "dry-rest-permissions-0.1.10.tar.gz", hash = "sha256:1f40461184063390e5b24e9c5602eb8cc8c3c2433c796f39a5332065bfbddd2b"},
-    {file = "dry_rest_permissions-0.1.10-py2.py3-none-any.whl", hash = "sha256:f3fe685760004ce182801602819b43ebfa922e587036f1f5a5c10ffcfa646039"},
 ]
 environs = [
     {file = "environs-9.5.0-py2.py3-none-any.whl", hash = "sha256:1e549569a3de49c05f856f40bce86979e7d5ffbbc4398e7f338574c220189124"},

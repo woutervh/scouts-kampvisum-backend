@@ -135,7 +135,6 @@ class ScoutsFunctionService:
 
         return user.persisted_scouts_functions.all()
 
-    @transaction.atomic
     def create_or_update_scouts_function(
         self,
         user: settings.AUTH_USER_MODEL,
