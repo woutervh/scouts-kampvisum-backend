@@ -348,5 +348,5 @@ class ScoutsFunctionService:
                             abstract_scouts_group.group_admin_id,
                         )
                     )
-
-            instance.scouts_groups.add(scouts_group)
+            else:
+                instance.scouts_groups.add(scouts_group)
