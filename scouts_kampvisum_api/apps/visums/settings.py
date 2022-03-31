@@ -41,7 +41,7 @@ class VisumSettings(SettingsHelper):
         return SettingsHelper.get("EMAIL_REGISTRATION_SUBJECT")
 
     @staticmethod
-    def get_sendinblue_tags():
+    def get_sendinblue_tags() -> list:
         return SettingsHelper.get_list("SENDINBLUE_MAIL_TAGS", [])
 
     @staticmethod
