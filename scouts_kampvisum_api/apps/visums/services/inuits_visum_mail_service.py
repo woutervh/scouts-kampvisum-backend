@@ -56,8 +56,16 @@ class InuitsVisumMailService(EmailService):
         dictionary = self._prepare_dictionary_responsible_changed()
 
     def notify_camp_registered(self, visum: CampVisum):
-        if visum.camp_registration_mail_sent_before_deadline:
-            return
+        deadline = VisumSettings.get_camp_registration_deadline_date()
+        now = timezone.now().date()
+
+        after_camp_registration_deadline = False
+        # logger.debug("AFTER ? %s (%s >= %s)", deadline < now, deadline, now)
+        if deadline < now:
+            after_camp_registration_deadline = True
+        else:
+            if visum.camp_registration_mail_sent_before_deadline:
+                return
 
         dictionary = self._prepare_dictionary_camp_registered(visum=visum)
         recipient = visum.created_by.email
@@ -109,7 +117,7 @@ class InuitsVisumMailService(EmailService):
         )
 
         template = self.template_camp_registration_before_deadline
-        if VisumSettings.get_camp_registration_deadline_date() >= timezone.now().date():
+        if after_camp_registration_deadline:
             template = self.template_camp_registration_after_deadline
 
         logger.debug(

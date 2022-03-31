@@ -45,11 +45,10 @@ class LinkedDeadlineService:
         )
 
     def are_camp_registration_deadline_items_checked(self, visum: CampVisum) -> bool:
-        from apps.visums.services import LinkedCheckService
-
         linked_deadline: LinkedDeadline = self.get_camp_registration_deadline(
             visum=visum
         )
+
         items: List[LinkedDeadlineItem] = linked_deadline.items.all()
 
         for item in items:

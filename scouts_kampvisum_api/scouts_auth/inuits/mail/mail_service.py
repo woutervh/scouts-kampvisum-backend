@@ -194,7 +194,7 @@ class EmailService:
 
         try:
             logger.debug(
-                "Sending mail to %s, from %s, with %d attachments",
+                "DJANGO MAIL: Sending mail to %s, from %s, with %d attachments",
                 message.to,
                 message.from_email,
                 len(message.attachments),
@@ -204,7 +204,6 @@ class EmailService:
             # Actually do something when this fails
             # https://redmine.inuits.eu/issues/83311
             logger.error("Mail could not be sent", exc)
-
             raise exc
 
     def send_send_in_blue_email(
@@ -244,6 +243,12 @@ class EmailService:
         #     message.template_id = template_id
 
         try:
+            logger.debug(
+                "SENDINBLUE: Sending mail to %s, from %s, with %d attachments",
+                message.to,
+                message.from_email,
+                len(message.attachments),
+            )
             message.send()
         except Exception as exc:
             logger.error("Mail could not be sent through SendInBlue", exc)
