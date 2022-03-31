@@ -53,15 +53,13 @@ class ChangeHandlerService:
         self._check_deadline_complete(visum=instance.deadline_item.deadline.visum)
 
     def _check_deadline_complete(self, visum):
-        if visum.camp_registration_mail_sent_before_deadline:
-            return
-
         from apps.deadlines.services import LinkedDeadlineService
-        from apps.visums.services import InuitsVisumMailService
 
         if LinkedDeadlineService().are_camp_registration_deadline_items_checked(
             visum=visum
         ):
+            from apps.visums.services import InuitsVisumMailService
+
             logger.debug("DEADLINE OK - Sending registration email")
             InuitsVisumMailService().notify_camp_registered(visum=visum)
         else:
