@@ -1424,6 +1424,23 @@
             "label": "Kampgeld leden ontvangen"
         }
     },
+	    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "budget_budget_members2",
+            "sub_category": [
+                "budget_budget",
+                [
+                    "budget",
+                    2022
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Kampgeld leden ontvangen check nummer 2"
+        }
+    },
     {
         "model": "visums.Check",
         "fields": {
@@ -1526,57 +1543,6 @@
                 "CommentCheck"
             ],
             "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "game_inclusion_members",
-            "sub_category": [
-                "game_inclusion",
-                [
-                    "game",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Inspanningen om iedereen mee te krijgen"
-        }
-    },
-	{
-        "model": "visums.Check",
-        "fields": {
-            "name": "game_weather_hot",
-            "sub_category": [
-                "game_inclusion",
-                [
-                    "game",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Voorzien op warm weer"
-        }
-    },
-	{
-        "model": "visums.Check",
-        "fields": {
-            "name": "game_weather_cold",
-            "sub_category": [
-                "game_inclusion",
-                [
-                    "game",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Voorzien op koud weer"
         }
     }
 ]
