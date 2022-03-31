@@ -82,19 +82,5 @@
 			"description": "",
 			"explanation": ""
 		}
-	},
-	{
-		"model": "visums.Category",
-		"fields": {
-			"name": "game",
-			"camp_types": [
-				[
-					"basis"
-				]
-			],
-			"label": "Spel",
-			"description": "Nieuwe categorie om te testen",
-			"explanation": ""
-		}
 	}
 ]
