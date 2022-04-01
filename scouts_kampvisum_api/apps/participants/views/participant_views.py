@@ -184,13 +184,15 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         if participant_type:
             presets["participant_type"] = participant_type
             presets["include_inactive"] = False
+            presets["leader"] = True
             presets["active_leader"] = False
             presets["only_scouts_members"] = True
 
             if ParticipantType.is_member(participant_type):
-                pass
+                presets["leader"] = False
             elif ParticipantType.is_cook(participant_type):
-                pass
+                presets["leader"] = True
+                presets["include_inactive"] = True
 
             elif ParticipantType.is_leader(participant_type):
                 presets["active_leader"] = True
@@ -199,6 +201,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
                 presets["active_leader"] = True
 
             elif ParticipantType.is_adult(participant_type):
+                presets["leader"] = True
                 presets["include_inactive"] = True
                 presets["min_age"] = GroupadminSettings.get_camp_responsible_min_age()
 

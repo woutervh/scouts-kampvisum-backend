@@ -31,6 +31,7 @@ class GroupAdminMemberService(GroupAdmin):
         min_age: int = None,
         max_age: int = None,
         gender: str = None,
+        leader: bool = False,
         active_leader: bool = False,
         presets: dict = None,
     ) -> List[AbstractScoutsMember]:
@@ -83,6 +84,10 @@ class GroupAdminMemberService(GroupAdmin):
         else:
             max_age = preset_max_age
 
+        preset_leader = presets.get("leader", False)
+        if preset_leader:
+            leader = preset_leader
+
         preset_active_leader = presets.get("active_leader", False)
         if preset_active_leader:
             active_leader = preset_active_leader
@@ -112,23 +117,26 @@ class GroupAdminMemberService(GroupAdmin):
                 ):
                     continue
 
-            if active_leader:
+            if leader or active_leader:
                 logger.debug(
-                    "Examining if member %s %s (%s) is an active leader in group %s",
+                    "Examining if member %s %s (%s) is a leader in group %s (active leader: %s)",
                     member.first_name,
                     member.last_name,
                     member.email,
                     group_group_admin_id,
+                    active_leader,
                 )
-                if not self._filter_by_active_leadership(
+                if not self._filter_by_leadership(
                     active_user=active_user,
                     member=member,
                     group_group_admin_id=group_group_admin_id,
                     function_descriptions=function_descriptions,
+                    leader=leader,
+                    active_leader=active_leader,
                 ):
                     continue
 
-            if not include_inactive:
+            if not active_leader and not include_inactive:
                 if not group_group_admin_id:
                     logger.debug(
                         "Wanted to check for activity status, but no group admin id given for the group"
@@ -228,15 +236,15 @@ class GroupAdminMemberService(GroupAdmin):
         return member_in_group
 
     # @TODO code copied from scouts_authorization_service - should be abstracted
-    def _filter_by_active_leadership(
+    def _filter_by_leadership(
         self,
         active_user: settings.AUTH_USER_MODEL,
         member: AbstractScoutsMember,
         group_group_admin_id: str,
         function_descriptions: List[AbstractScoutsFunctionDescription],
+        leader: bool = True,
+        active_leader: bool = False,
     ) -> bool:
-        active_leader_in_group = False
-
         member_profile = self.get_member_info(
             active_user=active_user, group_admin_id=member.group_admin_id
         )
@@ -249,6 +257,7 @@ class GroupAdminMemberService(GroupAdmin):
             member_profile.email,
             len(function_descriptions),
         )
+        function_activities: List[tuple] = []
         for member_function in member_profile.functions:
             if member_function.scouts_group.group_admin_id == group_group_admin_id:
                 for function_description in function_descriptions:
@@ -258,27 +267,57 @@ class GroupAdminMemberService(GroupAdmin):
                                 grouping.name
                                 == GroupadminSettings.get_section_leader_identifier()
                             ):
-                                active_leader_in_group = True
-                                break
+                                if member_function.end:
+                                    function_activities.append((True, False))
+                                else:
+                                    function_activities.append((True, True))
 
-        if active_leader_in_group:
+        leader_in_group = False
+        active_leader_in_group = True
+        for leader, active_leader in function_activities:
+            if leader and active_leader:
+                leader_in_group = True
+                active_leader_in_group = True
+                break
+
+        if leader_in_group:
+            if active_leader:
+                if active_leader_in_group:
+                    logger.debug(
+                        "INCLUDE: Member %s %s (%s) is an active leader in group %s",
+                        member_profile.first_name,
+                        member_profile.last_name,
+                        member_profile.email,
+                        group_group_admin_id,
+                    )
+                    return True
+                else:
+                    logger.debug(
+                        "EXCLUDE: Member %s %s (%s) is not an active leader in group %s",
+                        member_profile.first_name,
+                        member_profile.last_name,
+                        member_profile.email,
+                        group_group_admin_id,
+                    )
+                    return False
+
             logger.debug(
-                "INCLUDE: Member %s %s (%s) is an active leader in group %s",
+                "INCLUDE: Member %s %s (%s) is a leader in group %s",
                 member_profile.first_name,
                 member_profile.last_name,
                 member_profile.email,
                 group_group_admin_id,
             )
+            return True
         else:
             logger.debug(
-                "EXCLUDE: Member %s %s (%s) is not an active leader in group %s",
+                "EXCLUDE: Member %s %s (%s) is not a leader in group %s",
                 member_profile.first_name,
                 member_profile.last_name,
                 member_profile.email,
                 group_group_admin_id,
             )
-
-        return active_leader_in_group
+            return False
 
     def _filter_by_activity(
         self,
