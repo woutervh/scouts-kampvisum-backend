@@ -38,6 +38,9 @@ class InuitsVisumMailService(EmailService):
     template_camp_registration_after_deadline = (
         VisumSettings.get_camp_registration_after_deadline_template()
     )
+    template_camp_changed_after_deadline = (
+        VisumSettings.get_camp_changed_after_deadline_template()
+    )
 
     def notify_responsible_changed(self, check: LinkedParticipantCheck):
         visum: CampVisum = check.sub_category.category.category_set.visum
@@ -118,7 +121,10 @@ class InuitsVisumMailService(EmailService):
 
         template = self.template_camp_registration_before_deadline
         if after_camp_registration_deadline:
-            template = self.template_camp_registration_after_deadline
+            if visum.camp_registration_mail_sent_before_deadline:
+                template = self.template_camp_changed_after_deadline
+            else:
+                template = self.template_camp_registration_after_deadline
 
         logger.debug(
             "Preparing to send camp registration notification to %s (debug: %s, test: %s, acceptance: %s), using template %s",
@@ -140,10 +146,11 @@ class InuitsVisumMailService(EmailService):
             bcc=bcc,
         )
 
-        visum.camp_registration_mail_sent_before_deadline = result
+        if not after_camp_registration_deadline:
+            visum.camp_registration_mail_sent_before_deadline = result
 
-        visum.full_clean()
-        visum.save()
+            visum.full_clean()
+            visum.save()
 
     def _prepare_dictionary_responsible_changed(self, visum: CampVisum):
         return {
