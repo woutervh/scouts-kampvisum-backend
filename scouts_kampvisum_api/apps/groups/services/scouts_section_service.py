@@ -27,51 +27,53 @@ class ScoutsSectionService:
     groupadmin = GroupAdmin()
     default_section_name_service = DefaultScoutsSectionNameService()
 
-    # def section_create_or_update(
-    #     self,
-    #     request=None,
-    #     instance: ScoutsSection = None,
-    #     group: ScoutsGroup = None,
-    #     name: str = None,
-    #     gender: Gender = Gender.MIXED,
-    #     age_group: int = 0,
-    #     hidden: bool = False,
-    # ) -> ScoutsSection:
     def section_create_or_update(
         self,
         request=None,
         instance: ScoutsSection = None,
+        group: ScoutsGroup = None,
+        name: str = None,
+        gender: Gender = Gender.MIXED,
+        age_group: int = 0,
+        hidden: bool = False,
         section: ScoutsSection = None,
     ) -> ScoutsSection:
         """
         Creates or updates a ScoutsSection instance.
         """
+        if section:
+            group = section.group
+            name = section.name
+            gender = section.gender
+            age_group = section.age_group
+            hidden = section.hidden
+
         if instance is None:
             instance = ScoutsSection.objects.safe_get(
-                group=section.group,
-                name=section.name,
-                gender=section.gender,
-                age_group=section.age_group,
+                group=group,
+                name=name,
+                gender=gender,
+                age_group=age_group,
             )
 
         if instance is None:
             return self._section_create(
                 request=request,
-                group=section.group,
-                name=section.name,
-                gender=section.gender,
-                age_group=section.age_group,
-                hidden=section.hidden,
+                group=group,
+                name=name,
+                gender=gender,
+                age_group=age_group,
+                hidden=hidden,
             )
         else:
             return self._section_update(
                 request=request,
                 instance=instance,
-                group=section.group,
-                name=section.name,
-                gender=section.gender,
-                age_group=section.age_group,
-                hidden=section.hidden,
+                group=group,
+                name=name,
+                gender=gender,
+                age_group=age_group,
+                hidden=hidden,
             )
 
     def _section_create(
