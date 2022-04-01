@@ -354,11 +354,11 @@ INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool(
 )
 ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
 # Day after which a new camp registration is considered to be in the next camp year - FORMAT: MM-DD
-CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "05-01")
+CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "09-01")
 # Day after which a mail should be sent if the camp responsible has changed - FORMAT: MM-DD
-RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-01")
+RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-10")
 # Deadline for the camp registration - FORMAT: MM-DD
-CAMP_REGISTRATION_DEADLINE = env.str("CAMP_REGISTRATION_DEADLINE", "03-30")
+CAMP_REGISTRATION_DEADLINE = env.str("CAMP_REGISTRATION_DEADLINE", "04-10")
 ENFORCE_MEMBER_CHECKS = env.list(
     "ENFORCE_MEMBER_CHECKS",
     ["ParticipantMemberCheck", "ParticipantLeaderCheck", "ParticipantResponsibleCheck"],
