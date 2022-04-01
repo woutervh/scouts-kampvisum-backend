@@ -156,7 +156,8 @@ class LinkedCategoryService:
 
         # Deleted Category
         logger.debug(
-            "REMAINING CURRENT CATEGORIES: (%s",
+            "REMAINING CURRENT CATEGORIES: %d (%s)",
+            len(current_categories),
             ", ".join(current_category.name for current_category in current_categories),
         )
         for linked_category in current_linked_categories:

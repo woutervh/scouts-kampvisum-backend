@@ -150,7 +150,8 @@ class LinkedSubCategoryService:
 
         # Deleted SubCategory
         logger.debug(
-            "REMAINING CURRENT SUB-CATEGORIES: %s",
+            "REMAINING CURRENT SUB-CATEGORIES: %d (%s)",
+            len(current_sub_categories),
             ",".join(
                 current_sub_category.name
                 for current_sub_category in current_sub_categories
