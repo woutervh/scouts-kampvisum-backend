@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 
 from apps.camps.models import CampType
 
-from scouts_auth.inuits.utils import ListUtils
+from apps.visums.models import SubCategory
 
 
 # LOGGING
@@ -41,6 +41,9 @@ class Command(BaseCommand):
         ]
 
         logger.debug("Loading sub-categories from %s", path)
+
+        current_sub_categories: List[SubCategory] = SubCategory.objects.all()
+        loaded_sub_categories: List[tuple] = []
 
         previous_category = None
         previous_index = -1
@@ -81,6 +84,10 @@ class Command(BaseCommand):
                     camp_types.remove(default_camp_type)
                 model.get("fields")["camp_types"] = [camp_types]
 
+                loaded_sub_categories.append(
+                    (model.get("fields").get("name"), category)
+                )
+
                 logger.trace("MODEL DATA: %s", model)
 
             with open(tmp_path, "w") as o:
@@ -91,3 +98,30 @@ class Command(BaseCommand):
 
         logger.debug("REMOVING adjusted fixture %s", tmp_path)
         os.remove(tmp_path)
+
+        found_sub_categories: List[SubCategory] = []
+        for name, category in loaded_sub_categories:
+            # logger.debug("LOADED SUB-CATEGORY: %s, %s", name, category)
+            for current_sub_category in current_sub_categories:
+                if (
+                    name == current_sub_category.name
+                    and category[0] == current_sub_category.category.name
+                    and category[1] == current_sub_category.category.camp_year.year
+                ):
+                    found_sub_categories.append(current_sub_category)
+
+        logger.debug(
+            "FOUND sub-categories: %d (%s)",
+            len(found_sub_categories),
+            ", ".join(sub_category.name for sub_category in found_sub_categories),
+        )
+
+        for current_sub_category in current_sub_categories:
+            if current_sub_category not in found_sub_categories:
+                logger.debug(
+                    "Removed sub-category: %s (%s [%s])",
+                    current_sub_category.name,
+                    current_sub_category.category.name,
+                    current_sub_category.category.camp_year.year,
+                )
+                current_sub_category.delete()

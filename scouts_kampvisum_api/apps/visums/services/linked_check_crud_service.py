@@ -144,7 +144,8 @@ class LinkedCheckCRUDService:
 
         # Deleted Check
         logger.debug(
-            "REMAINING CURRENT CHECKS: %s",
+            "REMAINING CURRENT CHECKS: %d (%s)",
+            len(current_checks),
             ",".join(current_check.name for current_check in current_checks),
         )
         for linked_check in current_linked_checks:

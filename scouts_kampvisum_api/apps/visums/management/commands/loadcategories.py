@@ -9,9 +9,7 @@ from django.core.management.base import BaseCommand
 from apps.camps.models import CampYear, CampType
 from apps.camps.services import CampYearService
 
-from apps.visums.models import CategoryPriority
-
-from scouts_auth.inuits.utils import ListUtils
+from apps.visums.models import Category, CategoryPriority
 
 
 # LOGGING
@@ -39,6 +37,9 @@ class Command(BaseCommand):
         tmp_path = os.path.join(parent_path, tmp_data_path)
 
         logger.debug("Loading categories from %s", path)
+
+        current_categories: List[Category] = Category.objects.all()
+        loaded_categories: List[tuple] = []
 
         current_camp_year: CampYear = (
             CampYearService().get_or_create_current_camp_year()
@@ -92,6 +93,13 @@ class Command(BaseCommand):
                     model.get("fields")["priority"] = list()
                     model.get("fields")["priority"].append(highest_priority.owner)
 
+                loaded_categories.append(
+                    (
+                        model.get("fields").get("name"),
+                        model.get("fields").get("camp_year")[0],
+                    )
+                )
+
                 logger.trace("MODEL DATA: %s", model)
 
             with open(tmp_path, "w") as o:
@@ -102,3 +110,31 @@ class Command(BaseCommand):
 
         logger.debug("REMOVING adjusted fixture %s", tmp_path)
         os.remove(tmp_path)
+
+        found_categories: List[Category] = []
+        for name, camp_year in loaded_categories:
+            for current_category in current_categories:
+                if (
+                    name == current_category.name
+                    and camp_year == current_category.camp_year.year
+                ):
+                    found_categories.append(current_category)
+
+        logger.debug(
+            "FOUND categories: %d (%s)",
+            len(found_categories),
+            ", ".join(category.name for category in found_categories),
+        )
+
+        # linked_category_set_service = LinkedCategorySetService()
+        for current_category in current_categories:
+            if current_category not in found_categories:
+                logger.debug(
+                    "Removed category: %s (%s)",
+                    current_category.name,
+                    current_category.camp_year.year,
+                )
+                # linked_category_set_service.delete_category(
+                #     request=None, category=current_category
+                # )
+                current_category.delete()

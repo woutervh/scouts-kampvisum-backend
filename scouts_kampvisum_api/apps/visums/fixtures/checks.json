@@ -1424,7 +1424,7 @@
             "label": "Kampgeld leden ontvangen"
         }
     },
-	    {
+    {
         "model": "visums.Check",
         "fields": {
             "name": "budget_budget_members2",

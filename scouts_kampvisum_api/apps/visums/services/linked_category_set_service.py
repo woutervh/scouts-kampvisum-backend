@@ -6,6 +6,7 @@ from apps.camps.models import CampType
 
 from apps.visums.models import (
     CampVisum,
+    Category,
     LinkedCategorySet,
 )
 from apps.visums.services import LinkedCategoryService

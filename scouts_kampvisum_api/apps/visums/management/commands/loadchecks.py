@@ -8,6 +8,8 @@ from django.core.management.base import BaseCommand
 
 from apps.camps.models import CampType
 
+from apps.visums.models import Check
+
 from apps.signals.services import ChangeHandlerService
 
 
@@ -41,6 +43,9 @@ class Command(BaseCommand):
         ]
 
         logger.debug("Loading checks from %s", path)
+
+        current_checks: List[Check] = Check.objects.all()
+        loaded_checks: List[tuple] = []
 
         previous_sub_category = None
         previous_index = -1
@@ -98,6 +103,8 @@ class Command(BaseCommand):
                 validators = model.get("fields").get("validators", [])
                 model.get("fields")["validators"] = ",".join(validators)
 
+                loaded_checks.append((model.get("fields").get("name"), sub_category))
+
                 logger.trace("MODEL DATA: %s", model)
 
             with open(tmp_path, "w") as o:
@@ -108,3 +115,33 @@ class Command(BaseCommand):
 
         logger.debug("REMOVING adjusted fixture %s", tmp_path)
         os.remove(tmp_path)
+
+        found_checks: List[Check] = []
+        for name, sub_category in loaded_checks:
+            # logger.debug("LOADED CHECK: %s %s", name, sub_category)
+            for current_check in current_checks:
+                if (
+                    name == current_check.name
+                    and sub_category[0] == current_check.sub_category.name
+                    and sub_category[1][0] == current_check.sub_category.category.name
+                    and sub_category[1][1]
+                    == current_check.sub_category.category.camp_year.year
+                ):
+                    found_checks.append(current_check)
+
+        logger.debug(
+            "FOUND checks: %d (%s)",
+            len(found_checks),
+            ", ".join(check.name for check in found_checks),
+        )
+
+        for current_check in current_checks:
+            if current_check not in found_checks:
+                logger.debug(
+                    "Removed check: %s (%s - %s [%s])",
+                    current_check.name,
+                    current_check.sub_category.name,
+                    current_check.sub_category.category.name,
+                    current_check.sub_category.category.camp_year.year,
+                )
+                current_check.delete()
