@@ -73,6 +73,10 @@ class VisumSettings(SettingsHelper):
         return SettingsHelper.get("RESOURCES_TEMPLATE_CAMP_REGISTRATION_AFTER_DEADLINE")
 
     @staticmethod
+    def get_camp_changed_after_deadline_template():
+        return SettingsHelper.get("RESOURCES_TEMPLATE_CAMP_CHANGED_AFTER_DEADLINE")
+
+    @staticmethod
     def get_camp_registration_notification_to(
         address: str = None, send_to: str = None, label: str = None
     ) -> str:
