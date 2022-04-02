@@ -73,7 +73,7 @@ class ChangeHandlerService:
         today = timezone.now().date()
 
         if today > epoch:
-            InuitsVisumMailService().notify_responsible_changed()
+            InuitsVisumMailService().notify_responsible_changed(check=instance)
 
     @staticmethod
     def parse_change_handlers(data: dict) -> str:

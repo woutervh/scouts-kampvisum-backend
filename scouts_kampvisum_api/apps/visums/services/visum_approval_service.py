@@ -24,6 +24,7 @@ class CampVisumApprovalService:
 
     @transaction.atomic
     def update_approval(self, request, instance: CampVisumApproval, **fields):
+        instance.approved = fields.get("approved", False)
         instance.leaders = fields.get("leaders", None)
         instance.group_leaders = fields.get("group_leaders", None)
         instance.district_commissioner = fields.get("district_commissioner", None)
