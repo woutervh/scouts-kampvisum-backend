@@ -70,6 +70,9 @@ class CampService:
         # sections = ScoutsSection.objects.filter(id__in=sections)
         for section in sections:
             instance.sections.add(section)
+        for section in instance.sections.all():
+            if section not in sections:
+                instance.sections.remove(section)
 
         instance.full_clean()
         instance.save()

@@ -1,6 +1,7 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
-from apps.visums.models import CampVisumApproval
+from apps.visums.models import CampVisumEngagement
 
 from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
 
@@ -12,19 +13,24 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class CampVisumApprovalSerializer(serializers.ModelSerializer):
+class CampVisumEngagementSerializer(serializers.ModelSerializer):
 
     leaders = ScoutsUserSerializer(required=False)
     group_leaders = ScoutsUserSerializer(required=False)
     district_commissioner = ScoutsUserSerializer(required=False)
 
     class Meta:
-        model = CampVisumApproval
+        model = CampVisumEngagement
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
+        id = data.get("id", None)
+
         data = super().to_internal_value(data)
         logger.debug("DATA: %s", data)
+
+        if id:
+            data["id"] = id if CampVisumEngagement.objects.safe_get(id=id) else None
 
         leaders = data.get("leaders", None)
         group_leaders = data.get("group_leaders", None)
@@ -39,7 +45,7 @@ class CampVisumApprovalSerializer(serializers.ModelSerializer):
 
         return data
 
-    def to_representation(self, obj: CampVisumApproval) -> dict:
+    def to_representation(self, obj: CampVisumEngagement) -> dict:
         data = super().to_representation(obj)
 
         data["can_sign"] = obj.can_sign()
@@ -76,3 +82,42 @@ class CampVisumApprovalSerializer(serializers.ModelSerializer):
             }
 
         return data
+
+    def validate(self, obj: any) -> any:
+        logger.debug("DATA: %s", obj)
+        if isinstance(obj, CampVisumEngagement):
+            return obj
+
+        if isinstance(obj, dict):
+            approved = False
+            if "approved" in obj:
+                approved = obj.get("approved")
+            else:
+                id = obj.get("id", None)
+                if id:
+                    instance = CampVisumEngagement.objects.safe_get(id=id)
+                    if instance:
+                        approved = instance.approved
+
+            leaders = obj.get("leaders", None)
+            group_leaders = obj.get("group_leaders", None)
+            district_commissioner = obj.get("district_commissioner", None)
+
+            if not approved:
+                if leaders or group_leaders or district_commissioner:
+                    raise ValidationError(
+                        "Leaders, group leaders and DC's can only sign the camp after it's been approved"
+                    )
+            else:
+                if (district_commissioner or group_leaders) and not leaders:
+                    raise ValidationError(
+                        "Group leaders and DC's can only sign after the leaders have signed"
+                    )
+                if district_commissioner and not (leaders or group_leaders):
+                    raise ValidationError(
+                        "DC's can only sign after the leaders and group leaders have signed"
+                    )
+                if district_commissioner:
+                    pass
+
+            return obj

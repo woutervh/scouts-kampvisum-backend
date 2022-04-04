@@ -4,7 +4,7 @@ from apps.camps.managers import CampTypeManager
 
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField, UniqueBooleanField
-from scouts_auth.inuits.models.interfaces import Indexable, Explainable, Translatable
+from scouts_auth.inuits.models.mixins import Indexable, Explainable, Translatable
 
 # LOGGING
 import logging

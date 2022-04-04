@@ -45,7 +45,7 @@ class InuitsVisumMailService(EmailService):
     def notify_responsible_changed(self, check: LinkedParticipantCheck):
         visum: CampVisum = check.sub_category.category.category_set.visum
 
-        checks: List[LinkedParticipantCheck] = LinkedParticipantCheck.objects.get(
+        checks: List[LinkedParticipantCheck] = LinkedParticipantCheck.objects.all().filter(
             parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK,
             sub_category__category__category_set__visum=visum,
         )
@@ -56,7 +56,7 @@ class InuitsVisumMailService(EmailService):
                 participants.append(linked_participant)
 
         logger.debug("Preparing to send mail to")
-        dictionary = self._prepare_dictionary_responsible_changed()
+        dictionary = self._prepare_dictionary_responsible_changed(visum=visum)
 
     def notify_camp_registered(self, visum: CampVisum):
         deadline = VisumSettings.get_camp_registration_deadline_date()

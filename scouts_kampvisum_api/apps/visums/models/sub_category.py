@@ -7,7 +7,7 @@ from apps.visums.managers import SubCategoryManager
 
 from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
-from scouts_auth.inuits.models.interfaces import (
+from scouts_auth.inuits.models.mixins import (
     Describable,
     Explainable,
     Indexable,

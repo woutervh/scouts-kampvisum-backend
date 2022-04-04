@@ -230,7 +230,7 @@ class ScoutsUser(User):
     def __str__(self):
         return (
             super().__str__()
-            + "group_admin_id({}), gender ({}), phone_number({}), membership_number({}), customer_number({}), birth_date({}), scouts_groups({}), addresses({}), functions({}), function_descriptions({}), group_specific_fields({}), links({})"
+            + ", group_admin_id({}), gender ({}), phone_number({}), membership_number({}), customer_number({}), birth_date({}), scouts_groups({}), addresses({}), functions({}), function_descriptions({}), group_specific_fields({}), links({})"
         ).format(
             self.group_admin_id,
             self.gender,

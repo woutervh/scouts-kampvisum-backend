@@ -9,7 +9,7 @@ from apps.visums.models import SubCategory, Check
 
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
-from scouts_auth.inuits.models.interfaces import Indexable
+from scouts_auth.inuits.models.mixins import Indexable
 
 
 # LOGGING

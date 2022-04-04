@@ -11,8 +11,6 @@ from scouts_auth.auth.oidc_user_helper import OIDCUserHelper
 
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
-from scouts_auth.inuits.cache import InuitsCache
-
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger

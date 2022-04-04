@@ -4,7 +4,7 @@ from apps.visums.models.enums import CheckTypeEnum
 from apps.visums.managers import CheckTypeManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.interfaces import Describable
+from scouts_auth.inuits.models.mixins import Describable
 from scouts_auth.inuits.models.fields import RequiredCharField
 
 # LOGGING

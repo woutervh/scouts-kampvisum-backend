@@ -6,7 +6,7 @@ from apps.deadlines.managers import DeadlineManager
 
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
-from scouts_auth.inuits.models.interfaces import (
+from scouts_auth.inuits.models.mixins import (
     Describable,
     Explainable,
     Indexable,

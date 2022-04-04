@@ -4,7 +4,7 @@ from apps.deadlines.managers import DeadlineFlagManager
 
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField, OptionalCharField
-from scouts_auth.inuits.models.interfaces import Changeable, Indexable, Translatable
+from scouts_auth.inuits.models.mixins import Changeable, Indexable, Translatable
 
 
 # LOGGING
