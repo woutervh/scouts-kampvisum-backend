@@ -1427,23 +1427,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "budget_budget_members2",
-            "sub_category": [
-                "budget_budget",
-                [
-                    "budget",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Kampgeld leden ontvangen check nummer 2"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "budget_budget_comments",
             "sub_category": [
                 "budget_budget",
