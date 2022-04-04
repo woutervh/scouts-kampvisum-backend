@@ -7,11 +7,11 @@ from apps.camps.services import CampService, CampTypeService
 
 from apps.deadlines.services import LinkedDeadlineService
 
-from apps.visums.models import LinkedCategorySet, CampVisum, CampVisumApproval
+from apps.visums.models import LinkedCategorySet, CampVisum, CampVisumEngagement
 from apps.visums.services import (
     LinkedCategorySetService,
     InuitsVisumMailService,
-    CampVisumApprovalService,
+    CampVisumEngagementService,
 )
 
 
@@ -29,7 +29,7 @@ class CampVisumService:
     category_set_service = LinkedCategorySetService()
     linked_deadline_service = LinkedDeadlineService()
     mail_service = InuitsVisumMailService()
-    visum_approval_service = CampVisumApprovalService()
+    visum_engagement_service = CampVisumEngagementService()
 
     @transaction.atomic
     def visum_create(self, request, **data) -> CampVisum:
@@ -45,7 +45,7 @@ class CampVisumService:
             camp_types=data.get("camp_types")
         )
 
-        approval: CampVisumApproval = self.visum_approval_service.create_approval()
+        engagement: CampVisumEngagement = self.visum_engagement_service.create_engagement()
 
         logger.debug(
             "Creating CampVisum instance for camp %s with camp type(s) (%s)",
@@ -57,7 +57,7 @@ class CampVisumService:
 
         visum.group = camp.sections.first().group
         visum.camp = camp
-        visum.approval = approval
+        visum.engagement = engagement
         visum.created_by = request.user
 
         visum.full_clean()
@@ -110,8 +110,8 @@ class CampVisumService:
             ", ".join([camp_type.camp_type for camp_type in camp_types]),
         )
 
-        if not instance.approval:
-            instance.approval = self.visum_approval_service.create_approval()
+        if not instance.engagement:
+            instance.engagement = self.visum_engagement_service.create_engagement()
 
         instance.camp = self.camp_service.camp_update(
             request, instance=camp, **camp_fields
@@ -148,11 +148,11 @@ class CampVisumService:
         )
 
         camp: Camp = instance.camp
-        approval: CampVisumApproval = instance.approval
+        engagement: CampVisumEngagement = instance.engagement
 
         instance.delete()
 
         if camp:
             camp.delete()
-        if approval:
-            approval.delete()
+        if engagement:
+            engagement.delete()

@@ -2,7 +2,7 @@ from django.db import models
 
 from apps.camps.models import Camp, CampType
 
-from apps.visums.models import CampVisumApproval
+from apps.visums.models import CampVisumEngagement
 from apps.visums.managers import CampVisumManager
 
 from scouts_auth.groupadmin.models import ScoutsGroup
@@ -28,8 +28,8 @@ class CampVisum(AuditedBaseModel):
     camp_types = models.ManyToManyField(CampType)
 
     camp_registration_mail_sent_before_deadline = models.BooleanField(default=False)
-    approval = models.OneToOneField(
-        CampVisumApproval,
+    engagement = models.OneToOneField(
+        CampVisumEngagement,
         on_delete=models.CASCADE,
         related_name="visum",
         null=True,

@@ -5,7 +5,7 @@ from apps.camps.serializers import CampSerializer, CampTypeSerializer
 from apps.visums.models import CampVisum
 from apps.visums.serializers import (
     LinkedCategorySetSerializer,
-    CampVisumApprovalSerializer,
+    CampVisumEngagementSerializer,
 )
 
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
@@ -24,7 +24,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
     camp = CampSerializer()
     camp_types = CampTypeSerializer(many=True)
     category_set = LinkedCategorySetSerializer()
-    approval = CampVisumApprovalSerializer(required=False)
+    engagement = CampVisumEngagementSerializer(required=False)
 
     class Meta:
         model = CampVisum
@@ -32,7 +32,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         data["category_set"] = {}
-        data["approval"] = {}
+        data["engagement"] = {}
 
         id = data.get("id", None)
         instance: CampVisum = CampVisum.objects.safe_get(id=id)
