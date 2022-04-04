@@ -6,7 +6,7 @@ from apps.visums.models import CategoryPriority
 from apps.visums.managers import CategoryManager
 
 from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
-from scouts_auth.inuits.models.interfaces import (
+from scouts_auth.inuits.models.mixins import (
     Describable,
     Explainable,
     Indexable,

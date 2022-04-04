@@ -6,7 +6,7 @@ from apps.deadlines.models import DeadlineItem, LinkedDeadlineFlag
 from apps.visums.models import LinkedSubCategory, LinkedCheck
 
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.interfaces import Indexable
+from scouts_auth.inuits.models.mixins import Indexable
 
 
 # LOGGING
