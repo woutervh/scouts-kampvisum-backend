@@ -31,7 +31,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = "Fixes issue 92074 https://redmine.inuits.eu/issues/92074"
-    exception = False
+    exception = True
 
     default_section_name_service = DefaultScoutsSectionNameService()
 

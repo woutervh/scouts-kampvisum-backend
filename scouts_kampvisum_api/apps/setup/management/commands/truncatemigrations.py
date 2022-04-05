@@ -11,7 +11,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = "Truncates django's migrations table"
-    exception = False
+    exception = True
 
     def _drop(self, cursor, table, name=None):
         if name is None:
