@@ -1,4 +1,11 @@
 role_section_leader: []
 role_group_leader: []
+role_district_commissioner:
+  - visums.view_visum_approval
+  - visums.edit_visum_approval
+  - visums.view_visum_feedback
+  - visums.edit_visum_feedback
+  - visums.view_visum_notes
+  - visums.edit_visum_notes
 role_administrator: []
-role_super_admin: [] # Doesn't need permissions because is made super user in djang
+role_super_admin: [] # Doesn't need permissions because is made super user in django
