@@ -197,3 +197,10 @@ class LinkedDeadlineService:
             return LinkedDeadline.objects.get(id=linked_deadline.id)
 
         return LinkedDeadline.objects.get(id=linked_deadline)
+
+    @transaction.atomic
+    def delete_linked_deadlines_for_visum(self, request, visum: CampVisum):
+        linked_deadlines: List[LinkedDeadline] = visum.deadlines.all()
+
+        for linked_deadline in linked_deadlines:
+            linked_deadline.delete()

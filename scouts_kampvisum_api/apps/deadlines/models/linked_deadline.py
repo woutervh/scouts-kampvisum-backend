@@ -5,7 +5,6 @@ from apps.deadlines.managers import LinkedDeadlineManager
 
 from apps.visums.models import CampVisum
 
-
 from scouts_auth.inuits.models import AuditedBaseModel
 
 
