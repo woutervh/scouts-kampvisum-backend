@@ -1,12 +1,8 @@
-import os
-from pathlib import Path
 from typing import List
 
 from django.db import transaction
-from django.conf import settings
-from django.core.management import call_command
+from django.db.models import Q
 from django.core.management.base import BaseCommand
-from django.core.exceptions import ValidationError
 
 from apps.deadlines.models import LinkedDeadline, LinkedDeadlineItem
 
@@ -38,3 +34,9 @@ class Command(BaseCommand):
 
                     linked_deadline_item.full_clean()
                     linked_deadline_item.save()
+
+        linked_deadline_items: List[
+            LinkedDeadlineItem
+        ] = LinkedDeadlineItem.objects.all().filter(
+            Q(linked_deadline_fix__isnull=True) | Q(linked_deadline_fix__exact="")
+        )

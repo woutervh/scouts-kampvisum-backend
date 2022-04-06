@@ -85,10 +85,10 @@ class ScoutsAuthorizationService(AuthorizationService):
         if user.has_role_administrator():
             user = self.add_user_as_admin(user)
 
-        if user.has_role_district_commissioner():
-            user = self.add_user_to_group(
-                user, ScoutsAuthorizationService.DISTRICT_COMMISSIONER
-            )
+        # if user.has_role_district_commissioner():
+        #     user = self.add_user_to_group(
+        #         user, ScoutsAuthorizationService.DISTRICT_COMMISSIONER
+        #     )
 
         # if user.has_role_group_leader():
         #     user = self.add_user_to_group(user, ScoutsAuthorizationService.GROUP_LEADER)
