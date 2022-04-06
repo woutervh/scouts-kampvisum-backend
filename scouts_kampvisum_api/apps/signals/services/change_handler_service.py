@@ -4,10 +4,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-# from apps.deadlines.models import LinkedDeadlineFlag
-
-# from apps.visums.models import LinkedCheck, LinkedParticipantCheck
-
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
 
@@ -21,8 +17,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class ChangeHandlerService:
 
     default_change_handler = settings.CHECK_CHANGED
-
-    # mail_service = InuitsVisumMailService()
 
     def handle_changes(self, change_handlers: str, instance=None):
         change_handlers: List[str] = change_handlers.split(",")

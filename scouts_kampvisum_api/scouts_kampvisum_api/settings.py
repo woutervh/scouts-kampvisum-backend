@@ -359,6 +359,8 @@ CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "09-01")
 RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-10")
 # Deadline for the camp registration - FORMAT: MM-DD
 CAMP_REGISTRATION_DEADLINE = env.str("CAMP_REGISTRATION_DEADLINE", "04-10")
+# Camp registration mails should be sent only once during this period (in hours)
+CAMP_REGISTRATION_MAIL_DELTA = env.int("CAMP_REGISTRATION_MAIL_DELTA", 24)
 ENFORCE_MEMBER_CHECKS = env.list(
     "ENFORCE_MEMBER_CHECKS",
     ["ParticipantMemberCheck", "ParticipantLeaderCheck", "ParticipantResponsibleCheck"],

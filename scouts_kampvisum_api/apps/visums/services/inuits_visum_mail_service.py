@@ -45,7 +45,9 @@ class InuitsVisumMailService(EmailService):
     def notify_responsible_changed(self, check: LinkedParticipantCheck):
         visum: CampVisum = check.sub_category.category.category_set.visum
 
-        checks: List[LinkedParticipantCheck] = LinkedParticipantCheck.objects.all().filter(
+        checks: List[
+            LinkedParticipantCheck
+        ] = LinkedParticipantCheck.objects.all().filter(
             parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK,
             sub_category__category__category_set__visum=visum,
         )
@@ -59,15 +61,61 @@ class InuitsVisumMailService(EmailService):
         dictionary = self._prepare_dictionary_responsible_changed(visum=visum)
 
     def notify_camp_registered(self, visum: CampVisum):
-        deadline = VisumSettings.get_camp_registration_deadline_date()
-        now = timezone.now().date()
+        """
+        Notifies stakeholders about changes to the camp when all camp deadline items have been checked.
 
-        after_camp_registration_deadline = False
+        Camp registration complete (all camp registration deadline items checked):
+        -> before camp registration deadline: camp_registered_before_deadline.html
+        -> after camp registration deadline: camp_registered_after_deadline.html
+        If the initial camp registration mail was already sent:
+        -> camp_changed_after_deadline.html
+
+        To clarify:
+        - Before the camp registration deadline:
+          -> emails should be sent once when all the camp registration deadline items have been checked
+        - After the camp registration deadline:
+          -> emails should be sent when the camp registration deadline items have been checked and on subsequent changes.
+             -> If the camp registration mail hasn't been sent yet: the camp registration after deadline mail
+             -> If the camp registration mail has already been sent: the camp registration changed mail
+
+        """
+        sending_camp_registration_mail = False
+        sending_camp_changed_mail = False
+
+        deadline = VisumSettings.get_camp_registration_deadline_date()
+        now = timezone.now()
+        delta = VisumSettings.get_email_registration_delta()
+
+        before_camp_registration_deadline = True
         # logger.debug("AFTER ? %s (%s >= %s)", deadline < now, deadline, now)
-        if deadline < now:
-            after_camp_registration_deadline = True
-        else:
+        if deadline < now.date():
+            before_camp_registration_deadline = False
+
+        template = self.template_camp_registration_before_deadline
+        if before_camp_registration_deadline:
+            sending_camp_registration_mail = True
+
+            # Before deadline and camp registration mail has already been sent
             if visum.camp_registration_mail_sent_before_deadline:
+                logger.debug("Camp registration mail has already been sent")
+                return
+        else:
+            # After deadline and camp registration mail has not yet been set
+            if not visum.camp_registration_mail_sent_after_deadline:
+                sending_camp_registration_mail = True
+                template = self.template_camp_registration_after_deadline
+            # After deadline and camp registration mail has been sent already
+            else:
+                sending_camp_changed_mail = True
+                template = self.template_camp_changed_after_deadline
+
+        if not sending_camp_registration_mail and sending_camp_changed_mail:
+            # Only send out 1 email per day for changed checks
+            if (
+                visum.camp_registration_mail_last_sent
+                and (now - visum.camp_registration_mail_last_sent).hours < delta
+            ):
+                logger.debug("Camp registration mail has already been sent today")
                 return
 
         dictionary = self._prepare_dictionary_camp_registered(visum=visum)
@@ -119,13 +167,6 @@ class InuitsVisumMailService(EmailService):
             )
         )
 
-        template = self.template_camp_registration_before_deadline
-        if after_camp_registration_deadline:
-            if visum.camp_registration_mail_sent_before_deadline:
-                template = self.template_camp_changed_after_deadline
-            else:
-                template = self.template_camp_registration_after_deadline
-
         logger.debug(
             "Preparing to send camp registration notification to %s (debug: %s, test: %s, acceptance: %s), using template %s",
             recipient,
@@ -146,11 +187,16 @@ class InuitsVisumMailService(EmailService):
             bcc=bcc,
         )
 
-        if not after_camp_registration_deadline:
-            visum.camp_registration_mail_sent_before_deadline = result
+        if sending_camp_registration_mail:
+            if before_camp_registration_deadline:
+                visum.camp_registration_mail_sent_before_deadline = result
+            else:
+                visum.camp_registration_mail_sent_after_deadline = result
 
-            visum.full_clean()
-            visum.save()
+        visum.camp_registration_mail_last_sent = now
+
+        visum.full_clean()
+        visum.save()
 
     def _prepare_dictionary_responsible_changed(self, visum: CampVisum):
         return {
