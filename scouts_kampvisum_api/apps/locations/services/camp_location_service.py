@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -146,6 +147,20 @@ class CampLocationService:
         instance.save()
 
         return instance
+
+    @transaction.atomic
+    def remove_linked_locations(self, request, instance: LinkedLocationCheck):
+        logger.debug(
+            "Removing %d linked location(s) %s from location check %s",
+            instance.locations.count(),
+            instance.id,
+        )
+
+        locations: List[LinkedLocation] = instance.locations.all()
+
+        instance.locations.clear()
+        for location in locations:
+            location.delete()
 
     @transaction.atomic
     def create_or_update_camp_location(
