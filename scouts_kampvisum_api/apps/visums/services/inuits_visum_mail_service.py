@@ -42,9 +42,25 @@ class InuitsVisumMailService(EmailService):
         VisumSettings.get_camp_changed_after_deadline_template()
     )
 
-    def notify_responsible_changed(self, check: LinkedParticipantCheck):
-        visum: CampVisum = check.sub_category.category.category_set.visum
+    template_camp_responsible_changed_after_deadline = (
+        VisumSettings.get_camp_responsible_changed_after_deadline_template()
+    )
 
+    def notify_responsible_changed(self, check: LinkedParticipantCheck):
+        before_camp_registration_deadline = True
+
+        deadline = VisumSettings.get_camp_registration_deadline_date()
+        now = timezone.now()
+        if deadline < now.date():
+            before_camp_registration_deadline = False
+
+        if before_camp_registration_deadline:
+            logger.debug(
+                "Camp responsible changed - not sending mail because deadline has not yet passed"
+            )
+            return
+
+        visum: CampVisum = check.sub_category.category.category_set.visum
         checks: List[
             LinkedParticipantCheck
         ] = LinkedParticipantCheck.objects.all().filter(
@@ -59,6 +75,21 @@ class InuitsVisumMailService(EmailService):
 
         logger.debug("Preparing to send mail to")
         dictionary = self._prepare_dictionary_responsible_changed(visum=visum)
+
+        template = self.template_camp_responsible_changed_after_deadline
+        to = [participant.participant.email for participant in participants]
+        to = VisumSettings.get_camp_responsible_changed_notification_to(
+            addresses=to, label="CAMP REGISTRATION: recipient"
+        )
+
+        result = self._send_prepared_email(
+            template_path=template,
+            dictionary=dictionary,
+            subject=VisumSettings.get_email_responsible_changed_subject().format(
+                visum.camp.name
+            ),
+            to=to,
+        )
 
     def notify_camp_registered(self, visum: CampVisum):
         """
@@ -78,6 +109,9 @@ class InuitsVisumMailService(EmailService):
              -> If the camp registration mail hasn't been sent yet: the camp registration after deadline mail
              -> If the camp registration mail has already been sent: the camp registration changed mail
 
+        https://redmine.inuits.eu/issues/87010
+        https://redmine.inuits.eu/issues/92716
+        https://redmine.inuits.eu/issues/92718
         """
         sending_camp_registration_mail = False
         sending_camp_changed_mail = False
