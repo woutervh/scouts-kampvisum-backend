@@ -289,5 +289,37 @@
 			],
 			"label": "Bankkaart"
 		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "game_inclusion",
+			"category": [
+				"game",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Inclusie"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "game_weather",
+			"category": [
+				"game",
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Weersomstandigheden"
+		}
 	}
 ]
