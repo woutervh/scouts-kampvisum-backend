@@ -111,12 +111,13 @@ class InuitsVisumMailService(EmailService):
 
         if not sending_camp_registration_mail and sending_camp_changed_mail:
             # Only send out 1 email per day for changed checks
-            if (
-                visum.camp_registration_mail_last_sent
-                and (now - visum.camp_registration_mail_last_sent).hours < delta
-            ):
-                logger.debug("Camp registration mail has already been sent today")
-                return
+            if visum.camp_registration_mail_last_sent:
+                time_delta = now - visum.camp_registration_mail_last_sent
+                hours = time_delta.days * 24 + time_delta.seconds / 3600
+
+                if hours < delta:
+                    logger.debug("Camp registration mail has already been sent today")
+                    return
 
         dictionary = self._prepare_dictionary_camp_registered(visum=visum)
         recipient = visum.created_by.email

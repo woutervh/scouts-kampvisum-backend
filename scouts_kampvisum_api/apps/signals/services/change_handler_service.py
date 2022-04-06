@@ -38,12 +38,14 @@ class ChangeHandlerService:
 
     # def default_check_changed(self, instance: LinkedCheck):
     def default_check_changed(self, instance):
-        model = type(instance).__name__
-        if model == "LinkedCheck":
+        from apps.visums.models import LinkedCheck
+        from apps.deadlines.models import LinkedDeadlineFlag
+
+        if isinstance(instance, LinkedCheck):
             self._check_deadline_complete(
                 visum=instance.sub_category.category.category_set.visum
             )
-        elif model == "LinkedDeadlineFlag":
+        elif isinstance(instance, LinkedDeadlineFlag):
             self._check_deadline_complete(
                 visum=instance.deadline_item.linked_deadline.visum
             )

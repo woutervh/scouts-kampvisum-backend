@@ -45,9 +45,9 @@ class CampVisumService:
             camp_types=data.get("camp_types")
         )
 
-        # engagement: CampVisumEngagement = (
-        #     self.visum_engagement_service.create_engagement()
-        # )
+        engagement: CampVisumEngagement = (
+            self.visum_engagement_service.create_engagement()
+        )
 
         logger.debug(
             "Creating CampVisum instance for camp %s with camp type(s) (%s)",
@@ -59,7 +59,7 @@ class CampVisumService:
 
         visum.group = camp.sections.first().group
         visum.camp = camp
-        # visum.engagement = engagement
+        visum.engagement = engagement
         visum.created_by = request.user
 
         visum.full_clean()
@@ -112,8 +112,8 @@ class CampVisumService:
             ", ".join([camp_type.camp_type for camp_type in camp_types]),
         )
 
-        # if not instance.engagement:
-        #     instance.engagement = self.visum_engagement_service.create_engagement()
+        if not instance.engagement:
+            instance.engagement = self.visum_engagement_service.create_engagement()
 
         instance.camp = self.camp_service.camp_update(
             request, instance=camp, **camp_fields
@@ -150,7 +150,7 @@ class CampVisumService:
         )
 
         camp: Camp = instance.camp
-        # engagement: CampVisumEngagement = instance.engagement
+        engagement: CampVisumEngagement = instance.engagement
 
         self.linked_deadline_service.delete_linked_deadlines_for_visum(
             request=request, visum=instance
@@ -160,5 +160,5 @@ class CampVisumService:
 
         if camp:
             camp.delete()
-        # if engagement:
-        #     engagement.delete()
+        if engagement:
+            engagement.delete()
