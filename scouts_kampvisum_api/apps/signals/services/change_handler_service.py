@@ -38,9 +38,15 @@ class ChangeHandlerService:
 
     # def default_check_changed(self, instance: LinkedCheck):
     def default_check_changed(self, instance):
-        self._check_deadline_complete(
-            visum=instance.sub_category.category.category_set.visum
-        )
+        model = type(instance).__name__
+        if model == "LinkedCheck":
+            self._check_deadline_complete(
+                visum=instance.sub_category.category.category_set.visum
+            )
+        elif model == "LinkedDeadlineFlag":
+            self._check_deadline_complete(
+                visum=instance.deadline_item.linked_deadline.visum
+            )
 
     # def default_deadline_flag_changed(self, instance: LinkedDeadlineFlag):
     def default_deadline_flag_changed(self, instance):
