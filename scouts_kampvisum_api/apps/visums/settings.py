@@ -42,6 +42,10 @@ class VisumSettings(SettingsHelper):
         return SettingsHelper.get("EMAIL_REGISTRATION_SUBJECT")
 
     @staticmethod
+    def get_email_registration_changed_subject():
+        return SettingsHelper.get("EMAIL_REGISTRATION_CHANGED_SUBJECT")
+
+    @staticmethod
     def get_email_responsible_changed_subject():
         return SettingsHelper.get("EMAIL_RESPONSIBLE_CHANGED_SUBJECT")
 

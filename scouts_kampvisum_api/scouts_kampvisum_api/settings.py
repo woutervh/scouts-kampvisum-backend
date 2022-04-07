@@ -525,6 +525,9 @@ EMAIL_REGISTRATION_BCC = env.str(
     "EMAIL_REGISTRATION_BCC", "bosaanvragen@scoutsengidsenvlaanderen.be"
 )
 EMAIL_REGISTRATION_SUBJECT = env.str("EMAIL_REGISTRATION_SUBJECT", "Kampregistratie {}")
+EMAIL_REGISTRATION_CHANGED_SUBJECT = env.str(
+    "EMAIL_REGISTRATION_CHANGED_SUBJECT", "Je kampregistratie werd aangepast - {}"
+)
 EMAIL_RESPONSIBLE_CHANGED_SUBJECT = env.str(
     "EMAIL_RESPONSIBLE_CHANGED_SUBJECT",
     "Kampregistratie {}: kampverantwoordelijke veranderd",
