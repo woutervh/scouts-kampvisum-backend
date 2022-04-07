@@ -183,7 +183,7 @@ class ScoutsUser(User):
         return [
             group
             for group in self.persisted_scouts_groups.all()
-            if self.has_role_section_leader(group)
+            if self.has_role_section_leader(group=group)
         ]
 
     def has_role_group_leader(self, group: ScoutsGroup) -> bool:
@@ -200,17 +200,24 @@ class ScoutsUser(User):
         return [
             group
             for group in self.persisted_scouts_groups.all()
-            if self.has_role_group_leader(group)
+            if self.has_role_group_leader(group=group)
         ]
 
-    def has_role_district_commissioner(self) -> bool:
+    def has_role_district_commissioner(self, group: ScoutsGroup) -> bool:
         """
         Determines if the user is a district commissioner based on a function code
         """
         for function in self.persisted_scouts_functions.all():
-            if function.is_district_commissioner():
+            if function.is_district_commissioner(scouts_group=group):
                 return True
         return False
+
+    def get_district_commissioner_groups(self) -> List[ScoutsGroup]:
+        return [
+            group
+            for group in self.persisted_scouts_groups.all()
+            if self.has_role_district_commissioner(group=group)
+        ]
 
     def has_role_administrator(self) -> bool:
         """
@@ -230,7 +237,7 @@ class ScoutsUser(User):
     def __str__(self):
         return (
             super().__str__()
-            + "group_admin_id({}), gender ({}), phone_number({}), membership_number({}), customer_number({}), birth_date({}), scouts_groups({}), addresses({}), functions({}), function_descriptions({}), group_specific_fields({}), links({})"
+            + ", group_admin_id({}), gender ({}), phone_number({}), membership_number({}), customer_number({}), birth_date({}), scouts_groups({}), addresses({}), functions({}), function_descriptions({}), group_specific_fields({}), links({})"
         ).format(
             self.group_admin_id,
             self.gender,
@@ -337,8 +344,13 @@ class ScoutsUser(User):
             ),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
-            "DISTRICT COMMISSIONER ?",
-            self.has_role_district_commissioner(),
+            "DISTRICT COMMISSIONER",
+            ", ".join(
+                group.group_admin_id
+                for group in self.get_district_commissioner_groups()
+            )
+            if len(self.get_district_commissioner_groups()) > 0
+            else "None",
             "GROUP LEADER",
             ", ".join(group.group_admin_id for group in self.get_group_leader_groups())
             if len(self.get_group_leader_groups()) > 0

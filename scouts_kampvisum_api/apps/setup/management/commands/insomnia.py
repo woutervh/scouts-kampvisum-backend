@@ -50,7 +50,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = "Provides some known uuids for insomnia"
-    exception = False
+    exception = True
 
     def handle(self, *args, **kwargs):
         user = self.setup_admin_user()

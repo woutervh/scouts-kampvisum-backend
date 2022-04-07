@@ -13,6 +13,9 @@
             "check_type": [
                 "DurationCheck"
             ],
+            "change_handlers": [
+                "change_camp_dates"
+            ],
             "is_multiple": true,
             "label": "Start- en einddatum voor het ledenkamp"
         }
@@ -27,6 +30,9 @@
                     "planning",
                     2022
                 ]
+            ],
+            "change_handlers": [
+                "change_camp_dates"
             ],
             "check_type": [
                 "DurationCheck"
@@ -259,6 +265,9 @@
             ],
             "check_type": [
                 "CampLocationCheck"
+            ],
+            "change_handlers": [
+                "change_sleeping_location"
             ],
             "is_multiple": true,
             "label": "Gegevens kampplaats en verhuurder",
@@ -1422,23 +1431,6 @@
                 "SimpleCheck"
             ],
             "label": "Kampgeld leden ontvangen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "budget_budget_members2",
-            "sub_category": [
-                "budget_budget",
-                [
-                    "budget",
-                    2022
-                ]
-            ],
-            "check_type": [
-                "SimpleCheck"
-            ],
-            "label": "Kampgeld leden ontvangen check nummer 2"
         }
     },
     {

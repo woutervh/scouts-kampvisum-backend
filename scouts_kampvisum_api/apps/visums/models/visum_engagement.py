@@ -34,8 +34,9 @@ class CampVisumEngagementManager(models.Manager):
 
         return None
 
+
 class CampVisumEngagement(AbstractBaseModel):
-    
+
     objects = CampVisumEngagementManager()
 
     approved = models.BooleanField(default=False)
@@ -69,7 +70,7 @@ class CampVisumEngagement(AbstractBaseModel):
         return self.can_sign()
 
     def group_leaders_can_sign(self) -> bool:
-        return self.leaders_can_sign() and self.leaders and self.leaders.count() > 0
+        return self.leaders_can_sign() and self.leaders
 
     def district_commissioner_can_sign(self) -> bool:
-        return self.group_leaders_can_sign() and self.group_leaders and self.group_leaders.count() > 0
+        return self.group_leaders_can_sign() and self.group_leaders

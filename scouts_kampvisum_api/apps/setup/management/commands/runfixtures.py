@@ -15,7 +15,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = "Loads all fixtures"
-    exception = False
+    exception = True
 
     BASE_PATH = "apps/"
 

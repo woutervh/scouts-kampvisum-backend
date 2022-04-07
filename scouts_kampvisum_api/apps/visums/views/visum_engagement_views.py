@@ -22,12 +22,14 @@ class CampVisumEngagementViewSet(viewsets.GenericViewSet):
     serializer_class = CampVisumEngagementSerializer
     queryset = CampVisumEngagement.objects.all()
 
-    camp_visum_approval_service = CampVisumEngagementService()
+    camp_visum_engagement_service = CampVisumEngagementService()
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumEngagementSerializer})
     def retrieve(self, request, pk=None):
         instance = self.get_object()
-        serializer = CampVisumEngagementSerializer(instance, context={"request": request})
+        serializer = CampVisumEngagementSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(serializer.data)
 
@@ -38,23 +40,24 @@ class CampVisumEngagementViewSet(viewsets.GenericViewSet):
     def partial_update(self, request, pk=None):
         instance = CampVisumEngagement.objects.safe_get(pk=pk, raise_error=True)
 
-        logger.debug("CAMP VISUM APPROVAL UPDATE REQUEST DATA: %s", request.data)
-        
         data = request.data
-        data["id"] = pk
+
+        logger.debug("CAMP VISUM ENGAGEMENT UPDATE REQUEST DATA: %s", data)
+
+        data["id"] = instance.id
 
         serializer = CampVisumEngagementSerializer(
             data=request.data,
-            instance=instance,
+            # instance=instance,
             context={"request": request},
             partial=True,
         )
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("CAMP VISUM APPROVAL UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug("CAMP VISUM ENGAGEMENT UPDATE VALIDATED DATA: %s", validated_data)
 
-        updated_instance = self.camp_visum_approval_service.update_engagement(
+        updated_instance = self.camp_visum_engagement_service.update_engagement(
             request, instance=instance, **validated_data
         )
 

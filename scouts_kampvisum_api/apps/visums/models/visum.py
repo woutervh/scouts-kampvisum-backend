@@ -3,11 +3,13 @@ from django.db import models
 from apps.camps.models import Camp, CampType
 
 from apps.visums.models import CampVisumEngagement
+from apps.visums.models.enums import CampVisumState
 from apps.visums.managers import CampVisumManager
 
 from scouts_auth.groupadmin.models import ScoutsGroup
 
 from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.fields import DefaultCharField, OptionalDateTimeField
 
 
 # LOGGING
@@ -28,6 +30,9 @@ class CampVisum(AuditedBaseModel):
     camp_types = models.ManyToManyField(CampType)
 
     camp_registration_mail_sent_before_deadline = models.BooleanField(default=False)
+    camp_registration_mail_sent_after_deadline = models.BooleanField(default=False)
+    camp_registration_mail_last_sent = OptionalDateTimeField()
+
     engagement = models.OneToOneField(
         CampVisumEngagement,
         on_delete=models.CASCADE,
@@ -36,8 +41,14 @@ class CampVisum(AuditedBaseModel):
         blank=True,
     )
 
+    state = DefaultCharField(
+        choices=CampVisumState.choices,
+        default=CampVisumState.DATA_REQUIRED,
+        max_length=32,
+    )
+
     class Meta:
-        ordering = ["camp__sections__age_group"]
+        # ordering = ["camp__sections__age_group"]
         permissions = [
             ("create_campvisum", "User can create a camp"),
         ]

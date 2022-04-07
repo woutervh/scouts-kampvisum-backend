@@ -1,4 +1,5 @@
 import datetime
+from typing import List
 
 from django.utils import timezone
 from django.core.exceptions import ValidationError
@@ -41,6 +42,18 @@ class VisumSettings(SettingsHelper):
         return SettingsHelper.get("EMAIL_REGISTRATION_SUBJECT")
 
     @staticmethod
+    def get_email_registration_changed_subject():
+        return SettingsHelper.get("EMAIL_REGISTRATION_CHANGED_SUBJECT")
+
+    @staticmethod
+    def get_email_responsible_changed_subject():
+        return SettingsHelper.get("EMAIL_RESPONSIBLE_CHANGED_SUBJECT")
+
+    @staticmethod
+    def get_email_registration_delta() -> int:
+        return SettingsHelper.get_int("CAMP_REGISTRATION_MAIL_DELTA")
+
+    @staticmethod
     def get_sendinblue_tags() -> list:
         return SettingsHelper.get_list("SENDINBLUE_MAIL_TAGS", [])
 
@@ -77,7 +90,13 @@ class VisumSettings(SettingsHelper):
         return SettingsHelper.get("RESOURCES_TEMPLATE_CAMP_CHANGED_AFTER_DEADLINE")
 
     @staticmethod
-    def get_camp_registration_notification_to(
+    def get_camp_responsible_changed_after_deadline_template():
+        return SettingsHelper.get(
+            "RESOURCES_TEMPLATE_CAMP_RESPONSIBLE_CHANGED_AFTER_DEADLINE"
+        )
+
+    @staticmethod
+    def get_emails_to(
         address: str = None, send_to: str = None, label: str = None
     ) -> str:
         """
@@ -118,3 +137,24 @@ class VisumSettings(SettingsHelper):
         )
 
         return processed_address
+
+    @staticmethod
+    def get_camp_registration_notification_to(
+        address: str = None, send_to: str = None, label: str = None
+    ) -> str:
+        return VisumSettings.get_emails_to(
+            address=address, send_to=send_to, label=label
+        )
+
+    @staticmethod
+    def get_camp_responsible_changed_notification_to(
+        addresses: List[str] = None, label: str = None
+    ) -> List[str]:
+        recipients: List[str] = []
+        for address in addresses:
+            recipients.append(
+                VisumSettings.get_emails_to(
+                    address=address, send_to=address, label=label
+                )
+            )
+        return recipients
