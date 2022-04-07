@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 
 from django.conf import settings
@@ -46,13 +47,12 @@ class InuitsVisumMailService(EmailService):
         VisumSettings.get_camp_responsible_changed_after_deadline_template()
     )
 
-    def notify_responsible_changed(self, check: LinkedParticipantCheck):
-        before_camp_registration_deadline = True
-
-        deadline = VisumSettings.get_camp_registration_deadline_date()
-        now = timezone.now()
-        if deadline < now.date():
-            before_camp_registration_deadline = False
+    def notify_responsible_changed(
+        self,
+        check: LinkedParticipantCheck,
+        before_camp_registration_deadline: bool = False,
+        now: datetime.datetime = None,
+    ):
 
         if before_camp_registration_deadline:
             logger.debug(
@@ -91,7 +91,12 @@ class InuitsVisumMailService(EmailService):
             to=to,
         )
 
-    def notify_camp_registered(self, visum: CampVisum):
+    def notify_camp_registered(
+        self,
+        visum: CampVisum,
+        before_camp_registration_deadline: bool = False,
+        now: datetime.datetime = None,
+    ):
         """
         Notifies stakeholders about changes to the camp when all camp deadline items have been checked.
 
@@ -116,14 +121,7 @@ class InuitsVisumMailService(EmailService):
         sending_camp_registration_mail = False
         sending_camp_changed_mail = False
 
-        deadline = VisumSettings.get_camp_registration_deadline_date()
-        now = timezone.now()
         delta = VisumSettings.get_email_registration_delta()
-
-        before_camp_registration_deadline = True
-        # logger.debug("AFTER ? %s (%s >= %s)", deadline < now, deadline, now)
-        if deadline < now.date():
-            before_camp_registration_deadline = False
 
         template = self.template_camp_registration_before_deadline
         if before_camp_registration_deadline:

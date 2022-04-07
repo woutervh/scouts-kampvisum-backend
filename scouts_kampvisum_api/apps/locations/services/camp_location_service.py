@@ -151,7 +151,7 @@ class CampLocationService:
     @transaction.atomic
     def remove_linked_locations(self, request, instance: LinkedLocationCheck):
         logger.debug(
-            "Removing %d linked location(s) %s from location check %s",
+            "Removing %d linked location(s) from location check %s",
             instance.locations.count(),
             instance.id,
         )

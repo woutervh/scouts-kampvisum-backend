@@ -13,6 +13,9 @@
             "check_type": [
                 "DurationCheck"
             ],
+            "change_handlers": [
+                "change_camp_dates"
+            ],
             "is_multiple": true,
             "label": "Start- en einddatum voor het ledenkamp"
         }
@@ -27,6 +30,9 @@
                     "planning",
                     2022
                 ]
+            ],
+            "change_handlers": [
+                "change_camp_dates"
             ],
             "check_type": [
                 "DurationCheck"
@@ -259,6 +265,9 @@
             ],
             "check_type": [
                 "CampLocationCheck"
+            ],
+            "change_handlers": [
+                "change_sleeping_location"
             ],
             "is_multiple": true,
             "label": "Gegevens kampplaats en verhuurder",
