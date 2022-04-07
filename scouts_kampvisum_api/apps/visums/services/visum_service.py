@@ -45,7 +45,9 @@ class CampVisumService:
             camp_types=data.get("camp_types")
         )
 
-        engagement: CampVisumEngagement = self.visum_engagement_service.create_engagement()
+        engagement: CampVisumEngagement = (
+            self.visum_engagement_service.create_engagement()
+        )
 
         logger.debug(
             "Creating CampVisum instance for camp %s with camp type(s) (%s)",
@@ -149,6 +151,10 @@ class CampVisumService:
 
         camp: Camp = instance.camp
         engagement: CampVisumEngagement = instance.engagement
+
+        self.linked_deadline_service.delete_linked_deadlines_for_visum(
+            request=request, visum=instance
+        )
 
         instance.delete()
 

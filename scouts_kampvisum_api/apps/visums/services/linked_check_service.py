@@ -1,3 +1,5 @@
+from typing import List
+
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
@@ -166,9 +168,37 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        logger.debug("DATA: %s", data)
-
         locations = data.get("locations", [])
+        # All locations removed
+        if len(locations) == 0:
+            self.location_service.remove_linked_locations(
+                request=request, instance=instance
+            )
+        else:
+            # Have currently linked locations been removed ?
+            linked_locations: List[LinkedLocation] = instance.locations.all()
+            removed_locations: List[LinkedLocation] = []
+            for linked_location in linked_locations:
+                location_found = False
+                for location in locations:
+                    if (
+                        isinstance(location, LinkedLocation)
+                        and location.id == linked_location.id
+                    ):
+                        location_found = True
+                        break
+                if not location_found:
+                    removed_locations.append(linked_location)
+
+            for removed_location in removed_locations:
+                logger.debug(
+                    "Removing location %s (%s)",
+                    linked_location.name,
+                    linked_location.id,
+                )
+                instance.locations.remove(removed_location)
+
+        # Add new or update existing locations
         for location in locations:
             linked_location = None
             location_data = {}

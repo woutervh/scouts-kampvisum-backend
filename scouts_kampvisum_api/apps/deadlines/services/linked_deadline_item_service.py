@@ -48,6 +48,7 @@ class LinkedDeadlineItemService:
         linked_deadline_item = LinkedDeadlineItem()
 
         linked_deadline_item.parent = deadline_item
+        linked_deadline_item.linked_deadline_fix = linked_deadline.id
 
         if deadline_item.item_sub_category:
             linked_deadline_item.linked_sub_category = (

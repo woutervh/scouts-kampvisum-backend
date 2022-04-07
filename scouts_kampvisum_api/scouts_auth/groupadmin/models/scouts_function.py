@@ -86,21 +86,27 @@ class ScoutsFunction(AuditedBaseModel):
             )
         ]
 
-    def is_leader(self, scouts_group: ScoutsGroup) -> bool:
+    def is_leader(self, scouts_group: ScoutsGroup = None) -> bool:
+        if scouts_group:
+            if not scouts_group in self.scouts_groups.all():
+                return False
+
         return (
-            scouts_group in self.scouts_groups.all()
-            and self.name.lower()
+            self.name.lower()
             == GroupadminSettings.get_section_leader_identifier().lower()
         )
 
-    def is_section_leader(self, scouts_group: ScoutsGroup) -> bool:
+    def is_section_leader(self, scouts_group: ScoutsGroup = None) -> bool:
         return self.is_leader(scouts_group=scouts_group)
 
-    def is_group_leader(self, scouts_group: ScoutsGroup) -> bool:
+    def is_group_leader(self, scouts_group: ScoutsGroup = None) -> bool:
         return (
             self.is_leader(scouts_group=scouts_group)
             and AbstractScoutsFunctionCode(code=self.code).is_group_leader()
         )
 
-    def is_district_commissioner(self) -> bool:
-        return AbstractScoutsFunctionCode(code=self.code).is_district_commissioner()
+    def is_district_commissioner(self, scouts_group: ScoutsGroup = None) -> bool:
+        return (
+            self.is_leader(scouts_group=scouts_group)
+            and AbstractScoutsFunctionCode(code=self.code).is_district_commissioner()
+        )

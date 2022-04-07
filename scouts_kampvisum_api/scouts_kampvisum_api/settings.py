@@ -355,10 +355,12 @@ INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool(
 ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
 # Day after which a new camp registration is considered to be in the next camp year - FORMAT: MM-DD
 CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "09-01")
-# Day after which a mail should be sent if the camp responsible has changed - FORMAT: MM-DD
-RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", "04-10")
 # Deadline for the camp registration - FORMAT: MM-DD
-CAMP_REGISTRATION_DEADLINE = env.str("CAMP_REGISTRATION_DEADLINE", "04-10")
+CAMP_REGISTRATION_DEADLINE = env.str("CAMP_REGISTRATION_DEADLINE", "04-1")
+# Day after which a mail should be sent if the camp responsible has changed - FORMAT: MM-DD
+RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", CAMP_REGISTRATION_DEADLINE)
+# Camp registration mails should be sent only once during this period (in hours)
+CAMP_REGISTRATION_MAIL_DELTA = env.int("CAMP_REGISTRATION_MAIL_DELTA", 24)
 ENFORCE_MEMBER_CHECKS = env.list(
     "ENFORCE_MEMBER_CHECKS",
     ["ParticipantMemberCheck", "ParticipantLeaderCheck", "ParticipantResponsibleCheck"],
@@ -479,6 +481,9 @@ RESOURCES_TEMPLATE_CAMP_REGISTRATION_AFTER_DEADLINE = (
 RESOURCES_TEMPLATE_CAMP_CHANGED_AFTER_DEADLINE = (
     RESOURCES_MAIL_TEMPLATE_PATH + "camp_changed_after_deadline.html"
 )
+RESOURCES_TEMPLATE_CAMP_RESPONSIBLE_CHANGED_AFTER_DEADLINE = (
+    RESOURCES_MAIL_TEMPLATE_PATH + "responsible_changed_after_deadline.html"
+)
 
 # EMAIL
 EMAIL_DEBUG_RECIPIENT = env.str("EMAIL_DEBUG_RECIPIENT")
@@ -520,6 +525,13 @@ EMAIL_REGISTRATION_BCC = env.str(
     "EMAIL_REGISTRATION_BCC", "bosaanvragen@scoutsengidsenvlaanderen.be"
 )
 EMAIL_REGISTRATION_SUBJECT = env.str("EMAIL_REGISTRATION_SUBJECT", "Kampregistratie {}")
+EMAIL_REGISTRATION_CHANGED_SUBJECT = env.str(
+    "EMAIL_REGISTRATION_CHANGED_SUBJECT", "Je kampregistratie werd aangepast - {}"
+)
+EMAIL_RESPONSIBLE_CHANGED_SUBJECT = env.str(
+    "EMAIL_RESPONSIBLE_CHANGED_SUBJECT",
+    "Kampregistratie {}: kampverantwoordelijke veranderd",
+)
 EMAIL_TEMPLATE = None
 TMP_FOLDER = RESOURCES_PATH + "temp"
 ANYMAIL = {}

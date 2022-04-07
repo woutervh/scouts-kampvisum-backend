@@ -31,7 +31,7 @@ class ScoutsFunctionService:
     ):
         # logger.debug("PRESENT FUNCTIONS: %s", user.functions, user=user)
         abstract_function_descriptions: List[
-            AbstractScoutsFunction
+            AbstractScoutsFunctionDescription
         ] = self.groupadmin.get_function_descriptions(
             active_user=user
         ).function_descriptions
@@ -92,11 +92,13 @@ class ScoutsFunctionService:
                     #     abstract_function_description.code,
                     #     abstract_function_description.description,
                     # )
-                    scouts_function: ScoutsFunction = self.create_or_update_scouts_function(
-                        user=user,
-                        abstract_function=abstract_function,
-                        abstract_function_description=abstract_function_description,
-                        abstract_scouts_groups=abstract_function_description.scouts_groups,
+                    scouts_function: ScoutsFunction = (
+                        self.create_or_update_scouts_function(
+                            user=user,
+                            abstract_function=abstract_function,
+                            abstract_function_description=abstract_function_description,
+                            abstract_scouts_groups=[abstract_function.scouts_group],
+                        )
                     )
 
             # if not abstract_function_description_found:
