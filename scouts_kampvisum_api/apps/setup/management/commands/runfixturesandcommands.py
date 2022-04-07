@@ -24,7 +24,7 @@ class Command(BaseCommand):
         # "fix92074bis",
         "sprint7fix91022",
         "fix92544",
-        "updatevisums",
+        # "updatevisums",
     ]
 
     def handle(self, *args, **kwargs):

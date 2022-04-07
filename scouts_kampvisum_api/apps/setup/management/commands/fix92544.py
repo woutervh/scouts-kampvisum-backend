@@ -35,8 +35,13 @@ class Command(BaseCommand):
                     linked_deadline_item.full_clean()
                     linked_deadline_item.save()
 
-        linked_deadline_items: List[
-            LinkedDeadlineItem
-        ] = LinkedDeadlineItem.objects.all().filter(
-            Q(linked_deadline_fix__isnull=True) | Q(linked_deadline_fix__exact="")
+        linked_deadline_items: List[LinkedDeadlineItem] = list(
+            LinkedDeadlineItem.objects.all().filter(
+                Q(linked_deadline_fix__isnull=True) | Q(linked_deadline_fix__exact="")
+            )
+        )
+
+        logger.info(
+            "LinkedDeadlineItem instances not linked to a LinkedDeadline: %d",
+            len(linked_deadline_items),
         )
