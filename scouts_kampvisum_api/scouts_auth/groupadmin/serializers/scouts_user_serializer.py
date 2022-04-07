@@ -33,7 +33,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "name": group.name,
                 "full_name": group.full_name,
                 "type": group.group_type,
-                "is_leader": obj.has_role_leader(group=group),
+                "is_section_leader": obj.has_role_section_leader(group=group),
                 "is_group_leader": obj.has_role_group_leader(group=group),
                 "is_district_commissioner": obj.has_role_district_commissioner(
                     group=group
