@@ -47,18 +47,18 @@ class ChangeHandlerService:
         from apps.visums.models import LinkedCheck
         from apps.deadlines.models import LinkedDeadlineFlag
 
+        visum = None
         if isinstance(instance, LinkedCheck):
-            return self._check_deadline_complete(
-                visum=instance.sub_category.category.category_set.visum,
-                before_camp_registration_deadline=before_camp_registration_deadline,
-                now=now,
-            )
+            visum = instance.sub_category.category.category_set.visum
         elif isinstance(instance, LinkedDeadlineFlag):
-            return self._check_deadline_complete(
-                visum=instance.deadline_item.linked_deadline.visum,
-                before_camp_registration_deadline=before_camp_registration_deadline,
-                now=now,
-            )
+            visum = instance.deadline_item.linked_deadline.visum
+
+        self._check_deadline_complete(
+            visum=visum,
+            before_camp_registration_deadline=before_camp_registration_deadline,
+            now=now,
+        )
+        self._check_camp_visum_complete(visum=visum)
 
     # def default_deadline_flag_changed(self, instance: LinkedDeadlineFlag):
     def default_deadline_flag_changed(self, instance):
@@ -95,6 +95,21 @@ class ChangeHandlerService:
             logger.debug("DEADLINE NOT OK YET - Not sending mail")
 
         return False
+
+    def _check_camp_visum_complete(self, visum):
+        from apps.visums.serializers import CampVisumSerializer
+        from apps.visums.models.enums import CheckState, CampVisumState
+
+        serializer_data = CampVisumSerializer(instance=visum).data
+        state = serializer_data.get("category_set").get("state")
+
+        if CheckState.is_checked_or_irrelevant(state=state):
+            visum.state = CampVisumState.SIGNABLE
+        else:
+            visum.state = CampVisumState.DATA_REQUIRED
+
+        visum.full_clean()
+        visum.save()
 
     # def change_camp_responsible(self, instance: LinkedParticipantCheck):
     def change_camp_responsible(self, instance):

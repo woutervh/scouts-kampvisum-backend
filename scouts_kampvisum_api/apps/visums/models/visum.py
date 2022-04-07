@@ -3,12 +3,13 @@ from django.db import models
 from apps.camps.models import Camp, CampType
 
 from apps.visums.models import CampVisumEngagement
+from apps.visums.models.enums import CampVisumState
 from apps.visums.managers import CampVisumManager
 
 from scouts_auth.groupadmin.models import ScoutsGroup
 
 from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import OptionalDateTimeField
+from scouts_auth.inuits.models.fields import DefaultCharField, OptionalDateTimeField
 
 
 # LOGGING
@@ -38,6 +39,12 @@ class CampVisum(AuditedBaseModel):
         related_name="visum",
         null=True,
         blank=True,
+    )
+
+    state = DefaultCharField(
+        choices=CampVisumState.choices,
+        default=CampVisumState.DATA_REQUIRED,
+        max_length=32,
     )
 
     class Meta:
