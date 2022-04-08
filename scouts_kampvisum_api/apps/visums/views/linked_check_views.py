@@ -100,7 +100,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("SIMPLE CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_simple_check(
-            instance, **validated_data
+            request=request, instance=instance, **validated_data
         )
 
         output_serializer = LinkedSimpleCheckSerializer(
@@ -149,7 +149,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("DATE CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_date_check(
-            instance, **validated_data
+            request=request, instance=instance, **validated_data
         )
 
         output_serializer = LinkedDateCheckSerializer(
@@ -202,7 +202,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("DURATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_duration_check(
-            instance, **validated_data
+            request=request, instance=instance, **validated_data
         )
 
         output_serializer = LinkedDurationCheckSerializer(
@@ -423,7 +423,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("PARTICIPANT CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_participant_check(
-            request, instance, **validated_data
+            request=request, instance=instance, **validated_data
         )
 
         output_serializer = LinkedParticipantCheckSerializer(
@@ -589,7 +589,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("FILE UPLOAD CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_file_upload_check(
-            instance=instance, files=validated_data
+            request=request, instance=instance, files=validated_data
         )
 
         output_serializer = LinkedFileUploadCheckSerializer(
@@ -624,7 +624,10 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("FILE UPLOAD CHECK UNLINK VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.unlink_file(
-            request, instance, persisted_file_id, **validated_data
+            request=request,
+            instance=instance,
+            persisted_file_id=persisted_file_id,
+            **validated_data
         )
 
         output_serializer = LinkedFileUploadCheckSerializer(
@@ -739,7 +742,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("COMMENT CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_comment_check(
-            instance, **validated_data
+            request=request, instance=instance, **validated_data
         )
 
         output_serializer = LinkedCommentCheckSerializer(
@@ -794,7 +797,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = LinkedNumberCheckSerializer(
-            instance, context={"request": request}
+            request=request, instance=instance, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)

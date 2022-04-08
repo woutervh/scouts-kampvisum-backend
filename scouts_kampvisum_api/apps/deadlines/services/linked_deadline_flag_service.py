@@ -18,10 +18,14 @@ class LinkedDeadlineFlagService:
     deadline_flag_service = DeadlineFlagService()
     change_handler_service = ChangeHandlerService()
 
-    def notify_change(self, instance: LinkedDeadlineFlag, data_changed: bool = False):
+    def notify_change(
+        self, request, instance: LinkedDeadlineFlag, data_changed: bool = False
+    ):
         if data_changed and instance.parent.has_change_handlers():
             self.change_handler_service.handle_changes(
-                change_handlers=instance.parent.change_handlers, instance=instance
+                change_handlers=instance.parent.change_handlers,
+                request=request,
+                instance=instance,
             )
 
         return instance
@@ -73,6 +77,7 @@ class LinkedDeadlineFlagService:
         instance.save()
 
         return self.notify_change(
+            request=request,
             instance=instance,
             data_changed=data.get("flag", None) is not None
             and data.get("flag") != old_value,

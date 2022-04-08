@@ -19,7 +19,7 @@ class ChangeHandlerService:
 
     default_change_handler = settings.CHECK_CHANGED
 
-    def handle_changes(self, change_handlers: str, instance=None):
+    def handle_changes(self, change_handlers: str, request=None, instance=None):
         change_handlers: List[str] = change_handlers.split(",")
 
         for change_handler in change_handlers:
@@ -35,11 +35,12 @@ class ChangeHandlerService:
                 instance.id,
                 change_handler,
             )
-            getattr(self, change_handler)(instance=instance)
+            getattr(self, change_handler)(request=request, instance=instance)
 
     # def default_check_changed(self, instance: LinkedCheck):
     def default_check_changed(
         self,
+        request,
         instance,
         before_camp_registration_deadline: bool = False,
         now: datetime.datetime = None,
@@ -54,20 +55,22 @@ class ChangeHandlerService:
             visum = instance.deadline_item.linked_deadline.visum
 
         self._check_deadline_complete(
+            request=request,
             visum=visum,
             before_camp_registration_deadline=before_camp_registration_deadline,
             now=now,
         )
-        self._check_camp_visum_complete(visum=visum)
+        self._check_camp_visum_complete(request=request, visum=visum)
 
     # def default_deadline_flag_changed(self, instance: LinkedDeadlineFlag):
-    def default_deadline_flag_changed(self, instance):
+    def default_deadline_flag_changed(self, request, instance):
         return self._check_deadline_complete(
-            visum=instance.deadline_item.deadline.visum
+            request=request, visum=instance.deadline_item.deadline.visum
         )
 
     def _check_deadline_complete(
         self,
+        request,
         visum,
         before_camp_registration_deadline: bool = False,
         now: datetime.datetime = None,
@@ -96,7 +99,7 @@ class ChangeHandlerService:
 
         return False
 
-    def _check_camp_visum_complete(self, visum):
+    def _check_camp_visum_complete(self, request, visum):
         from apps.visums.serializers import CampVisumSerializer
         from apps.visums.models.enums import CheckState, CampVisumState
 
@@ -112,7 +115,7 @@ class ChangeHandlerService:
         visum.save()
 
     # def change_camp_responsible(self, instance: LinkedParticipantCheck):
-    def change_camp_responsible(self, instance):
+    def change_camp_responsible(self, request, instance):
         from apps.visums.services import InuitsVisumMailService
 
         epoch = GroupadminSettings.get_responsibility_epoch_date()
@@ -130,25 +133,27 @@ class ChangeHandlerService:
                 now=now,
             )
 
-    def change_sleeping_location(self, instance):
+    def change_sleeping_location(self, request, instance):
         (
             before_camp_registration_deadline,
             now,
         ) = self.calculate_camp_registration_deadline()
 
         return self.default_check_changed(
+            request=request,
             instance=instance,
             before_camp_registration_deadline=before_camp_registration_deadline,
             now=now,
         )
 
-    def change_camp_dates(self, instance):
+    def change_camp_dates(self, request, instance):
         (
             before_camp_registration_deadline,
             now,
         ) = self.calculate_camp_registration_deadline()
 
         return self.default_check_changed(
+            request=request,
             instance=instance,
             before_camp_registration_deadline=before_camp_registration_deadline,
             now=now,

@@ -44,11 +44,13 @@ class LinkedCheckService:
     groupadmin = GroupAdminMemberService()
     change_handler_service = ChangeHandlerService()
 
-    def notify_change(self, instance: LinkedCheck, data_changed: bool = False):
+    def notify_change(self, request, instance: LinkedCheck, data_changed: bool = False):
         data_changed = True
         if data_changed and instance.parent.has_change_handlers():
             self.change_handler_service.handle_changes(
-                change_handlers=instance.parent.change_handlers, instance=instance
+                change_handlers=instance.parent.change_handlers,
+                request=request,
+                instance=instance,
             )
 
         return instance
@@ -63,7 +65,7 @@ class LinkedCheckService:
             )
 
     @transaction.atomic
-    def update_simple_check(self, instance: LinkedSimpleCheck, **data):
+    def update_simple_check(self, request, instance: LinkedSimpleCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
@@ -72,7 +74,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return self.notify_change(instance)
+        return self.notify_change(request=request, instance=instance)
 
     def get_date_check(self, check_id):
         try:
@@ -83,7 +85,7 @@ class LinkedCheckService:
             )
 
     @transaction.atomic
-    def update_date_check(self, instance: LinkedDateCheck, **data):
+    def update_date_check(self, request, instance: LinkedDateCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
@@ -92,7 +94,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return self.notify_change(instance)
+        return self.notify_change(request=request, instance=instance)
 
     def get_duration_check(self, check_id):
         try:
@@ -104,7 +106,7 @@ class LinkedCheckService:
             )
 
     @transaction.atomic
-    def update_duration_check(self, instance: LinkedDurationCheck, **data):
+    def update_duration_check(self, request, instance: LinkedDurationCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
@@ -121,7 +123,9 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return self.notify_change(instance, data_changed=data_changed)
+        return self.notify_change(
+            request=request, instance=instance, data_changed=data_changed
+        )
 
     def get_location_check(self, check_id):
         try:
@@ -216,7 +220,7 @@ class LinkedCheckService:
                 **location_data,
             )
 
-        return self.notify_change(instance)
+        return self.notify_change(request=request, instance=instance)
 
     def get_participant_check(self, check_id):
         try:
@@ -271,7 +275,9 @@ class LinkedCheckService:
             if visum_participant not in instance.participants.all():
                 instance.participants.add(visum_participant)
 
-        return self.notify_change(instance=instance, data_changed=data_changed)
+        return self.notify_change(
+            request=request, instance=instance, data_changed=data_changed
+        )
 
     @transaction.atomic
     def toggle_participant_payment_status(
@@ -285,7 +291,7 @@ class LinkedCheckService:
             visum_participant_id=visum_participant_id
         )
 
-        return self.notify_change(instance=instance)
+        return self.notify_change(request=request, instance=instance)
 
     @transaction.atomic
     def unlink_participant(
@@ -320,7 +326,7 @@ class LinkedCheckService:
         logger.debug("Deleting VisumParticipant instance with id %s", participant.id)
         participant.delete()
 
-        return self.notify_change(instance)
+        return self.notify_change(request=request, instance=instance)
 
     def get_file_upload_check(self, check_id):
         try:
@@ -332,7 +338,9 @@ class LinkedCheckService:
             )
 
     @transaction.atomic
-    def update_file_upload_check(self, instance: LinkedFileUploadCheck, files: list):
+    def update_file_upload_check(
+        self, request, instance: LinkedFileUploadCheck, files: list
+    ):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
@@ -347,7 +355,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return self.notify_change(instance)
+        return self.notify_change(request=request, instance=instance)
 
     @transaction.atomic
     def unlink_file(
@@ -367,7 +375,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return self.notify_change(instance)
+        return self.notify_change(request=request, instance=instance)
 
     def get_comment_check(self, check_id):
         try:
@@ -379,7 +387,7 @@ class LinkedCheckService:
             )
 
     @transaction.atomic
-    def update_comment_check(self, instance: LinkedCommentCheck, **data):
+    def update_comment_check(self, request, instance: LinkedCommentCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
@@ -388,7 +396,7 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return self.notify_change(instance)
+        return self.notify_change(request=request, instance=instance)
 
     def get_number_check(self, check_id):
         try:
@@ -400,7 +408,7 @@ class LinkedCheckService:
             )
 
     @transaction.atomic
-    def update_number_check(self, instance: LinkedNumberCheck, **data):
+    def update_number_check(self, request, instance: LinkedNumberCheck, **data):
         logger.debug(
             "Updating %s instance with id %s", type(instance).__name__, instance.id
         )
@@ -409,4 +417,4 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        return self.notify_change(instance)
+        return self.notify_change(request=request, instance=instance)
