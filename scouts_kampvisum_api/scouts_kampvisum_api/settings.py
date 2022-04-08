@@ -482,7 +482,7 @@ RESOURCES_TEMPLATE_CAMP_CHANGED_AFTER_DEADLINE = (
     RESOURCES_MAIL_TEMPLATE_PATH + "camp_changed_after_deadline.html"
 )
 RESOURCES_TEMPLATE_CAMP_RESPONSIBLE_CHANGED_AFTER_DEADLINE = (
-    RESOURCES_MAIL_TEMPLATE_PATH + "responsible_changed_after_deadline.html"
+    RESOURCES_MAIL_TEMPLATE_PATH + "camp_changed_after_deadline.html"
 )
 
 # EMAIL
