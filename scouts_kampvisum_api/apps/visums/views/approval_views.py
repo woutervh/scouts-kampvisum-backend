@@ -10,18 +10,18 @@ class ApprovalViewSet(viewsets.GenericViewSet):
             id=linked_sub_category_id, raise_error=True
         )
 
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response({}, status=status.HTTP_201_CREATED)
 
     def partial_update_approval(self, request, linked_sub_category_id):
         linked_sub_category: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
             id=linked_sub_category_id, raise_error=True
         )
 
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response({}, status=status.HTTP_201_CREATED)
 
     def partial_update_notes(self, request, linked_category_id):
         linked_category: LinkedCategory = LinkedCategory.objects.safe_get(
             id=linked_category_id, raise_error=True
         )
 
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response({}, status=status.HTTP_201_CREATED)
