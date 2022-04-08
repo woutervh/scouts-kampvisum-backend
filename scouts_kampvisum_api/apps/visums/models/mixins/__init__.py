@@ -1,1 +1,0 @@
-from .visum_approval_mixin import VisumApprovalMixin

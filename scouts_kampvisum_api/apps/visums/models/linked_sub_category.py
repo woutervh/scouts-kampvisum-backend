@@ -1,9 +1,11 @@
 from django.db import models
 
 from apps.visums.models import LinkedCategory, SubCategory
+from apps.visums.models.enums import CampVisumApprovalState
 from apps.visums.managers import LinkedSubCategoryManager
 
 from scouts_auth.inuits.models import AuditedArchiveableBaseModel
+from scouts_auth.inuits.models.fields import OptionalCharField, DefaultCharField
 
 
 class LinkedSubCategory(AuditedArchiveableBaseModel):
@@ -15,8 +17,21 @@ class LinkedSubCategory(AuditedArchiveableBaseModel):
         LinkedCategory, on_delete=models.CASCADE, related_name="sub_categories"
     )
 
+    feedback = OptionalCharField()
+    approval = DefaultCharField(
+        choices=CampVisumApprovalState.choices,
+        default=CampVisumApprovalState.UNDECIDED,
+        max_length=1,
+    )
+
     class Meta:
         ordering = ["parent__index"]
+        permissions = [
+            ("view_visum_feedback", "User can view the DC's feedback"),
+            ("edit_visum_feedback", "User is a DC and can edit the feedback"),
+            ("view_visum_approval", "User can view approval status"),
+            ("edit_visum_approval", "User is a DC and can set approval status"),
+        ]
 
     # def is_checked(self) -> CheckState:
     #     for check in self.checks.all():

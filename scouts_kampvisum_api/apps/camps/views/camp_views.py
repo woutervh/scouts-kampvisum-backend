@@ -13,6 +13,9 @@ from apps.camps.serializers import CampSerializer
 from apps.camps.services import CampService
 from apps.camps.filters import CampFilter
 
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.services import ScoutsAuthorizationService
+
 
 # LOGGING
 import logging
@@ -32,6 +35,7 @@ class CampViewSet(viewsets.GenericViewSet):
     filterset_class = CampFilter
 
     camp_service = CampService()
+    authorization_service = ScoutsAuthorizationService()
 
     @swagger_auto_schema(
         request_body=CampSerializer,
@@ -112,10 +116,20 @@ class CampViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
     def get_available_years(self, request, group_admin_id=None):
+        group: ScoutsGroup = ScoutsGroup.objects.safe_get(
+            group_admin_id=group_admin_id, raise_error=True
+        )
         camps = Camp.objects.filter(
-            visum__group__group_admin_id=group_admin_id
+            visum__group__group_admin_id=group.group_admin_id
         ).distinct()
         years = list()
+
+        # HACKETY HACK
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=group
+        )
 
         for camp in camps:
             years.append(camp.year.year)

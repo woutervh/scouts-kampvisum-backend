@@ -76,7 +76,7 @@ class ScoutsAuthorizationService(AuthorizationService):
         return user
 
     def update_user_authorizations(
-        self, user: settings.AUTH_USER_MODEL
+        self, user: settings.AUTH_USER_MODEL, scouts_group: ScoutsGroup = None
     ) -> settings.AUTH_USER_MODEL:
         logger.debug(
             "SCOUTS AUTHORIZATION SERVICE: updating user authorizations", user=user
@@ -85,18 +85,31 @@ class ScoutsAuthorizationService(AuthorizationService):
         if user.has_role_administrator():
             user = self.add_user_as_admin(user)
 
-        # if user.has_role_district_commissioner():
-        #     user = self.add_user_to_group(
-        #         user, ScoutsAuthorizationService.DISTRICT_COMMISSIONER
-        #     )
+        if scouts_group:
+            logger.debug(
+                "SCOUTS_AUTHORIZATION_SERVICE: Updating user authorizations for group %s",
+                scouts_group.group_admin_id,
+            )
+            if user.has_role_district_commissioner(group=scouts_group):
+                user = self.add_user_to_group(
+                    user,
+                    ScoutsAuthorizationService.DISTRICT_COMMISSIONER,
+                    scouts_group=scouts_group,
+                )
 
-        # if user.has_role_group_leader():
-        #     user = self.add_user_to_group(user, ScoutsAuthorizationService.GROUP_LEADER)
+            if user.has_role_group_leader(group=scouts_group):
+                user = self.add_user_to_group(
+                    user,
+                    ScoutsAuthorizationService.GROUP_LEADER,
+                    scouts_group=scouts_group,
+                )
 
-        # if user.has_role_section_leader():
-        #     user = self.add_user_to_group(
-        #         user, ScoutsAuthorizationService.SECTION_LEADER
-        #     )
+            if user.has_role_section_leader(group=scouts_group):
+                user = self.add_user_to_group(
+                    user,
+                    ScoutsAuthorizationService.SECTION_LEADER,
+                    scouts_group=scouts_group,
+                )
 
         if GroupadminSettings.is_debug():
             test_groups = GroupadminSettings.get_test_groups()
@@ -117,7 +130,10 @@ class ScoutsAuthorizationService(AuthorizationService):
         return self.add_user_to_group(user, ScoutsAuthorizationService.ADMINISTRATOR)
 
     def add_user_to_group(
-        self, user: settings.AUTH_USER_MODEL, role: str
+        self,
+        user: settings.AUTH_USER_MODEL,
+        role: str,
+        scouts_group: ScoutsGroup = None,
     ) -> settings.AUTH_USER_MODEL:
         if role not in self.known_roles:
             raise ValueError("Role " + role + " is not a known scouts role")

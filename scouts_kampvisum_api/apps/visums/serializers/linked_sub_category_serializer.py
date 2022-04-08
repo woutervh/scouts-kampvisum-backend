@@ -4,6 +4,12 @@ from apps.visums.models import LinkedSubCategory
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import SubCategorySerializer, LinkedCheckSerializer
 
+from scouts_auth.inuits.serializers import PermissionRequiredSerializerField
+from scouts_auth.inuits.serializers.fields import (
+    OptionalCharSerializerField,
+    DefaultCharSerializerField,
+)
+
 
 # LOGGING
 import logging
@@ -16,6 +22,17 @@ class LinkedSubCategorySerializer(serializers.ModelSerializer):
 
     parent = SubCategorySerializer()
     checks = LinkedCheckSerializer(many=True)
+
+    feedback = PermissionRequiredSerializerField(
+        permission="visums.visums_view_feedback",
+        field=OptionalCharSerializerField(),
+        required=False,
+    )
+    approval = PermissionRequiredSerializerField(
+        permission="visums.view_visum_approval",
+        field=DefaultCharSerializerField(),
+        required=False,
+    )
 
     class Meta:
         model = LinkedSubCategory
