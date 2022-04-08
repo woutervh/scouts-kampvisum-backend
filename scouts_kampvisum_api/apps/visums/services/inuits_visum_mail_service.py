@@ -124,9 +124,7 @@ class InuitsVisumMailService(EmailService):
         delta = VisumSettings.get_email_registration_delta()
 
         template = self.template_camp_registration_before_deadline
-        subject = (
-            VisumSettings.get_email_registration_subject().format(visum.camp.name),
-        )
+        subject = VisumSettings.get_email_registration_subject().format(visum.camp.name)
         if before_camp_registration_deadline:
             sending_camp_registration_mail = True
 
@@ -143,10 +141,8 @@ class InuitsVisumMailService(EmailService):
             else:
                 sending_camp_changed_mail = True
                 template = self.template_camp_changed_after_deadline
-                subject = (
-                    VisumSettings.get_email_registration_changed_subject().format(
-                        visum.camp.name
-                    ),
+                subject = VisumSettings.get_email_registration_changed_subject().format(
+                    visum.camp.name
                 )
 
         if not sending_camp_registration_mail and sending_camp_changed_mail:
@@ -209,12 +205,13 @@ class InuitsVisumMailService(EmailService):
         )
 
         logger.debug(
-            "Preparing to send camp registration notification to %s (debug: %s, test: %s, acceptance: %s), using template %s",
+            "Preparing to send camp registration notification to %s (debug: %s, test: %s, acceptance: %s), using template %s and subject %s",
             recipient,
             VisumSettings.is_debug(),
             VisumSettings.is_test(),
             VisumSettings.is_acceptance(),
             template,
+            subject,
         )
 
         result = self._send_prepared_email(
@@ -226,16 +223,17 @@ class InuitsVisumMailService(EmailService):
             bcc=bcc,
         )
 
-        if sending_camp_registration_mail:
-            if before_camp_registration_deadline:
-                visum.camp_registration_mail_sent_before_deadline = result
-            else:
-                visum.camp_registration_mail_sent_after_deadline = result
+        if result:
+            if sending_camp_registration_mail:
+                if before_camp_registration_deadline:
+                    visum.camp_registration_mail_sent_before_deadline = result
+                else:
+                    visum.camp_registration_mail_sent_after_deadline = result
 
-        visum.camp_registration_mail_last_sent = now
+            visum.camp_registration_mail_last_sent = now
 
-        visum.full_clean()
-        visum.save()
+            visum.full_clean()
+            visum.save()
 
     def _prepare_dictionary_responsible_changed(self, visum: CampVisum):
         return {

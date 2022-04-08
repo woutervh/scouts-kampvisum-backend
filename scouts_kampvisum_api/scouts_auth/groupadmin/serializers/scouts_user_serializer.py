@@ -44,6 +44,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "code": function.code,
                 "description": function.description,
                 "is_leader": function.is_leader(),
+                "end": function.end,
             }
             for function in obj.persisted_scouts_functions.all()
         ]

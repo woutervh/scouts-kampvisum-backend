@@ -194,10 +194,11 @@ class EmailService:
 
         try:
             logger.debug(
-                "DJANGO MAIL: Sending mail to %s, from %s, with %d attachments",
+                "DJANGO MAIL: Sending mail to %s, from %s, with %d attachments and subject %s",
                 message.to,
                 message.from_email,
                 len(message.attachments),
+                subject,
             )
             message.send()
         except Exception as exc:
@@ -244,10 +245,11 @@ class EmailService:
 
         try:
             logger.debug(
-                "SENDINBLUE: Sending mail to %s, from %s, with %d attachments",
+                "SENDINBLUE: Sending mail to %s, from %s, with %d attachments and subject %s",
                 message.to,
                 message.from_email,
                 len(message.attachments),
+                subject,
             )
             message.send()
         except Exception as exc:
