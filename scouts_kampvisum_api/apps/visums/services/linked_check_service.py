@@ -19,6 +19,7 @@ from apps.visums.models import (
     LinkedFileUploadCheck,
     LinkedCommentCheck,
     LinkedNumberCheck,
+    CampVisum,
 )
 
 from apps.signals.services import ChangeHandlerService
@@ -46,6 +47,12 @@ class LinkedCheckService:
 
     def notify_change(self, request, instance: LinkedCheck, data_changed: bool = False):
         data_changed = True
+
+        visum: CampVisum = instance.sub_category.category.category_set.visum
+        visum.updated_by = request.user
+        visum.full_clean()
+        visum.save()
+
         if data_changed and instance.parent.has_change_handlers():
             self.change_handler_service.handle_changes(
                 change_handlers=instance.parent.change_handlers,

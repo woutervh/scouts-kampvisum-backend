@@ -73,21 +73,35 @@ class InuitsVisumMailService(EmailService):
             for linked_participant in linked_participants:
                 participants.append(linked_participant)
 
-        logger.debug("Preparing to send mail to")
         dictionary = self._prepare_dictionary_responsible_changed(visum=visum)
 
         template = self.template_camp_responsible_changed_after_deadline
         to = [participant.participant.email for participant in participants]
+        to.append(
+            visum.updated_by.email if visum.updated_by else visum.created_by.email
+        )
         to = VisumSettings.get_camp_responsible_changed_notification_to(
             addresses=to, label="CAMP REGISTRATION: recipient"
+        )
+
+        subject = VisumSettings.get_email_responsible_changed_subject().format(
+            visum.camp.name
+        )
+
+        logger.debug(
+            "Preparing to send camp registration notification to %s (debug: %s, test: %s, acceptance: %s), using template %s and subject %s",
+            to,
+            VisumSettings.is_debug(),
+            VisumSettings.is_test(),
+            VisumSettings.is_acceptance(),
+            template,
+            subject,
         )
 
         result = self._send_prepared_email(
             template_path=template,
             dictionary=dictionary,
-            subject=VisumSettings.get_email_responsible_changed_subject().format(
-                visum.camp.name
-            ),
+            subject=subject,
             to=to,
         )
 
