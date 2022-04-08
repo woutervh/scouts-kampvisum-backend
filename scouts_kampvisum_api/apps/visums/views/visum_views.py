@@ -140,6 +140,17 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def list(self, request):
+        # HACKETY HACK
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        group_admin_id = self.request.query_params.get("group", None)
+        scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
+            group_admin_id=group_admin_id, raise_error=True
+        )
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=scouts_group
+        )
+
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 

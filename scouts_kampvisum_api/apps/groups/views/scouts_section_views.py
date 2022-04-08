@@ -28,6 +28,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     queryset = ScoutsSection.objects.all().filter(hidden=False)
 
     section_service = ScoutsSectionService()
+    authorization_service = ScoutsAuthorizationService()
 
     @swagger_auto_schema(
         request_body=ScoutsSectionSerializer,

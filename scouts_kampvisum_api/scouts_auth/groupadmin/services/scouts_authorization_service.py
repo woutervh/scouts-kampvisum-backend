@@ -96,6 +96,12 @@ class ScoutsAuthorizationService(AuthorizationService):
                     ScoutsAuthorizationService.DISTRICT_COMMISSIONER,
                     scouts_group=scouts_group,
                 )
+            else:
+                user = self.remove_user_from_group(
+                    user,
+                    ScoutsAuthorizationService.DISTRICT_COMMISSIONER,
+                    scouts_group=scouts_group,
+                )
 
             if user.has_role_group_leader(group=scouts_group):
                 user = self.add_user_to_group(
@@ -103,9 +109,21 @@ class ScoutsAuthorizationService(AuthorizationService):
                     ScoutsAuthorizationService.GROUP_LEADER,
                     scouts_group=scouts_group,
                 )
+            else:
+                user = self.remove_user_from_group(
+                    user,
+                    ScoutsAuthorizationService.GROUP_LEADER,
+                    scouts_group=scouts_group,
+                )
 
             if user.has_role_section_leader(group=scouts_group):
                 user = self.add_user_to_group(
+                    user,
+                    ScoutsAuthorizationService.SECTION_LEADER,
+                    scouts_group=scouts_group,
+                )
+            else:
+                user = self.remove_user_from_group(
                     user,
                     ScoutsAuthorizationService.SECTION_LEADER,
                     scouts_group=scouts_group,
@@ -139,6 +157,19 @@ class ScoutsAuthorizationService(AuthorizationService):
             raise ValueError("Role " + role + " is not a known scouts role")
 
         super().add_user_to_group(user, group_name=role)
+
+        return user
+
+    def remove_user_from_group(
+        self,
+        user: settings.AUTH_USER_MODEL,
+        role: str,
+        scouts_group: ScoutsGroup = None,
+    ) -> settings.AUTH_USER_MODEL:
+        if role not in self.known_roles:
+            raise ValueError("Role " + role + " is not a known scouts role")
+
+        super().remove_user_from_group(user, group_name=role)
 
         return user
 

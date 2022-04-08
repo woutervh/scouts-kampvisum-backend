@@ -4,3 +4,4 @@ from .visum_engagement_views import CampVisumEngagementViewSet
 from .visum_views import CampVisumViewSet
 from .linked_check_views import LinkedCheckViewSet
 from .linked_category_views import LinkedCategoryViewSet
+from .approval_views import ApprovalViewSet
