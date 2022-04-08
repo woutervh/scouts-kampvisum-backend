@@ -1,10 +1,19 @@
 role_section_leader:
+  - visums.view_visum
+  - visums.list_visum
+  - visums.edit_visum
   - visums.view_visum_approval
   - visums.view_visum_feedback
 role_group_leader:
+  - visums.view_visum
+  - visums.list_visum
+  - visums.edit_visum
   - visums.view_visum_approval
   - visums.view_visum_feedback
 role_district_commissioner:
+  - visums.view_visum
+  - visums.list_visum
+  - visums.edit_visum
   - visums.view_visum_approval
   - visums.edit_visum_approval
   - visums.view_visum_feedback

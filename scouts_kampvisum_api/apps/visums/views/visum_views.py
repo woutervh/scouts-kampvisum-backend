@@ -11,6 +11,8 @@ from apps.visums.serializers import CampVisumSerializer
 from apps.visums.filters import CampVisumFilter
 from apps.visums.services import CampVisumService
 
+from scouts_auth.auth.permissions import CustomDjangoPermission
+
 from scouts_auth.groupadmin.models import ScoutsGroup
 
 
@@ -34,14 +36,17 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     camp_visum_service = CampVisumService()
 
-    # def get_permissions(self):
-    #     if self.action == "create":
-    #         return [
-    #             permissions.IsAuthenticated(),
-    #             DRYPermissions(),
-    #         ]
+    def get_permissions(self):
+        current_permissions = super().get_permissions()
 
-    #     return super().get_permissions()
+        if self.action == "retrieve":
+            current_permissions.append(CustomDjangoPermission("visums.view_visum"))
+        if self.action == "create":
+            current_permissions.append(CustomDjangoPermission("visums.edit_visum"))
+        if self.action == "list":
+            current_permissions.append(CustomDjangoPermission("visums.list_visum"))
+
+        return current_permissions
 
     @swagger_auto_schema(
         request_body=CampVisumSerializer,

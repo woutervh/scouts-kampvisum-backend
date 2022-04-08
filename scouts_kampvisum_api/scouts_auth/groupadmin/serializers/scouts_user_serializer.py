@@ -3,19 +3,11 @@ from typing import List
 from rest_framework import serializers
 
 from scouts_auth.groupadmin.models import ScoutsUser
-from scouts_auth.groupadmin.serializers import (
-    ScoutsGroupSerializer,
-    ScoutsFunctionSerializer,
-)
 
 
 class ScoutsUserSerializer(serializers.ModelSerializer):
 
     user_permissions = serializers.SerializerMethodField()
-    # scouts_groups = serializers.SerializerMethodField()
-    # functions = serializers.SerializerMethodField()
-    # scouts_groups = ScoutsGroupSerializer(many=True, required=False)
-    # scouts_functions = ScoutsFunctionSerializer(many=True, required=False)
     scouts_groups = serializers.SerializerMethodField()
     scouts_functions = serializers.SerializerMethodField()
 
@@ -55,28 +47,6 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
             }
             for function in obj.persisted_scouts_functions.all()
         ]
-
-    # def get_scouts_groups(self, obj: ScoutsUser):
-    #     return [
-    #         {
-    #             "group_admin_id": group.group_admin_id,
-    #             "name": group.name,
-    #             "full_name": group.full_name,
-    #             "type": group.type,
-    #         }
-    #         for group in obj.scouts_groups
-    #     ]
-
-    # def get_functions(self, obj: ScoutsUser):
-    #     return [
-    #         {
-    #             "function": function.function,
-    #             "scouts_group": function.scouts_group.group_admin_id,
-    #             "code": function.code,
-    #             "description": function.description,
-    #         }
-    #         for function in obj.functions
-    # ]
 
     def to_internal_value(self, data: dict) -> dict:
         group_admin_id = data.get("group_admin_id", None)
