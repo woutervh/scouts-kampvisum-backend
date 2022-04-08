@@ -103,7 +103,9 @@ class ChangeHandlerService:
         from apps.visums.serializers import CampVisumSerializer
         from apps.visums.models.enums import CheckState, CampVisumState
 
-        serializer_data = CampVisumSerializer(instance=visum).data
+        serializer_data = CampVisumSerializer(
+            instance=visum, context={"request": request}
+        ).data
         state = serializer_data.get("category_set").get("state")
 
         if CheckState.is_checked_or_irrelevant(state=state):

@@ -793,11 +793,11 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug("NUMBER CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_number_check(
-            instance, **validated_data
+            request=request, instance=instance, **validated_data
         )
 
         output_serializer = LinkedNumberCheckSerializer(
-            request=request, instance=instance, context={"request": request}
+            instance, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
