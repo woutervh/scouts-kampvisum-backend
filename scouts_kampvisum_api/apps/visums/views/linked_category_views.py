@@ -5,6 +5,9 @@ from drf_yasg2.utils import swagger_auto_schema
 from apps.visums.models import LinkedCategory
 from apps.visums.serializers import LinkedCategorySerializer
 
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.services import ScoutsAuthorizationService
+
 
 # LOGGING
 import logging
@@ -20,6 +23,8 @@ class LinkedCategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = LinkedCategorySerializer
     queryset = LinkedCategory.objects.all()
+
+    authorization_service = ScoutsAuthorizationService()
 
     # @swagger_auto_schema(
     #     request_body=CategorySerializer,
@@ -50,6 +55,13 @@ class LinkedCategoryViewSet(viewsets.GenericViewSet):
         Gets and returns a Category instance from the db.
         """
 
+        instance = self.get_object()
+        # HACKETY HACK
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=instance.category_set.visum.group
+        )
         instance = self.get_object()
         serializer = LinkedCategorySerializer(instance, context={"request": request})
 

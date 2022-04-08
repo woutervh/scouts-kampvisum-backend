@@ -11,6 +11,9 @@ from apps.groups.models import ScoutsSection
 from apps.groups.serializers import ScoutsSectionSerializer
 from apps.groups.services import ScoutsSectionService
 
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.services import ScoutsAuthorizationService
+
 
 # LOGGING
 import logging
@@ -136,6 +139,16 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
     def list_by_group(self, request, group_admin_id):
+        group: ScoutsGroup = ScoutsGroup.objects.safe_get(
+            group_admin_id=group_admin_id, raise_error=True
+        )
+
+        # HACKETY HACK
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=group
+        )
         instances = ScoutsSection.objects.all().filter(
             group__group_admin_id=group_admin_id, hidden=False
         )

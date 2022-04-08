@@ -14,6 +14,7 @@ from apps.visums.services import CampVisumService
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
 from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 
 # LOGGING
@@ -35,6 +36,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()
+    authorization_service = ScoutsAuthorizationService()
 
     def get_permissions(self):
         current_permissions = super().get_permissions()
@@ -92,6 +94,13 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def retrieve(self, request, pk=None):
+        instance = self.get_object()
+        # HACKETY HACK
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=instance.group
+        )
         instance = self.get_object()
         serializer = CampVisumSerializer(instance, context={"request": request})
 
