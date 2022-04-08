@@ -119,11 +119,18 @@ class ChangeHandlerService:
     # def change_camp_responsible(self, instance: LinkedParticipantCheck):
     def change_camp_responsible(self, request, instance):
         from apps.visums.services import InuitsVisumMailService
+        from apps.deadlines.services import LinkedDeadlineService
 
         epoch = GroupadminSettings.get_responsibility_epoch_date()
         now = timezone.now()
+        visum = instance.sub_category.category.category_set.visum
 
-        if epoch < now.date():
+        if (
+            epoch < now.date()
+            and LinkedDeadlineService().are_camp_registration_deadline_items_checked(
+                visum=visum
+            )
+        ):
             (
                 before_camp_registration_deadline,
                 now,
