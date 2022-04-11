@@ -27,6 +27,7 @@ class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseMod
 
     name = RequiredCharField()
     is_important = models.BooleanField(default=False)
+    is_camp_registration = models.BooleanField(default=False)
     camp_year = models.ForeignKey(
         CampYear, on_delete=models.CASCADE, related_name="deadline_set"
     )
@@ -53,7 +54,7 @@ class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseMod
         return (self.name, self.camp_year)
 
     def __str__(self) -> str:
-        return "id ({}), name ({}), camp_year({}), camp_types ({}), is_important ({}), label ({}), description ({}), explanation ({})".format(
+        return "id ({}), name ({}), camp_year({}), camp_types ({}), is_important ({}), is_camp_registration ({}), label ({}), description ({}), explanation ({})".format(
             self.id,
             self.name,
             self.camp_year.year,
@@ -61,6 +62,7 @@ class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseMod
                 camp_type.to_readable_str() for camp_type in self.camp_types.all()
             ),
             self.is_important,
+            self.is_camp_registration,
             self.label,
             self.description,
             self.explanation,

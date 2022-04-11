@@ -33,7 +33,6 @@ from apps.visums.services import LinkedCheckService
 
 from apps.deadlines.models import (
     LinkedDeadline,
-    LinkedDeadlineFlag,
 )
 
 from scouts_auth.groupadmin.models import ScoutsUser, AbstractScoutsMember
@@ -314,6 +313,10 @@ class Command(BaseCommand):
                 pass
 
         if not user:
+            user = ScoutsUser.objects.safe_get(username="ADMIN")
+            if user:
+                return user
+
             user: ScoutsUser = ScoutsUser()
 
             user.group_admin_id = uuid.uuid4()
