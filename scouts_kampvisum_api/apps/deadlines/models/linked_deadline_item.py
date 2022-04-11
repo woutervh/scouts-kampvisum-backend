@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.deadlines.models import DeadlineItem, LinkedDeadline, LinkedDeadlineFlag
+from apps.deadlines.models import DeadlineItem, LinkedDeadlineFlag
 from apps.visums.models import LinkedSubCategory, LinkedCheck
 
 from scouts_auth.inuits.models import AbstractBaseModel
@@ -20,13 +20,9 @@ class LinkedDeadlineItem(AbstractBaseModel):
         DeadlineItem, on_delete=models.CASCADE, related_name="deadline_item"
     )
 
-    linked_deadline = models.ForeignKey(
-        LinkedDeadline,
-        on_delete=models.CASCADE,
-        related_name="items",
-        null=True,
-        blank=True,
-    )
+    # linked_deadline = models.ForeignKey(
+    #     LinkedDeadline, on_delete=models.CASCADE, related_name="items", null=True, blank=True
+    # )
     linked_deadline_fix = OptionalCharField()
 
     linked_sub_category = models.ForeignKey(

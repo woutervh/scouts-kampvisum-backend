@@ -3,7 +3,6 @@ from rest_framework import serializers
 from apps.deadlines.models import LinkedDeadlineItem
 from apps.deadlines.serializers import (
     DeadlineItemSerializer,
-    # LinkedDeadlineSerializer,
     LinkedDeadlineFlagSerializer,
 )
 
@@ -21,15 +20,13 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class LinkedDeadlineItemSerializer(serializers.ModelSerializer):
 
     parent = DeadlineItemSerializer()
-    # linked_deadline = LinkedDeadlineSerializer()
     linked_sub_category = LinkedSubCategorySerializer(required=False)
     linked_check = LinkedCheckSerializer(required=False)
     flag = LinkedDeadlineFlagSerializer(required=False)
 
     class Meta:
         model = LinkedDeadlineItem
-        # fields = "__all__"
-        exclude = ["linked_deadline"]
+        fields = "__all__"
 
     def to_representation(self, obj: LinkedDeadlineItem) -> dict:
         # logger.debug("LINKED DEADLINE ITEM: %s", obj)
