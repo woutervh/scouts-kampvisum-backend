@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import viewsets, status, serializers
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -24,7 +25,7 @@ class PermissionsViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: serializers.Serializer})
     def get(self, request):
         try:
-            user: User = request.user
+            user: settings.AUTH_USER_MODEL = request.user
 
             return Response(user.permissions)
         except Exception as exc:
@@ -33,7 +34,7 @@ class PermissionsViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: serializers.Serializer})
     def get_for_group(self, request, group_admin_id: str):
         try:
-            user: User = request.user
+            user: settings.AUTH_USER_MODEL = request.user
             group: ScoutsGroup = ScoutsGroup.objects.safe_get(
                 group_admin_id=group_admin_id, raise_error=True
             )
@@ -41,8 +42,10 @@ class PermissionsViewSet(viewsets.GenericViewSet):
             # HACKETY HACK
             # This should probably be handled by a rest call when changing groups in the frontend,
             # but adding it here avoids the need for changes to the frontend
-            self.authorization_service.update_user_authorizations(
-                user=request.user, scouts_group=group
+            user: settings.AUTH_USER_MODEL = (
+                self.authorization_service.update_user_authorizations(
+                    user=request.user, scouts_group=group
+                )
             )
 
             return Response(user.permissions)

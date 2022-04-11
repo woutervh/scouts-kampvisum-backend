@@ -119,17 +119,17 @@ class CampViewSet(viewsets.GenericViewSet):
         group: ScoutsGroup = ScoutsGroup.objects.safe_get(
             group_admin_id=group_admin_id, raise_error=True
         )
-        camps = Camp.objects.filter(
-            visum__group__group_admin_id=group.group_admin_id
-        ).distinct()
-        years = list()
-
         # HACKETY HACK
         # This should probably be handled by a rest call when changing groups in the frontend,
         # but adding it here avoids the need for changes to the frontend
         self.authorization_service.update_user_authorizations(
             user=request.user, scouts_group=group
         )
+
+        camps = Camp.objects.filter(
+            visum__group__group_admin_id=group.group_admin_id
+        ).distinct()
+        years = list()
 
         for camp in camps:
             years.append(camp.year.year)
