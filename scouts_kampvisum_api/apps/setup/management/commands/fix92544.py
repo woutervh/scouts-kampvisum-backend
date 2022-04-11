@@ -3,8 +3,11 @@ from typing import List
 from django.db import transaction
 from django.db.models import Q
 from django.core.management.base import BaseCommand
+from django.core.exceptions import ValidationError
 
 from apps.deadlines.models import LinkedDeadline, LinkedDeadlineItem
+
+from apps.visums.models import CampVisum
 
 
 # LOGGING
@@ -45,3 +48,16 @@ class Command(BaseCommand):
             "LinkedDeadlineItem instances not linked to a LinkedDeadline: %d",
             len(linked_deadline_items),
         )
+
+        # Double check
+        visums: List[CampVisum] = CampVisum.objects.all()
+        for visum in visums:
+            deadlines: List[LinkedDeadline] = visum.deadlines.all()
+            for deadline in deadlines:
+                items: List[LinkedDeadlineItem] = deadline.items.all()
+                for item in items:
+                    if not item.linked_deadline_fix:
+                        raise ValidationError(
+                            "LinkedDeadlineItem %s (%s) does not have a linked_deadline_fix !"
+                        )
+        logger.info("All linked deadline items have the fix !")
