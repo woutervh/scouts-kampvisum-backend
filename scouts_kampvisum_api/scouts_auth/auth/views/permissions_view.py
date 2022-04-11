@@ -6,7 +6,7 @@ from drf_yasg2.utils import swagger_auto_schema
 
 from scouts_auth.auth.models import User
 
-from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 
@@ -47,6 +47,8 @@ class PermissionsViewSet(viewsets.GenericViewSet):
                     user=request.user, scouts_group=group
                 )
             )
+
+            user: settings.AUTH_USER_MODEL = ScoutsUser.objects.get(pk=user.pk)
 
             return Response(user.permissions)
         except Exception as exc:
