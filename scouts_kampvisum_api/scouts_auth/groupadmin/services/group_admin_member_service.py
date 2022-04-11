@@ -273,11 +273,14 @@ class GroupAdminMemberService(GroupAdmin):
                                     function_activities.append((True, True))
 
         leader_in_group = False
-        active_leader_in_group = True
-        for leader, active_leader in function_activities:
-            if leader and active_leader:
+        active_leader_in_group = False
+        for leader_function, active_leader_function in function_activities:
+            if leader_function:
+                leader_in_group = True
+            if active_leader_function:
                 leader_in_group = True
                 active_leader_in_group = True
+
                 break
 
         if leader_in_group:
