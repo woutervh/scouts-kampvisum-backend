@@ -530,7 +530,7 @@ EMAIL_REGISTRATION_CHANGED_SUBJECT = env.str(
 )
 EMAIL_RESPONSIBLE_CHANGED_SUBJECT = env.str(
     "EMAIL_RESPONSIBLE_CHANGED_SUBJECT",
-    "Kampregistratie {}: kampverantwoordelijke veranderd",
+    "Je kampregistratie werd aangepast - {}",
 )
 EMAIL_TEMPLATE = None
 TMP_FOLDER = RESOURCES_PATH + "temp"
