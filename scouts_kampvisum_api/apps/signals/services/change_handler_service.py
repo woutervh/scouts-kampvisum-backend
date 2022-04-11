@@ -58,7 +58,11 @@ class ChangeHandlerService:
         for deadline in visum.deadlines.all():
             if deadline.parent.is_camp_registration:
                 for item in deadline.items.all():
-                    if item.linked_check == instance or item.flag == instance:
+                    if (
+                        item.linked_sub_category == instance.sub_category
+                        or item.linked_check == instance
+                        or item.flag == instance
+                    ):
                         trigger = True
 
         self._check_deadline_complete(
