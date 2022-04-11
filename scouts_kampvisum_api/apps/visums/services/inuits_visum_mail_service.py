@@ -53,14 +53,25 @@ class InuitsVisumMailService(EmailService):
         before_camp_registration_deadline: bool = False,
         now: datetime.datetime = None,
     ):
+        visum: CampVisum = check.sub_category.category.category_set.visum
+        delta = VisumSettings.get_email_registration_delta()
 
         if before_camp_registration_deadline:
             logger.debug(
                 "Camp responsible changed - not sending mail because deadline has not yet passed"
             )
             return
+        # Only send out 1 email per day for changed checks
+        if visum.camp_registration_mail_last_sent:
+            time_delta = now - visum.camp_registration_mail_last_sent
+            hours = time_delta.days * 24 + time_delta.seconds / 3600
 
-        visum: CampVisum = check.sub_category.category.category_set.visum
+            if hours < delta:
+                logger.debug(
+                    "Camp responsible changed mail has already been sent today"
+                )
+                return
+
         checks: List[
             LinkedParticipantCheck
         ] = LinkedParticipantCheck.objects.all().filter(
