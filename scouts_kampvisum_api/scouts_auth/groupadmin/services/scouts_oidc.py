@@ -104,6 +104,14 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
             )
             return None
 
+    def filter_users_by_claims(self, claims):
+        """Return all users matching the group admin id."""
+        # logger.debug("CLAIMS: %s", claims)
+        group_admin_id = claims.get("id")
+        if not group_admin_id:
+            return self.UserModel.objects.none()
+        return self.UserModel.objects.filter(group_admin_id=group_admin_id)
+
     def create_user(self, claims: dict) -> settings.AUTH_USER_MODEL:
         """
         Create and return a new user object.

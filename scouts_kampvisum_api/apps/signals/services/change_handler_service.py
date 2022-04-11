@@ -44,6 +44,7 @@ class ChangeHandlerService:
         instance,
         before_camp_registration_deadline: bool = False,
         now: datetime.datetime = None,
+        trigger: bool = False,
     ):
         from apps.visums.models import LinkedCheck
         from apps.deadlines.models import LinkedDeadlineFlag
@@ -54,18 +55,25 @@ class ChangeHandlerService:
         elif isinstance(instance, LinkedDeadlineFlag):
             visum = instance.deadline_item.linked_deadline.visum
 
+        for deadline in visum.deadlines.all():
+            if deadline.parent.is_camp_registration:
+                for item in deadline.items.all():
+                    if item.linked_check == instance or item.flag == instance:
+                        trigger = True
+
         self._check_deadline_complete(
             request=request,
             visum=visum,
             before_camp_registration_deadline=before_camp_registration_deadline,
             now=now,
+            trigger=trigger,
         )
         self._check_camp_visum_complete(request=request, visum=visum)
 
     # def default_deadline_flag_changed(self, instance: LinkedDeadlineFlag):
     def default_deadline_flag_changed(self, request, instance):
         return self._check_deadline_complete(
-            request=request, visum=instance.deadline_item.deadline.visum
+            request=request, visum=instance.deadline_item.deadline.visum, trigger=False
         )
 
     def _check_deadline_complete(
@@ -74,7 +82,14 @@ class ChangeHandlerService:
         visum,
         before_camp_registration_deadline: bool = False,
         now: datetime.datetime = None,
+        trigger: bool = False,
     ):
+        if not trigger:
+            logger.debug(
+                "Changed instance is not part of a deadline, don't check if a mail needs to be sent"
+            )
+            return
+
         from apps.deadlines.services import LinkedDeadlineService
 
         if LinkedDeadlineService().are_camp_registration_deadline_items_checked(
@@ -88,14 +103,17 @@ class ChangeHandlerService:
                     now,
                 ) = self.calculate_camp_registration_deadline()
 
-            logger.debug("DEADLINE OK - Sending registration email")
+            logger.debug(
+                "CAMP REGISTRATION DEADLINE complete - OK to send registration email (%s deadline)",
+                "before" if before_camp_registration_deadline else "after",
+            )
             return InuitsVisumMailService().notify_camp_registered(
                 visum=visum,
                 before_camp_registration_deadline=before_camp_registration_deadline,
                 now=now,
             )
         else:
-            logger.debug("DEADLINE NOT OK YET - Not sending mail")
+            logger.debug("CAMP REGISTRATION DEADLINE not complete - Not sending mail")
 
         return False
 
@@ -153,6 +171,7 @@ class ChangeHandlerService:
             instance=instance,
             before_camp_registration_deadline=before_camp_registration_deadline,
             now=now,
+            trigger=True,
         )
 
     def change_camp_dates(self, request, instance):
@@ -166,6 +185,7 @@ class ChangeHandlerService:
             instance=instance,
             before_camp_registration_deadline=before_camp_registration_deadline,
             now=now,
+            trigger=True,
         )
 
     def calculate_camp_registration_deadline(

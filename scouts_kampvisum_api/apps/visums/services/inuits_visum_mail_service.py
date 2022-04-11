@@ -241,7 +241,9 @@ class InuitsVisumMailService(EmailService):
             if sending_camp_registration_mail:
                 if before_camp_registration_deadline:
                     visum.camp_registration_mail_sent_before_deadline = result
+                    visum.camp_registration_mail_sent_after_deadline = False
                 else:
+                    visum.camp_registration_mail_sent_before_deadline = False
                     visum.camp_registration_mail_sent_after_deadline = result
 
             visum.camp_registration_mail_last_sent = now

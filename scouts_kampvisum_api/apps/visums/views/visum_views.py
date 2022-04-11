@@ -45,6 +45,8 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             current_permissions.append(CustomDjangoPermission("visums.view_visum"))
         if self.action == "create":
             current_permissions.append(CustomDjangoPermission("visums.edit_visum"))
+        if self.action == "update" or self.action == "partial_update":
+            current_permissions.append(CustomDjangoPermission("visums.edit_visum"))
         if self.action == "list":
             current_permissions.append(CustomDjangoPermission("visums.list_visum"))
 

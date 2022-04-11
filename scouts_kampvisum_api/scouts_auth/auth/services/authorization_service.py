@@ -36,6 +36,9 @@ class AuthorizationService:
         if group.name == self.SUPER_ADMIN:
             user.is_superuser = True
 
+        user.full_clean()
+        user.save()
+
         return user
 
     def remove_user_from_group(
@@ -56,5 +59,8 @@ class AuthorizationService:
 
         logger.debug("Removing user %s from auth group %s", user.username, group.name)
         group.user_set.remove(user)
+
+        user.full_clean()
+        user.save()
 
         return user
