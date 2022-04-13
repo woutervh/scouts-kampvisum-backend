@@ -1,20 +1,11 @@
-import os
-from pathlib import Path
 from typing import List
 
 from django.db import transaction
-from django.conf import settings
-from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.core.exceptions import ValidationError
 
-from apps.groups.models import (
-    DefaultScoutsSectionName,
-    ScoutsSection,
-)
 from apps.groups.services import DefaultScoutsSectionNameService
 
-from scouts_auth.groupadmin.models import ScoutsGroup
+from apps.visums.models import CampVisum, CampVisumEngagement
 
 
 # LOGGING
@@ -36,4 +27,11 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
-        pass
+        visums: List[CampVisum] = CampVisum.objects.all()
+
+        for visum in visums:
+            if not visum.engagement:
+                visum.engagement = CampVisumEngagement()
+
+                visum.full_clean()
+                visum.save()
