@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.deadlines.models import Deadline
+from apps.deadlines.models import Deadline, LinkedDeadlineItem
 from apps.deadlines.managers import LinkedDeadlineManager
 
 from apps.visums.models import CampVisum
@@ -25,7 +25,7 @@ class LinkedDeadline(AuditedBaseModel):
     visum = models.ForeignKey(
         CampVisum, on_delete=models.CASCADE, related_name="deadlines"
     )
-    # items = models.ManyToManyField(LinkedDeadlineItem, related_name="deadline")
+    items = models.ManyToManyField(LinkedDeadlineItem, related_name="deadline")
 
     class Meta:
         unique_together = ("parent", "visum")

@@ -116,13 +116,13 @@ class LinkedDeadlineService:
                 instance.parent.name,
             )
 
-        # logger.debug(
-        #     "Linking %d LinkedDeadlineItem instance(s) to LinkedDeadline %s",
-        #     len(items),
-        #     instance.parent.name,
-        # )
-        # for item in items:
-        #     instance.items.add(item)
+        logger.debug(
+            "Linking %d LinkedDeadlineItem instance(s) to LinkedDeadline %s",
+            len(items),
+            instance.parent.name,
+        )
+        for item in items:
+            instance.items.add(item)
 
         return instance
 

@@ -21,7 +21,7 @@ class Command(BaseCommand):
     help = "Fixes issue 92544 https://redmine.inuits.eu/issues/92544"
     exception = True
 
-    # fix for https://redmine.inuits.eu/issues/92074 for camp visums that were already registered
+    # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
         linked_deadlines: List[LinkedDeadline] = LinkedDeadline.objects.all()
