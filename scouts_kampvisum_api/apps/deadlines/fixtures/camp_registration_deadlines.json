@@ -9,7 +9,7 @@
             "is_important": true,
             "is_camp_registration": true,
             "due_date": {
-                "date_day": 11,
+                "date_day": 13,
                 "date_month": 4
             },
             "camp_types": [
