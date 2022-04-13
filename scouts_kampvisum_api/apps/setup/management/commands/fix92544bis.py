@@ -21,19 +21,19 @@ class Command(BaseCommand):
     help = "Fixes issue 92544 https://redmine.inuits.eu/issues/92544"
     exception = True
 
-    # fix for https://redmine.inuits.eu/issues/92074 for camp visums that were already registered
+    # fix for https://redmine.inuits.eu/issues/92074 to reestablish the link between LinkedDeadline and LinkedDeadlineItem
     @transaction.atomic
     def handle(self, *args, **kwargs):
-        linked_deadlines: List[LinkedDeadline] = LinkedDeadline.objects.all()
-        for linked_deadline in linked_deadlines:
-            linked_deadline_id = linked_deadline.id
-            linked_deadline_items: List[
-                LinkedDeadlineItem
-            ] = linked_deadline.items.all()
-
-            for linked_deadline_item in linked_deadline_items:
-                if not linked_deadline_item.linked_deadline_fix:
-                    linked_deadline_item.linked_deadline_fix = linked_deadline_id
+        linked_deadline_items: List[
+            LinkedDeadlineItem
+        ] = LinkedDeadlineItem.objects.all()
+        for linked_deadline_item in linked_deadline_items:
+            if linked_deadline_item.linked_deadline_fix:
+                linked_deadline: LinkedDeadline = LinkedDeadline.objects.safe_get(
+                    id=linked_deadline_item.linked_deadline_fix
+                )
+                if linked_deadline:
+                    linked_deadline_item.linked_deadline = linked_deadline
 
                     linked_deadline_item.full_clean()
                     linked_deadline_item.save()
@@ -43,7 +43,6 @@ class Command(BaseCommand):
                 Q(linked_deadline_fix__isnull=True) | Q(linked_deadline_fix__exact="")
             )
         )
-
         logger.info(
             "LinkedDeadlineItem instances not linked to a LinkedDeadline: %d",
             len(linked_deadline_items),

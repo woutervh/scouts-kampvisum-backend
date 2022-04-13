@@ -50,19 +50,24 @@ class ChangeHandlerService:
         from apps.deadlines.models import LinkedDeadlineFlag
 
         visum = None
+        is_flag = False
         if isinstance(instance, LinkedCheck):
             visum = instance.sub_category.category.category_set.visum
         elif isinstance(instance, LinkedDeadlineFlag):
+            is_flag = True
             visum = instance.deadline_item.linked_deadline.visum
 
         for deadline in visum.deadlines.all():
             if deadline.parent.is_camp_registration:
                 for item in deadline.items.all():
                     if (
-                        item.linked_sub_category == instance.sub_category
-                        or item.linked_check == instance
-                        or item.flag == instance
-                    ):
+                        not is_flag
+                        and (
+                            item.linked_sub_category == instance.sub_category
+                            or item.linked_check == instance
+                            or item.flag == instance
+                        )
+                    ) or (is_flag and item.flag == instance):
                         trigger = True
 
         self._check_deadline_complete(
