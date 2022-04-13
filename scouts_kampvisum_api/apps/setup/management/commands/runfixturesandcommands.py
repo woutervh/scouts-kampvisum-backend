@@ -22,10 +22,10 @@ class Command(BaseCommand):
         "loaddefaultdeadlines",
         # "fix92074",
         # "fix92074bis",
-        "sprint7fix91022",
-        "fix93032",
-        "fix92544tris",
-        # "updatevisums",
+        # "sprint7fix91022",
+        # "fix93032",
+        # "fix92544tris",
+        "updatevisums",
     ]
 
     def handle(self, *args, **kwargs):
