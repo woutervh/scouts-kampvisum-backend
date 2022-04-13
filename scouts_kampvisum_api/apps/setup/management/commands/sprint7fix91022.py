@@ -31,7 +31,11 @@ class Command(BaseCommand):
 
         for visum in visums:
             if not visum.engagement:
-                visum.engagement = CampVisumEngagement()
+                engagement = CampVisumEngagement()
+                engagement.full_clean()
+                engagement.save()
+
+                visum.engagement = engagement
 
                 visum.full_clean()
                 visum.save()
