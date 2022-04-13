@@ -1108,7 +1108,7 @@
                 "change_camp_responsible"
             ],
             "label": "Contactgegevens kampverantwoordelijke",
-            "explanation": "De kampverantwoordelijke is iemand van de leidingsploeg die als verantwoordelijke het kamp ‘trekt’."
+            "explanation": "De kampverantwoordelijke is iemand van de leidingsploeg die als verantwoordelijke het kamp ‘trekt’. <br> Wijzigen deze gegevens na de deadline van de kampregistratie? Bezorg ze dan nog aan de gemeente waar je op kamp gaat."
         }
     },
     {
@@ -1125,7 +1125,8 @@
             "check_type": [
                 "ParticipantResponsibleCheck"
             ],
-            "label": "Contactgegevens 2de kampverantwoordelijke"
+            "label": "Contactgegevens 2de kampverantwoordelijke",
+            "explanation": "Wijzigen deze gegevens na de deadline van de kampregistratie? Bezorg ze dan nog aan de gemeente waar je op kamp gaat."
         }
     },
     {
