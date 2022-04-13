@@ -25,7 +25,6 @@ class LinkedDeadline(AuditedBaseModel):
     visum = models.ForeignKey(
         CampVisum, on_delete=models.CASCADE, related_name="deadlines"
     )
-    # items = models.ManyToManyField(LinkedDeadlineItem, related_name="deadline")
 
     class Meta:
         unique_together = ("parent", "visum")

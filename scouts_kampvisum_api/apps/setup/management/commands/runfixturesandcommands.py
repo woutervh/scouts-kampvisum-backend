@@ -24,8 +24,7 @@ class Command(BaseCommand):
         # "fix92074bis",
         "sprint7fix91022",
         "fix93032",
-        "fix92544",
-        "fix92544bis",
+        "fix92544tris",
         # "updatevisums",
     ]
 
