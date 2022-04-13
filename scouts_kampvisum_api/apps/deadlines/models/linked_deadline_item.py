@@ -27,7 +27,6 @@ class LinkedDeadlineItem(AbstractBaseModel):
         null=True,
         blank=True,
     )
-    linked_deadline_fix = OptionalCharField()
 
     linked_sub_category = models.ForeignKey(
         LinkedSubCategory,
