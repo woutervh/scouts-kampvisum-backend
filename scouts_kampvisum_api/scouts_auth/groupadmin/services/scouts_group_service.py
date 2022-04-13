@@ -27,7 +27,7 @@ class ScoutsGroupService:
         user.scouts_groups = abstract_groups
 
         logger.debug(
-            "SCOUTS GROUP SERVICE: Found %d groups(s)",
+            "SCOUTS GROUP SERVICE: Found %d groups(s) for user %s",
             len(abstract_groups),
             user.username,
             user=user,
