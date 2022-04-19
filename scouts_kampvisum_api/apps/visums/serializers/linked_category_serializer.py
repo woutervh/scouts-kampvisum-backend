@@ -4,9 +4,6 @@ from apps.visums.models import LinkedCategory
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CategorySerializer, LinkedSubCategorySerializer
 
-from scouts_auth.inuits.serializers import PermissionRequiredSerializerField
-from scouts_auth.inuits.serializers.fields import OptionalCharSerializerField
-
 
 # LOGGING
 import logging
@@ -19,11 +16,6 @@ class LinkedCategorySerializer(serializers.ModelSerializer):
 
     parent = CategorySerializer()
     sub_categories = LinkedSubCategorySerializer(many=True)
-    notes = PermissionRequiredSerializerField(
-        permission="visums.view_visum_notes",
-        field=OptionalCharSerializerField(),
-        required=False,
-    )
 
     class Meta:
         model = LinkedCategory

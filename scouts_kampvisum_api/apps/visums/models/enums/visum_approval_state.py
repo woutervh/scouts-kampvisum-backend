@@ -1,9 +1,16 @@
 from django.db import models
 
 
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+
+logger: InuitsLogger = logging.getLogger(__name__)
+
+
 class CampVisumApprovalState(models.TextChoices):
     """
-    An enum that provides differente visum approval states
+    An enum that provides different visum approval states
     """
 
     # Base state, nothing to do yet
@@ -17,8 +24,9 @@ class CampVisumApprovalState(models.TextChoices):
     DISAPPROVED = "D", "DISAPPROVED"
 
     @staticmethod
-    def endpoint_from_type(check_type: str):
+    def get_state(approval: str):
+        approval = approval.lower()
         for option in CampVisumApprovalState.choices:
-            if option[0] == check_type:
-                return option[1]
-        return None
+            if option[0].lower() == approval or option[1].lower() == approval:
+                return option
+        return CampVisumApprovalState.UNDECIDED

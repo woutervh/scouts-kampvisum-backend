@@ -28,7 +28,7 @@ class ChoiceSerializerField(serializers.ChoiceField):
         value = super().get_value(dictionary)
         return value
 
-    def to_internal_value(self, data):
+    def to_internal_value(self, data: dict) -> dict:
         # logger.debug("DATA: %s", data)
         return super().to_internal_value(data)
 

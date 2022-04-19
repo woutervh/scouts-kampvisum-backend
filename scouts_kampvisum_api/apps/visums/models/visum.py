@@ -9,7 +9,11 @@ from apps.visums.managers import CampVisumManager
 from scouts_auth.groupadmin.models import ScoutsGroup
 
 from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import DefaultCharField, OptionalDateTimeField
+from scouts_auth.inuits.models.fields import (
+    OptionalCharField,
+    DefaultCharField,
+    OptionalDateTimeField,
+)
 
 
 # LOGGING
@@ -46,6 +50,8 @@ class CampVisum(AuditedBaseModel):
         default=CampVisumState.DATA_REQUIRED,
         max_length=32,
     )
+    # DC's can add notes to a linked category that are only viewable and editable by other DC's
+    notes = OptionalCharField()
 
     class Meta:
         # ordering = ["camp__sections__age_group"]
@@ -53,6 +59,8 @@ class CampVisum(AuditedBaseModel):
             ("view_visum", "User can view a camp visum"),
             ("edit_visum", "User can create and edit a camp visum"),
             ("list_visum", "User can list visums for his/her group"),
+            ("view_visum_notes", "User is a DC and can view approval notes"),
+            ("edit_visum_notes", "User is a DC and can edit approval notes"),
         ]
 
     def __str__(self):

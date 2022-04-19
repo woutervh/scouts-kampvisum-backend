@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
 from apps.visums.models import LinkedSubCategory
-from apps.visums.models.enums import CheckState
+from apps.visums.models.enums import CheckState, CampVisumApprovalState
 from apps.visums.serializers import SubCategorySerializer, LinkedCheckSerializer
 
 from scouts_auth.inuits.serializers import PermissionRequiredSerializerField
 from scouts_auth.inuits.serializers.fields import (
     OptionalCharSerializerField,
-    DefaultCharSerializerField,
+    ChoiceSerializerField,
 )
 
 
@@ -24,13 +24,16 @@ class LinkedSubCategorySerializer(serializers.ModelSerializer):
     checks = LinkedCheckSerializer(many=True)
 
     feedback = PermissionRequiredSerializerField(
-        permission="visums.visums_view_feedback",
+        permission="visums.view_visum_feedback",
         field=OptionalCharSerializerField(),
         required=False,
     )
     approval = PermissionRequiredSerializerField(
         permission="visums.view_visum_approval",
-        field=DefaultCharSerializerField(),
+        field=ChoiceSerializerField(
+            choices=CampVisumApprovalState.choices,
+            default=CampVisumApprovalState.UNDECIDED,
+        ),
         required=False,
     )
 

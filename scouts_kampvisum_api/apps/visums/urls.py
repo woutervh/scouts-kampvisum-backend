@@ -119,7 +119,7 @@ urlpatterns = [
     ),
     path("visums/<uuid:linked_sub_category_id>/feedback", feedback, name="feedback"),
     path("visums/<uuid:linked_sub_category_id>/approval", approval, name="approval"),
-    path("visums/<uuid:linked_category_id>/notes", notes, name="notes"),
+    path("visums/<uuid:visum_id>/notes", notes, name="notes"),
 ]
 
 

@@ -10,6 +10,9 @@ from apps.visums.serializers import (
 
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
 
+from scouts_auth.inuits.serializers import PermissionRequiredSerializerField
+from scouts_auth.inuits.serializers.fields import OptionalCharSerializerField
+
 
 # LOGGING
 import logging
@@ -25,6 +28,11 @@ class CampVisumSerializer(serializers.ModelSerializer):
     camp_types = CampTypeSerializer(many=True)
     category_set = LinkedCategorySetSerializer()
     engagement = CampVisumEngagementSerializer(required=False)
+    notes = PermissionRequiredSerializerField(
+        permission="visums.view_visum_notes",
+        field=OptionalCharSerializerField(),
+        required=False,
+    )
 
     class Meta:
         model = CampVisum
