@@ -75,6 +75,15 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+    
+    def global_update_approval(self, request, visum_id):
+        instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
+        
+        instance = self.approval_service.global_update_approval(request=request, instance=instance)
+
+        output_serializer = CampVisumSerializer(instance, context={"request": request})
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     def partial_update_dc_notes(self, request, visum_id):
         instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)

@@ -15,7 +15,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class CampVisumApprovalService:
     
-    def update_feedback(self, request, instance: LinkedSubCategory, feedback: str):
+    def update_feedback(self, request, instance: LinkedSubCategory, feedback: str) -> LinkedSubCategory:
         logger.debug(
             "Setting feedback on LinkedSubCategory %s (%s)",
             instance.parent.name,
@@ -30,7 +30,7 @@ class CampVisumApprovalService:
         
         return instance
 
-    def update_approval(self, request, instance: LinkedSubCategory, approval: str):
+    def update_approval(self, request, instance: LinkedSubCategory, approval: str) -> LinkedSubCategory:
         approval: CampVisumApprovalState = CampVisumApprovalState.get_state(approval)
 
         logger.debug(
@@ -56,7 +56,7 @@ class CampVisumApprovalService:
             
             state = CampVisumState.NOT_SIGNABLE
         else:
-            disapproved_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all().filter(Q(category__category_set__visum=visum)&Q(approval=CampVisumApprovalState.DISAPPROVED))
+            disapproved_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all().disapproved(visum=visum)
             if disapproved_sub_categories.count() > 0:
                 state = CampVisumState.NOT_SIGNABLE
             else:
@@ -68,8 +68,20 @@ class CampVisumApprovalService:
         visum.save()
         
         return instance
+
+    def global_update_approval(self, request, instance: CampVisum) -> CampVisum:
+        logger.debug("Globally setting approval state for visum %s (%s)", instance.camp.name, instance.id)
+        
+        approvable_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all().globally_approvable(visum=instance)
+        for approvable_sub_category in approvable_sub_categories:
+            approvable_sub_category.approval = CampVisumApprovalState.APPROVED
+            
+            approvable_sub_category.full_clean()
+            approvable_sub_category.save()
+        
+        return instance
     
-    def update_dc_notes(self, request, instance: CampVisum, notes: str):
+    def update_dc_notes(self, request, instance: CampVisum, notes: str) -> CampVisum:
         logger.debug(
             "Adding DC notes on CampVisum %s (%s)",
             instance.camp.name,

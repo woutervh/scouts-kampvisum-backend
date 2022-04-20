@@ -67,6 +67,7 @@ number_check = LinkedCheckViewSet.as_view(
 
 feedback = CampVisumApprovalViewSet.as_view({"patch": "partial_update_feedback"})
 approval = CampVisumApprovalViewSet.as_view({"patch": "partial_update_approval"})
+global_approval = CampVisumApprovalViewSet.as_view({"patch": "global_update_approval"})
 notes = CampVisumApprovalViewSet.as_view({"patch": "partial_update_dc_notes"})
 
 urlpatterns = [
@@ -119,6 +120,7 @@ urlpatterns = [
     ),
     path("visums/<uuid:linked_sub_category_id>/feedback", feedback, name="feedback"),
     path("visums/<uuid:linked_sub_category_id>/approval", approval, name="approval"),
+    path("visums/<uuid:visum_id>/global_approval", global_approval, name="global_approval"),
     path("visums/<uuid:visum_id>/notes", notes, name="notes"),
 ]
 

@@ -1,5 +1,8 @@
 from django.db import models
+from django.db.models import Q
 from django.core.exceptions import ValidationError
+
+from apps.visums.models.enums import CampVisumApprovalState
 
 
 # LOGGING
@@ -15,6 +18,15 @@ class LinkedSubCategoryQuerySet(models.QuerySet):
 
     def all(self, *args, **kwargs):
         return super().all(args, is_archived=False, **kwargs)
+
+    def disapproved(self, visum):
+        return self.filter(Q(category__category_set__visum=visum)&Q(approval=CampVisumApprovalState.DISAPPROVED))
+
+    def approvable(self, visum):
+        return self.filter(category__category_set__visum=visum).exclude(approval=CampVisumApprovalState.DISAPPROVED)
+
+    def globally_approvable(self, visum):
+        return self.filter(category__category_set__visum=visum).exclude(approval=CampVisumApprovalState.DISAPPROVED).exclude(approval=CampVisumApprovalState.APPROVED_FEEDBACK)
 
 
 class LinkedSubCategoryManager(models.Manager):
