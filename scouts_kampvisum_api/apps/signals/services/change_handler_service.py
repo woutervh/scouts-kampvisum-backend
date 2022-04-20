@@ -104,6 +104,16 @@ class ChangeHandlerService:
         if LinkedDeadlineService().are_camp_registration_deadline_items_checked(
             visum=visum
         ):
+            # Set the visum as signable if all required checks are completed
+            if not visum.is_signable():
+                logger.debug("Setting CampVisum %s (%s) to state SIGNABLE", visum.camp.name, visum.id)
+                from apps.visums.models.enums import CampVisumState
+                
+                visum.state = CampVisumState.SIGNABLE
+                
+                visum.full_clean()
+                visum.save()
+            
             from apps.visums.services import InuitsVisumMailService
 
             if not now:
@@ -136,8 +146,10 @@ class ChangeHandlerService:
         state = serializer_data.get("category_set").get("state")
 
         if CheckState.is_checked_or_irrelevant(state=state):
+            logger.debug("Setting CampVisum %s (%s) to state SIGNABLE (category set state: %s)", visum.camp.name, visum.id, state)
             visum.state = CampVisumState.SIGNABLE
         else:
+            logger.debug("Setting CampVisum %s (%s) to state DATA_REQUIRED (category set state: %s)", visum.camp.name, visum.id, state)
             visum.state = CampVisumState.DATA_REQUIRED
 
         visum.full_clean()

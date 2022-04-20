@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from apps.visums.models import CampVisumEngagement
+from apps.visums.services import CampVisumEngagementService
 
 from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
 
@@ -84,41 +85,19 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
         return data
 
     def validate(self, obj: any) -> any:
-        logger.debug("DATA: %s", obj)
         if isinstance(obj, CampVisumEngagement):
             return obj
 
         if isinstance(obj, dict):
-            # approved = False
-            # if "approved" in obj:
-            #     approved = obj.get("approved")
-            # else:
-            #     id = obj.get("id", None)
-            #     if id:
-            #         instance = CampVisumEngagement.objects.safe_get(id=id)
-            #         if instance:
-            #             approved = instance.approved
+            id = obj.get("id", None)
+            if not id:
+                raise ValidationError("Can't load CampVisumEngagement without an id")
 
-            leaders = obj.get("leaders", None)
-            group_leaders = obj.get("group_leaders", None)
-            district_commissioner = obj.get("district_commissioner", None)
-
-            # if not approved:
-            #     if leaders or group_leaders or district_commissioner:
-            #         raise ValidationError(
-            #             "Leaders, group leaders and DC's can only sign the camp after it's been approved"
-            #         )
-            # else:
-            #     if (district_commissioner or group_leaders) and not leaders:
-            #         raise ValidationError(
-            #             "Group leaders and DC's can only sign after the leaders have signed"
-            #         )
-            #     if district_commissioner and not (leaders or group_leaders):
-            #         raise ValidationError(
-            #             "DC's can only sign after the leaders and group leaders have signed"
-            #         )
-            #     if district_commissioner:
-            #         pass
+            engagement = CampVisumEngagement.objects.safe_get(id=id, raise_error=True)
+            
+            leaders = engagement.leaders
+            group_leaders = engagement.group_leaders
+            district_commissioner = engagement.district_commissioner
 
             if (district_commissioner or group_leaders) and not leaders:
                 raise ValidationError(
@@ -129,6 +108,9 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
                     "DC's can only sign after the leaders and group leaders have signed"
                 )
             if district_commissioner:
-                pass
+                service = CampVisumEngagementService()
+                
+                if not service.is_signable_by_dc(request=self.context.get("request"), instance=engagement):
+                    raise ValidationError("DC's can only sign if there are no sub-categories markes as DISAPPROVED")
 
             return obj

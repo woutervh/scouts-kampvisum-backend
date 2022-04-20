@@ -62,6 +62,9 @@ class CampVisum(AuditedBaseModel):
             ("view_visum_notes", "User is a DC and can view approval notes"),
             ("edit_visum_notes", "User is a DC and can edit approval notes"),
         ]
+    
+    def is_signable(self):
+        return self.state != CampVisumState.DATA_REQUIRED and self.state != CampVisumState.NOT_SIGNABLE
 
     def __str__(self):
         return "{}".format(self.id)

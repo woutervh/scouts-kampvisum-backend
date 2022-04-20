@@ -12,9 +12,9 @@ from apps.visums.views import (
     SubCategoryViewSet,
     CampVisumViewSet,
     CampVisumEngagementViewSet,
+    CampVisumApprovalViewSet,
     LinkedCheckViewSet,
     LinkedCategoryViewSet,
-    ApprovalViewSet,
 )
 
 simple_check = LinkedCheckViewSet.as_view(
@@ -65,9 +65,9 @@ number_check = LinkedCheckViewSet.as_view(
     {"get": "retrieve_number_check", "patch": "partial_update_number_check"}
 )
 
-feedback = ApprovalViewSet.as_view({"patch": "partial_update_feedback"})
-approval = ApprovalViewSet.as_view({"patch": "partial_update_approval"})
-notes = ApprovalViewSet.as_view({"patch": "partial_update_notes"})
+feedback = CampVisumApprovalViewSet.as_view({"patch": "partial_update_feedback"})
+approval = CampVisumApprovalViewSet.as_view({"patch": "partial_update_approval"})
+notes = CampVisumApprovalViewSet.as_view({"patch": "partial_update_dc_notes"})
 
 urlpatterns = [
     path("checks/simple/<uuid:check_id>", simple_check, name="simple_check"),

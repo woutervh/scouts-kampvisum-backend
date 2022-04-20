@@ -12,6 +12,9 @@ class CampVisumState(models.TextChoices):
     # CampVisum has all required data, leaders and group leaders can sign the engagement
     # FRONTEND: "Kamp goedkeuren" -> button enabled
     SIGNABLE = "SIGNABLE", "signable"
+    # CampVisum has all required data, but one of the sub-categories is marked as DISAPPROVED
+    # FRONTEND: "Kamp afkeuren" -> button enabled
+    NOT_SIGNABLE = "NOT_SIGNABLE", "not_signable"
     # CampVisum has been signed by leaders and group leaders, DC can start approval flow
     REVIEWABLE = "REVIEWABLE", "reviewable"
     # DC has approved the camp visum
@@ -29,3 +32,4 @@ class CampVisumState(models.TextChoices):
             if option[0] == check_type:
                 return option[1]
         return None
+    

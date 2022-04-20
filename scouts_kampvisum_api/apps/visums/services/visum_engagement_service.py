@@ -14,6 +14,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumEngagementService:
+    
     @transaction.atomic
     def create_engagement(self, *args, **kwargs):
         approval = CampVisumEngagement()
@@ -27,12 +28,16 @@ class CampVisumEngagementService:
     def update_engagement(self, request, instance: CampVisumEngagement, **fields):
         user: ScoutsUser = request.user
         visum: CampVisum = instance.visum
-
+        
         if user.has_role_district_commissioner(group=visum.group):
             if not instance.leaders or not instance.group_leaders:
                 raise ValidationError(
                     "DC can only sign after leaders and group leaders have signed"
                 )
+            if not self.is_signable_by_dc(request=self.context.get("request"), instance=instance):
+                raise ValidationError("Visum is not yet signable, not all camp registration checks have been completed")
+
+        
             instance.district_commissioner = user
             instance.approved = True
         elif user.has_role_group_leader(group=visum.group):
@@ -51,3 +56,8 @@ class CampVisumEngagementService:
         instance.save()
 
         return instance
+
+    def is_signable_by_dc(self, request, instance: CampVisumEngagement) -> bool:
+        visum: CampVisum = instance.visum
+        
+        return visum.is_signable()
