@@ -22,6 +22,8 @@ class CampVisumApprovalState(models.TextChoices):
     APPROVED_FEEDBACK = "N", "APPROVED_WITH_FEEDBACK"
     # "DISSAPPROVED": the visum does not pass the minimum guidelines and cannot be signed in this case
     DISAPPROVED = "D", "DISAPPROVED"
+    # "FEEDBACK_RESOLVED": the  necessary steps were taking to resolve the issue in feedback
+    FEEDBACK_RESOLVED = "F", "FEEDBACK_RESOLVED"
 
     @staticmethod
     def get_state(approval: str):
@@ -29,4 +31,22 @@ class CampVisumApprovalState(models.TextChoices):
         for option in CampVisumApprovalState.choices:
             if option[0].lower() == approval or option[1].lower() == approval:
                 return option
+        return CampVisumApprovalState.UNDECIDED
+
+    def get_state_enum(approval: any):
+        if isinstance(approval, CampVisumApprovalState):
+            return approval
+
+        states = [CampVisumApprovalState.UNDECIDED, CampVisumApprovalState.APPROVED, CampVisumApprovalState.APPROVED_FEEDBACK, CampVisumApprovalState.DISAPPROVED, CampVisumApprovalState.FEEDBACK_RESOLVED]
+        
+        if isinstance(approval, tuple):
+            for state in states:
+                if approval[0] == state.name or approval[1] == state.label:
+                    return state
+        
+        if isinstance(approval, str):
+            for state in states:
+                if approval == state.name or approval == state.label:
+                    return state
+    
         return CampVisumApprovalState.UNDECIDED

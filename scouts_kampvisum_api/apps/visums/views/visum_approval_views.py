@@ -106,3 +106,27 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         output_serializer = CampVisumSerializer(instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+    
+    def handle_feedback(self, request, linked_sub_category_id):
+        instance: LinkedSubCategory = LinkedSubCategory.objects.safe_get(id=linked_sub_category_id, raise_error=True)
+        
+        instance = self.approval_service.handle_feedback(request=request, instance=instance)
+
+        output_serializer = LinkedSubCategorySerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+    
+    def global_handle_feedback(self, request, visum_id):
+        instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
+        
+        instance = self.approval_service.global_handle_feedback(request=request, instance=instance)
+
+        output_serializer = CampVisumSerializer(
+            instance, context={"request": request}
+        )
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)

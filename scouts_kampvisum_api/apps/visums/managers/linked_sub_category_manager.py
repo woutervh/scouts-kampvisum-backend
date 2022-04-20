@@ -27,6 +27,15 @@ class LinkedSubCategoryQuerySet(models.QuerySet):
 
     def globally_approvable(self, visum):
         return self.filter(category__category_set__visum=visum).exclude(approval=CampVisumApprovalState.DISAPPROVED).exclude(approval=CampVisumApprovalState.APPROVED_FEEDBACK)
+    
+    def resolution_not_required(self, visum):
+        return self.filter(category__category_set__visum=visum).exclude(approval=CampVisumApprovalState.DISAPPROVED).exclude(approval=CampVisumApprovalState.APPROVED_FEEDBACK).exclude(approval=CampVisumApprovalState.FEEDBACK_RESOLVED)
+    
+    def requires_resolution(self, visum):
+        return self.filter(Q(category__category_set__visum=visum)&Q(approval=CampVisumApprovalState.DISAPPROVED))
+    
+    def can_be_resolved(self, visum):
+        return self.filter(Q(category__category_set__visum=visum)&(Q(approval=CampVisumApprovalState.DISAPPROVED)|Q(approval=CampVisumApprovalState.APPROVED_FEEDBACK)))
 
 
 class LinkedSubCategoryManager(models.Manager):
