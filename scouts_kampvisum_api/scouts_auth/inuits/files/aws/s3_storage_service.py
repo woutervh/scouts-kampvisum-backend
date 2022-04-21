@@ -3,7 +3,7 @@ import ntpath
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from storages.backends.s3boto3 import boto3, S3Boto3Storage
-
+from botocore.exceptions import ClientError
 from scouts_auth.inuits.files import CustomStorage, StorageSettings
 
 # LOGGING
@@ -23,6 +23,28 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
     # access_key = StorageSettings.get_s3_access_key()
 
     local_storage = FileSystemStorage()
+
+    def create_presigned_url(self, object_name, expiration=3600):
+        """Generate a presigned URL to share an S3 object
+
+        :param object_name: string
+        :param expiration: Time in seconds for the presigned URL to remain valid
+        :return: Presigned URL as string. If error, returns None.
+        """
+
+        # Generate a presigned URL for the S3 object
+        s3_client = boto3.client('s3')
+        try:
+            response = s3_client.generate_presigned_url('get_object',
+                                                        Params={'Bucket': self.bucket_name,
+                                                                'Key': object_name},
+                                                        ExpiresIn=expiration)
+        except ClientError as e:
+            logging.error(e)
+            return None
+
+        # The response contains the presigned URL
+        return response
 
     # @TODO remove s3 specific code from this model
     def get_path(self):
