@@ -89,15 +89,20 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
             return obj
 
         if isinstance(obj, dict):
-            id = obj.get("id", None)
-            if not id:
-                raise ValidationError("Can't load CampVisumEngagement without an id")
+            engagement: CampVisumEngagement = None
 
-            engagement = CampVisumEngagement.objects.safe_get(id=id, raise_error=True)
-            
-            leaders = engagement.leaders
-            group_leaders = engagement.group_leaders
-            district_commissioner = engagement.district_commissioner
+            id = obj.get("id", None)
+            leaders = obj.get("leaders", None)
+            group_leaders = obj.get("group_leaders", None)
+            district_commissioner = obj.get("district_commissioner", None)
+            if id:
+                engagement = CampVisumEngagement.objects.safe_get(
+                    id=id, raise_error=True
+                )
+
+                leaders = engagement.leaders
+                group_leaders = engagement.group_leaders
+                district_commissioner = engagement.district_commissioner
 
             if (district_commissioner or group_leaders) and not leaders:
                 raise ValidationError(
@@ -107,10 +112,14 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
                 raise ValidationError(
                     "DC's can only sign after the leaders and group leaders have signed"
                 )
-            if district_commissioner:
+            if district_commissioner and engagement:
                 service = CampVisumEngagementService()
-                
-                if not service.is_signable_by_dc(request=self.context.get("request"), instance=engagement):
-                    raise ValidationError("DC's can only sign if there are no sub-categories markes as DISAPPROVED")
+
+                if not service.is_signable_by_dc(
+                    request=self.context.get("request"), instance=engagement
+                ):
+                    raise ValidationError(
+                        "DC's can only sign if there are no sub-categories markes as DISAPPROVED"
+                    )
 
             return obj
