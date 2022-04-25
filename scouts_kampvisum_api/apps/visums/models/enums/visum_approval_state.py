@@ -37,16 +37,22 @@ class CampVisumApprovalState(models.TextChoices):
         if isinstance(approval, CampVisumApprovalState):
             return approval
 
-        states = [CampVisumApprovalState.UNDECIDED, CampVisumApprovalState.APPROVED, CampVisumApprovalState.APPROVED_FEEDBACK, CampVisumApprovalState.DISAPPROVED, CampVisumApprovalState.FEEDBACK_RESOLVED]
-        
+        states = [
+            CampVisumApprovalState.UNDECIDED,
+            CampVisumApprovalState.APPROVED,
+            CampVisumApprovalState.APPROVED_FEEDBACK,
+            CampVisumApprovalState.DISAPPROVED,
+            CampVisumApprovalState.FEEDBACK_RESOLVED,
+        ]
+
         if isinstance(approval, tuple):
             for state in states:
-                if approval[0] == state.name or approval[1] == state.label:
+                if approval[0] == state or approval[1] == state.label:
                     return state
-        
+
         if isinstance(approval, str):
             for state in states:
-                if approval == state.name or approval == state.label:
+                if approval == state or approval == state.label:
                     return state
-    
+
         return CampVisumApprovalState.UNDECIDED
