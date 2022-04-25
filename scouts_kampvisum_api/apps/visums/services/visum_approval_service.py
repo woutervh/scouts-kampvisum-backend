@@ -125,8 +125,9 @@ class CampVisumApprovalService:
 
         self._set_visum_state(
             request=request,
-            instance=instance,
+            instance=None,
             approval=CampVisumApprovalState.FEEDBACK_RESOLVED,
+            visum=instance,
         )
 
         instance.full_clean()
@@ -135,10 +136,14 @@ class CampVisumApprovalService:
         return instance
 
     def _set_visum_state(
-        self, request, instance: LinkedSubCategory, approval: CampVisumApprovalState
+        self,
+        request,
+        instance: LinkedSubCategory,
+        approval: CampVisumApprovalState,
+        visum: CampVisum = None,
     ):
         # Set proper state on camp visum
-        visum: CampVisum = instance.category.category_set.visum
+        visum: CampVisum = visum if visum else instance.category.category_set.visum
         state: CampVisumState = CampVisumState.SIGNABLE
 
         logger.debug("APPROVAL: %s (%s)", approval, type(approval).__name__)
@@ -160,9 +165,7 @@ class CampVisumApprovalService:
         else:
             if approval == CampVisumApprovalState.DISAPPROVED:
                 logger.debug(
-                    "LinkedSubCategory %s (%s) is DISAPPROVED, setting CampVisum %s (%s) to state NOT_SIGNABLE",
-                    instance.parent.name,
-                    instance.id,
+                    "Setting CampVisum %s (%s) to state NOT_SIGNABLE",
                     visum.camp.name,
                     visum.id,
                 )
