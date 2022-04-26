@@ -30,16 +30,14 @@ class CampVisumEngagementService:
         visum: CampVisum = instance.visum
         
         if user.has_role_district_commissioner(group=visum.group):
-            if not instance.leaders or not instance.group_leaders:
-                raise ValidationError(
-                    "DC can only sign after leaders and group leaders have signed"
-                )
-            if not self.is_signable_by_dc(request=self.context.get("request"), instance=instance):
-                raise ValidationError("Visum is not yet signable, not all camp registration checks have been completed")
+            if instance.leaders and instance.group_leaders:
+                instance.district_commissioner = user
+                instance.approved = True
+            elif not instance.leaders:
+                instance.leaders = user
+            else:
+                instance.group_leaders = user
 
-        
-            instance.district_commissioner = user
-            instance.approved = True
         elif user.has_role_group_leader(group=visum.group):
             if not instance.leaders:
                 instance.leaders = user
