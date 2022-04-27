@@ -84,7 +84,9 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
 
         instance = self.approval_service.global_update_approval(
-            request=request, instance=instance
+            request=request,
+            instance=instance,
+            approval=CampVisumApprovalState.APPROVED,
         )
 
         output_serializer = CampVisumSerializer(instance, context={"request": request})
