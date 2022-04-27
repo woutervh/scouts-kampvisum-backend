@@ -14,7 +14,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumEngagementService:
-    
     @transaction.atomic
     def create_engagement(self, *args, **kwargs):
         approval = CampVisumEngagement()
@@ -25,10 +24,12 @@ class CampVisumEngagementService:
         return approval
 
     @transaction.atomic
-    def update_engagement(self, request, instance: CampVisumEngagement, **fields):
+    def update_engagement(
+        self, request, instance: CampVisumEngagement, **fields
+    ) -> CampVisumEngagement:
         user: ScoutsUser = request.user
         visum: CampVisum = instance.visum
-        
+
         if user.has_role_district_commissioner(group=visum.group):
             if instance.leaders and instance.group_leaders:
                 instance.district_commissioner = user
@@ -57,5 +58,5 @@ class CampVisumEngagementService:
 
     def is_signable_by_dc(self, request, instance: CampVisumEngagement) -> bool:
         visum: CampVisum = instance.visum
-        
+
         return visum.is_signable()

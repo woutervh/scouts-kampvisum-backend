@@ -68,9 +68,14 @@ number_check = LinkedCheckViewSet.as_view(
 feedback = CampVisumApprovalViewSet.as_view({"patch": "partial_update_feedback"})
 approval = CampVisumApprovalViewSet.as_view({"patch": "partial_update_approval"})
 global_approval = CampVisumApprovalViewSet.as_view({"patch": "global_update_approval"})
+global_disapproval = CampVisumApprovalViewSet.as_view(
+    {"patch": "global_update_disapproval"}
+)
 notes = CampVisumApprovalViewSet.as_view({"patch": "partial_update_dc_notes"})
 handle_feedback = CampVisumApprovalViewSet.as_view({"patch": "handle_feedback"})
-global_handle_feedback = CampVisumApprovalViewSet.as_view({"patch": "global_handle_feedback"})
+global_handle_feedback = CampVisumApprovalViewSet.as_view(
+    {"patch": "global_handle_feedback"}
+)
 
 urlpatterns = [
     path("checks/simple/<uuid:check_id>", simple_check, name="simple_check"),
@@ -122,10 +127,27 @@ urlpatterns = [
     ),
     path("visums/<uuid:linked_sub_category_id>/feedback", feedback, name="feedback"),
     path("visums/<uuid:linked_sub_category_id>/approval", approval, name="approval"),
-    path("visums/<uuid:visum_id>/global_approval", global_approval, name="global_approval"),
+    path(
+        "visums/<uuid:visum_id>/global_approval",
+        global_approval,
+        name="global_approval",
+    ),
+    path(
+        "visums/<uuid:visum_id>/global_disapproval",
+        global_disapproval,
+        name="global_disapproval",
+    ),
     path("visums/<uuid:visum_id>/notes", notes, name="notes"),
-    path("visums/<uuid:linked_sub_category_id>/handle_feedback", handle_feedback, name="handle_feedback"),
-    path("visums/<uuid:visum_id>/global_handle_feedback", global_handle_feedback, name="global_handle_feedback"),
+    path(
+        "visums/<uuid:linked_sub_category_id>/handle_feedback",
+        handle_feedback,
+        name="handle_feedback",
+    ),
+    path(
+        "visums/<uuid:visum_id>/global_handle_feedback",
+        global_handle_feedback,
+        name="global_handle_feedback",
+    ),
 ]
 
 

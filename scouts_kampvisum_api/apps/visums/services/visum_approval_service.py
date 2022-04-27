@@ -55,21 +55,35 @@ class CampVisumApprovalService:
 
         return instance
 
-    def global_update_approval(self, request, instance: CampVisum) -> CampVisum:
+    def global_update_approval(
+        self, request, instance: CampVisum, approval: CampVisumApprovalState = None
+    ) -> CampVisum:
+        approval = approval if approval else CampVisumApprovalState.APPROVED
+
         logger.debug(
-            "Globally setting approval state for visum %s (%s)",
+            "Globally setting approval state %s for visum %s (%s)",
+            approval,
             instance.camp.name,
             instance.id,
         )
 
-        approvable_sub_categories: List[
-            LinkedSubCategory
-        ] = LinkedSubCategory.objects.all().globally_approvable(visum=instance)
-        for approvable_sub_category in approvable_sub_categories:
-            approvable_sub_category.approval = CampVisumApprovalState.APPROVED
+        if approval == CampVisumApprovalState.APPROVED:
+            approvable_sub_categories: List[
+                LinkedSubCategory
+            ] = LinkedSubCategory.objects.all().globally_approvable(visum=instance)
+            for approvable_sub_category in approvable_sub_categories:
+                approvable_sub_category.approval = approval
+                instance.updated_by = request.user
 
-            approvable_sub_category.full_clean()
-            approvable_sub_category.save()
+                approvable_sub_category.full_clean()
+                approvable_sub_category.save()
+
+        self._set_visum_state(
+            request=request,
+            instance=None,
+            approval=approval,
+            visum=instance,
+        )
 
         return instance
 

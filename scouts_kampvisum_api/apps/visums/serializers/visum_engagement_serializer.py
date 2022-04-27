@@ -47,7 +47,9 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
         return data
 
     def to_representation(self, obj: CampVisumEngagement) -> dict:
+        logger.debug(f"CAMP VISUM ENGAGEMENT SERIALIZER TO_REPRESENTATION {obj}")
         data = super().to_representation(obj)
+        logger.debug(f"CAMP VISUM ENGAGEMENT SERIALIZER TO_REPRESENTATION {obj}")
 
         data["can_sign"] = obj.can_sign()
         data["leaders_can_sign"] = obj.leaders_can_sign()
@@ -81,6 +83,8 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
                 "group_admin_id": obj.district_commissioner.group_admin_id,
                 "username": obj.district_commissioner.username,
             }
+
+        logger.debug(f"CAMP VISUM ENGAGEMENT SERIALIZER TO_REPRESENTATION {data}")
 
         return data
 

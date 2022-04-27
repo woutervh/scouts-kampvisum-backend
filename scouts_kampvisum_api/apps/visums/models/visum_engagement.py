@@ -70,7 +70,10 @@ class CampVisumEngagement(AbstractBaseModel):
         return self.can_sign()
 
     def group_leaders_can_sign(self) -> bool:
-        return self.leaders_can_sign() and self.leaders
+        return self.leaders_can_sign() and self.leaders is not None
 
     def district_commissioner_can_sign(self) -> bool:
-        return self.group_leaders_can_sign() and self.group_leaders
+        return self.group_leaders_can_sign() and self.group_leaders is not None
+
+    def __str__(self):
+        return f"CampVisumEngagement ({self.id}): leaders ({self.leaders.username if self.leaders else None}), group_leaders ({self.group_leaders.username if self.group_leaders else None}), district_commissioner ({self.district_commissioner.username if self.district_commissioner else None})"

@@ -57,12 +57,18 @@ class CampVisumEngagementViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("CAMP VISUM ENGAGEMENT UPDATE VALIDATED DATA: %s", validated_data)
 
-        updated_instance = self.camp_visum_engagement_service.update_engagement(
-            request, instance=instance, **validated_data
+        updated_instance: CampVisumEngagement = (
+            self.camp_visum_engagement_service.update_engagement(
+                request, instance=instance, **validated_data
+            )
         )
 
+        # logger.debug("ENGAGEMENT: %s", updated_instance)
+        # logger.debug("ENGAGEMENT: {}".format(updated_instance))
+        logger.debug(f"Engagement: {updated_instance}")
+
         output_serializer = CampVisumEngagementSerializer(
-            updated_instance, context={"request": request}
+            instance=updated_instance, context={"request": request}
         )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
