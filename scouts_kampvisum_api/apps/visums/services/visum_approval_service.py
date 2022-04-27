@@ -201,7 +201,8 @@ class CampVisumApprovalService:
                 if disapproved_sub_categories.count() > 0:
                     state = CampVisumState.NOT_SIGNABLE
                 else:
-                    state = CampVisumState.SIGNABLE
+                    # Party !
+                    state = CampVisumState.APPROVED
 
         if not state:
             raise ValidationError("CampVisum needs to have a state, none given")

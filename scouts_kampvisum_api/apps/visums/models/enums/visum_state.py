@@ -25,6 +25,8 @@ class CampVisumState(models.TextChoices):
     REVIEWED_DISAPPROVED = "REVIEWED_DISAPPROVED", "reviewed_disapproved"
     # CampVisum was disapproved, leaders/group leaders have revisited the failed items
     FEEDBACK_HANDLED = "FEEDBACK_HANDLED", "feedback_handled"
+    # CampVisum has been fixed by leaders/group leaders, DC has signed the CampVisum
+    APPROVED = "APPROVED", "approved"
 
     @staticmethod
     def endpoint_from_type(check_type: str):
@@ -32,4 +34,3 @@ class CampVisumState(models.TextChoices):
             if option[0] == check_type:
                 return option[1]
         return None
-    
