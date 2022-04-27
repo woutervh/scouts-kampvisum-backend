@@ -1,6 +1,7 @@
 from typing import List
 
 from django.db.models import Q
+from django.core.exceptions import ValidationError
 
 from apps.visums.models import LinkedSubCategory, CampVisum
 from apps.visums.models.enums import CampVisumApprovalState, CampVisumState
@@ -34,15 +35,19 @@ class CampVisumApprovalService:
     def update_approval(
         self, request, instance: LinkedSubCategory, approval: str
     ) -> LinkedSubCategory:
+        visum: CampVisum = instance.category.category_set.visum
         approval: CampVisumApprovalState = CampVisumApprovalState.get_state_enum(
             approval
         )
+
         logger.debug(
-            "Setting approval state %s (%s) on LinkedSubCategory %s (%s)",
+            "Setting approval state %s (%s) on LinkedSubCategory %s (%s) for CampVisum %s with state %s",
             approval,
             approval.label,
             instance.parent.name,
             instance.id,
+            visum.camp.name,
+            visum.state,
         )
 
         instance.approval = approval
@@ -51,7 +56,47 @@ class CampVisumApprovalService:
         instance.full_clean()
         instance.save()
 
-        self._set_visum_state(request=request, instance=instance, approval=approval)
+        self._set_visum_state(
+            request=request, instance=instance, approval=approval, visum=visum
+        )
+
+        return instance
+
+    def handle_feedback(
+        self, request, instance: LinkedSubCategory
+    ) -> LinkedSubCategory:
+        visum: CampVisum = instance.category.category_set.visum
+        logger.debug(
+            "Setting feedback as resolved on LinkedSubCategory %s (%s) for visum %s with state %s",
+            instance.parent.name,
+            instance.id,
+            visum.camp.name,
+            visum.state,
+        )
+        instance.approval = CampVisumApprovalState.FEEDBACK_RESOLVED
+
+        instance.full_clean()
+        instance.save()
+
+        self._set_visum_state(
+            request=request, instance=instance, approval=instance.approval, visum=visum
+        )
+
+        return instance
+
+    def update_dc_notes(self, request, instance: CampVisum, notes: str) -> CampVisum:
+        logger.debug(
+            "Adding DC notes on CampVisum %s (%s) with state %s",
+            instance.camp.name,
+            instance.id,
+            instance.state,
+        )
+
+        instance.notes = notes
+        instance.updated_by = request.user
+
+        instance.full_clean()
+        instance.save()
 
         return instance
 
@@ -78,45 +123,11 @@ class CampVisumApprovalService:
                 approvable_sub_category.full_clean()
                 approvable_sub_category.save()
 
-        self._set_visum_state(
+        instance = self._set_visum_state(
             request=request,
             instance=None,
             approval=approval,
             visum=instance,
-        )
-
-        return instance
-
-    def update_dc_notes(self, request, instance: CampVisum, notes: str) -> CampVisum:
-        logger.debug(
-            "Adding DC notes on CampVisum %s (%s)",
-            instance.camp.name,
-            instance.id,
-        )
-
-        instance.notes = notes
-        instance.updated_by = request.user
-
-        instance.full_clean()
-        instance.save()
-
-        return instance
-
-    def handle_feedback(
-        self, request, instance: LinkedSubCategory
-    ) -> LinkedSubCategory:
-        logger.debug(
-            "Setting feedback as resolved on LinkedSubCategory %s (%s)",
-            instance.parent.name,
-            instance.id,
-        )
-        instance.approval = CampVisumApprovalState.FEEDBACK_RESOLVED
-
-        instance.full_clean()
-        instance.save()
-
-        self._set_visum_state(
-            request=request, instance=instance, approval=instance.approval
         )
 
         return instance
@@ -137,15 +148,12 @@ class CampVisumApprovalService:
             resolvable_sub_category.full_clean()
             resolvable_sub_category.save()
 
-        self._set_visum_state(
+        instance = self._set_visum_state(
             request=request,
             instance=None,
             approval=CampVisumApprovalState.FEEDBACK_RESOLVED,
             visum=instance,
         )
-
-        instance.full_clean()
-        instance.save()
 
         return instance
 
@@ -155,11 +163,10 @@ class CampVisumApprovalService:
         instance: LinkedSubCategory,
         approval: CampVisumApprovalState,
         visum: CampVisum = None,
-    ):
+    ) -> CampVisum:
         # Set proper state on camp visum
         visum: CampVisum = visum if visum else instance.category.category_set.visum
-        state: CampVisumState = CampVisumState.SIGNABLE
-
+        state: CampVisumApprovalState = None
         logger.debug("APPROVAL: %s (%s)", approval, type(approval).__name__)
 
         # feedback was resolved, check other sub-categories and set proper state on visum
@@ -175,6 +182,8 @@ class CampVisumApprovalService:
                     visum.id,
                 )
                 state = CampVisumState.FEEDBACK_HANDLED
+            else:
+                state = CampVisumState.NOT_SIGNABLE
         # dc disapproved a sub-category, set proper state on visum
         else:
             if approval == CampVisumApprovalState.DISAPPROVED:
@@ -193,6 +202,9 @@ class CampVisumApprovalService:
                     state = CampVisumState.NOT_SIGNABLE
                 else:
                     state = CampVisumState.SIGNABLE
+
+        if not state:
+            raise ValidationError("CampVisum needs to have a state, none given")
 
         visum.state = state
 
