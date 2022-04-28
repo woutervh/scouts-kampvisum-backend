@@ -128,6 +128,7 @@ class CampVisumApprovalService:
             instance=None,
             approval=approval,
             visum=instance,
+            global_approval=True,
         )
 
         return instance
@@ -163,6 +164,7 @@ class CampVisumApprovalService:
         instance: LinkedSubCategory,
         approval: CampVisumApprovalState,
         visum: CampVisum = None,
+        global_approval: bool = False,
     ) -> CampVisum:
         # Set proper state on camp visum
         visum: CampVisum = visum if visum else instance.category.category_set.visum
@@ -184,8 +186,8 @@ class CampVisumApprovalService:
                 state = CampVisumState.FEEDBACK_HANDLED
             else:
                 state = CampVisumState.NOT_SIGNABLE
-        # dc disapproved a sub-category, set proper state on visum
         else:
+            # dc disapproved a sub-category, set proper state on visum
             if approval == CampVisumApprovalState.DISAPPROVED:
                 logger.debug(
                     "Setting CampVisum %s (%s) to state NOT_SIGNABLE",
@@ -195,14 +197,17 @@ class CampVisumApprovalService:
 
                 state = CampVisumState.NOT_SIGNABLE
             else:
-                disapproved_sub_categories: List[
-                    LinkedSubCategory
-                ] = LinkedSubCategory.objects.all().disapproved(visum=visum)
-                if disapproved_sub_categories.count() > 0:
-                    state = CampVisumState.NOT_SIGNABLE
+                if global_approval:
+                    disapproved_sub_categories: List[
+                        LinkedSubCategory
+                    ] = LinkedSubCategory.objects.all().disapproved(visum=visum)
+                    if disapproved_sub_categories.count() > 0:
+                        state = CampVisumState.NOT_SIGNABLE
+                    else:
+                        # Party !
+                        state = CampVisumState.APPROVED
                 else:
-                    # Party !
-                    state = CampVisumState.APPROVED
+                    state = visum.state
 
         if not state:
             raise ValidationError("CampVisum needs to have a state, none given")
