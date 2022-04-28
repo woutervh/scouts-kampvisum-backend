@@ -73,7 +73,11 @@ class CampVisumApprovalService:
             visum.camp.name,
             visum.state,
         )
-        instance.approval = CampVisumApprovalState.FEEDBACK_RESOLVED
+        instance.approval = (
+            CampVisumApprovalState.FEEDBACK_READ
+            if instance.approval == CampVisumApprovalState.APPROVED_FEEDBACK
+            else CampVisumApprovalState.FEEDBACK_RESOLVED
+        )
 
         instance.full_clean()
         instance.save()
@@ -169,10 +173,14 @@ class CampVisumApprovalService:
         # Set proper state on camp visum
         visum: CampVisum = visum if visum else instance.category.category_set.visum
         state: CampVisumApprovalState = None
-        logger.debug("APPROVAL: %s (%s)", approval, type(approval).__name__)
+        logger.debug(
+            f"APPROVAL: {approval} (%s)",
+            type(approval).__name__,
+        )
 
         # feedback was resolved, check other sub-categories and set proper state on visum
         if approval == CampVisumApprovalState.FEEDBACK_RESOLVED:
+            # leaders have acknowledged DC remarks (approval was APPROVED_FEEDBACK
             resolvable_sub_categories: List[
                 LinkedSubCategory
             ] = LinkedSubCategory.objects.all().requires_resolution(visum=visum)

@@ -22,8 +22,10 @@ class CampVisumApprovalState(models.TextChoices):
     APPROVED_FEEDBACK = "N", "APPROVED_WITH_FEEDBACK"
     # "DISSAPPROVED": the visum does not pass the minimum guidelines and cannot be signed in this case
     DISAPPROVED = "D", "DISAPPROVED"
-    # "FEEDBACK_RESOLVED": the  necessary steps were taking to resolve the issue in feedback
+    # "FEEDBACK_RESOLVED": the necessary steps were taking to resolve the issue in feedback (state was DISAPPROVED)
     FEEDBACK_RESOLVED = "F", "FEEDBACK_RESOLVED"
+    # "FEEDBACK_READ": the leaders have acknowledged the DC's remarks (state was APPROVED_FEEDBACK)
+    FEEDBACK_READ = "R", "FEEDBACK_READ"
 
     @staticmethod
     def get_state(approval: str):
@@ -43,6 +45,7 @@ class CampVisumApprovalState(models.TextChoices):
             CampVisumApprovalState.APPROVED_FEEDBACK,
             CampVisumApprovalState.DISAPPROVED,
             CampVisumApprovalState.FEEDBACK_RESOLVED,
+            CampVisumApprovalState.FEEDBACK_READ,
         ]
 
         if isinstance(approval, tuple):
