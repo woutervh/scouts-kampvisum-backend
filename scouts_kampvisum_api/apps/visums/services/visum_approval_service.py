@@ -116,16 +116,16 @@ class CampVisumApprovalService:
             instance.id,
         )
 
-        if approval == CampVisumApprovalState.APPROVED:
-            approvable_sub_categories: List[
-                LinkedSubCategory
-            ] = LinkedSubCategory.objects.all().globally_approvable(visum=instance)
-            for approvable_sub_category in approvable_sub_categories:
-                approvable_sub_category.approval = approval
-                instance.updated_by = request.user
+        # if approval == CampVisumApprovalState.APPROVED:
+            # approvable_sub_categories: List[
+            #     LinkedSubCategory
+            # ] = LinkedSubCategory.objects.all().globally_approvable(visum=instance)
+            # for approvable_sub_category in approvable_sub_categories:
+            #     approvable_sub_category.approval = approval
+            #     instance.updated_by = request.user
 
-                approvable_sub_category.full_clean()
-                approvable_sub_category.save()
+            #     approvable_sub_category.full_clean()
+            #     approvable_sub_category.save()
 
         instance = self._set_visum_state(
             request=request,
@@ -152,6 +152,13 @@ class CampVisumApprovalService:
 
             resolvable_sub_category.full_clean()
             resolvable_sub_category.save()
+        
+        acknowledgeable_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all().can_be_acknowledged(visum=instance)
+        for acknowledgeable_sub_category in acknowledgeable_sub_categories:
+            acknowledgeable_sub_category.approval = CampVisumApprovalState.FEEDBACK_READ
+            
+            acknowledgeable_sub_category.full_clean()
+            acknowledgeable_sub_category.save()
 
         instance = self._set_visum_state(
             request=request,

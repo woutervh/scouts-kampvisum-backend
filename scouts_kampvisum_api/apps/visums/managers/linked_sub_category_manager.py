@@ -35,7 +35,10 @@ class LinkedSubCategoryQuerySet(models.QuerySet):
         return self.filter(Q(category__category_set__visum=visum)&Q(approval=CampVisumApprovalState.DISAPPROVED))
     
     def can_be_resolved(self, visum):
-        return self.filter(Q(category__category_set__visum=visum)&(Q(approval=CampVisumApprovalState.DISAPPROVED)|Q(approval=CampVisumApprovalState.APPROVED_FEEDBACK)))
+        return self.filter(Q(category__category_set__visum=visum)&(Q(approval=CampVisumApprovalState.DISAPPROVED)))
+    
+    def can_be_acknowledged(self, visum):
+        return self.filter(Q(category__category_set__visum=visum)&(Q(approval=CampVisumApprovalState.APPROVED_FEEDBACK)))
 
 
 class LinkedSubCategoryManager(models.Manager):
