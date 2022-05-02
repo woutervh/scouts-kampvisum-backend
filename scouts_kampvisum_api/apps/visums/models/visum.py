@@ -51,7 +51,7 @@ class CampVisum(AuditedBaseModel):
         max_length=32,
     )
     # DC's can add notes to a linked category that are only viewable and editable by other DC's
-    notes = OptionalCharField()
+    notes = OptionalCharField(max_length=300)
 
     class Meta:
         # ordering = ["camp__sections__age_group"]
@@ -62,9 +62,12 @@ class CampVisum(AuditedBaseModel):
             ("view_visum_notes", "User is a DC and can view approval notes"),
             ("edit_visum_notes", "User is a DC and can edit approval notes"),
         ]
-    
+
     def is_signable(self):
-        return self.state != CampVisumState.DATA_REQUIRED and self.state != CampVisumState.NOT_SIGNABLE
+        return (
+            self.state != CampVisumState.DATA_REQUIRED
+            and self.state != CampVisumState.NOT_SIGNABLE
+        )
 
     def __str__(self):
         return "{}".format(self.id)

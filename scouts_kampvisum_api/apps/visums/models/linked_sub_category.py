@@ -17,7 +17,7 @@ class LinkedSubCategory(AuditedArchiveableBaseModel):
         LinkedCategory, on_delete=models.CASCADE, related_name="sub_categories"
     )
 
-    feedback = OptionalCharField()
+    feedback = OptionalCharField(max_length=300)
     approval = DefaultCharField(
         choices=CampVisumApprovalState.choices,
         default=CampVisumApprovalState.UNDECIDED,
