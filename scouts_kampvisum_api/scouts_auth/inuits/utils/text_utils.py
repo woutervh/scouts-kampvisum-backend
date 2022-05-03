@@ -1,6 +1,5 @@
 from django.db import models
 
-
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
@@ -11,7 +10,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class TextUtils:
     @staticmethod
     def replace(
-        path, dictionary, placeholder_start: str = "(((", placeholder_end: str = ")))"
+            path, dictionary, placeholder_start: str = "(((", placeholder_end: str = ")))"
     ):
         try:
             with open(path, "r") as f:
@@ -35,6 +34,14 @@ class TextUtils:
         end = ""
         with open(path_end, "r") as f:
             end = f.read()
+
+        return start + contents + end
+
+    @staticmethod
+    def compose_html_email_prepared_end(path_start, contents: str, end: str):
+        start = ""
+        with open(path_start, "r") as f:
+            start = f.read()
 
         return start + contents + end
 

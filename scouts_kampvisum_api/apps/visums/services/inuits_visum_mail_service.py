@@ -295,13 +295,17 @@ class InuitsVisumMailService(EmailService):
         template_id: str = None,
     ) -> bool:
         dictionary["title_mail"] = subject
+        dictionary["year_footer_mail"] = str(timezone.now().date().year)
 
         body = None
         html_body = self._prepare_email_body(
             template_path=template_path, dictionary=dictionary
         )
-        html_body = TextUtils.compose_html_email(
-            self.template_path_start, html_body, self.template_path_end
+        html_body_end = self._prepare_email_body(
+            template_path=self.template_path_end, dictionary=dictionary
+        )
+        html_body = TextUtils.compose_html_email_prepared_end(
+            self.template_path_start, html_body, html_body_end
         )
 
         if not reply_to:
