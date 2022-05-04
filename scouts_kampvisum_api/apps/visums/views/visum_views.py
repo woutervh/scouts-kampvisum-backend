@@ -16,7 +16,6 @@ from scouts_auth.auth.permissions import CustomDjangoPermission
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
-
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
@@ -156,16 +155,17 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
-        if page is not None:
-            serializer = CampVisumSerializer(
-                page, many=True, context={"request": request}
-            )
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = CampVisumSerializer(
-                instances, many=True, context={"request": request}
-            )
-            return Response(serializer.data)
+        serializer = CampVisumSerializer(
+            page, many=True, context={"request": request}
+        ) if page is not None else CampVisumSerializer(
+            instances, many=True, context={"request": request}
+        )
+
+        ordered = sorted(serializer.data,
+                         key=lambda k: k.get("camp", {}).get("sections", [{"age_group": 0}])[0].get("age_group", 0))
+
+        return self.get_paginated_response(ordered) if page is not None else Response(ordered)
+
 
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
