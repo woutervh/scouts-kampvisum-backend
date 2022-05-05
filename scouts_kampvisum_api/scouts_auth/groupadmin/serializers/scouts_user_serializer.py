@@ -32,7 +32,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 ),
             }
             for group in obj.persisted_scouts_groups.all()
-            if obj.has_role_leader(group=group)
+            if (obj.has_role_leader(group=group) or obj.has_role_district_commissioner(group=group))
         ]
 
     def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
