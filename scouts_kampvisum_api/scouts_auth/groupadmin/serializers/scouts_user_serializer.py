@@ -10,7 +10,6 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
     user_permissions = serializers.SerializerMethodField()
     scouts_groups = serializers.SerializerMethodField()
     scouts_functions = serializers.SerializerMethodField()
-    scouts_groups = serializers.SerializerMethodField()
 
     class Meta:
         model = ScoutsUser
@@ -33,7 +32,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 ),
             }
             for group in obj.persisted_scouts_groups.all()
-            # if obj.has_role_leader(group=group)
+            if obj.has_role_leader(group=group)
         ]
 
     def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
