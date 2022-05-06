@@ -66,6 +66,7 @@ class ScoutsGroup(AuditedBaseModel):
     objects = ScoutsGroupManager()
 
     group_admin_id = RequiredCharField()
+    parent_group_admin_id = OptionalCharField()
     number = OptionalCharField()
     name = OptionalCharField()
     group_type = OptionalCharField()
@@ -97,6 +98,7 @@ class ScoutsGroup(AuditedBaseModel):
         group = ScoutsGroup()
 
         group.group_admin_id = abstract_group.group_admin_id
+        group.parent_group_admin_id = abstract_group.parent_group
         group.number = abstract_group.number
         group.name = abstract_group.name
         group.group_type = abstract_group.type
@@ -106,6 +108,7 @@ class ScoutsGroup(AuditedBaseModel):
     def equals_abstract_scouts_group(self, abstract_group: AbstractScoutsGroup):
         return (
             self.group_admin_id == abstract_group.group_admin_id
+            and self.parent_group_admin_id == abstract_group.parent_group
             and self.number == abstract_group.number
             and self.name == abstract_group.name
             and self.group_type == abstract_group.type

@@ -32,7 +32,10 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 ),
             }
             for group in obj.persisted_scouts_groups.all()
-            # if (obj.has_role_leader(group=group) or obj.has_role_district_commissioner(group=group))
+            if (
+                obj.has_role_leader(group=group)
+                or obj.has_role_district_commissioner(group=group)
+            )
         ]
 
     def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
@@ -45,6 +48,8 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "code": function.code,
                 "description": function.description,
                 "is_leader": function.is_leader(),
+                "is_group_leader": function.is_group_leader(),
+                "is_district_commissioner": function.is_district_commissioner(),
                 "end": function.end,
             }
             for function in obj.persisted_scouts_functions.all()

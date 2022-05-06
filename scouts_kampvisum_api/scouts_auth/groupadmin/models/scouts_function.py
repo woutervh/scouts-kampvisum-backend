@@ -24,6 +24,9 @@ class ScoutsFunctionQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def has_function_for_group(self, group_admin_id: str):
+        return self.filter(scouts_groups__group_admin_id=group_admin_id).count() > 0
+
 
 class ScoutsFunctionManager(models.Manager):
     def get_queryset(self):
@@ -86,14 +89,29 @@ class ScoutsFunction(AuditedBaseModel):
             )
         ]
 
-    def is_leader(self, scouts_group: ScoutsGroup = None) -> bool:
-        if scouts_group:
-            if not scouts_group in self.scouts_groups.all():
-                return False
+    def _has_function_for_group(self, scouts_group: ScoutsGroup = None) -> bool:
+        return ScoutsFunction.objects.all().has_function_for_group(
+            group_admin_id=scouts_group.group_admin_id
+        )
 
+    def _has_function_for_parent_group(self, scouts_group: ScoutsGroup = None) -> bool:
         return (
-            self.name.lower()
-            == GroupadminSettings.get_section_leader_identifier().lower()
+            ScoutsFunction.objects.all().has_function_for_group(
+                group_admin_id=scouts_group.parent_group_admin_id
+            )
+            if scouts_group.parent_group_admin_id
+            else False
+        )
+
+    def is_leader(self, scouts_group: ScoutsGroup = None) -> bool:
+        return (
+            (
+                self.name.lower()
+                == GroupadminSettings.get_section_leader_identifier().lower()
+            )
+            if not scouts_group
+            or self._has_function_for_group(scouts_group=scouts_group)
+            else False
         )
 
     def is_section_leader(self, scouts_group: ScoutsGroup = None) -> bool:
@@ -101,12 +119,17 @@ class ScoutsFunction(AuditedBaseModel):
 
     def is_group_leader(self, scouts_group: ScoutsGroup = None) -> bool:
         return (
-            self.is_leader(scouts_group=scouts_group)
-            and AbstractScoutsFunctionCode(code=self.code).is_group_leader()
+            (AbstractScoutsFunctionCode(code=self.code).is_group_leader())
+            if not scouts_group
+            or self._has_function_for_group(scouts_group=scouts_group)
+            else False
         )
 
     def is_district_commissioner(self, scouts_group: ScoutsGroup = None) -> bool:
         return (
-            self.is_leader(scouts_group=scouts_group)
-            and AbstractScoutsFunctionCode(code=self.code).is_district_commissioner()
+            AbstractScoutsFunctionCode(code=self.code).is_district_commissioner()
+            if not scouts_group
+            or self._has_function_for_group(scouts_group=scouts_group)
+            or self._has_function_for_parent_group(scouts_group=scouts_group)
+            else False
         )
