@@ -32,7 +32,6 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
             group
             for group in obj.persisted_scouts_groups.all()
             if obj.has_role_leader(group=group)
-            or obj.has_role_district_commissioner(group=group)
         ]
 
         if obj.has_role_district_commissioner():
