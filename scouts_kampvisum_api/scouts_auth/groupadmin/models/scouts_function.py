@@ -126,10 +126,10 @@ class ScoutsFunction(AuditedBaseModel):
         )
 
     def is_district_commissioner(self, scouts_group: ScoutsGroup = None) -> bool:
-        return (
-            AbstractScoutsFunctionCode(code=self.code).is_district_commissioner()
-            if not scouts_group
-            or self._has_function_for_group(scouts_group=scouts_group)
-            or self._has_function_for_parent_group(scouts_group=scouts_group)
-            else False
-        )
+        if AbstractScoutsFunctionCode(code=self.code).is_district_commissioner():
+            if scouts_group and scouts_group in self.scouts_groups.all():
+                return True
+
+            return True
+
+        return False

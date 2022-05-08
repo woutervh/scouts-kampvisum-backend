@@ -203,21 +203,26 @@ class ScoutsUser(User):
             if self.has_role_group_leader(group=group)
         ]
 
-    def has_role_district_commissioner(self, group: ScoutsGroup) -> bool:
+    def has_role_district_commissioner(self, group: ScoutsGroup = None) -> bool:
         """
         Determines if the user is a district commissioner based on a function code
         """
         for function in self.persisted_scouts_functions.all():
             if function.is_district_commissioner(scouts_group=group):
-                return True
-        return False
+                self.is_district_commissioner = True
+        return self.is_district_commissioner
 
     def get_district_commissioner_groups(self) -> List[ScoutsGroup]:
-        return [
-            group
-            for group in self.persisted_scouts_groups.all()
-            if self.has_role_district_commissioner(group=group)
-        ]
+        # return [
+        #     group
+        #     for group in self.persisted_scouts_groups.all()
+        #     if self.has_role_district_commissioner(group=group)
+        # ]
+        for function in self.persisted_scouts_functions.all():
+            if function.is_district_commissioner():
+                return function.scouts_groups.all()
+
+        return []
 
     def has_role_administrator(self) -> bool:
         """
@@ -270,6 +275,13 @@ class ScoutsUser(User):
         )
 
     def to_descriptive_string(self):
+        groups = self.groups.all()
+        district_commissioner_groups: List[
+            ScoutsGroup
+        ] = self.get_district_commissioner_groups()
+        group_leader_groups: List[ScoutsGroup] = self.get_group_leader_groups()
+        section_leader_groups: List[ScoutsGroup] = self.get_section_leader_groups()
+
         return (
             "\n------------------------------------------------------------------------------------------------------------------------\n"
             "{}\n"
@@ -335,9 +347,7 @@ class ScoutsUser(User):
             if len(self.get_all_permissions()) > 0
             else "None",
             "AUTH GROUPS",
-            ", ".join(group.name for group in self.groups.all())
-            if len(self.groups.all()) > 0
-            else "None",
+            ", ".join(group.name for group in groups) if len(groups) > 0 else "None",
             "SCOUTS GROUPS",
             ", ".join(
                 group.group_admin_id for group in self.persisted_scouts_groups.all()
@@ -345,21 +355,16 @@ class ScoutsUser(User):
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
             "DISTRICT COMMISSIONER",
-            ", ".join(
-                group.group_admin_id
-                for group in self.get_district_commissioner_groups()
-            )
-            if len(self.get_district_commissioner_groups()) > 0
+            ", ".join(group.group_admin_id for group in district_commissioner_groups)
+            if len(district_commissioner_groups) > 0
             else "None",
             "GROUP LEADER",
-            ", ".join(group.group_admin_id for group in self.get_group_leader_groups())
-            if len(self.get_group_leader_groups()) > 0
+            ", ".join(group.group_admin_id for group in group_leader_groups)
+            if len(group_leader_groups) > 0
             else "None",
             "SECTION LEADER",
-            ", ".join(
-                group.group_admin_id for group in self.get_section_leader_groups()
-            )
-            if len(self.get_section_leader_groups()) > 0
+            ", ".join(group.group_admin_id for group in section_leader_groups)
+            if len(section_leader_groups) > 0
             else "None",
             "last authenticated",
             self.last_authenticated,

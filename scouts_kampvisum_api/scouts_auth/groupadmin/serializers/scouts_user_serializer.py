@@ -2,7 +2,16 @@ from typing import List
 
 from rest_framework import serializers
 
-from scouts_auth.groupadmin.models import ScoutsUser
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup
+
+from scouts_auth.inuits.utils import ListUtils
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserSerializer(serializers.ModelSerializer):
@@ -19,6 +28,22 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         return obj.permissions
 
     def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
+        groups: List[ScoutsGroup] = [
+            group
+            for group in obj.persisted_scouts_groups.all()
+            if obj.has_role_leader(group=group)
+            or obj.has_role_district_commissioner(group=group)
+        ]
+
+        if obj.has_role_district_commissioner():
+            district_commissioner_groups = obj.get_district_commissioner_groups()
+
+            groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
+                groups, district_commissioner_groups
+            )
+
+            groups.sort(key=lambda group: group.group_admin_id)
+
         return [
             {
                 "group_admin_id": group.group_admin_id,
@@ -31,11 +56,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                     group=group
                 ),
             }
-            for group in obj.persisted_scouts_groups.all()
-            if (
-                obj.has_role_leader(group=group)
-                or obj.has_role_district_commissioner(group=group)
-            )
+            for group in groups
         ]
 
     def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
