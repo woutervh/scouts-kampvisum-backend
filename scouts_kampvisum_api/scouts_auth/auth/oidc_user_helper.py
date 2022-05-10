@@ -24,7 +24,7 @@ class OIDCUserHelper:
             now,
             last_updated,
             delta_seconds,
-            delta_seconds * 60 < OIDCSettings.get_profile_refresh_time(),
+            delta_seconds / 60 > OIDCSettings.get_profile_refresh_time(),
         )
 
     @staticmethod
@@ -49,7 +49,7 @@ class OIDCUserHelper:
         )
         if requires_loading:
             logger.debug(
-                "User last refreshed: %s (%s) compared to now: %s (%s) is less than the refresh limit: %s minutes (delta: %s minutes) - No need to reload user data",
+                "User last refreshed: %s (%s) compared to now: %s (%s) is more than the refresh limit: %s minutes (delta: %s minutes) - Reloading user data",
                 last_updated,
                 type(last_updated).__name__,
                 now,
@@ -58,6 +58,15 @@ class OIDCUserHelper:
                 delta_seconds,
             )
             return True
+        logger.debug(
+            "User last refreshed: %s (%s) compared to now: %s (%s) is less than the refresh limit: %s minutes (delta: %s minutes) - No need to reload user data",
+            last_updated,
+            type(last_updated).__name__,
+            now,
+            type(now).__name__,
+            OIDCSettings.get_profile_refresh_time(),
+            delta_seconds,
+        )
         return False
 
     @staticmethod
@@ -80,7 +89,7 @@ class OIDCUserHelper:
         )
         if requires_loading:
             logger.debug(
-                "User has persisted scouts groups (%d) and last refreshed: %s (%s) compared to now: %s (%s) is less than the refresh limit: %s minutes (delta: %s minutes) - No need to reload user groups",
+                "User has persisted scouts groups (%d) and last refreshed: %s (%s) compared to now: %s (%s) is more than the refresh limit: %s minutes (delta: %s minutes) - Reloading user groups",
                 count,
                 last_updated,
                 type(last_updated).__name__,
@@ -90,7 +99,16 @@ class OIDCUserHelper:
                 delta_seconds,
             )
             return True
-
+        logger.debug(
+            "User has persisted scouts groups (%d) and last refreshed: %s (%s) compared to now: %s (%s) is less than the refresh limit: %s minutes (delta: %s minutes) - No need to reload user groups",
+            count,
+            last_updated,
+            type(last_updated).__name__,
+            now,
+            type(now).__name__,
+            OIDCSettings.get_profile_refresh_groups_time(),
+            delta_seconds,
+        )
         return False
 
     @staticmethod
@@ -113,7 +131,7 @@ class OIDCUserHelper:
         )
         if requires_loading:
             logger.debug(
-                "User has persisted scouts functions (%d) and last refreshed: %s (%s) compared to now: %s (%s) is less than the refresh limit: %s minutes (delta: %s minutes) - No need to reload user groups",
+                "User has persisted scouts functions (%d) and last refreshed: %s (%s) compared to now: %s (%s) is more than the refresh limit: %s minutes (delta: %s minutes) - Reloading user functions",
                 count,
                 last_updated,
                 type(last_updated).__name__,
@@ -123,5 +141,14 @@ class OIDCUserHelper:
                 delta_seconds,
             )
             return True
-
+        logger.debug(
+            "User has persisted scouts functions (%d) and last refreshed: %s (%s) compared to now: %s (%s) is less than the refresh limit: %s minutes (delta: %s minutes) - No need to reload user functions",
+            count,
+            last_updated,
+            type(last_updated).__name__,
+            now,
+            type(now).__name__,
+            OIDCSettings.get_profile_refresh_functions_time(),
+            delta_seconds,
+        )
         return False
