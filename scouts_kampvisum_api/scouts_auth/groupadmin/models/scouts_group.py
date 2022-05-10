@@ -66,7 +66,7 @@ class ScoutsGroup(AuditedBaseModel):
     objects = ScoutsGroupManager()
 
     group_admin_id = RequiredCharField()
-    parent_group_admin_id = OptionalCharField()
+    parent_group_admin_id = OptionalCharField(null=True)
     number = OptionalCharField()
     name = OptionalCharField()
     group_type = OptionalCharField()
