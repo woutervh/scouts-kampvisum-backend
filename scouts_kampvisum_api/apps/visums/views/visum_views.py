@@ -75,7 +75,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
                 for group in request.user.persisted_scouts_groups.all()
             ]
             or not scouts_group
-            or not request.user.has_role_leader(group=scouts_group)
+            or (not request.user.has_role_leader(group=scouts_group)) and (not request.user.has_role_district_commissioner(group=scouts_group))
         ):
             raise PermissionDenied(
                 {
