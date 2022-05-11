@@ -22,7 +22,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScoutsUser
-        exclude = ["password", "persisted_scouts_groups", "persisted_scouts_functions"]
+        exclude = ["password", "persisted_scouts_groups"]
 
     def get_user_permissions(self, obj: ScoutsUser):
         return obj.permissions
@@ -31,7 +31,8 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         groups: List[ScoutsGroup] = [
             group
             for group in obj.persisted_scouts_groups.all()
-            if obj.has_role_leader(group=group) or obj.has_role_district_commissioner(group=group)
+            if obj.has_role_leader(group=group)
+            or obj.has_role_district_commissioner(group=group)
         ]
 
         if obj.has_role_district_commissioner():

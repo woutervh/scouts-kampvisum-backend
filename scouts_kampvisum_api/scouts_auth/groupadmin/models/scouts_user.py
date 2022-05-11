@@ -16,7 +16,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsLink,
     AbstractScoutsGroup,
     ScoutsGroup,
-    ScoutsFunction,
+    # ScoutsFunction,
 )
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
@@ -117,9 +117,9 @@ class ScoutsUser(User):
     persisted_scouts_groups: List[ScoutsGroup] = models.ManyToManyField(
         ScoutsGroup, related_name="user"
     )
-    persisted_scouts_functions: List[ScoutsFunction] = models.ManyToManyField(
-        ScoutsFunction, related_name="user"
-    )
+    # persisted_scouts_functions: List[ScoutsFunction] = models.ManyToManyField(
+    #     ScoutsFunction, related_name="user"
+    # )
 
     #
     # Locally cached, non-persisted fields

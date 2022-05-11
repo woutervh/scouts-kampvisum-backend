@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsUser
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
 from scouts_auth.groupadmin.settings import GroupadminSettings
 
@@ -34,6 +34,7 @@ class ScoutsFunctionManager(models.Manager):
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
+        user = kwargs.get("user", None)
         group_admin_id = kwargs.get("group_admin_id", None)
         raise_error = kwargs.get("raise_error", False)
 
@@ -43,16 +44,16 @@ class ScoutsFunctionManager(models.Manager):
             except:
                 pass
 
-        if group_admin_id:
+        if user and group_admin_id:
             try:
-                return self.get_queryset().get(group_admin_id=group_admin_id)
+                return self.get_queryset().get(user=user, group_admin_id=group_admin_id)
             except:
                 pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate ScoutsFunction instance(s) with the provided params: (id: {}, group_admin_id: {})".format(
-                    pk, group_admin_id
+                "Unable to locate ScoutsFunction instance(s) with the provided params: (id: {}, user: {}, group_admin_id: {})".format(
+                    pk, user.username, group_admin_id
                 )
             )
         return None
@@ -72,6 +73,13 @@ class ScoutsFunction(AuditedBaseModel):
 
     objects = ScoutsFunctionManager()
 
+    user = models.ForeignKey(
+        ScoutsUser,
+        on_delete=models.CASCADE,
+        related_name="persisted_scouts_functions",
+        null=True,
+        blank=True,
+    )
     group_admin_id = RequiredCharField()
     code = OptionalCharField()
     type = OptionalCharField()
@@ -85,7 +93,7 @@ class ScoutsFunction(AuditedBaseModel):
         ordering = ["group_admin_id"]
         constraints = [
             models.UniqueConstraint(
-                fields=["group_admin_id"], name="unique_group_admin_id"
+                fields=["user", "group_admin_id"], name="unique_user_for_function"
             )
         ]
 

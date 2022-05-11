@@ -28,7 +28,7 @@ class ScoutsFunctionService:
 
     def create_or_update_scouts_functions_for_user(
         self, user: settings.AUTH_USER_MODEL
-    ):
+    ) -> settings.AUTH_USER_MODEL:
         # logger.debug("PRESENT FUNCTIONS: %s", user.functions, user=user)
         abstract_function_descriptions: List[
             AbstractScoutsFunctionDescription
@@ -37,61 +37,12 @@ class ScoutsFunctionService:
         ).function_descriptions
         user.function_descriptions = abstract_function_descriptions
 
-        # for user_function in user.functions:
-        #     logger.debug("FUNCTION: %s", user_function)
-
-        # logger.debug(
-        #     "SCOUTS FUNCTION SERVICE: Found %d (possibly duplicate) function(s) and %d function description(s)",
-        #     len(user.functions),
-        #     len(user.function_descriptions),
-        #     user=user,
-        # )
-
-        self.create_or_update_scouts_functions(
-            user=user,
-        )
-
-        return user
-
-    def create_or_update_scouts_functions(
-        self,
-        user: settings.AUTH_USER_MODEL,
-        abstract_functions: List[AbstractScoutsFunction] = None,
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = None,
-    ) -> List[ScoutsFunction]:
-        if not abstract_functions:
-            abstract_functions = user.functions
-        if not abstract_function_descriptions:
-            abstract_function_descriptions = user.function_descriptions
-
-        # for abstract_function_description in abstract_function_descriptions:
-        #     logger.debug(
-        #         "ABSTRACT FUNCTION DESCRIPTION: %s %s %s",
-        #         abstract_function_description.group_admin_id,
-        #         abstract_function_description.code,
-        #         abstract_function_description.description,
-        #     )
-
-        functions_without_description: List[AbstractScoutsFunction] = []
-        for abstract_function in abstract_functions:
-            abstract_function_description_found = False
+        for abstract_function in user.functions:
             for abstract_function_description in abstract_function_descriptions:
                 if (
                     abstract_function_description.group_admin_id
                     == abstract_function.function
                 ):
-                    abstract_function_description_found = True
-                    # logger.debug(
-                    #     "Found %d groups (%s) for function %s (%s, %s)",
-                    #     len(abstract_function_description.scouts_groups),
-                    #     ", ".join(
-                    #         scouts_group.group_admin_id
-                    #         for scouts_group in abstract_function_description.scouts_groups
-                    #     ),
-                    #     abstract_function_description.group_admin_id,
-                    #     abstract_function_description.code,
-                    #     abstract_function_description.description,
-                    # )
                     scouts_function: ScoutsFunction = (
                         self.create_or_update_scouts_function(
                             user=user,
@@ -101,42 +52,7 @@ class ScoutsFunctionService:
                         )
                     )
 
-            # if not abstract_function_description_found:
-            #     if abstract_function.function not in [
-            #         function.function for function in functions_without_description
-            #     ]:
-            #         functions_without_description.append(abstract_function)
-
-        # if len(functions_without_description) > 0:
-        #     logger.error(
-        #         "No function description found for functions (%s)",
-        #         ", ".join(
-        #             abstract_function.function
-        #             for abstract_function in functions_without_description
-        #         ),
-        #     )
-
-        # for function_without_description in functions_without_description:
-        #     logger.debug(
-        #         "NO FUNCTION DESCRIPTION FOR function %s %s %s %s",
-        #         function_without_description.function,
-        #         function_without_description.scouts_group.group_admin_id,
-        #         function_without_description.code,
-        #         function_without_description.description,
-        #     )
-        # for abstract_function_description in abstract_function_descriptions:
-        #     logger.debug(
-        #         "FUNCTION DESCRIPTION: %s %s %s (%s)",
-        #         abstract_function_description.group_admin_id,
-        #         abstract_function_description.code,
-        #         abstract_function_description.description,
-        #         ", ".join(
-        #             scouts_group.group_admin_id
-        #             for scouts_group in abstract_function_description.scouts_groups
-        #         ),
-        #     )
-
-        return user.persisted_scouts_functions.all()
+        return user
 
     def create_or_update_scouts_function(
         self,
@@ -146,6 +62,7 @@ class ScoutsFunctionService:
         abstract_scouts_groups: List[AbstractScoutsGroup],
     ) -> ScoutsFunction:
         scouts_function: ScoutsFunction = ScoutsFunction.objects.safe_get(
+            user=user,
             group_admin_id=abstract_function_description.group_admin_id,
         )
 
@@ -221,6 +138,7 @@ class ScoutsFunctionService:
 
         scouts_function: ScoutsFunction = ScoutsFunction()
 
+        scouts_function.user = created_by
         scouts_function.group_admin_id = group_admin_id
         scouts_function.code = code
         scouts_function.type = type

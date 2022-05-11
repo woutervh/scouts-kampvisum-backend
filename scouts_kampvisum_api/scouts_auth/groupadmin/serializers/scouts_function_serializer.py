@@ -17,4 +17,5 @@ class ScoutsFunctionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScoutsFunction
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ["user"]
