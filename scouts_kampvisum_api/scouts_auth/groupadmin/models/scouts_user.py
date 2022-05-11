@@ -165,7 +165,7 @@ class ScoutsUser(User):
         return [group.group_admin_id for group in self.persisted_scouts_groups.all()]
 
     def has_role_leader(self, group: ScoutsGroup) -> bool:
-        for function in self.persisted_scouts_functions.all():
+        for function in self.persisted_scouts_functions.filter(end__isnull=True):
             if function.is_leader(scouts_group=group):
                 return True
         return False
@@ -174,7 +174,7 @@ class ScoutsUser(User):
         """
         Determines if the user is a section leader based on a function in the specified group
         """
-        for function in self.persisted_scouts_functions.all():
+        for function in self.persisted_scouts_functions.filter(end__isnull=True):
             if function.is_section_leader(scouts_group=group):
                 return True
         return False
@@ -190,7 +190,7 @@ class ScoutsUser(User):
         """
         Determines if the user is a group leader based on a function in the specified group
         """
-        for function in self.persisted_scouts_functions.all():
+        for function in self.persisted_scouts_functions.filter(end__isnull=True):
             if function.is_group_leader(scouts_group=group):
                 return True
 
@@ -207,7 +207,7 @@ class ScoutsUser(User):
         """
         Determines if the user is a district commissioner based on a function code
         """
-        for function in self.persisted_scouts_functions.all():
+        for function in self.persisted_scouts_functions.filter(end__isnull=True):
             if function.is_district_commissioner(scouts_group=group):
                 self.is_district_commissioner = True
         return self.is_district_commissioner
@@ -218,7 +218,7 @@ class ScoutsUser(User):
         #     for group in self.persisted_scouts_groups.all()
         #     if self.has_role_district_commissioner(group=group)
         # ]
-        for function in self.persisted_scouts_functions.all():
+        for function in self.persisted_scouts_functions.filter(end__isnull=True):
             if function.is_district_commissioner():
                 return function.scouts_groups.all()
 
