@@ -123,7 +123,7 @@ class ScoutsFunctionService:
             if abstract_function.description
             else ""
         )
-        name = abstract_function_description.get_groupings_name()
+        name = abstract_function_description.get_groupings_name() if abstract_function_description.get_groupings_name() else ""
         begin = abstract_function.begin if abstract_function.begin else None
         end = abstract_function.end if abstract_function.end else None
 
