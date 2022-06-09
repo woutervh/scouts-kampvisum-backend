@@ -43,6 +43,7 @@ class ScoutsFunctionService:
                     abstract_function_description.group_admin_id
                     == abstract_function.function
                 ):
+
                     scouts_function: ScoutsFunction = (
                         self.create_or_update_scouts_function(
                             user=user,
@@ -206,7 +207,6 @@ class ScoutsFunctionService:
             if abstract_function.begin
             else instance.begin
         )
-        end = abstract_function.end if abstract_function.end else instance.end
 
         # if abstract_function.end and (
         #     not instance.end or abstract_function.end != instance.end
@@ -234,7 +234,7 @@ class ScoutsFunctionService:
         instance.description = description
         instance.name = name
         instance.begin = begin
-        instance.end = abstract_function.end if abstract_function.end else instance.end
+        instance.end = abstract_function.end if abstract_function.end else None
         instance.updated_by = updated_by
 
         instance.full_clean()
