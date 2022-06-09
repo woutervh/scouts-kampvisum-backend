@@ -198,7 +198,7 @@ class ScoutsFunctionService:
         name = (
             abstract_function_description.get_groupings_name()
             if abstract_function_description.get_groupings_name()
-            else instance.name
+            else ""
         )
         begin = (
             abstract_function_description.begin
