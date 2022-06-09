@@ -162,7 +162,8 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         )
 
         ordered = sorted(serializer.data,
-                         key=lambda k: k.get("camp", {}).get("sections", [{"age_group": 0}])[0].get("age_group", 0))
+                         key=lambda k: k.get("camp", {}).get("sections", [{"age_group": 0}])[0].get("age_group", 0)
+                         if len(k.get("camp", {}).get("sections", [{"age_group": 0}])) > 0 else 0)
 
         return self.get_paginated_response(ordered) if page is not None else Response(ordered)
 
