@@ -35,11 +35,15 @@ class ScoutsFunctionService:
         ] = self.groupadmin.get_function_descriptions(
             active_user=user
         ).function_descriptions
-        user.function_descriptions = abstract_function_descriptions
         unique_function_descriptions = {}
+        unique_function_descriptions_list = []
+
         for abstract_function_description in abstract_function_descriptions:
             if abstract_function_description.description not in unique_function_descriptions or abstract_function_description.end is None:
                 unique_function_descriptions[abstract_function_description.description] = abstract_function_description
+                unique_function_descriptions_list.append(abstract_function_description)
+
+        user.function_descriptions = unique_function_descriptions_list
 
         for abstract_function in user.functions:
             for key in unique_function_descriptions.keys():
