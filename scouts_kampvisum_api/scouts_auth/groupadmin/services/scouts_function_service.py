@@ -36,9 +36,13 @@ class ScoutsFunctionService:
             active_user=user
         ).function_descriptions
         user.function_descriptions = abstract_function_descriptions
+        unique_function_descriptions = {}
+        for abstract_function_description in abstract_function_descriptions:
+            if abstract_function_description.description not in unique_function_descriptions or abstract_function_description.end is None:
+                unique_function_descriptions[abstract_function_description.description] = abstract_function_description
 
         for abstract_function in user.functions:
-            for abstract_function_description in abstract_function_descriptions:
+            for unique_abstract_function_description in unique_function_descriptions.items():
                 if (
                     abstract_function_description.group_admin_id
                     == abstract_function.function
@@ -48,7 +52,7 @@ class ScoutsFunctionService:
                         self.create_or_update_scouts_function(
                             user=user,
                             abstract_function=abstract_function,
-                            abstract_function_description=abstract_function_description,
+                            abstract_function_description=unique_abstract_function_description,
                             abstract_scouts_groups=[abstract_function.scouts_group],
                         )
                     )
