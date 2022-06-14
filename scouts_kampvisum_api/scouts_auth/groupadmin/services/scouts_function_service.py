@@ -35,29 +35,27 @@ class ScoutsFunctionService:
         ] = self.groupadmin.get_function_descriptions(
             active_user=user
         ).function_descriptions
-        unique_function_descriptions = {}
-        unique_function_descriptions_list = []
 
-        for abstract_function_description in abstract_function_descriptions:
-            if abstract_function_description.description not in unique_function_descriptions or abstract_function_description.end is None:
-                unique_function_descriptions[abstract_function_description.description] = abstract_function_description
-                unique_function_descriptions_list.append(abstract_function_description)
+        user.function_descriptions = abstract_function_descriptions
 
-        user.function_descriptions = unique_function_descriptions_list
-
+        unique_user_functions = {}
         for abstract_function in user.functions:
-            for key in unique_function_descriptions.keys():
+            if abstract_function.code not in unique_user_functions or abstract_function.end is None:
+                unique_user_functions[abstract_function.code] = abstract_function
+
+        for key in unique_user_functions:
+            for abstract_function_description in abstract_function_descriptions:
                 if (
-                    unique_function_descriptions[key].group_admin_id
-                    == abstract_function.function
+                    abstract_function_description.group_admin_id
+                    == unique_user_functions[key].function
                 ):
 
                     scouts_function: ScoutsFunction = (
                         self.create_or_update_scouts_function(
                             user=user,
-                            abstract_function=abstract_function,
-                            abstract_function_description=unique_function_descriptions[key],
-                            abstract_scouts_groups=[abstract_function.scouts_group],
+                            abstract_function=unique_user_functions[key],
+                            abstract_function_description=abstract_function_description,
+                            abstract_scouts_groups=[unique_user_functions[key].scouts_group],
                         )
                     )
 
