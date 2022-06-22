@@ -163,7 +163,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             else:
                 return self.list_participants(request)
 
-        if not search_term:
+        if not search_term and not all_members:
             raise ValidationError("Url param 'term' is a required filter")
 
         if participant_type:
