@@ -236,28 +236,17 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         #     if search_term.strip()[-1] != "|"
         #     else search_term
         # )
-        if all_members:
-            members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered_all(
-                active_user=request.user,
-                term=search_term,
-                group_group_admin_id=group_group_admin_id,
-                min_age=min_age,
-                max_age=max_age,
-                gender=gender,
-                include_inactive=include_inactive,
-                presets=presets,
-            )
-        else:
-            members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
-                active_user=request.user,
-                term=search_term,
-                group_group_admin_id=group_group_admin_id,
-                min_age=min_age,
-                max_age=max_age,
-                gender=gender,
-                include_inactive=include_inactive,
-                presets=presets,
-            )
+        members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
+            active_user=request.user,
+            term=search_term,
+            group_group_admin_id=group_group_admin_id,
+            min_age=min_age,
+            max_age=max_age,
+            gender=gender,
+            include_inactive=include_inactive,
+            presets=presets,
+            all_members=all_members
+        )
 
         if only_scouts_members:
             results = [
