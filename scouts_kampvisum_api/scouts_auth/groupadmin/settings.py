@@ -59,6 +59,10 @@ class GroupadminSettings(SettingsHelper):
         return GroupadminSettings.get("GROUP_ADMIN_MEMBER_LIST_ENDPOINT", default_value)
 
     @staticmethod
+    def get_group_admin_member_list_filtered_endpoint(default_value=None):
+        return GroupadminSettings.get("GROUP_ADMIN_MEMBER_LIST_FILTERED_ENDPOINT", default_value)
+
+    @staticmethod
     def include_inactive_members_in_search(default_value=False):
         return GroupadminSettings.get_bool(
             "INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", default_value

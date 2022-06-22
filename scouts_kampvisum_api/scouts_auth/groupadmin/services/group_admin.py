@@ -59,6 +59,8 @@ class GroupAdmin:
     url_member_profile = GroupadminSettings.get_group_admin_profile_endpoint()
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst
     url_member_list = GroupadminSettings.get_group_admin_member_list_endpoint()
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst/filter/stateless
+    url_member_list_filtered = GroupadminSettings.get_group_admin_member_list_filtered_endpoint()
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}
     url_member_info = (
         GroupadminSettings.get_group_admin_member_detail_endpoint() + "/{}"
@@ -75,11 +77,20 @@ class GroupAdmin:
         + "/gelijkaardig?voornaam={}&achternaam={}"
     )
 
-    def post(self, endpoint: str, payload: dict) -> str:
+    def post(self, endpoint: str, payload: dict, active_user: settings.AUTH_USER_MODEL = None) -> str:
         """Post the payload to the specified GA endpoint and returns the response as json_data."""
         logger.debug("GA: Posting data to endpoint %s", endpoint)
         try:
-            response = requests.post(endpoint, data=payload)
+            if active_user:
+                response = requests.post(
+                    endpoint,
+                    headers={
+                        "Authorization": "Bearer {0}".format(active_user.access_token),
+                    },
+                    json=payload
+                )
+            else:
+                response = requests.post(endpoint, data=payload)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
@@ -469,6 +480,58 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberListResponse = serializer.save()
+
+        return member_list
+
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst/filter/stateless
+    def get_member_list_filtered_raw(
+            self, active_user: settings.AUTH_USER_MODEL, payload: dict
+    ) -> str:
+        json_data = self.post(self.url_member_list_filtered, payload, active_user)
+
+        logger.info("GA CALL: %s (%s)", "get_member_list_filtered", self.url_member_list_filtered)
+        logger.trace("GA RESPONSE: %s", json_data)
+
+        return json_data
+
+    def get_member_list_filtered(
+            self,
+            active_user: settings.AUTH_USER_MODEL,
+            term: str,
+            group_group_admin_id: str = None,
+            min_age: int = None,
+            max_age: int = None,
+            gender: str = None,
+    ) -> AbstractScoutsMemberListResponse:
+        payload = {
+            "groepen": [],
+            "criteria": {},
+            "kolommen": [
+                "Voornaam",
+                "Achternaam",
+                "Telefoon",
+                "adres",
+                "email"
+            ]
+        }
+        if term:
+            payload["criteria"]["naamlike"] = term
+        if group_group_admin_id:
+            payload["groepen"].append(group_group_admin_id)
+        if max_age or min_age:
+            payload["criteria"]["leeftijd"] = dict()
+        if max_age:
+            payload["criteria"]["leeftijd"]["jongerdan"] = min_age
+        if min_age:
+            payload["criteria"]["leeftijd"]["ouderdan"] = min_age
+        if gender:
+            payload["geslacht"] = gender.lower()
+        json_data = self.get_member_list_filtered_raw(active_user, payload)
+
+        serializer = AbstractScoutsMemberSearchResponseSerializer(data=json_data)
+        serializer.is_valid(raise_exception=True)
+
+        member_list: AbstractScoutsMemberSearchResponse = serializer.save()
 
         return member_list
 
