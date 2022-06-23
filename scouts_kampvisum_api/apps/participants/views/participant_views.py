@@ -272,13 +272,13 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
         page = self.paginate_queryset(results)
 
-        if page is not None:
-            serializer = InuitsParticipantSerializer(
-                page, many=True, context={"request": request}
-            )
-            return self.get_paginated_response(serializer.data)
-        else:
+        if page is None or all_members:
             serializer = InuitsParticipantSerializer(
                 results, many=True, context={"request": request}
             )
             return Response(serializer.data)
+        else:
+            serializer = InuitsParticipantSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(serializer.data)
