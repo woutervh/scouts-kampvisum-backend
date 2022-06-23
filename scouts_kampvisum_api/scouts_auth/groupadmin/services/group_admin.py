@@ -485,9 +485,12 @@ class GroupAdmin:
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst/filter/stateless
     def get_member_list_filtered_raw(
-            self, active_user: settings.AUTH_USER_MODEL, payload: dict
+            self, active_user: settings.AUTH_USER_MODEL, payload: dict, offset: int
     ) -> str:
-        json_data = self.post(self.url_member_list_filtered, payload, active_user)
+        url = self.url_member_list_filtered
+        if offset:
+            url = f"{url}?offset={offset}"
+        json_data = self.post(url, payload, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_member_list_filtered", self.url_member_list_filtered)
         logger.trace("GA RESPONSE: %s", json_data)
@@ -502,6 +505,7 @@ class GroupAdmin:
             min_age: int = None,
             max_age: int = None,
             gender: str = None,
+            offset: int = 0,
     ) -> AbstractScoutsMemberListResponse:
         payload = {
             "criteria": {},
@@ -525,7 +529,7 @@ class GroupAdmin:
             payload["criteria"]["leeftijd"]["ouderdan"] = min_age
         if gender:
             payload["criteria"]["geslacht"] = gender.lower()
-        json_data = self.get_member_list_filtered_raw(active_user, payload)
+        json_data = self.get_member_list_filtered_raw(active_user, payload, offset)
 
         serializer = AbstractScoutsMemberSearchResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)

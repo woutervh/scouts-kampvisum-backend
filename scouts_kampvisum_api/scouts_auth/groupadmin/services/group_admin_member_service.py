@@ -212,17 +212,24 @@ class GroupAdminMemberService(GroupAdmin):
         )
         if len(response.members) == 0:
             return []
+        all_members = []
+        all_members.extend(response.members)
+        if len(response.members) == 50:
+            offset = 50
+            while len(response.members) == 50:
+                response: AbstractScoutsMemberListResponse = self.get_member_list_filtered(
+                    active_user, term, group_group_admin_id, min_age, max_age, gender, offset
+                )
+                all_members.extend(response.members)
+                offset += 50
         logger.debug(
-            "GA returned a list of %d member(s) for search term %s (count: %d, total: %d -> %d more on GA)",
-            len(response.members),
+            "GA returned a list of %d member(s) for search term %s",
+            len(all_members),
             term,
-            response.count,
-            response.total,
-            (response.total - response.count),
         )
 
         members: List[AbstractScoutsMember] = []
-        for response_member in response.members:
+        for response_member in all_members:
             member: AbstractScoutsMember = self.get_member_info(
                 active_user=active_user, group_admin_id=response_member.group_admin_id
             )
