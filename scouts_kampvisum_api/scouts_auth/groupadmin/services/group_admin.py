@@ -520,7 +520,7 @@ class GroupAdmin:
         if max_age or min_age:
             payload["criteria"]["leeftijd"] = dict()
         if max_age:
-            payload["criteria"]["leeftijd"]["jongerdan"] = min_age
+            payload["criteria"]["leeftijd"]["jongerdan"] = max_age
         if min_age:
             payload["criteria"]["leeftijd"]["ouderdan"] = min_age
         if gender:
