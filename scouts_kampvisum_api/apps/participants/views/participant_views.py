@@ -139,7 +139,6 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def list_scouts_members_all(self, request):
         return self._list(request=request, only_scouts_members=True, all_members=True)
 
-    # @TODO sort by name etc
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False, all_members=False):
         check = self.request.GET.get("check", None)
         search_term = self.request.GET.get("term", None)
@@ -236,17 +235,27 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         #     if search_term.strip()[-1] != "|"
         #     else search_term
         # )
-        members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
-            active_user=request.user,
-            term=search_term,
-            group_group_admin_id=group_group_admin_id,
-            min_age=min_age,
-            max_age=max_age,
-            gender=gender,
-            include_inactive=include_inactive,
-            presets=presets,
-            all_members=all_members
-        )
+        if all_members:
+            members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered_all(
+                active_user=request.user,
+                term=search_term,
+                group_group_admin_id=group_group_admin_id,
+                min_age=min_age,
+                max_age=max_age,
+                gender=gender,
+            )
+        else:
+            members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
+                active_user=request.user,
+                term=search_term,
+                group_group_admin_id=group_group_admin_id,
+                min_age=min_age,
+                max_age=max_age,
+                gender=gender,
+                include_inactive=include_inactive,
+                presets=presets,
+            )
+        members = sorted(members, key=lambda x: (x.first_name, x.last_name))
 
         if only_scouts_members:
             results = [

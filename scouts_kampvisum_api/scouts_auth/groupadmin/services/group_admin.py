@@ -504,7 +504,6 @@ class GroupAdmin:
             gender: str = None,
     ) -> AbstractScoutsMemberListResponse:
         payload = {
-            "groepen": [],
             "criteria": {},
             "kolommen": [
                 "Voornaam",
@@ -517,7 +516,7 @@ class GroupAdmin:
         if term:
             payload["criteria"]["naamlike"] = term
         if group_group_admin_id:
-            payload["groepen"].append(group_group_admin_id)
+            payload["criteria"]["groepen"] = [group_group_admin_id]
         if max_age or min_age:
             payload["criteria"]["leeftijd"] = dict()
         if max_age:

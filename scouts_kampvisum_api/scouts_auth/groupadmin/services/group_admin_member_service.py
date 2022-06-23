@@ -35,7 +35,6 @@ class GroupAdminMemberService(GroupAdmin):
         leader: bool = False,
         active_leader: bool = False,
         presets: dict = None,
-        all_members: bool = False,
     ) -> List[AbstractScoutsMember]:
         """
         Searches for scouts members and applies some filters
@@ -45,14 +44,9 @@ class GroupAdminMemberService(GroupAdmin):
         - if include_inactive is False, then members who were last active since the ACTIVITY_EPOCH setting are excluded
         - if min_age, max_age or gender are set, members will be filtered based on the the year of their birth and gender.
         """
-        if all_members:
-            response: AbstractScoutsMemberListResponse = self.get_member_list_filtered(
-                active_user, term, group_group_admin_id, min_age, max_age, gender
-            )
-        else:
-            response: AbstractScoutsMemberSearchResponse = self.search_member(
-                active_user, term
-            )
+        response: AbstractScoutsMemberSearchResponse = self.search_member(
+            active_user, term
+        )
         if len(response.members) == 0:
             return []
         logger.debug(
@@ -197,6 +191,48 @@ class GroupAdminMemberService(GroupAdmin):
             term,
             group_group_admin_id,
             include_inactive,
+            min_age,
+            max_age,
+            gender,
+        )
+
+        return members
+
+    def search_member_filtered_all(
+            self,
+            active_user: settings.AUTH_USER_MODEL,
+            term: str,
+            group_group_admin_id: str = None,
+            min_age: int = None,
+            max_age: int = None,
+            gender: str = None,
+    ) -> List[AbstractScoutsMember]:
+        response: AbstractScoutsMemberListResponse = self.get_member_list_filtered(
+            active_user, term, group_group_admin_id, min_age, max_age, gender
+        )
+        if len(response.members) == 0:
+            return []
+        logger.debug(
+            "GA returned a list of %d member(s) for search term %s (count: %d, total: %d -> %d more on GA)",
+            len(response.members),
+            term,
+            response.count,
+            response.total,
+            (response.total - response.count),
+        )
+
+        members: List[AbstractScoutsMember] = []
+        for response_member in response.members:
+            member: AbstractScoutsMember = self.get_member_info(
+                active_user=active_user, group_admin_id=response_member.group_admin_id
+            )
+            members.append(member)
+
+        logger.debug(
+            "Found %d member(s) for search term %s, group_admin_id %s, min_age %s, max_age %s and gender %s",
+            len(members),
+            term,
+            group_group_admin_id,
             min_age,
             max_age,
             gender,
