@@ -524,7 +524,7 @@ class GroupAdmin:
         if min_age:
             payload["criteria"]["leeftijd"]["ouderdan"] = min_age
         if gender:
-            payload["geslacht"] = gender.lower()
+            payload["criteria"]["geslacht"] = gender.lower()
         json_data = self.get_member_list_filtered_raw(active_user, payload)
 
         serializer = AbstractScoutsMemberSearchResponseSerializer(data=json_data)
