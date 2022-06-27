@@ -28,21 +28,30 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         return obj.permissions
 
     def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
-        groups: List[ScoutsGroup] = [
-            group
-            for group in obj.persisted_scouts_groups.all()
-            if obj.has_role_leader(group=group)
-            or obj.has_role_district_commissioner(group=group)
-        ]
 
-        if obj.has_role_district_commissioner():
-            district_commissioner_groups = obj.get_district_commissioner_groups()
+        admin_group = ScoutsGroup.objects.safe_get(
+            group_admin_id="X1027G", raise_error=False
+        )
 
-            groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
-                groups, district_commissioner_groups
-            )
+        if (obj.has_role_leader(group=admin_group) or obj.has_role_district_commissioner(group=admin_group)) if admin_group else False:
+            groups: List[ScoutsGroup] = ScoutsGroup.objects.all()
+        else:
+            groups: List[ScoutsGroup] = [
+                group
+                for group in obj.persisted_scouts_groups.all()
+                if obj.has_role_leader(group=group)
+                or obj.has_role_district_commissioner(group=group)
 
-            groups.sort(key=lambda group: group.group_admin_id)
+            ]
+
+            if obj.has_role_district_commissioner():
+                district_commissioner_groups = obj.get_district_commissioner_groups()
+
+                groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
+                    groups, district_commissioner_groups
+                )
+
+                groups.sort(key=lambda group: group.group_admin_id)
 
         return [
             {

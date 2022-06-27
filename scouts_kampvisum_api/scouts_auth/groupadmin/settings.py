@@ -103,15 +103,15 @@ class GroupadminSettings(SettingsHelper):
 
     @staticmethod
     def get_administrator_groups() -> List[str]:
-        return SettingsHelper.get("KNOWN_ADMIN_GROUPS")
+        return SettingsHelper.get_list("KNOWN_ADMIN_GROUPS")
 
     @staticmethod
     def get_test_groups() -> List[str]:
-        return SettingsHelper.get("KNOWN_TEST_GROUPS")
+        return SettingsHelper.get_list("KNOWN_TEST_GROUPS")
 
     @staticmethod
     def get_roles() -> List[str]:
-        return SettingsHelper.get("KNOWN_ROLES")
+        return SettingsHelper.get_list("KNOWN_ROLES")
 
     @staticmethod
     def get_section_leader_identifier() -> str:

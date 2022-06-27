@@ -36,5 +36,17 @@ role_district_commissioner:
   - visums.edit_visum_feedback
   - visums.view_visum_notes
   - visums.edit_visum_notes
-role_administrator: []
+role_administrator:
+  - visums.create_visum
+  - visums.view_visum
+  - visums.edit_visum
+  - visums.list_visum
+  - visums.delete_visum
+  - groups.create_section
+  - groups.view_section
+  - groups.edit_section
+  - groups.list_section
+  - groups.delete_section
+  - visums.view_visum_approval
+  - visums.view_visum_feedback
 role_super_admin: [] # Doesn't need permissions because is made super user in django
