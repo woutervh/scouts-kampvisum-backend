@@ -79,16 +79,26 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         ordered = sorted(serializer.data,
                          key=lambda k: k.get("camp", {}).get("sections", [{"age_group": 0}])[0].get("age_group", 0)
                          if len(k.get("camp", {}).get("sections", [{"age_group": 0}])) > 0 else 0)
-        i = 0
-        for camp in ordered:
-            for category in camp.get("category_set").get("categories"):
+        locations = list()
+        for visum in ordered:
+            for category in visum.get("category_set").get("categories"):
                 if category.get('parent').get('name') == "logistics":
                     for sub_category in category.get("sub_categories"):
                         if sub_category.get("parent").get("name") == "logistics_locations":
                             for check in sub_category.get("checks"):
                                 if check.get("parent").get("name") == "logistics_locations_location":
-                                    ordered[i] = check.get("value")
-                                    ordered[i]["camp"] = camp.get("camp")
-            i = i + 1
+                                    for location_list in check.get("value").get("locations"):
+                                        for key in location_list.keys():
+                                            if key == "locations":
+                                                for location in location_list[key]:
+                                                    location["visum_id"] = visum.get("id")
+                                                    location["camp"] = dict()
+                                                    location["camp"]["id"] = visum.get("camp").get("id")
+                                                    location["camp"]["name"] = visum.get("camp").get("name")
+                                                    location["camp"]["group"] = visum.get("group")
 
-        return self.get_paginated_response(ordered) if page is not None else Response(ordered)
+
+
+
+                                                    locations.append(location)
+        return Response(locations)
