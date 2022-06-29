@@ -57,6 +57,9 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         # This should probably be handled by a rest call when changing groups in the frontend,
         # but adding it here avoids the need for changes to the frontend
         group_admin_id = self.request.query_params.get("group", None)
+        # if no group filter then check if user is in X1027G to show all locations
+        if group_admin_id is None:
+            group_admin_id = "X9002G"
         scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
             group_admin_id=group_admin_id, raise_error=True
         )
@@ -85,6 +88,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
                             for check in sub_category.get("checks"):
                                 if check.get("parent").get("name") == "logistics_locations_location":
                                     ordered[i] = check.get("value")
+                                    ordered[i]["camp"] = camp.get("camp")
             i = i + 1
 
         return self.get_paginated_response(ordered) if page is not None else Response(ordered)
