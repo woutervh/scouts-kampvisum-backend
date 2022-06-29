@@ -96,9 +96,5 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
                                                     location["camp"]["id"] = visum.get("camp").get("id")
                                                     location["camp"]["name"] = visum.get("camp").get("name")
                                                     location["camp"]["group"] = visum.get("group")
-
-
-
-
                                                     locations.append(location)
         return Response(locations)
