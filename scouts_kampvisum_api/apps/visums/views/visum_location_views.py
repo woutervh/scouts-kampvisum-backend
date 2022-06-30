@@ -59,7 +59,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         group_admin_id = self.request.query_params.get("group", None)
         # if no group filter then check if user is in X1027G to show all locations
         if group_admin_id is None:
-            group_admin_id = "X9002G"
+            group_admin_id = "X1027G"
         scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
             group_admin_id=group_admin_id, raise_error=True
         )
@@ -76,11 +76,8 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
             instances, many=True, context={"request": request}
         )
 
-        ordered = sorted(serializer.data,
-                         key=lambda k: k.get("camp", {}).get("sections", [{"age_group": 0}])[0].get("age_group", 0)
-                         if len(k.get("camp", {}).get("sections", [{"age_group": 0}])) > 0 else 0)
         locations = list()
-        for visum in ordered:
+        for visum in serializer.data:
             for category in visum.get("category_set").get("categories"):
                 if category.get('parent').get('name') == "logistics":
                     for sub_category in category.get("sub_categories"):
@@ -92,6 +89,11 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
                                             if key == "locations":
                                                 for location in location_list[key]:
                                                     location["visum_id"] = visum.get("id")
+                                                    location.pop("id", None)
+                                                    location.pop("location", None)
+                                                    location.pop("address", None)
+                                                    location.pop("is_main_location", None)
+                                                    location["name"] = location_list["name"]
                                                     location["camp"] = dict()
                                                     location["camp"]["id"] = visum.get("camp").get("id")
                                                     location["camp"]["name"] = visum.get("camp").get("name")
