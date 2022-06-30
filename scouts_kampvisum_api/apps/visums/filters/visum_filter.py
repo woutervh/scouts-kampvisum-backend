@@ -5,7 +5,6 @@ from apps.visums.models import CampVisum
 
 from apps.camps.services import CampYearService
 
-
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
@@ -21,52 +20,28 @@ class CampVisumFilter(filters.FilterSet):
     @property
     def qs(self):
         parent = super().qs
+        start_date = self.request.query_params.get("start_date", None)
+        end_date = self.request.query_params.get("end_date", None)
 
         group_admin_id = self.request.query_params.get("group", None)
         year = self.request.query_params.get("year", None)
-
         if not year or year == "undefined":
             year = CampYearService().get_or_create_current_camp_year()
-
             year = year.year
 
-        if year and group_admin_id:
-            logger.debug(
-                "Filtering CampVisum instances with group %s and year %s",
-                group_admin_id,
-                year,
-            )
-            return (
-                parent.filter(
-                    Q(camp__year__year=year),
-                    Q(group__group_admin_id=group_admin_id),
-                )
-                # .order_by("camp__sections__name__age_group")
-                # .distinct("camp__sections__name__age_group")
-                .distinct()
-            )
-        if year:
-            logger.debug("Filtering CampVisum instances with year %s", year)
-            return (
-                parent.filter(camp__year__year=year)
-                # .order_by("camp__sections__name__age_group")
-                # .distinct("camp__sections__name__age_group")
-                .distinct()
-            )
+        query_filters = dict()
         if group_admin_id:
-            logger.debug("Filtering CampVisum instances with group %s", group_admin_id)
-            result = (
-                parent.filter(Q(group__group_admin_id=group_admin_id))
-                # .order_by("camp__sections__name__age_group")
-                # .distinct("camp__sections__name__age_group")
-                .distinct()
-            )
-            logger.debug(
-                "Found %d CampVisum instances for group %s",
-                result.count(),
-                group_admin_id,
-            )
-            return result
+            query_filters["group__group_admin_id"] = group_admin_id
+        if year:
+            query_filters["camp__year__year"] = year
 
-        logger.debug("Filters for CampVisum not set, returning all instances")
+        and_condition = Q()
+        for key, value in query_filters.items():
+            and_condition.add(Q(**{key: value}), Q.AND)
+        date_range_filter = Q()
+        if start_date and end_date:
+            date_range_filter = (Q(camp__year__start_date__lte=end_date)&Q(camp__year__end_date__gte=start_date))
+
+        return parent.filter(and_condition).filter(date_range_filter).distinct()
+
         return parent.all()

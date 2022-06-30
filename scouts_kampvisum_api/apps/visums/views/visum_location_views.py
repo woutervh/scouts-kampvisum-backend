@@ -68,11 +68,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         )
 
         instances = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(instances)
-
         serializer = CampVisumSerializer(
-            page, many=True, context={"request": request}
-        ) if page is not None else CampVisumSerializer(
             instances, many=True, context={"request": request}
         )
 
