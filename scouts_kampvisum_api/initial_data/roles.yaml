@@ -49,4 +49,5 @@ role_administrator:
   - groups.delete_section
   - visums.view_visum_approval
   - visums.view_visum_feedback
+  - visums.view_camp_locations
 role_super_admin: [] # Doesn't need permissions because is made super user in django
