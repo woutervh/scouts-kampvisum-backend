@@ -7,7 +7,7 @@ license = "GPL v2.0"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-Django = "^3.2.2"
+Django = "^3.2.14"
 django-rest-framework = "^0.1.0"
 django-cors-headers = "^3.7.0"
 django-sql-middleware = "^0.0.7"
