@@ -56,6 +56,7 @@ class CampVisum(AuditedBaseModel):
     class Meta:
         # ordering = ["camp__sections__age_group"]
         permissions = [
+            ("view_camp_locations", "User can view all camp locations"),
             ("view_visum", "User can view a camp visum"),
             ("edit_visum", "User can create and edit a camp visum"),
             ("list_visum", "User can list visums for his/her group"),
