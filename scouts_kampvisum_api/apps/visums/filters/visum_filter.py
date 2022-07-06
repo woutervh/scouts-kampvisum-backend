@@ -20,9 +20,6 @@ class CampVisumFilter(filters.FilterSet):
     @property
     def qs(self):
         parent = super().qs
-        start_date = self.request.query_params.get("start_date", None)
-        end_date = self.request.query_params.get("end_date", None)
-
         group_admin_id = self.request.query_params.get("group", None)
         year = self.request.query_params.get("year", None)
         if not year or year == "undefined":
@@ -38,10 +35,5 @@ class CampVisumFilter(filters.FilterSet):
         and_condition = Q()
         for key, value in query_filters.items():
             and_condition.add(Q(**{key: value}), Q.AND)
-        date_range_filter = Q()
-        if start_date and end_date:
-            date_range_filter = (Q(camp__year__start_date__lte=end_date)&Q(camp__year__end_date__gte=start_date))
 
-        return parent.filter(and_condition).filter(date_range_filter).distinct()
-
-        return parent.all()
+        return parent.filter(and_condition).distinct()
