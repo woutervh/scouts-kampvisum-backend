@@ -10,15 +10,22 @@ from apps.visums.models import CampVisum
 from apps.visums.serializers import CampVisumSerializer
 from apps.visums.filters import CampVisumFilter
 from apps.visums.services import CampVisumService
+from apps.locations.models import CampLocation
+from apps.locations.serializers import CampLocationMinimalSerializer
+from apps.camps.serializers import CampMinimalSerializer
 
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
 from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from apps.visums.models import LinkedCategory
+from apps.visums.models import LinkedSubCategory
+from apps.visums.models import LinkedLocationCheck
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -29,7 +36,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
     """
 
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = CampVisumSerializer
+    serializer_class = CampLocationMinimalSerializer
     queryset = CampVisum.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = CampVisumFilter
@@ -52,7 +59,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
 
         return current_permissions
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: CampLocationMinimalSerializer})
     def list(self, request):
         # HACKETY HACK
         # This should probably be handled by a rest call when changing groups in the frontend,
@@ -68,32 +75,27 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
             user=request.user, scouts_group=scouts_group
         )
 
-        instances = self.filter_queryset(self.get_queryset())
-        serializer = CampVisumSerializer(
-            instances, many=True, context={"request": request}
-        )
-
+        campvisums = self.filter_queryset(self.get_queryset())
         locations = list()
-        for visum in serializer.data:
-            for category in visum.get("category_set").get("categories"):
-                if category.get('parent').get('name') == "logistics":
-                    for sub_category in category.get("sub_categories"):
-                        if sub_category.get("parent").get("name") == "logistics_locations":
-                            for check in sub_category.get("checks"):
-                                if check.get("parent").get("name") == "logistics_locations_location":
-                                    for location_list in check.get("value").get("locations"):
-                                        for key in location_list.keys():
-                                            if key == "locations":
-                                                for location in location_list[key]:
-                                                    location["visum_id"] = visum.get("id")
-                                                    location.pop("id", None)
-                                                    location.pop("location", None)
-                                                    location.pop("address", None)
-                                                    location.pop("is_main_location", None)
-                                                    location["name"] = location_list["name"]
-                                                    location["camp"] = dict()
-                                                    location["camp"]["id"] = visum.get("camp").get("id")
-                                                    location["camp"]["name"] = visum.get("camp").get("name")
-                                                    location["camp"]["group"] = visum.get("group")
-                                                    locations.append(location)
+        for campvisum in campvisums:
+            linked_categories = LinkedCategory.objects.filter(category_set__id=campvisum.category_set.id,
+                                                              parent__name="logistics")
+            for linked_category in linked_categories:
+                linked_sub_categories = LinkedSubCategory.objects.filter(category=linked_category.id,
+                                                                         parent__name="logistics_locations")
+                for linked_sub_category in linked_sub_categories:
+                    linked_checks = LinkedLocationCheck.objects.filter(sub_category=linked_sub_category.id,
+                                                                       parent__name="logistics_locations_location")
+                    for linked_check in linked_checks:
+                        for linked_location in linked_check.locations.all():
+                            for camp_location in CampLocation.objects.filter(location_id=linked_location.id):
+                                location = CampLocationMinimalSerializer(
+                                    camp_location, many=False
+                                ).data
+                                location["visum_id"] = campvisum.id
+                                location["name"] = linked_location.name
+                                location["camp"] = CampMinimalSerializer(campvisum.camp, many=False).data
+                                location["camp"]["group"] = ScoutsGroupSerializer(campvisum.group, many=False).data
+                                locations.append(location)
+
         return Response(locations)
