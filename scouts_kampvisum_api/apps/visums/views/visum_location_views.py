@@ -70,7 +70,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         group_admin_id = self.request.query_params.get("group", None)
         # if no group filter then check if user is in X1027G to show all locations
         if group_admin_id is None:
-            group_admin_id = "X9002G"
+            group_admin_id = "X1027G"
         scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
             group_admin_id=group_admin_id, raise_error=True
         )
