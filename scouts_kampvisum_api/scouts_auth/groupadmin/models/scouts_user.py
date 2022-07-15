@@ -70,6 +70,14 @@ class ScoutsUserManager(UserManager):
             )
         return None
 
+    def get_leader_groups(self):
+        try:
+            self.get_queryset().get()
+        except:
+            pass
+
+        return []
+
     def get_by_natural_key(self, username):
         logger.trace(
             "GET BY NATURAL KEY %s: (username: %s (%s))",
@@ -209,8 +217,9 @@ class ScoutsUser(User):
         """
         for function in self.persisted_scouts_functions.filter(end__isnull=True):
             if function.is_district_commissioner(scouts_group=group):
-                self.is_district_commissioner = True
-        return self.is_district_commissioner
+                return True
+
+        return False
 
     def get_district_commissioner_groups(self) -> List[ScoutsGroup]:
         # return [

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -112,32 +113,33 @@ class ScoutsFunction(AuditedBaseModel):
         )
 
     def is_leader(self, scouts_group: ScoutsGroup = None) -> bool:
-        return (
-            (
-                self.name.lower()
-                == GroupadminSettings.get_section_leader_identifier().lower()
-            )
-            if not scouts_group
-            or self._has_function_for_group(scouts_group=scouts_group)
-            else False
-        )
+        if (
+            self.name.lower()
+            == GroupadminSettings.get_section_leader_identifier().lower()
+        ):
+            if scouts_group:
+                return scouts_group in self.scouts_groups.all()
+            return True
+        return False
 
     def is_section_leader(self, scouts_group: ScoutsGroup = None) -> bool:
         return self.is_leader(scouts_group=scouts_group)
 
     def is_group_leader(self, scouts_group: ScoutsGroup = None) -> bool:
-        return (
-            (AbstractScoutsFunctionCode(code=self.code).is_group_leader())
-            if not scouts_group
-            or self._has_function_for_group(scouts_group=scouts_group)
-            else False
-        )
+        if AbstractScoutsFunctionCode(code=self.code).is_group_leader():
+            if scouts_group:
+                return scouts_group in self.scouts_groups.all()
+            return True
+        return False
 
     def is_district_commissioner(self, scouts_group: ScoutsGroup = None) -> bool:
         if AbstractScoutsFunctionCode(code=self.code).is_district_commissioner():
-            if scouts_group and scouts_group in self.scouts_groups.all():
+            if scouts_group:
+                if scouts_group in self.scouts_groups.all():
+                    return True
+                else:
+                    return False
+            else:
                 return True
-
-            return True
 
         return False

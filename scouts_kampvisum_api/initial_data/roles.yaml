@@ -1,31 +1,18 @@
 role_section_leader:
-  - visums.create_visum
   - visums.view_visum
   - visums.edit_visum
   - visums.list_visum
   - visums.delete_visum
-  - groups.create_section
-  - groups.view_section
-  - groups.edit_section
-  - groups.list_section
-  - groups.delete_section
   - visums.view_visum_approval
   - visums.view_visum_feedback
 role_group_leader:
-  - visums.create_visum
   - visums.view_visum
   - visums.edit_visum
   - visums.list_visum
   - visums.delete_visum
-  - groups.create_section
-  - groups.view_section
-  - groups.edit_section
-  - groups.list_section
-  - groups.delete_section
   - visums.view_visum_approval
   - visums.view_visum_feedback
 role_district_commissioner:
-  - visums.create_visum
   - visums.view_visum
   - visums.edit_visum
   - visums.list_visum
@@ -37,16 +24,9 @@ role_district_commissioner:
   - visums.view_visum_notes
   - visums.edit_visum_notes
 role_administrator:
-  - visums.create_visum
   - visums.view_visum
   - visums.edit_visum
   - visums.list_visum
-  - visums.delete_visum
-  - groups.create_section
-  - groups.view_section
-  - groups.edit_section
-  - groups.list_section
-  - groups.delete_section
   - visums.view_visum_approval
   - visums.view_visum_feedback
   - visums.view_camp_locations

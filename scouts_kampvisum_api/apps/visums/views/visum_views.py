@@ -42,12 +42,14 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
         if self.action == "retrieve":
             current_permissions.append(CustomDjangoPermission("visums.view_visum"))
-        if self.action == "create":
+        elif self.action == "create":
             current_permissions.append(CustomDjangoPermission("visums.edit_visum"))
-        if self.action == "update" or self.action == "partial_update":
+        elif self.action == "update" or self.action == "partial_update":
             current_permissions.append(CustomDjangoPermission("visums.edit_visum"))
-        if self.action == "list":
+        elif self.action == "list":
             current_permissions.append(CustomDjangoPermission("visums.list_visum"))
+        elif self.action == "destroy":
+            current_permissions.append(CustomDjangoPermission("visums.delete_visum"))
 
         return current_permissions
 
@@ -75,7 +77,8 @@ class CampVisumViewSet(viewsets.GenericViewSet):
                 for group in request.user.persisted_scouts_groups.all()
             ]
             or not scouts_group
-            or (not request.user.has_role_leader(group=scouts_group)) and (not request.user.has_role_district_commissioner(group=scouts_group))
+            or (not request.user.has_role_leader(group=scouts_group))
+            and (not request.user.has_role_district_commissioner(group=scouts_group))
         ):
             raise PermissionDenied(
                 {
@@ -155,18 +158,26 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
-        serializer = CampVisumSerializer(
-            page, many=True, context={"request": request}
-        ) if page is not None else CampVisumSerializer(
-            instances, many=True, context={"request": request}
+        serializer = (
+            CampVisumSerializer(page, many=True, context={"request": request})
+            if page is not None
+            else CampVisumSerializer(instances, many=True, context={"request": request})
         )
 
-        ordered = sorted(serializer.data,
-                         key=lambda k: k.get("camp", {}).get("sections", [{"age_group": 0}])[0].get("age_group", 0)
-                         if len(k.get("camp", {}).get("sections", [{"age_group": 0}])) > 0 else 0)
+        ordered = sorted(
+            serializer.data,
+            key=lambda k: k.get("camp", {})
+            .get("sections", [{"age_group": 0}])[0]
+            .get("age_group", 0)
+            if len(k.get("camp", {}).get("sections", [{"age_group": 0}])) > 0
+            else 0,
+        )
 
-        return self.get_paginated_response(ordered) if page is not None else Response(ordered)
-
+        return (
+            self.get_paginated_response(ordered)
+            if page is not None
+            else Response(ordered)
+        )
 
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
