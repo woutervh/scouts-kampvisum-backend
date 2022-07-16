@@ -216,8 +216,12 @@ class ScoutsUser(User):
         Determines if the user is a district commissioner based on a function code
         """
         for function in self.persisted_scouts_functions.filter(end__isnull=True):
-            if function.is_district_commissioner(scouts_group=group):
-                return True
+            if group:
+                if function.is_district_commissioner_for_group(scouts_group=group):
+                    return True
+            else:
+                if function.is_district_commissioner():
+                    return True
 
         return False
 

@@ -61,6 +61,13 @@ class ScoutsGroupManager(models.Manager):
 
         return self.get(group_admin_id=group_admin_id)
 
+    def get_groups_with_parent(self, parent_group_admin_id):
+        return (
+            self.get_queryset()
+            .filter(parent_group_admin_id=parent_group_admin_id)
+            .all()
+        )
+
 
 class ScoutsGroup(AuditedBaseModel):
 

@@ -1,4 +1,8 @@
 role_section_leader:
+  - groups.view_section
+  - groups.edit_section
+  - groups.delete_section
+  - groups.list_section
   - visums.view_visum
   - visums.edit_visum
   - visums.list_visum
@@ -6,6 +10,10 @@ role_section_leader:
   - visums.view_visum_approval
   - visums.view_visum_feedback
 role_group_leader:
+  - groups.view_section
+  - groups.edit_section
+  - groups.delete_section
+  - groups.list_section
   - visums.view_visum
   - visums.edit_visum
   - visums.list_visum
@@ -13,6 +21,10 @@ role_group_leader:
   - visums.view_visum_approval
   - visums.view_visum_feedback
 role_district_commissioner:
+  - groups.view_section
+  - groups.edit_section
+  - groups.delete_section
+  - groups.list_section
   - visums.view_visum
   - visums.edit_visum
   - visums.list_visum
@@ -24,6 +36,10 @@ role_district_commissioner:
   - visums.view_visum_notes
   - visums.edit_visum_notes
 role_administrator:
+  - groups.view_section
+  - groups.edit_section
+  - groups.delete_section
+  - groups.list_section
   - visums.view_visum
   - visums.edit_visum
   - visums.list_visum

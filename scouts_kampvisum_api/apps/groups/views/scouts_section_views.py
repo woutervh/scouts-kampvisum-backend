@@ -1,7 +1,7 @@
 from typing import List
 
 from django.http.response import HttpResponse
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
@@ -10,6 +10,8 @@ from drf_yasg2.openapi import Schema, TYPE_STRING
 from apps.groups.models import ScoutsSection
 from apps.groups.serializers import ScoutsSectionSerializer
 from apps.groups.services import ScoutsSectionService
+
+from scouts_auth.auth.permissions import CustomDjangoPermission
 
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
@@ -29,6 +31,24 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
 
     section_service = ScoutsSectionService()
     authorization_service = ScoutsAuthorizationService()
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        current_permissions = super().get_permissions()
+
+        if self.action == "retrieve":
+            current_permissions.append(CustomDjangoPermission("groups.view_section"))
+        elif self.action == "create":
+            current_permissions.append(CustomDjangoPermission("groups.edit_section"))
+        elif self.action == "update" or self.action == "partial_update":
+            current_permissions.append(CustomDjangoPermission("groups.edit_section"))
+        elif self.action == "list":
+            current_permissions.append(CustomDjangoPermission("groups.list_section"))
+        elif self.action == "destroy":
+            current_permissions.append(CustomDjangoPermission("groups.delete_section"))
+
+        return current_permissions
 
     @swagger_auto_schema(
         request_body=ScoutsSectionSerializer,

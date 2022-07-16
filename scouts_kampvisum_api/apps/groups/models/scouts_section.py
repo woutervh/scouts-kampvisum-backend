@@ -50,6 +50,12 @@ class ScoutsSection(AbstractBaseModel):
                 name="unique_group_name_gender_age_group_for_section",
             )
         ]
+        permissions = [
+            ("view_section", "User can view a group section"),
+            ("edit_section", "User can create and edit a group section"),
+            ("delete_section", "User can delete a group section"),
+            ("list_section", "User can list sections for his/her group"),
+        ]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED ScoutsSection")
