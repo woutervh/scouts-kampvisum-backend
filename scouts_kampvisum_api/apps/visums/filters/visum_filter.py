@@ -36,4 +36,4 @@ class CampVisumFilter(filters.FilterSet):
         for key, value in query_filters.items():
             and_condition.add(Q(**{key: value}), Q.AND)
 
-        return parent.filter(and_condition).distinct()
+        return parent.allowed(user=self.request.user).filter(and_condition).distinct()

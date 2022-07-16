@@ -14,7 +14,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class CampVisumQuerySet(models.QuerySet):
+class CampQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -36,28 +36,15 @@ class CampVisumQuerySet(models.QuerySet):
 
                 group_admin_ids.append(underlyingGroups)
 
-        return self.filter(group__group_admin_id__in=group_admin_ids)
+        return self.filter(visum__group__group_admin_id__in=group_admin_ids)
 
 
-class CampVisumManager(models.Manager):
+class CampManager(models.Manager):
+    """
+    Loads CampYear instances by their integer year, not their id/uuid.
+
+    This is useful for defining fixtures.
+    """
+
     def get_queryset(self):
-        return CampVisumQuerySet(self.model, using=self._db)
-
-    def safe_get(self, *args, **kwargs):
-        pk = kwargs.get("id", kwargs.get("pk", None))
-        raise_error = kwargs.get("raise_error", False)
-
-        if pk:
-            try:
-                return self.get_queryset().get(pk=pk)
-            except:
-                pass
-
-        if raise_error:
-            raise ValidationError(
-                "Unable to locate CampVisum instance(s) with the provided params: (id: {})".format(
-                    pk,
-                )
-            )
-
-        return None
+        return CampQuerySet(self.model, using=self._db)

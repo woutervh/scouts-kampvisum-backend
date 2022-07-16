@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 
 from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsUser
@@ -69,6 +70,16 @@ class ScoutsFunctionManager(models.Manager):
 
         return self.get(group_admin_id=group_admin_id)
 
+    def get_leader_functions(self, user: settings.AUTH_USER_MODEL):
+        return (
+            self.get_queryset()
+            .filter(
+                name__iexact=GroupadminSettings.get_section_leader_identifier(),
+                user=user,
+            )
+            .all()
+        )
+
 
 class ScoutsFunction(AuditedBaseModel):
 
@@ -132,14 +143,20 @@ class ScoutsFunction(AuditedBaseModel):
             return True
         return False
 
-    def is_district_commissioner(self, scouts_group: ScoutsGroup = None) -> bool:
-        if AbstractScoutsFunctionCode(code=self.code).is_district_commissioner():
-            if scouts_group:
-                if scouts_group in self.scouts_groups.all():
+    def is_district_commissioner(self) -> bool:
+        return AbstractScoutsFunctionCode(code=self.code).is_district_commissioner()
+
+    def is_district_commissioner_for_group(
+        self, scouts_group: ScoutsGroup = None
+    ) -> bool:
+        if self.is_district_commissioner():
+            scouts_groups = self.scouts_groups.all()
+
+            for group in scouts_groups:
+                if (
+                    scouts_group.group_admin_id == group.group_admin_id
+                    or scouts_group.parent_group_admin_id == group.group_admin_id
+                ):
                     return True
-                else:
-                    return False
-            else:
-                return True
 
         return False

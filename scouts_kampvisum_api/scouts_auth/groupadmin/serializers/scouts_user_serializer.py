@@ -33,15 +33,8 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
             group_admin_id="X1027G", raise_error=False
         )
 
-        if (
-            (
-                obj.has_role_leader(group=admin_group)
-                or obj.has_role_district_commissioner(group=admin_group)
-            )
-            if admin_group
-            else False
-        ):
-            groups: List[ScoutsGroup] = ScoutsGroup.objects.all()
+        if admin_group and obj.has_role_leader(group=admin_group):
+            groups = ScoutsGroup.objects.all()
         else:
             groups: List[ScoutsGroup] = [
                 group
@@ -51,7 +44,6 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
             ]
 
             if obj.has_role_district_commissioner():
-                logger.info("HERE")
                 district_commissioner_groups = obj.get_district_commissioner_groups()
 
                 groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(

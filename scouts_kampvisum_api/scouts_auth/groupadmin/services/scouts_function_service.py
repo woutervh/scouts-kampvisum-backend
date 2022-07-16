@@ -29,6 +29,42 @@ class ScoutsFunctionService:
     def create_or_update_scouts_functions_for_user(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
+        """
+        LEADER:
+        To definitively find out if a user is a leader, the function description
+        must be queried. This is because the scouts maintain a flexible approach
+        to section naming.
+        A code like GVL (gidsen-verkennerleiding) in the function list of the
+        profile call is not sufficient, because a scouts group might not have
+        that section (gidsen/verkenners). To know for sure, the function
+        description must be queried. If it contains the word "Leiding" under the
+        key "naam" in the element "groeperingen", then you know it's a leader
+        function.
+        Required calls:
+        https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
+        https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie
+
+        GROUP LEADER:
+        These functions do follow a convention that can be derived from the
+        profile call: if the function code is GRL (groepsleider), AGRL (adjunct
+        groepsleider) or GRLP (groepsleidingsploeg), then the user is a group
+        leader.
+        Required calls:
+        https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
+
+        DISTRICT COMMISSIONER:
+        DC is different yet again. When a user is a DC, it could be that only 1
+        group is listed in the profile call. Usually however, a DC has
+        responsibilities for more than 1 group. A list of these groups can be
+        derived by looking at the underlying and upper groups (key s
+        "onderliggendeGroepen" and "bovenliggendeGroep") in a group call.
+        This follows a convention that if someone is DC for group A1234B, that
+        user is also a DC for all groups that have a name starting with A12.
+
+        Required calls:
+        https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
+        https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/<GROUP NAME>
+        """
         # logger.debug("PRESENT FUNCTIONS: %s", user.functions, user=user)
         abstract_function_descriptions: List[
             AbstractScoutsFunctionDescription
@@ -40,7 +76,10 @@ class ScoutsFunctionService:
 
         unique_user_functions = {}
         for abstract_function in user.functions:
-            if abstract_function.code not in unique_user_functions or abstract_function.end is None:
+            if (
+                abstract_function.code not in unique_user_functions
+                or abstract_function.end is None
+            ):
                 unique_user_functions[abstract_function.code] = abstract_function
 
         for key in unique_user_functions:
@@ -55,7 +94,9 @@ class ScoutsFunctionService:
                             user=user,
                             abstract_function=unique_user_functions[key],
                             abstract_function_description=abstract_function_description,
-                            abstract_scouts_groups=[unique_user_functions[key].scouts_group],
+                            abstract_scouts_groups=[
+                                unique_user_functions[key].scouts_group
+                            ],
                         )
                     )
 
@@ -68,6 +109,11 @@ class ScoutsFunctionService:
         abstract_function_description: AbstractScoutsFunctionDescription,
         abstract_scouts_groups: List[AbstractScoutsGroup],
     ) -> ScoutsFunction:
+        """
+        abstract_function: the scouts function delivered by the profile call (GA/profiel)
+        abstract_function_description: the function description delivered by the function description call (GA/functie)
+        abstract_scouts_groups: the groups in the function in the profile call
+        """
         scouts_function: ScoutsFunction = ScoutsFunction.objects.safe_get(
             user=user,
             group_admin_id=abstract_function_description.group_admin_id,
@@ -129,7 +175,11 @@ class ScoutsFunctionService:
             if abstract_function.description
             else ""
         )
-        name = abstract_function_description.get_groupings_name() if abstract_function_description.get_groupings_name() else ""
+        name = (
+            abstract_function_description.get_groupings_name()
+            if abstract_function_description.get_groupings_name()
+            else ""
+        )
         begin = abstract_function.begin if abstract_function.begin else None
         end = abstract_function.end if abstract_function.end else None
 
