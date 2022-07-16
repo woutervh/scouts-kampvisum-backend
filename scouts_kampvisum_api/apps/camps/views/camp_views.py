@@ -116,22 +116,14 @@ class CampViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
     def get_available_years(self, request, group_admin_id=None):
-        group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-            group_admin_id=group_admin_id, raise_error=True
+        instances = (
+            self.filter_queryset(self.get_queryset())
+            .filter(visum__group__group_admin_id=group_admin_id)
+            .distinct()
         )
-        # HACKETY HACK
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
-
-        camps = Camp.objects.filter(
-            visum__group__group_admin_id=group.group_admin_id
-        ).distinct()
         years = list()
 
-        for camp in camps:
+        for camp in instances:
             years.append(camp.year.year)
 
         return Response(list(set(years)))

@@ -1,15 +1,18 @@
 from typing import List
 
 from django.http.response import HttpResponse
+from django_filters import rest_framework as filters
 from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from apps.groups.models import ScoutsSection
 from apps.groups.serializers import ScoutsSectionSerializer
 from apps.groups.services import ScoutsSectionService
+from apps.groups.filters import ScoutsSectionFilter
 
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
@@ -28,6 +31,8 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
 
     serializer_class = ScoutsSectionSerializer
     queryset = ScoutsSection.objects.all().filter(hidden=False)
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = ScoutsSectionFilter
 
     section_service = ScoutsSectionService()
     authorization_service = ScoutsAuthorizationService()
@@ -58,6 +63,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         Creates a new ScoutSection.
         """
+
         logger.debug("SECTION CREATE REQUEST DATA: %s", request.data)
         input_serializer = ScoutsSectionSerializer(
             data=request.data, context={"request": request}
@@ -137,7 +143,6 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         Retrieves a list of all existing Section instances.
         """
-
         instances: List[ScoutsSection] = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
 
@@ -160,19 +165,9 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
     def list_by_group(self, request, group_admin_id):
-        group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-            group_admin_id=group_admin_id, raise_error=True
-        )
-
-        # HACKETY HACK
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
-        instances = ScoutsSection.objects.all().filter(
-            group__group_admin_id=group_admin_id, hidden=False
-        )
+        instances: List[ScoutsSection] = self.filter_queryset(
+            self.get_queryset()
+        ).filter(group__group_admin_id=group_admin_id, hidden=False)
         page = self.paginate_queryset(instances)
 
         if page is not None:

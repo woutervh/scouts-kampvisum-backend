@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.camps.models import CampYear
+from apps.camps.managers import CampManager
 from apps.groups.models import ScoutsSection
 
 from scouts_auth.inuits.models import AuditedBaseModel
@@ -17,6 +18,8 @@ class Camp(AuditedBaseModel):
     """
     A model for a scouts camp.
     """
+
+    objects = CampManager()
 
     # @TODO model period, exceptions, test-driven
     year = models.ForeignKey(CampYear, on_delete=models.CASCADE)
