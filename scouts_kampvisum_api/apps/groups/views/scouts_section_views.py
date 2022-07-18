@@ -165,6 +165,12 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
     def list_by_group(self, request, group_admin_id):
+        group: ScoutsGroup = ScoutsGroup.objects.safe_get(
+            group_admin_id=group_admin_id, raise_error=True
+        )
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=group
+        )
         instances: List[ScoutsSection] = self.filter_queryset(
             self.get_queryset()
         ).filter(group__group_admin_id=group_admin_id, hidden=False)
