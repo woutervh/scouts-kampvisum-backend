@@ -1,6 +1,8 @@
+from lib2to3.pgen2.token import EQUAL
 from typing import List
 
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 
 from scouts_auth.auth.services import AuthorizationService
 
@@ -84,12 +86,20 @@ class ScoutsAuthorizationService(AuthorizationService):
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
             user = self.add_user_as_admin(user)
-
+        allowed = False
         if scouts_group:
-            logger.debug(
-                "SCOUTS_AUTHORIZATION_SERVICE: Updating user authorizations for group %s",
-                scouts_group.group_admin_id,
-            )
+            if user.has_role_district_commissioner(group=scouts_group):
+                allowed = True
+
+            if user.has_role_group_leader(group=scouts_group):
+                allowed = True
+
+            if user.has_role_section_leader(group=scouts_group):
+                allowed = True
+
+            if not allowed:
+                raise PermissionDenied()
+            
             if user.has_role_district_commissioner(group=scouts_group):
                 user = self.add_user_to_group(
                     user,
@@ -109,6 +119,7 @@ class ScoutsAuthorizationService(AuthorizationService):
                     ScoutsAuthorizationService.GROUP_LEADER,
                     scouts_group=scouts_group,
                 )
+
             else:
                 user = self.remove_user_from_group(
                     user,
@@ -122,13 +133,13 @@ class ScoutsAuthorizationService(AuthorizationService):
                     ScoutsAuthorizationService.SECTION_LEADER,
                     scouts_group=scouts_group,
                 )
+
             else:
                 user = self.remove_user_from_group(
                     user,
                     ScoutsAuthorizationService.SECTION_LEADER,
                     scouts_group=scouts_group,
-                )
-
+            )
         if GroupadminSettings.is_debug():
             test_groups = GroupadminSettings.get_test_groups()
             if any(group in user.get_group_names() for group in test_groups):
