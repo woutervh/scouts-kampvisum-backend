@@ -8,6 +8,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
+from rest_framework.exceptions import PermissionDenied
 
 from apps.visums.models import (
     LinkedCheck,
@@ -716,7 +717,38 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                 "Can only search for files if the group's group admin id is given"
             )
 
+            
+
         if term:
+            leader_functions: List[ScoutsFunction] = list(
+                ScoutsFunction.objects.get_leader_functions(user=user)
+            ) 
+
+            group_admin_ids = []
+            for leader_function in leader_functions:
+                for group in leader_function.scouts_groups.all():
+                    group_admin_ids.append(group.group_admin_id)
+
+                    if user.is_district_commissioner:
+                        underlyingGroups: List[ScoutsGroup] = list(
+                            ScoutsGroup.objects.get_groups_with_parent(
+                                parent_group_admin_id=group.group_admin_id
+                            )
+                        )
+
+                        for underlyingGroup in underlyingGroups:
+                            if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
+                                group_admin_ids.append(underlyingGroup.group_admin_id)
+
+            if not group in group_admin_ids:
+                raise PermissionDenied(
+                    {
+                        "message": "You don't have permission to request files for group {}".format(
+                            group
+                        )
+                    }
+                )
+
             instances = (
                 PersistedFile.objects.filter(
                     Q(
