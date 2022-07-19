@@ -22,6 +22,7 @@ import logging
 
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 from scouts_auth.inuits.logging import InuitsLogger
+from visums.models import CampVisum
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -147,6 +148,13 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
 
         instances = self.filter_queryset(
             self.linked_deadline_service.list_for_visum(visum=visum_id)
+        )
+        visum = CampVisum.objects.safe_get(id=visum_id)
+        group = visum.group
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=group
         )
         page = self.paginate_queryset(instances)
 
