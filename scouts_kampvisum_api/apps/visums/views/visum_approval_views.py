@@ -15,6 +15,8 @@ from apps.visums.services import CampVisumApprovalService
 
 # LOGGING
 import logging
+
+from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -23,12 +25,21 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class CampVisumApprovalViewSet(viewsets.GenericViewSet):
 
     approval_service = CampVisumApprovalService()
+    authorization_service = ScoutsAuthorizationService()
+
+    def check_user_allowed(self, request, instance: LinkedSubCategory):
+        group = instance.category.category_set.visum.group
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=group
+        )
 
     def partial_update_feedback(self, request, linked_sub_category_id):
         instance: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
             id=linked_sub_category_id, raise_error=True
         )
-
+        self.check_user_allowed(request, instance)
         logger.debug("FEEDBACK UPDATE REQUEST DATA: %s", request.data)
 
         serializer = LinkedSubCategoryFeedbackSerializer(
@@ -56,6 +67,7 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         instance: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
             id=linked_sub_category_id, raise_error=True
         )
+        self.check_user_allowed(request, instance)
 
         logger.debug("APPROVAL UPDATE REQUEST DATA: %s", request.data)
 
@@ -82,6 +94,9 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
 
     def global_update_approval(self, request, visum_id):
         instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=instance.group
+        )
 
         instance = self.approval_service.global_update_approval(
             request=request,
@@ -95,7 +110,9 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
 
     def global_update_disapproval(self, request, visum_id):
         instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
-
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=instance.group
+        )
         instance = self.approval_service.global_update_approval(
             request=request,
             instance=instance,
@@ -108,7 +125,9 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
 
     def partial_update_dc_notes(self, request, visum_id):
         instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
-
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=instance.group
+        )
         logger.debug("DC NOTES UPDATE REQUEST DATA: %s", request.data)
 
         serializer = CampVisumNotesSerializer(
@@ -134,7 +153,7 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         instance: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
             id=linked_sub_category_id, raise_error=True
         )
-
+        self.check_user_allowed(request, instance)
         instance = self.approval_service.handle_feedback(
             request=request, instance=instance
         )
@@ -145,11 +164,11 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-
     def global_handle_feedback(self, request, visum_id):
         instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
-
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=instance.group
+        )
         instance = self.approval_service.global_handle_feedback(
             request=request, instance=instance
         )
