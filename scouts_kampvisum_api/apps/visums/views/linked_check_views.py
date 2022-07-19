@@ -739,8 +739,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                             if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
                                 group_admin_ids.append(underlyingGroup.group_admin_id)
 
-            logger.debug('######### GROUP ADMIN IDS:%s', group_admin_ids)
-
             if not group_admin_id in group_admin_ids:
                 raise PermissionDenied(
                     {

@@ -28,7 +28,7 @@ class CampQuerySet(models.QuerySet):
             for group in leader_function.scouts_groups.all():
                 group_admin_ids.append(group.group_admin_id)
 
-                if user.is_district_commissioner:
+                if user.has_role_district_commissioner():
                     underlyingGroups: List[ScoutsGroup] = list(
                         ScoutsGroup.objects.get_groups_with_parent(
                             parent_group_admin_id=group.group_admin_id
