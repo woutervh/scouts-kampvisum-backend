@@ -105,7 +105,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         self.authorization_service.update_user_authorizations(
             user=request.user, scouts_group=instance.group
         )
-        instance = self.get_object()
         serializer = CampVisumSerializer(instance, context={"request": request})
 
         return Response(serializer.data)

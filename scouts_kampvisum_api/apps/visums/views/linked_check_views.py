@@ -34,6 +34,7 @@ from apps.visums.serializers import (
     LinkedNumberCheckSerializer,
 )
 from apps.visums.services import LinkedCheckService
+from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
@@ -55,7 +56,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.DjangoFilterBackend]
 
     linked_check_service = LinkedCheckService()
-
+    authorization_service = ScoutsAuthorizationService()
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
     def retrieve(self, request, pk=None):
         instance: LinkedCheck = get_object_or_404(LinkedCheck.objects, pk=pk)
@@ -729,7 +730,12 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def partial_update_comment_check(self, request, check_id):
         logger.debug("COMMENT CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_comment_check(check_id)
-
+        group = instance.sub_category.category.category_set.visum.group
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=group
+        )
         serializer = LinkedCommentCheckSerializer(
             data=request.data,
             instance=instance,
