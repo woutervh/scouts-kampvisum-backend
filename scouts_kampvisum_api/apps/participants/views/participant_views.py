@@ -1,11 +1,14 @@
 from typing import List
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
+
+from apps.utils.utils import AuthenticationHelper
 
 from apps.participants.models import InuitsParticipant
 from apps.participants.models.enums import ParticipantType
@@ -41,8 +44,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     participant_service = InuitsParticipantService()
     groupadmin = GroupAdminMemberService()
 
-    def get_queryset(self):
-        return InuitsParticipant.objects.all()
+    def get_queryset(self, user: settings.AUTH_USER_MODEL):
+        return InuitsParticipant.objects.allowed(user=user)
 
     @swagger_auto_schema(
         request_body=InuitsParticipantSerializer,
@@ -124,7 +127,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def list_participants(self, request):
-        queryset = self.get_queryset()
+        queryset = self.get_queryset(user=request.user)
         participants = self.filter_queryset(queryset)
 
         output_serializer = InuitsParticipantSerializer(participants, many=True)
@@ -262,7 +265,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
                 InuitsParticipant.from_scouts_member(member) for member in members
             ]
         else:
-            queryset = self.get_queryset().non_members()
+            queryset = self.get_queryset(user=request.user).non_members()
             non_members = self.filter_queryset(queryset)
             logger.debug("%d NON MEMBERS", len(non_members))
             results = [

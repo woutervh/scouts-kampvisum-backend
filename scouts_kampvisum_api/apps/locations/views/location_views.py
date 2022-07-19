@@ -88,6 +88,7 @@ class LocationViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationSerializer})
     def list(self, request):
+        logger.debug('################ list locations')
         queryset = self.get_queryset()
         instances = self.filter_queryset(queryset)
 

@@ -195,6 +195,7 @@ INSTALLED_APPS = [
     "safedelete",
     "storages",
     "sqlmiddleware",
+    "apps.utils",
     "apps.setup",
     "apps.participants",
     "apps.locations",
