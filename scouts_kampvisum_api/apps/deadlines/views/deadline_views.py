@@ -22,7 +22,7 @@ import logging
 
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 from scouts_auth.inuits.logging import InuitsLogger
-from visums.models import CampVisum
+from apps.visums.models import CampVisum
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
