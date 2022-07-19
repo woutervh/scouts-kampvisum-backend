@@ -39,6 +39,7 @@ from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
+from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction 
 
 # LOGGING
 import logging
@@ -711,17 +712,15 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     def search_files(self, request):
         term = self.request.GET.get("term", None)
-        group = self.request.GET.get("group", None)
-        if term and not group:
+        group_admin_id = self.request.GET.get("group", None)
+        if term and not group_admin_id:
             raise ValidationError(
                 "Can only search for files if the group's group admin id is given"
             )
 
-            
-
         if term:
             leader_functions: List[ScoutsFunction] = list(
-                ScoutsFunction.objects.get_leader_functions(user=user)
+                ScoutsFunction.objects.get_leader_functions(user=request.user)
             ) 
 
             group_admin_ids = []
@@ -729,7 +728,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                 for group in leader_function.scouts_groups.all():
                     group_admin_ids.append(group.group_admin_id)
 
-                    if user.is_district_commissioner:
+                    if request.user.has_role_district_commissioner():
                         underlyingGroups: List[ScoutsGroup] = list(
                             ScoutsGroup.objects.get_groups_with_parent(
                                 parent_group_admin_id=group.group_admin_id
@@ -740,11 +739,13 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                             if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
                                 group_admin_ids.append(underlyingGroup.group_admin_id)
 
-            if not group in group_admin_ids:
+            logger.debug('######### GROUP ADMIN IDS:%s', group_admin_ids)
+
+            if not group_admin_id in group_admin_ids:
                 raise PermissionDenied(
                     {
                         "message": "You don't have permission to request files for group {}".format(
-                            group
+                            group_admin_id
                         )
                     }
                 )
