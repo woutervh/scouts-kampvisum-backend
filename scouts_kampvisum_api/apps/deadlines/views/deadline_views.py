@@ -180,6 +180,10 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         instance: LinkedDeadlineFlag = LinkedDeadlineFlag.objects.safe_get(
             id=linked_deadline_flag_id, raise_error=True
         )
+        instance_linked_deadline: LinkedDeadline = self.linked_deadline_service.get_visum_deadline(
+            linked_deadline=linked_deadline_id
+        )
+        self.check_user_allowed(request, instance_linked_deadline)
 
         serializer = LinkedDeadlineFlagSerializer(
             data=request.data,
@@ -201,7 +205,6 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         instance: LinkedDeadline = self.linked_deadline_service.get_visum_deadline(
             linked_deadline=linked_deadline_id
         )
-        self.check_user_allowed(request, instance)
         serializer = VisumDeadlineSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
