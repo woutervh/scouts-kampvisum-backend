@@ -37,6 +37,14 @@ class CampViewSet(viewsets.GenericViewSet):
     camp_service = CampService()
     authorization_service = ScoutsAuthorizationService()
 
+    def check_user_allowed(self, request, instance: Camp):
+        group = instance.visum.group
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=group
+        )
+
     @swagger_auto_schema(
         request_body=CampSerializer,
         responses={status.HTTP_201_CREATED: CampSerializer},
@@ -69,7 +77,7 @@ class CampViewSet(viewsets.GenericViewSet):
     )
     def partial_update(self, request, pk=None):
         camp = self.get_object()
-
+        self.check_user_allowed(request, camp)
         serializer = CampSerializer(
             data=request.data, instance=camp, context={"request": request}, partial=True
         )
@@ -92,6 +100,7 @@ class CampViewSet(viewsets.GenericViewSet):
         logger.debug("Deleting Camp with id %s", pk)
 
         camp = get_object_or_404(Camp.objects, pk=pk)
+        self.check_user_allowed(request, camp)
         camp.delete()
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
