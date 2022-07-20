@@ -44,7 +44,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     participant_service = InuitsParticipantService()
     groupadmin = GroupAdminMemberService()
 
-    def get_queryset(self, user: settings.AUTH_USER_MODEL):
+    def get_queryset(self):
         return InuitsParticipant.objects.all()
 
     @swagger_auto_schema(
@@ -52,8 +52,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: InuitsParticipantSerializer},
     )
     def create(self, request):
-        logger.debug("PARTICIPANT CREATE REQUEST DATA: %s", request.data)
-        logger.debug("&&&&&&&&PARTICIPANT CREATE REQUEST DATA: %s", request.data["group_group_admin_id"])
+        # logger.debug("PARTICIPANT CREATE REQUEST DATA: %s", request.data)
         AuthenticationHelper.has_rights_for_group(request.user, request.data["group_group_admin_id"])
         input_serializer = InuitsParticipantSerializer(
             data=request.data, context={"request": request}
@@ -96,6 +95,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: InuitsParticipantSerializer},
     )
     def partial_update(self, request, pk=None):
+        AuthenticationHelper.has_rights_for_group(request.user, request.data["group_group_admin_id"])
         participant = self.get_object()
 
         logger.debug("PARTICIPANT PARTIAL UPDATE REQUEST DATA: %s", request.data)
