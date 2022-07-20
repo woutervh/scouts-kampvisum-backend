@@ -7,6 +7,9 @@ from apps.locations.models import LinkedLocation
 from apps.locations.serializers import LinkedLocationSerializer
 from apps.locations.filters import LinkedLocationFilter
 
+from django.core.exceptions import ValidationError
+from rest_framework.exceptions import PermissionDenied
+
 from apps.utils.utils import AuthenticationHelper
 
 
@@ -32,6 +35,11 @@ class LocationViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationSerializer})
     def list(self, request):
+        raise PermissionDenied(
+                {
+                    "message": "Search disabled"
+                }
+            )
         group_admin_id = self.request.GET.get("group", None)
         AuthenticationHelper.has_rights_for_group(request.user, group_admin_id)
 
