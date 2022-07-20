@@ -45,7 +45,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     groupadmin = GroupAdminMemberService()
 
     def get_queryset(self, user: settings.AUTH_USER_MODEL):
-        return InuitsParticipant.objects.allowed(user=user)
+        return InuitsParticipant.objects.all()
 
     @swagger_auto_schema(
         request_body=InuitsParticipantSerializer,
