@@ -53,6 +53,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     )
     def create(self, request):
         logger.debug("PARTICIPANT CREATE REQUEST DATA: %s", request.data)
+        logger.debug("&&&&&&&&PARTICIPANT CREATE REQUEST DATA: %s", request.data["group_group_admin_id"])
+        AuthenticationHelper.has_rights_for_group(request.user, request.data["group_group_admin_id"])
         input_serializer = InuitsParticipantSerializer(
             data=request.data, context={"request": request}
         )
