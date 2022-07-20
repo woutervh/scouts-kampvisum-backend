@@ -143,6 +143,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         return self._list(request=request, only_scouts_members=True, all_members=True)
 
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False, all_members=False):
+        AuthenticationHelper.has_rights_for_group(request.user, self.request.GET.get("group", None))
+
         check = self.request.GET.get("check", None)
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)

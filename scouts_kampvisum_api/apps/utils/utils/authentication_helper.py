@@ -5,6 +5,11 @@ from django.core.exceptions import ValidationError
 from rest_framework.exceptions import PermissionDenied
 from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction 
 
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+
+logger: InuitsLogger = logging.getLogger(__name__)
 
 class AuthenticationHelper:
     @staticmethod
@@ -32,6 +37,9 @@ class AuthenticationHelper:
 
     @staticmethod
     def has_rights_for_group(user: settings.AUTH_USER_MODEL, group_admin_id: str = None) -> bool: 
+        logger.debug("&&&&&&&&&&&&& %s", AuthenticationHelper.load_groups(user=user))
+        logger.debug("&&&&&&&&&&&&& %s", group_admin_id)
+
         if not group_admin_id in AuthenticationHelper.load_groups(user=user):
             raise PermissionDenied(
                 {
