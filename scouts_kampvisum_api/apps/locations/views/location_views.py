@@ -7,6 +7,8 @@ from apps.locations.models import LinkedLocation
 from apps.locations.serializers import LinkedLocationSerializer
 from apps.locations.filters import LinkedLocationFilter
 
+from apps.utils.utils import AuthenticationHelper
+
 
 # LOGGING
 import logging
@@ -24,7 +26,32 @@ class LocationViewSet(viewsets.GenericViewSet):
     ordering = ["id"]
 
     def get_queryset(self):
+        logger.debug('################ get_queryset: %s', LinkedLocation.objects.all())
+
         return LinkedLocation.objects.all()
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationSerializer})
+    def list(self, request):
+        group_admin_id = self.request.GET.get("group", None)
+        AuthenticationHelper.has_rights_for_group(request.user, group_admin_id)
+
+        logger.debug('################ list locations: %s', request)
+        queryset = self.get_queryset()
+        instances = self.filter_queryset(queryset)
+
+        page = self.paginate_queryset(instances)
+
+        if page is not None:
+            serializer = LinkedLocationSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = LinkedLocationSerializer(
+                instances, many=True, context={"request": request}
+            )
+            return Response(serializer.data)
+
 
     # @swagger_auto_schema(
     #     request_body=CampLocationSerializer,
@@ -85,22 +112,3 @@ class LocationViewSet(viewsets.GenericViewSet):
     #     output_serializer = CampLocationSerializer(instance)
 
     #     return Response(output_serializer.data, status=status.HTTP_200_OK)
-
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationSerializer})
-    def list(self, request):
-        logger.debug('################ list locations')
-        queryset = self.get_queryset()
-        instances = self.filter_queryset(queryset)
-
-        page = self.paginate_queryset(instances)
-
-        if page is not None:
-            serializer = LinkedLocationSerializer(
-                page, many=True, context={"request": request}
-            )
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = LinkedLocationSerializer(
-                instances, many=True, context={"request": request}
-            )
-            return Response(serializer.data)
