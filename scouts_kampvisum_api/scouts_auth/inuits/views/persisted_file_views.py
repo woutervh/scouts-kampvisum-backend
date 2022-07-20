@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
+from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.filters import PersistedFileFilter
 from scouts_auth.inuits.services import PersistedFileService
@@ -14,6 +15,7 @@ from scouts_auth.inuits.serializers import PersistedFileSerializer
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from apps.visums.models import LinkedCheck
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -30,7 +32,15 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
     filterset_class = PersistedFileFilter
 
     persisted_file_service = PersistedFileService()
+    authorization_service = ScoutsAuthorizationService()
 
+    def check_user_allowed(self, request, instance: LinkedCheck):
+        group = instance.sub_category.category.category_set.visum.group
+        # This should probably be handled by a rest call when changing groups in the frontend,
+        # but adding it here avoids the need for changes to the frontend
+        self.authorization_service.update_user_authorizations(
+            user=request.user, scouts_group=group
+        )
     @swagger_auto_schema(
         request_body=PersistedFileSerializer,
         responses={status.HTTP_201_CREATED: PersistedFileSerializer},
@@ -63,6 +73,8 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         """
 
         instance = self.get_object()
+        for check in instance.checks.all():
+            self.check_user_allowed(request, check)
         serializer = PersistedFileSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
@@ -77,7 +89,8 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         """
 
         instance = self.get_object()
-
+        for check in instance.checks.all():
+            self.check_user_allowed(request, check)
         logger.debug("PERSISTED FILE UPDATE REQUEST DATA: %s", request.data)
         serializer = PersistedFileSerializer(
             data=request.data,
@@ -108,6 +121,8 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         Deletes a PersistedFile instance.
         """
         instance: PersistedFile = get_object_or_404(PersistedFile.objects, pk=pk)
+        for check in instance.checks.all():
+            self.check_user_allowed(request, check)
         logger.debug(
             "Deleting PersistedFile instance with id %s and name %s",
             instance.id,
