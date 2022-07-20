@@ -621,7 +621,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         validated_data = serializer.validated_data
         logger.debug("FILE UPLOAD CHECK UPDATE VALIDATED DATA: %s", validated_data)
-
+        for file in validated_data:
+            for check in file.checks.all():
+                self.check_user_allowed(request, check)
         instance = self.linked_check_service.update_file_upload_check(
             request=request, instance=instance, files=validated_data
         )
