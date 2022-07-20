@@ -182,7 +182,7 @@ class LinkedLocationCheck(LinkedCheck):
     center_longitude = models.FloatField(null=True, blank=True, default=3.3452037)
     zoom = DefaultIntegerField(default=7)
 
-    locations = models.ManyToManyField(LinkedLocation)
+    locations = models.ManyToManyField(LinkedLocation,  related_name="checks")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

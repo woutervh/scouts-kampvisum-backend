@@ -6,9 +6,7 @@ from drf_yasg2.utils import swagger_auto_schema
 from apps.locations.models import LinkedLocation
 from apps.locations.serializers import LinkedLocationSerializer
 from apps.locations.filters import LinkedLocationFilter
-
-from django.core.exceptions import ValidationError
-from rest_framework.exceptions import PermissionDenied
+from django.db.models import Q
 
 from apps.utils.utils import AuthenticationHelper
 
@@ -28,25 +26,20 @@ class LocationViewSet(viewsets.GenericViewSet):
     ordering_fields = ["id"]
     ordering = ["id"]
 
-    def get_queryset(self):
-        logger.debug('################ get_queryset: %s', LinkedLocation.objects.all())
-
-        return LinkedLocation.objects.all()
+    def get_queryset(self, group_admin_id: str):
+        return LinkedLocation.objects.filter(
+                    Q(
+                        checks__sub_category__category__category_set__visum__group__group_admin_id=group_admin_id
+                    )
+                )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationSerializer})
     def list(self, request):
-        raise PermissionDenied(
-                {
-                    "message": "Search disabled"
-                }
-            )
         group_admin_id = self.request.GET.get("group", None)
         AuthenticationHelper.has_rights_for_group(request.user, group_admin_id)
 
-        logger.debug('################ list locations: %s', request)
-        queryset = self.get_queryset()
+        queryset = self.get_queryset(group_admin_id=group_admin_id)
         instances = self.filter_queryset(queryset)
-
         page = self.paginate_queryset(instances)
 
         if page is not None:
