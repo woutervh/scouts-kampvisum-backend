@@ -96,8 +96,9 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     )
     def partial_update(self, request, pk=None):
         AuthenticationHelper.has_rights_for_group(request.user, request.data["group_group_admin_id"])
+        AuthenticationHelper.has_rights_for_group(request.user, self.get_object().group_group_admin_id)
         participant = self.get_object()
-
+        logger.debug("PARTICIPANT: %s", self.get_object())
         logger.debug("PARTICIPANT PARTIAL UPDATE REQUEST DATA: %s", request.data)
         serializer = InuitsParticipantSerializer(
             instance=participant,
