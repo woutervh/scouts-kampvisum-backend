@@ -334,7 +334,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer},
     )
     def partial_update_camp_location_check(self, request, check_id):
-        logger.debug("CAMP LOCATION CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_camp_location_check(check_id)
         self.check_user_allowed(request, instance)
 
@@ -344,9 +343,14 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             context={"request": request},
             partial=True,
         )
+
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
+        for location in validated_data["locations"]:
+            for check in location.checks.all():
+                self.check_user_allowed(request, check)
+
         logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_camp_location_check(
@@ -611,19 +615,15 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer = PersistedFileSerializer(
             data=files, context={"request": request}, many=True
         )
-        # serializer = LinkedFileUploadCheckSerializer(
-        #     data=request.data,
-        #     instance=instance,
-        #     context={"request": request},
-        #     partial=True,
-        # )
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
         logger.debug("FILE UPLOAD CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
         for file in validated_data:
             for check in file.checks.all():
                 self.check_user_allowed(request, check)
+        
         instance = self.linked_check_service.update_file_upload_check(
             request=request, instance=instance, files=validated_data
         )
