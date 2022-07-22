@@ -26,19 +26,25 @@ class LocationViewSet(viewsets.GenericViewSet):
     ordering_fields = ["id"]
     ordering = ["id"]
 
-    def get_queryset(self, group_admin_id: str):
+    def get_queryset(self, group_admin_id: str, term: str):
         return LinkedLocation.objects.filter(
                     Q(
                         checks__sub_category__category__category_set__visum__group__group_admin_id=group_admin_id
                     )
+                ).distinct().filter(
+                    Q(name__icontains=term)
+            | Q(contact_name__icontains=term)
+            | Q(locations__name__icontains=term)
+            | Q(locations__address__icontains=term)
                 )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationSerializer})
     def list(self, request):
+        term = self.request.GET.get("term", None)
         group_admin_id = self.request.GET.get("group", None)
         AuthenticationHelper.has_rights_for_group(request.user, group_admin_id)
 
-        queryset = self.get_queryset(group_admin_id=group_admin_id)
+        queryset = self.get_queryset(group_admin_id=group_admin_id, term=term)
         instances = self.filter_queryset(queryset)
         page = self.paginate_queryset(instances)
 
