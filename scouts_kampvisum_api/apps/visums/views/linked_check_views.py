@@ -348,8 +348,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
         validated_data = serializer.validated_data
         for location in validated_data["locations"]:
-            for check in location.checks.all():
-                self.check_user_allowed(request, check)
+            if hasattr(location, 'checks'):
+                for check in location.checks.all():
+                    self.check_user_allowed(request, check)
 
         logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
