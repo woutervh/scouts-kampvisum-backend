@@ -228,25 +228,36 @@ class InuitsVisumMailService(EmailService):
                 label="CAMP REGISTRATION: bcc",
             )
         )
+        if not visum.camp_registration_mail_sent_after_deadline:
+            logger.debug(
+                "Preparing to send camp registration notification to %s (debug: %s, test: %s, acceptance: %s), using template %s and subject %s",
+                recipient,
+                VisumSettings.is_debug(),
+                VisumSettings.is_test(),
+                VisumSettings.is_acceptance(),
+                template,
+                subject,
+            )
 
-        logger.debug(
-            "Preparing to send camp registration notification to %s (debug: %s, test: %s, acceptance: %s), using template %s and subject %s",
-            recipient,
-            VisumSettings.is_debug(),
-            VisumSettings.is_test(),
-            VisumSettings.is_acceptance(),
-            template,
-            subject,
-        )
-
-        result = self._send_prepared_email(
-            template_path=template,
-            dictionary=dictionary,
-            subject=subject,
-            to=recipient,
-            cc=cc,
-            bcc=bcc,
-        )
+            result = self._send_prepared_email(
+                template_path=template,
+                dictionary=dictionary,
+                subject=subject,
+                to=recipient,
+                cc=cc,
+                bcc=bcc,
+            )
+        else:
+            result = False
+            logger.debug(
+                "Not sending emails after deadline",
+                recipient,
+                VisumSettings.is_debug(),
+                VisumSettings.is_test(),
+                VisumSettings.is_acceptance(),
+                template,
+                subject,
+            )
 
         if result:
             if sending_camp_registration_mail:

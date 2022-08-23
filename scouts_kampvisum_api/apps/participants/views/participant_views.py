@@ -130,7 +130,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def list_participants(self, request):
-        queryset = self.get_queryset(user=request.user)
+        queryset = self.get_queryset()
         participants = self.filter_queryset(queryset)
 
         output_serializer = InuitsParticipantSerializer(participants, many=True)
@@ -270,7 +270,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
                 InuitsParticipant.from_scouts_member(member) for member in members
             ]
         else:
-            queryset = self.get_queryset(user=request.user).non_members()
+            queryset = self.get_queryset().non_members()
             non_members = self.filter_queryset(queryset)
             logger.debug("%d NON MEMBERS", len(non_members))
             results = [
