@@ -52,13 +52,15 @@ class LinkedCheckService:
         visum.updated_by = request.user
         visum.full_clean()
         visum.save()
-
-        if data_changed and instance.parent.has_change_handlers():
-            self.change_handler_service.handle_changes(
-                change_handlers=instance.parent.change_handlers,
-                request=request,
-                instance=instance,
-            )
+        if type(instance) is LinkedNumberCheck and visum.camp_registration_mail_sent_after_deadline:
+            logger.debug("Not notifying linked number check change after deadline")
+        else:
+            if data_changed and instance.parent.has_change_handlers():
+                self.change_handler_service.handle_changes(
+                    change_handlers=instance.parent.change_handlers,
+                    request=request,
+                    instance=instance,
+                )
 
         return instance
 
