@@ -289,5 +289,296 @@
 			],
 			"label": "Bankkaart"
 		}
+	},
+		{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "planning_date",
+			"category": [
+				"planning",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Datum",
+			"explanation": "Iedere zomer gaan er een heleboel groepen op kamp. Begin dus tijdig aan de zoektocht naar een kampterrein. De drukste kampperiode is van 11 juli tot 10 augustus. Plan je je kamp buiten deze periode? Dan heb je meer keuze in mogelijke bestemmingen.  <br> Laat de ouders van je leden liefst zo snel mogelijk de kampdata weten. Zo kunnen zij zelf ook hun vakantie plannen."
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "planning_activities",
+			"category": [
+				"planning",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Activiteiten"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "planning_menu",
+			"category": [
+				"planning",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Menu"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "logistics_locations",
+			"category": [
+				"logistics",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Locaties",
+			"explanation": "Voeg de locatie van je kampplaats toe (of meerdere slaapplaatsen voor een trekkamp bijvoorbeeld).<br> Klik daarvoor op de 'voeg locatie toe'-knop. <br><br> Vul het adres in en check de kaart. Staat de groene pin helemaal juist? Dan kan je onderaan de gegevens van de eigenaar aanvullen, en op de knop klikken om toe te voegen.<br><br>Plek op de kaart niet helemaal juist, of je hebt geen adres ingegeven?  Klik indien nodig op de groene pin om ze te verwijderen. Klik op de kaart om een nieuwe zwarte pin te zetten. Staat de pin juist? Klik er dan op en voeg ze toe, de pin wordt nu groen. <br> Vergeet niet om onderaan ook op de 'voeg toe'-knop te klikken. "
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "logistics_transport",
+			"category": [
+				"logistics",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Vervoer",
+			"explanation": "Maak voor je vervoer een milieubewuste keuze. Ga met de trein, leg een bus in, of stel een co-driving schema op voor de ouders van je leden.<br>Als je met de auto of bus reist, ga dan zeker na of er lage emissiezones zijn op de plaatsen waar je zal rondrijden."
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "logistics_material",
+			"category": [
+				"logistics",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Materiaal"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "communication_agreements_parents",
+			"category": [
+				"communication_agreements",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Ouders"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "communication_agreements_agreements",
+			"category": [
+				"communication_agreements",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Afspraken"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "safety_insurance",
+			"category": [
+				"safety",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Verzekeringen"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "safety_healthcare",
+			"category": [
+				"safety",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Zorgverlening"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "safety_foreign_rules",
+			"category": [
+				"safety",
+				2023
+			],
+			"camp_types": [
+				[
+					"buitenlands_kamp"
+				]
+			],
+			"label": "Regels land van bestemming"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "members_leaders_responsible",
+			"category": [
+				"members_leaders",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Verantwoordelijke"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "members_leaders_estimates",
+			"category": [
+				"members_leaders",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Geschat aantal deelnemers"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "members_leaders_leaders",
+			"category": [
+				"members_leaders",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Kampleiding"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "members_leaders_cooks",
+			"category": [
+				"members_leaders",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Foerage"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "members_leaders_members",
+			"category": [
+				"members_leaders",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Leden"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "budget_budget",
+			"category": [
+				"budget",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Begroting"
+		}
+	},
+	{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "budget_banccard",
+			"category": [
+				"budget",
+				2023
+			],
+			"camp_types": [
+				[
+					"buitenlands_kamp"
+				]
+			],
+			"label": "Bankkaart"
+		}
 	}
 ]

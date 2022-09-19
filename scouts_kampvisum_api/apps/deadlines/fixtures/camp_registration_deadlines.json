@@ -72,5 +72,79 @@
                 }
             ]
         }
+    },
+        {
+        "model": "deadlines.Deadline",
+        "fields": {
+            "name": "camp_registration",
+            "label": "Kampregistratie",
+            "description": "Vul deze gegevens tijdig in, dan doen wij voor jou de bosaanvraag:",
+            "explanation": "Is je kampregistratie ingevuld, ben je te bereiken bij een noodgeval (ongeval, problemen op het thuisfront, natuurrampen, gezondheidsrisico's of andere onvoorziene omstandigheden) ? De mensen die de noodlijn van Scouts en Gidsen Vlaanderen opvolgen kunnen je zo bereiken.",
+            "is_important": true,
+            "is_camp_registration": true,
+            "due_date": {
+                "date_day": 13,
+                "date_month": 4
+            },
+            "camp_types": [
+                "basis"
+            ],
+            "items": [
+                {
+                    "item_sub_category": [
+                        "planning_date",
+                        [
+                            "planning",
+                            2023
+                        ]
+                    ]
+                },
+                {
+                    "item_check": [
+                        "logistics_locations_location",
+                        [
+                            "logistics_locations",
+                            [
+                                "logistics",
+                                2023
+                            ]
+                        ]
+                    ]
+                },
+                {
+                    "item_sub_category": [
+                        "members_leaders_estimates",
+                        [
+                            "members_leaders",
+                            2023
+                        ]
+                    ]
+                },
+                {
+                    "item_check": [
+                        "members_leaders_responsible_main",
+                        [
+                            "members_leaders_responsible",
+                            [
+                                "members_leaders",
+                                2023
+                            ]
+                        ]
+                    ]
+                },
+                {
+                    "item_check": [
+                        "members_leaders_responsible_adjunct",
+                        [
+                            "members_leaders_responsible",
+                            [
+                                "members_leaders",
+                                2023
+                            ]
+                        ]
+                    ]
+                }
+            ]
+        }
     }
 ]
