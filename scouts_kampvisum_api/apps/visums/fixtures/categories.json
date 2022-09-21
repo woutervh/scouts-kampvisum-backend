@@ -3,6 +3,9 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "planning",
+			"camp_year": [
+				2022
+			],
 			"camp_types": [
 				[
 					"basis"
@@ -17,6 +20,9 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "logistics",
+			"camp_year": [
+				2022
+			],
 			"camp_types": [
 				[
 					"basis"
@@ -31,6 +37,9 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "communication_agreements",
+			"camp_year": [
+				2022
+			],
 			"camp_types": [
 				[
 					"basis"
@@ -45,6 +54,9 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "safety",
+			"camp_year": [
+				2022
+			],
 			"camp_types": [
 				[
 					"basis"
@@ -59,6 +71,9 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "members_leaders",
+			"camp_year": [
+				2022
+			],
 			"camp_types": [
 				[
 					"basis"
@@ -73,6 +88,111 @@
 		"model": "visums.Category",
 		"fields": {
 			"name": "budget",
+			"camp_year": [
+				2022
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Budget",
+			"description": "",
+			"explanation": ""
+		}
+	},
+	{
+		"model": "visums.Category",
+		"fields": {
+			"name": "planning",
+			"camp_year": [
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Planning",
+			"description": "",
+			"explanation": ""
+		}
+	},
+	{
+		"model": "visums.Category",
+		"fields": {
+			"name": "logistics",
+			"camp_year": [
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Logistiek",
+			"description": "Voeg de locatie van je kampplaats toe (of meerdere slaapplaatsen voor een trekkamp bijvoorbeeld).<br> Klik daarvoor op de 'voeg locatie toe'-knop. <br><br> Vul het adres in en check de kaart. Staat de groene pin helemaal juist? Dan kan je onderaan de gegevens van de eigenaar aanvullen, en op de knop klikken om toe te voegen.<br><br>Plek op de kaart niet helemaal juist, of je hebt geen adres ingegeven?  Klik indien nodig op de groene pin om ze te verwijderen. Klik op de kaart om een nieuwe zwarte pin te zetten. Staat de pin juist? Klik er dan op en voeg ze toe, de pin wordt nu groen. <br> Vergeet niet om onderaan ook op de 'voeg toe'-knop te klikken.",
+			"explanation": ""
+		}
+	},
+	{
+		"model": "visums.Category",
+		"fields": {
+			"name": "communication_agreements",
+			"camp_year": [
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Communicatie & afspraken",
+			"description": "",
+			"explanation": ""
+		}
+	},
+	{
+		"model": "visums.Category",
+		"fields": {
+			"name": "safety",
+			"camp_year": [
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Veiligheid",
+			"description": "",
+			"explanation": ""
+		}
+	},
+	{
+		"model": "visums.Category",
+		"fields": {
+			"name": "members_leaders",
+			"camp_year": [
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Leden & leiding",
+			"description": "",
+			"explanation": ""
+		}
+	},
+	{
+		"model": "visums.Category",
+		"fields": {
+			"name": "budget",
+			"camp_year": [
+				2023
+			],
 			"camp_types": [
 				[
 					"basis"
