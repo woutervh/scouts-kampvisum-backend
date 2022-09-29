@@ -90,10 +90,12 @@ class Command(BaseCommand):
                         include_default=False,
                     )
 
+                    camp_year = CampYear.objects.safe_get(year=model.get("fields")["camp_year"][0])
+
                     deadline: Deadline = deadline_service.get_or_create_deadline(
                         request=None,
                         name=model.get("fields")["name"],
-                        camp_year=current_camp_year,
+                        camp_year=camp_year,
                         camp_types=camp_types,
                         items=[],
                     )

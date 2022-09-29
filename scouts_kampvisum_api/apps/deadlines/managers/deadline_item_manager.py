@@ -25,7 +25,7 @@ class DeadlineItemManager(models.Manager):
         item_sub_category = kwargs.get("item_sub_category", None)
         item_check = kwargs.get("item_check", None)
         raise_error = kwargs.get("raise_error", False)
-
+        
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
