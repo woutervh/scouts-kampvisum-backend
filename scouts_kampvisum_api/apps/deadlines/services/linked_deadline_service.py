@@ -104,6 +104,8 @@ class LinkedDeadlineService:
         instance.full_clean()
         instance.save()
 
+        logger.debug(f"LINKED DEADLINE: {instance}")
+
         items: List[
             LinkedDeadlineItem
         ] = self.linked_deadline_item_service.create_or_update_linked_deadline_items(

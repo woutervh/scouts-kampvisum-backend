@@ -8,6 +8,7 @@
             "explanation": "Is je kampregistratie ingevuld, ben je te bereiken bij een noodgeval (ongeval, problemen op het thuisfront, natuurrampen, gezondheidsrisico's of andere onvoorziene omstandigheden) ? De mensen die de noodlijn van Scouts en Gidsen Vlaanderen opvolgen kunnen je zo bereiken.",
             "is_important": true,
             "is_camp_registration": true,
+            "camp_year": [ 2022 ],
             "due_date": {
                 "date_day": 13,
                 "date_month": 4
@@ -82,6 +83,7 @@
             "explanation": "Is je kampregistratie ingevuld, ben je te bereiken bij een noodgeval (ongeval, problemen op het thuisfront, natuurrampen, gezondheidsrisico's of andere onvoorziene omstandigheden) ? De mensen die de noodlijn van Scouts en Gidsen Vlaanderen opvolgen kunnen je zo bereiken.",
             "is_important": true,
             "is_camp_registration": true,
+            "camp_year": [ 2023 ],
             "due_date": {
                 "date_day": 13,
                 "date_month": 4
