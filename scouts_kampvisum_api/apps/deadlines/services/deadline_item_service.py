@@ -39,7 +39,7 @@ class DeadlineItemService:
 
     @transaction.atomic
     def create_or_update_deadline_item(self, request, deadline, **item) -> DeadlineItem:
-        instance = DeadlineItem.objects.safe_get(deadline=deadline, raise_error=True, **item)
+        instance = DeadlineItem.objects.safe_get(deadline=deadline, **item)
 
         if instance:
             instance: DeadlineItem = self.update_deadline_item(
