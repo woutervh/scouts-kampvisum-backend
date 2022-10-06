@@ -357,7 +357,7 @@ ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
 # Day after which a new camp registration is considered to be in the next camp year - FORMAT: MM-DD
 CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "09-01")
 # Deadline for the camp registration - FORMAT: MM-DD
-CAMP_REGISTRATION_DEADLINE = env.str("CAMP_REGISTRATION_DEADLINE", "04-14")
+CAMP_REGISTRATION_DEADLINE = env.str("CAMP_REGISTRATION_DEADLINE", "04-13")
 # Day after which a mail should be sent if the camp responsible has changed - FORMAT: MM-DD
 RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", CAMP_REGISTRATION_DEADLINE)
 # Camp registration mails should be sent only once during this period (in hours)
