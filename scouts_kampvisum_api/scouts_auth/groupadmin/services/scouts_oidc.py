@@ -129,10 +129,10 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
                 username = decoded.get("preferred_username", None)
             except:
                 logger.error("Unable to decode JWT token - Do you need a refresh ?")
-        username = username if username else member.username
         # logger.debug("USER: create user %s", username)
 
         member: AbstractScoutsMember = self._load_member_data(data=claims)
+        username = username if username else member.username
         user: settings.AUTH_USER_MODEL = self.UserModel.objects.create_user(
             id=member.group_admin_id, username=username, email=member.email
         )
