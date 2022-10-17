@@ -107,3 +107,4 @@ class CampYearService:
         # logger.debug("CampYear for date (%s) already exists: %s", current, year)
 
         return [year]
+
