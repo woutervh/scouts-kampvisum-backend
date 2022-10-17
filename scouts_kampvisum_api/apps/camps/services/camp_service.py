@@ -24,7 +24,7 @@ class CampService:
         """
 
         # Required arguments:
-        year = fields.get("year", datetime.date.today().year)
+        year = fields.get("year", self.year_service.get_current_camp_year().year)
         name = fields.get("name")
         sections = fields.get("sections")
         # Optional arguments:

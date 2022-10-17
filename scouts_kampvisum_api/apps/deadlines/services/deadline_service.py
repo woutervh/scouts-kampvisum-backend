@@ -5,9 +5,12 @@ from django.db import transaction
 from django.utils import timezone
 
 from apps.camps.models import CampYear, CampType
+from apps.camps.services import CampYearService
 
 from apps.deadlines.models import Deadline, DeadlineDate, LinkedDeadlineItem
 from apps.deadlines.services import DeadlineItemService
+
+from scouts_auth.groupadmin.scouts import ScoutsTemporalDetails
 
 
 # LOGGING
@@ -182,6 +185,11 @@ class DeadlineService:
     ) -> datetime.date:
         day = day if day else 1
         month = month if month else 1
-        year = year if year else timezone.now().date().year
+
+        if year:
+            year = year
+        else:
+            camp_year_service = CampYearService()
+            year = camp_year_service.get_date_in_camp_year(month=month, day=day)
 
         return datetime.datetime(year, month, day).date()
