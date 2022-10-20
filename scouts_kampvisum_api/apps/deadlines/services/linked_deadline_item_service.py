@@ -14,6 +14,9 @@ from apps.deadlines.services import LinkedDeadlineFlagService
 
 from apps.visums.models import LinkedSubCategory, LinkedCheck
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class LinkedDeadlineItemService:
 
@@ -30,6 +33,8 @@ class LinkedDeadlineItemService:
                     linked_deadline.parent.name,
                 )
             )
+        else:
+            logger.debug(f"Found {len(items)} deadline items to link")
 
         results = []
         for item in items:
