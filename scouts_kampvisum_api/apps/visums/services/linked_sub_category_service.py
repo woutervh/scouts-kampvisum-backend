@@ -50,7 +50,7 @@ class LinkedSubCategoryService:
     def create_linked_sub_category(
         self, request, linked_category: LinkedCategory, sub_category: SubCategory
     ) -> LinkedSubCategory:
-        logger.debug("Creating LinkedSubCategory '%s'", sub_category.name)
+        logger.debug("Creating LinkedSubCategory '%s' (year: %d)", sub_category.name, linked_category.category_set.visum.camp.year.year)
 
         linked_sub_category = LinkedSubCategory()
 

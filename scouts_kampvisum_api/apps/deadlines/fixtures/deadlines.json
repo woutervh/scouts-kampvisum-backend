@@ -7,7 +7,9 @@
             "description": "Informeer naar lokale wetgeving en regels.",
             "explanation": "Registreerde je je kamp na de deadline? Laat de gemeente dan ook weten waar en wanneer je op kamp gaat.",
             "is_important": false,
-            "camp_year": [ 2023 ],
+            "camp_year": [
+                2023
+            ],
             "due_date": {
                 "date_day": 31,
                 "date_month": 5
@@ -39,7 +41,9 @@
             "description": "Organiseer het vervoer",
             "explanation": "Organiseer het vervoer van en naar de kampplaats",
             "is_important": false,
-            "camp_year": [ 2023 ],
+            "camp_year": [
+                2023
+            ],
             "due_date": {
                 "date_month": 6
             },
@@ -52,7 +56,7 @@
                         "logistics_transport",
                         [
                             "logistics",
-                            2022
+                            2023
                         ]
                     ]
                 }

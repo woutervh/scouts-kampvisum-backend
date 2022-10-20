@@ -67,7 +67,7 @@ class SubCategoryManager(models.Manager):
         return None
 
     def get_by_natural_key(self, name, category):
-        logger.trace(
+        logger.debug(
             "GET BY NATURAL KEY %s: (name: %s (%s), category: %s (%s))",
             "SubCategory",
             name,

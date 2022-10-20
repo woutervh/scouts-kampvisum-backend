@@ -32,10 +32,10 @@ class LinkedCheckCRUDService:
         )
 
         logger.debug(
-            "Linking %d checks to sub-category %s (%s)",
+            "Linking %d checks to linked sub-category %s (%s)",
             len(checks),
-            linked_sub_category.id,
             linked_sub_category.parent.name,
+            linked_sub_category.id,
         )
 
         for check in checks:

@@ -92,8 +92,9 @@ class LinkedDeadlineService:
             )
 
         logger.debug(
-            "Creating a %s instance for visum with id %s, with name %s",
+            "Creating a %s instance for visum %s (%s), with name %s",
             "LinkedDeadline",
+            visum.camp.name,
             visum.id,
             instance.parent.name,
         )

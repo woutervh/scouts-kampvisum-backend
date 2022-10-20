@@ -70,6 +70,8 @@ class LinkedSubCategoryManager(models.Manager):
                 pass
 
         if parent and visum:
+            logger.debug(f"PARENT: {parent.id}")
+            logger.debug(f"VISUM: {visum}")
             try:
                 return self.get_queryset().get(
                     parent__id=parent.id,
