@@ -189,7 +189,6 @@ class DeadlineService:
         if year:
             year = year
         else:
-            camp_year_service = CampYearService()
-            year = camp_year_service.get_date_in_camp_year(month=month, day=day)
+            year = ScoutsTemporalDetails.get_date_in_camp_year(month=month, day=day).year
 
         return datetime.datetime(year, month, day).date()
