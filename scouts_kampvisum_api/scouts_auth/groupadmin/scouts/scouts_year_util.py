@@ -62,12 +62,15 @@ class ScoutsTemporalDetails:
             ScoutsTemporalDetails.get_end_of_camp_year(date),
         )
     
-    def get_date_in_camp_year(self, month, day):
+    @staticmethod
+    def get_date_in_camp_year(month, day):
         """Returns the correct date in the current camp year for an abstract date with only a month and a day"""
         (
             start_date,
             end_date,
-        ) = ScoutsTemporalDetails.get_start_and_end_date_of_camp_year(date)
+        ) = ScoutsTemporalDetails.get_start_and_end_date_of_camp_year(datetime.datetime(datetime.datetime.now().year, month, day).date())
 
-        if start_date.month < month:
-            return 
+        if start_date.month <= month:
+            return datetime.date(start_date.year, month, day)
+        else:
+            return datetime.date(end_date.year, month, day)
