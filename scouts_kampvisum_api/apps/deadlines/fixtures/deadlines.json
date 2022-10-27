@@ -12,7 +12,8 @@
             ],
             "due_date": {
                 "date_day": 31,
-                "date_month": 5
+                "date_month": 5,
+                "date_year": 2023
             },
             "camp_types": [
                 "basis"
@@ -45,7 +46,9 @@
                 2023
             ],
             "due_date": {
-                "date_month": 6
+                "date_day": 31,
+                "date_month": 6,
+                "date_year": 2023
             },
             "camp_types": [
                 "basis"
