@@ -21,6 +21,7 @@ from scouts_auth.auth.permissions import CustomDjangoPermission
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
+from scouts_auth.groupadmin.settings import GroupadminSettings
 
 # LOGGING
 import logging
@@ -70,7 +71,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         group_admin_id = self.request.query_params.get("group", None)
         # if no group filter then check if user is in X1027G to show all locations
         if group_admin_id is None:
-            group_admin_id = "X1027G"
+            group_admin_id = GroupAdminSettings.get_personnel_group()
         scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
             group_admin_id=group_admin_id, raise_error=True
         )
