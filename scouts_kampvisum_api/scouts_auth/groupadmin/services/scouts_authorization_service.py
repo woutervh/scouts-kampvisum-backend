@@ -196,3 +196,24 @@ class ScoutsAuthorizationService(AuthorizationService):
         )
 
         return user
+
+    def get_active_leader_functions(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
+        leader_functions: List[AbstractScoutsFunction()] = []
+        functions: List[AbstractScoutsFunction] = self.service.get_functions(active_user=user).functions
+        now = pytz.utc.localize(datetime.now())
+
+        for user_function in user.functions:
+            function_end = user_function.end
+            # if function_end and (not hasattr(function_end, "tzinfo") or function_end.tzinfo is None or function_end.tzinfo.utcoffset(function_end) is None):
+            #     function_end = pytz.utc.localize(value)
+
+            if function_end is None or function_end >= now:
+                for function in functions:
+                    if function.group_admin_id == user_function.group_admin_id or function.group_admin_id == user_function.function:
+                        for grouping in function.groupings:
+                            if grouping.name == SettingsHelper.get_section_leader_identifier():
+                                leader_functions.append(user_function)
+                                # if user_function.group_admin_id not in [f.group_admin_id for f in leader_functions]:
+                                #     leader_functions.append(user_function)
+
+        return leader_functions

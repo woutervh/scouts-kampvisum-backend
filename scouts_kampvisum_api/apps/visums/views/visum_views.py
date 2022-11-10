@@ -37,8 +37,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     camp_visum_service = CampVisumService()
     authorization_service = ScoutsAuthorizationService()
 
-    def check_user_allowed(self, request, instance: CampVisum):
-        group = instance.group
+    def check_user_allowed(self, request, group):
         # This should probably be handled by a rest call when changing groups in the frontend,
         # but adding it here avoids the need for changes to the frontend
         self.authorization_service.update_user_authorizations(
@@ -110,7 +109,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         # HACKETY HACK
         # This should probably be handled by a rest call when changing groups in the frontend,
         # but adding it here avoids the need for changes to the frontend
-        self.check_user_allowed(request, instance)
+        self.check_user_allowed(request, instance.group)
         serializer = CampVisumSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
@@ -121,7 +120,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     )
     def partial_update(self, request, pk=None):
         instance = self.get_object()
-        self.check_user_allowed(request, instance)
+        self.check_user_allowed(request, instance.group)
 
         logger.debug("CAMP VISUM UPDATE REQUEST DATA: %s", request.data)
 
@@ -157,9 +156,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
             group_admin_id=group_admin_id, raise_error=True
         )
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=scouts_group
-        )
+        self.check_user_allowed(request, scouts_group)
 
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
