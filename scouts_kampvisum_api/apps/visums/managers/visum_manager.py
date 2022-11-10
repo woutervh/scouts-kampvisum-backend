@@ -5,6 +5,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
+from scouts_auth.groupadmin.settings import GroupadminSettings
 
 
 # LOGGING
@@ -19,11 +20,12 @@ class CampVisumQuerySet(models.QuerySet):
         super().__init__(*args, **kwargs)
 
     def allowed(self, user: settings.AUTH_USER_MODEL):
-        leader_functions: List[ScoutsFunction] = list(
-            ScoutsFunction.objects.get_leader_functions(user=user)
-        )
+        from scouts_auth.groupadmin.services import ScoutsAuthorizationService
+        service = ScoutsAuthorizationService()
 
-        group_admin_ids = []
+        leader_functions: List[ScoutsFunction] = service.get_active_leader_functions(user)
+
+        group_admin_ids = GroupAdminSettings.get_administrator_groups()
         for leader_function in leader_functions:
             for group in leader_function.scouts_groups.all():
                 group_admin_ids.append(group.group_admin_id)
