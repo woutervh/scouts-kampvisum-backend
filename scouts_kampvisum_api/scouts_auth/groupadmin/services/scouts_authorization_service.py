@@ -66,7 +66,8 @@ class ScoutsAuthorizationService(AuthorizationService):
     def load_user_scouts_groups(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
-        logger.debug("SCOUTS AUTHORIZATION SERVICE: loading user groups", user=user)
+        logger.debug(
+            "SCOUTS AUTHORIZATION SERVICE: loading user groups", user=user)
         user = self.scouts_group_service.create_or_update_scouts_groups_for_user(
             user=user
         )
@@ -99,7 +100,7 @@ class ScoutsAuthorizationService(AuthorizationService):
 
             if not allowed:
                 raise PermissionDenied()
-            
+
             if user.has_role_district_commissioner(group=scouts_group):
                 user = self.add_user_to_group(
                     user,
@@ -139,7 +140,7 @@ class ScoutsAuthorizationService(AuthorizationService):
                     user,
                     ScoutsAuthorizationService.SECTION_LEADER,
                     scouts_group=scouts_group,
-            )
+                )
         if GroupadminSettings.is_debug():
             test_groups = GroupadminSettings.get_test_groups()
             if any(group in user.get_group_names() for group in test_groups):
@@ -199,7 +200,8 @@ class ScoutsAuthorizationService(AuthorizationService):
 
     def get_active_leader_functions(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
         leader_functions: List[AbstractScoutsFunction()] = []
-        functions: List[AbstractScoutsFunction] = self.service.get_functions(active_user=user).functions
+        functions: List[AbstractScoutsFunction] = self.service.get_functions(
+            active_user=user).functions
         now = pytz.utc.localize(datetime.now())
 
         for user_function in user.functions:
