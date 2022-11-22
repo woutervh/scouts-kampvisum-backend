@@ -32,14 +32,16 @@ class DeadlineItemService:
         results = []
         for item in items:
             results.append(
-                self.create_or_update_deadline_item(request, deadline=deadline, **item)
+                self.create_or_update_deadline_item(
+                    request, deadline=deadline, **item)
             )
 
         return results
 
     @transaction.atomic
     def create_or_update_deadline_item(self, request, deadline, **item) -> DeadlineItem:
-        instance = DeadlineItem.objects.safe_get(deadline=deadline, raise_error=True, **item)
+        instance = DeadlineItem.objects.safe_get(
+            deadline=deadline, raise_error=False, **item)
 
         if instance:
             instance: DeadlineItem = self.update_deadline_item(
@@ -88,7 +90,8 @@ class DeadlineItemService:
             instance.item_check = item_check
         elif flag:
             instance.deadline_item_type = DeadlineItemType.DEADLINE
-            instance.item_flag = self.deadline_flag_service.get_or_create_flag(**flag)
+            instance.item_flag = self.deadline_flag_service.get_or_create_flag(
+                **flag)
         else:
             raise ValidationError(
                 "A DeadlineItem needs to be linked to a DeadlineFlag, a SubCategory or a Check instance"
@@ -130,7 +133,8 @@ class DeadlineItemService:
             instance.item_check = None
 
             instance.deadline_item_type = DeadlineItemType.DEADLINE
-            instance.item_flag = self.deadline_flag_service.get_or_create_flag(**flag)
+            instance.item_flag = self.deadline_flag_service.get_or_create_flag(
+                **flag)
         else:
             raise ValidationError(
                 "A DeadlineItem needs to be linked to a DeadlineFlag, a SubCategory or a Check instance"
