@@ -10,7 +10,7 @@ from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.filters import PersistedFileFilter
 from scouts_auth.inuits.services import PersistedFileService
-from scouts_auth.inuits.serializers import PersistedFileSerializer
+from scouts_auth.inuits.serializers import PersistedFileSerializer, PersistedFileDetailedSerializer
 
 # LOGGING
 import logging
@@ -41,6 +41,7 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         self.authorization_service.update_user_authorizations(
             user=request.user, scouts_group=group
         )
+
     @swagger_auto_schema(
         request_body=PersistedFileSerializer,
         responses={status.HTTP_201_CREATED: PersistedFileSerializer},
@@ -56,7 +57,8 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
-        logger.debug("PERSISTED FILE CREATE VALIDATED DATA: %s", validated_data)
+        logger.debug("PERSISTED FILE CREATE VALIDATED DATA: %s",
+                     validated_data)
 
         instance = self.persisted_file_service.save(request, validated_data)
 
@@ -75,7 +77,8 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         instance = self.get_object()
         for check in instance.checks.all():
             self.check_user_allowed(request, check)
-        serializer = PersistedFileSerializer(instance, context={"request": request})
+        serializer = PersistedFileDetailedSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -101,7 +104,8 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("PERSISTED FILE UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug("PERSISTED FILE UPDATE VALIDATED DATA: %s",
+                     validated_data)
 
         updated_instance = self.persisted_file_service.update(
             request, instance=instance, **validated_data
@@ -120,7 +124,8 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         """
         Deletes a PersistedFile instance.
         """
-        instance: PersistedFile = get_object_or_404(PersistedFile.objects, pk=pk)
+        instance: PersistedFile = get_object_or_404(
+            PersistedFile.objects, pk=pk)
         for check in instance.checks.all():
             self.check_user_allowed(request, check)
         logger.debug(

@@ -102,6 +102,8 @@ class ScoutsAuthorizationService(AuthorizationService):
                 allowed = True
 
             if not allowed:
+                logger.warn("Not allowed to retrieve data for group %s",
+                            scouts_group.group_admin_id, user=user)
                 raise PermissionDenied()
 
             if user.has_role_district_commissioner(group=scouts_group):

@@ -120,6 +120,9 @@ class GroupAdmin:
                     "404 GET - Unable to get data from endpoint {}".format(
                         endpoint)
                 )
+            # elif error.response.status_code == 401:
+            #     raise Http404(
+            #         "401 GET - Not authorized to get data from endpoint {}".format(endpoint))
             raise error
 
         return response.json()
@@ -296,7 +299,7 @@ class GroupAdmin:
 
         json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_functions", url)
+        logger.info("GA CALL: %s (%s)", "get_function_descriptions", url)
         logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -333,7 +336,8 @@ class GroupAdmin:
         url = self.url_function.format(function_id)
         json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_function", url)
+        logger.info("GA CALL: %s (%s) for id %s",
+                    "get_function", url, function_id)
         logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data

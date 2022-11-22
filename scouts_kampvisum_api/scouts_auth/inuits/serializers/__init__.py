@@ -22,4 +22,4 @@ from .inuits_personal_details_serializer import InuitsPersonalDetailsSerializer
 from .inuits_country_serializer import InuitsCountrySerializer
 from .inuits_address_serializer import InuitsAddressSerializer
 from .inuits_person_serializer import InuitsPersonSerializer
-from .persisted_file_serializer import PersistedFileSerializer
+from .persisted_file_serializer import PersistedFileSerializer, PersistedFileDetailedSerializer

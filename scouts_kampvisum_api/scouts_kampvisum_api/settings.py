@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-import os, logging, logging.config
+from scouts_auth.inuits.logging import InuitsLogger
+import os
+import logging
+import logging.config
 from environs import Env
 
 # ############################################################################ #
@@ -27,7 +30,8 @@ env.read_env()
 # Set it to 'development' or 'production' and define the appropriate variables
 # in .env.development and .env.production
 # Default: development
-environments = [".env.development.local", ".env.development", ".env.production"]
+environments = [".env.development.local",
+                ".env.development", ".env.production"]
 
 environment_conf = env.str("ENVIRONMENT", default="development")
 environment_loaded = False
@@ -165,7 +169,6 @@ LOGGING = {
     },
 }
 
-from scouts_auth.inuits.logging import InuitsLogger
 
 InuitsLogger.setup_logging(config=LOGGING)
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -359,12 +362,14 @@ CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "09-01")
 # Deadline for the camp registration - FORMAT: MM-DD
 CAMP_REGISTRATION_DEADLINE = env.str("CAMP_REGISTRATION_DEADLINE", "04-15")
 # Day after which a mail should be sent if the camp responsible has changed - FORMAT: MM-DD
-RESPONSIBILITY_EPOCH = env.str("RESPONSIBILITY_EPOCH", CAMP_REGISTRATION_DEADLINE)
+RESPONSIBILITY_EPOCH = env.str(
+    "RESPONSIBILITY_EPOCH", CAMP_REGISTRATION_DEADLINE)
 # Camp registration mails should be sent only once during this period (in hours)
 CAMP_REGISTRATION_MAIL_DELTA = env.int("CAMP_REGISTRATION_MAIL_DELTA", 24)
 ENFORCE_MEMBER_CHECKS = env.list(
     "ENFORCE_MEMBER_CHECKS",
-    ["ParticipantMemberCheck", "ParticipantLeaderCheck", "ParticipantResponsibleCheck"],
+    ["ParticipantMemberCheck", "ParticipantLeaderCheck",
+        "ParticipantResponsibleCheck"],
 )
 PROFILE_REFRESH = env.int("PROFILE_REFRESH", 15)
 PROFILE_REFRESH_GROUPS = env.int("PROFILE_REFRESH_GROUPS", 15)
@@ -385,9 +390,11 @@ CAMP_RESPONSIBLE_MIN_AGE = env.int("CAMP_RESPONSIBLE_MIN_AGE", 16)
 #                                                                              #
 # ############################################################################ #
 DEFAULT_PAGINATION_RESULTS = env.int("DEFAULT_PAGINATION_RESULTS", 10)
-DEFAULT_PAGINATION_MAX_RESULTS = env.int("DEFAULT_PAGINATION_MAX_RESULTS", 1000)
+DEFAULT_PAGINATION_MAX_RESULTS = env.int(
+    "DEFAULT_PAGINATION_MAX_RESULTS", 1000)
 PARTICIPANT_PAGINATION_RESULTS = env.int("PARTICIPANT_PAGINATION_RESULTS", 20)
-PARTICIPANT_PAGINATION_MAX_RESULTS = env.int("PARTICIPANT_PAGINATION_MAX_RESULTS", 1000)
+PARTICIPANT_PAGINATION_MAX_RESULTS = env.int(
+    "PARTICIPANT_PAGINATION_MAX_RESULTS", 1000)
 
 
 # ############################################################################ #
@@ -401,7 +408,8 @@ GROUP_ADMIN_PROFILE_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid/profiel"
 GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/zoeken"
 GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid"
 GROUP_ADMIN_MEMBER_LIST_ENDPOINT = GROUP_ADMIN_BASE_URL + "/ledenlijst"
-GROUP_ADMIN_MEMBER_LIST_FILTERED_ENDPOINT = GROUP_ADMIN_BASE_URL + "/ledenlijst/filter/stateless"
+GROUP_ADMIN_MEMBER_LIST_FILTERED_ENDPOINT = GROUP_ADMIN_BASE_URL + \
+    "/ledenlijst/filter/stateless"
 GROUP_ADMIN_GROUP_ENDPOINT = GROUP_ADMIN_BASE_URL + "/groep"
 GROUP_ADMIN_FUNCTIONS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/functie"
 
@@ -468,7 +476,8 @@ if USE_S3_STORAGE:
 
 # EMAIL RESOURCES
 RESOURCES_PATH = env.str("RESOURCES_PATH")
-RESOURCES_MAIL_TEMPLATE_PATH = RESOURCES_PATH + env.str("RESOURCES_MAIL_TEMPLATE_PATH")
+RESOURCES_MAIL_TEMPLATE_PATH = RESOURCES_PATH + \
+    env.str("RESOURCES_MAIL_TEMPLATE_PATH")
 RESOURCES_MAIL_TEMPLATE_START = RESOURCES_MAIL_TEMPLATE_PATH + env.str(
     "RESOURCES_MAIL_TEMPLATE_START"
 )
@@ -492,6 +501,8 @@ RESOURCES_TEMPLATE_CAMP_RESPONSIBLE_CHANGED_AFTER_DEADLINE = (
 EMAIL_DEBUG_RECIPIENT = env.str("EMAIL_DEBUG_RECIPIENT")
 # We are going to use anymail which maps multiple providers like sendinblue with default django mailing code
 # For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
+
+
 def setup_mail():
     global USE_SENDINBLUE
     global EMAIL_BACKEND
@@ -527,7 +538,8 @@ EMAIL_FROM = env.str("EMAIL_FROM", "kamp@scoutsengidsenvlaanderen.be")
 EMAIL_REGISTRATION_BCC = env.str(
     "EMAIL_REGISTRATION_BCC", "bosaanvragen@scoutsengidsenvlaanderen.be"
 )
-EMAIL_REGISTRATION_SUBJECT = env.str("EMAIL_REGISTRATION_SUBJECT", "Kampregistratie {}")
+EMAIL_REGISTRATION_SUBJECT = env.str(
+    "EMAIL_REGISTRATION_SUBJECT", "Kampregistratie {}")
 EMAIL_REGISTRATION_CHANGED_SUBJECT = env.str(
     "EMAIL_REGISTRATION_CHANGED_SUBJECT", "Je kampregistratie werd aangepast - {}"
 )
@@ -594,11 +606,13 @@ OIDC_OP_AUTHORIZATION_ENDPOINT = correct_url(
 # URL of your OpenID Connect provider token endpoint
 # REQUIRED
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_OP_TOKEN_ENDPOINT
-OIDC_OP_TOKEN_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_TOKEN_ENDPOINT"))
+OIDC_OP_TOKEN_ENDPOINT = correct_url(
+    OIDC_OP_ISSUER, env.str("OIDC_OP_TOKEN_ENDPOINT"))
 # URL of your OpenID Connect provider userinfo endpoint
 # REQUIRED
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_OP_USER_ENDPOINT
-OIDC_OP_USER_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_USER_ENDPOINT"))
+OIDC_OP_USER_ENDPOINT = correct_url(
+    OIDC_OP_ISSUER, env.str("OIDC_OP_USER_ENDPOINT"))
 # OpenID Connect client ID provided by your OP
 # REQUIRED
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_RP_CLIENT_ID
@@ -748,4 +762,5 @@ OIDC_DRF_AUTH_BACKEND = (
 # If both specified, the key takes precedence.
 # REQUIRED IF OIDC_RP_IDP_SIGN_KEY IS NOT SET
 # https://mozilla-django-oidc.readthedocs.io/en/stable/installation.html
-OIDC_OP_JWKS_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOINT"))
+OIDC_OP_JWKS_ENDPOINT = correct_url(
+    OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOINT"))
