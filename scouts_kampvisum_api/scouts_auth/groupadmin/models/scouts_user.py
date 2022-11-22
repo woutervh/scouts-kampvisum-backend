@@ -18,7 +18,7 @@ from scouts_auth.groupadmin.models import (
     ScoutsGroup,
     # ScoutsFunction,
 )
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.models import Gender
 from scouts_auth.inuits.models.fields import (
@@ -108,11 +108,15 @@ class ScoutsUser(User):
     #
     # Convenience fields to avoid a profile call to groupadmin at every authentication event.
     #
-    last_authenticated: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
-    last_refreshed: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
+    last_authenticated: datetime = TimezoneAwareDateTimeField(
+        blank=True, null=True)
+    last_refreshed: datetime = TimezoneAwareDateTimeField(
+        blank=True, null=True)
     last_updated: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
-    last_updated_groups: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
-    last_updated_functions: datetime = TimezoneAwareDateTimeField(blank=True, null=True)
+    last_updated_groups: datetime = TimezoneAwareDateTimeField(
+        blank=True, null=True)
+    last_updated_functions: datetime = TimezoneAwareDateTimeField(
+        blank=True, null=True)
 
     #
     # Fields inherited from scouts_auth.auth.models.User that may need to be updated after a call to groupadmin
@@ -243,7 +247,7 @@ class ScoutsUser(User):
         """
         if any(
             name in self.get_group_names()
-            for name in GroupadminSettings.get_administrator_groups()
+            for name in GroupAdminSettings.get_administrator_groups()
         ):
             self.is_administrator = True
         return self.is_administrator
@@ -263,13 +267,16 @@ class ScoutsUser(User):
             self.membership_number,
             self.customer_number,
             self.birth_date,
-            ", ".join(group.group_admin_id for group in self.persisted_scouts_groups)
+            ", ".join(
+                group.group_admin_id for group in self.persisted_scouts_groups)
             if self.scouts_groups
             else "[]",
-            ", ".join(address.to_descriptive_string() for address in self.addresses)
+            ", ".join(address.to_descriptive_string()
+                      for address in self.addresses)
             if self.addresses
             else "[]",
-            ", ".join(function.to_descriptive_string() for function in self.functions)
+            ", ".join(function.to_descriptive_string()
+                      for function in self.functions)
             if self.functions
             else "[]",
             ", ".join(
@@ -284,7 +291,8 @@ class ScoutsUser(User):
             )
             if self.group_specific_fields
             else "[]",
-            ", ".join(str(link) for link in self.links) if self.links else "[]",
+            ", ".join(str(link)
+                      for link in self.links) if self.links else "[]",
         )
 
     def to_descriptive_string(self):
@@ -293,7 +301,8 @@ class ScoutsUser(User):
             ScoutsGroup
         ] = self.get_district_commissioner_groups()
         group_leader_groups: List[ScoutsGroup] = self.get_group_leader_groups()
-        section_leader_groups: List[ScoutsGroup] = self.get_section_leader_groups()
+        section_leader_groups: List[ScoutsGroup] = self.get_section_leader_groups(
+        )
 
         return (
             "\n------------------------------------------------------------------------------------------------------------------------\n"
@@ -349,7 +358,8 @@ class ScoutsUser(User):
             "customer_number",
             self.customer_number,
             "addresses",
-            " || ".join(address.to_descriptive_string() for address in self.addresses),
+            " || ".join(address.to_descriptive_string()
+                        for address in self.addresses),
             "functions",
             # " || ".join(
             #     function.to_descriptive_string() for function in self.functions
@@ -360,7 +370,8 @@ class ScoutsUser(User):
             if len(self.get_all_permissions()) > 0
             else "None",
             "AUTH GROUPS",
-            ", ".join(group.name for group in groups) if len(groups) > 0 else "None",
+            ", ".join(group.name for group in groups) if len(
+                groups) > 0 else "None",
             "SCOUTS GROUPS",
             ", ".join(
                 group.group_admin_id for group in self.persisted_scouts_groups.all()
@@ -368,7 +379,8 @@ class ScoutsUser(User):
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
             "DISTRICT COMMISSIONER",
-            ", ".join(group.group_admin_id for group in district_commissioner_groups)
+            ", ".join(
+                group.group_admin_id for group in district_commissioner_groups)
             if len(district_commissioner_groups) > 0
             else "None",
             "GROUP LEADER",

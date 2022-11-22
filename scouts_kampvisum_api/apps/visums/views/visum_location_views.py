@@ -21,7 +21,7 @@ from scouts_auth.auth.permissions import CustomDjangoPermission
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 # LOGGING
 import logging
@@ -52,14 +52,19 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         current_permissions = super().get_permissions()
 
         if self.action == "retrieve":
-            current_permissions.append(CustomDjangoPermission("visums.view_visum"))
+            current_permissions.append(
+                CustomDjangoPermission("visums.view_visum"))
         if self.action == "create":
-            current_permissions.append(CustomDjangoPermission("visums.edit_visum"))
+            current_permissions.append(
+                CustomDjangoPermission("visums.edit_visum"))
         if self.action == "update" or self.action == "partial_update":
-            current_permissions.append(CustomDjangoPermission("visums.edit_visum"))
+            current_permissions.append(
+                CustomDjangoPermission("visums.edit_visum"))
         if self.action == "list":
-            current_permissions.append(CustomDjangoPermission("visums.list_visum"))
-            current_permissions.append(CustomDjangoPermission("visums.view_camp_locations"))
+            current_permissions.append(
+                CustomDjangoPermission("visums.list_visum"))
+            current_permissions.append(
+                CustomDjangoPermission("visums.view_camp_locations"))
 
         return current_permissions
 
@@ -120,8 +125,10 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
                                     ).data
                                     location["visum_id"] = campvisum.id
                                     location["name"] = linked_location.name
-                                    location["camp"] = CampMinimalSerializer(campvisum.camp, many=False).data
-                                    location["camp"]["group"] = ScoutsGroupSerializer(campvisum.group, many=False).data
+                                    location["camp"] = CampMinimalSerializer(
+                                        campvisum.camp, many=False).data
+                                    location["camp"]["group"] = ScoutsGroupSerializer(
+                                        campvisum.group, many=False).data
                                     locations.append(location)
 
         return Response(locations)

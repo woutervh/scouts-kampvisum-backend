@@ -21,7 +21,7 @@ from apps.visums.models import LinkedCheck, LinkedParticipantCheck
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 
 # LOGGING
@@ -53,14 +53,16 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     )
     def create(self, request):
         # logger.debug("PARTICIPANT CREATE REQUEST DATA: %s", request.data)
-        AuthenticationHelper.has_rights_for_group(request.user, request.data["group_group_admin_id"])
+        AuthenticationHelper.has_rights_for_group(
+            request.user, request.data["group_group_admin_id"])
         input_serializer = InuitsParticipantSerializer(
             data=request.data, context={"request": request}
         )
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
-        logger.debug("PARTICIPANT CREATE VALIDATED REQUEST DATA: %s", validated_data)
+        logger.debug(
+            "PARTICIPANT CREATE VALIDATED REQUEST DATA: %s", validated_data)
 
         participant = self.participant_service.create_or_update_participant(
             participant=validated_data, user=request.user
@@ -95,11 +97,14 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: InuitsParticipantSerializer},
     )
     def partial_update(self, request, pk=None):
-        AuthenticationHelper.has_rights_for_group(request.user, request.data["group_group_admin_id"])
-        AuthenticationHelper.has_rights_for_group(request.user, self.get_object().group_group_admin_id)
+        AuthenticationHelper.has_rights_for_group(
+            request.user, request.data["group_group_admin_id"])
+        AuthenticationHelper.has_rights_for_group(
+            request.user, self.get_object().group_group_admin_id)
         participant = self.get_object()
         logger.debug("PARTICIPANT: %s", self.get_object())
-        logger.debug("PARTICIPANT PARTIAL UPDATE REQUEST DATA: %s", request.data)
+        logger.debug(
+            "PARTICIPANT PARTIAL UPDATE REQUEST DATA: %s", request.data)
         serializer = InuitsParticipantSerializer(
             instance=participant,
             data=request.data,
@@ -109,7 +114,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("PARTICIPANT PARTIAL UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug(
+            "PARTICIPANT PARTIAL UPDATE VALIDATED DATA: %s", validated_data)
 
         participant = self.participant_service.update(
             participant=participant,
@@ -125,7 +131,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def list(self, request):
         return self._list(
             request=request,
-            include_inactive=GroupadminSettings.include_inactive_members_in_search(),
+            include_inactive=GroupAdminSettings.include_inactive_members_in_search(),
         )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
@@ -133,7 +139,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         queryset = self.get_queryset()
         participants = self.filter_queryset(queryset)
 
-        output_serializer = InuitsParticipantSerializer(participants, many=True)
+        output_serializer = InuitsParticipantSerializer(
+            participants, many=True)
 
         return Response(output_serializer.data)
 
@@ -146,7 +153,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         return self._list(request=request, only_scouts_members=True, all_members=True)
 
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False, all_members=False):
-        AuthenticationHelper.has_rights_for_group(request.user, self.request.GET.get("group", None))
+        AuthenticationHelper.has_rights_for_group(
+            request.user, self.request.GET.get("group", None))
 
         check = self.request.GET.get("check", None)
         search_term = self.request.GET.get("term", None)
@@ -214,14 +222,15 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             elif ParticipantType.is_adult(participant_type):
                 presets["leader"] = True
                 presets["include_inactive"] = True
-                presets["min_age"] = GroupadminSettings.get_camp_responsible_min_age()
+                presets["min_age"] = GroupAdminSettings.get_camp_responsible_min_age()
 
             if presets.get("active_leader", False) and not group_group_admin_id:
                 raise ValidationError(
                     "Can only search for active leaders in a group, no group admin id given"
                 )
 
-            include_inactive = presets.get("include_inactive", include_inactive)
+            include_inactive = presets.get(
+                "include_inactive", include_inactive)
             only_scouts_members = presets.get(
                 "only_scouts_members", only_scouts_members
             )

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 
 # LOGGING
@@ -106,14 +106,15 @@ class ChangeHandlerService:
         ):
             # Set the visum as signable if all required checks are completed
             if not visum.is_signable():
-                logger.debug("Setting CampVisum %s (%s) to state SIGNABLE", visum.camp.name, visum.id)
+                logger.debug(
+                    "Setting CampVisum %s (%s) to state SIGNABLE", visum.camp.name, visum.id)
                 from apps.visums.models.enums import CampVisumState
-                
+
                 visum.state = CampVisumState.SIGNABLE
-                
+
                 visum.full_clean()
                 visum.save()
-            
+
             from apps.visums.services import InuitsVisumMailService
 
             if not now:
@@ -132,7 +133,8 @@ class ChangeHandlerService:
                 now=now,
             )
         else:
-            logger.debug("CAMP REGISTRATION DEADLINE not complete - Not sending mail")
+            logger.debug(
+                "CAMP REGISTRATION DEADLINE not complete - Not sending mail")
 
         return False
 
@@ -146,10 +148,12 @@ class ChangeHandlerService:
         state = serializer_data.get("category_set").get("state")
 
         if CheckState.is_checked_or_irrelevant(state=state):
-            logger.debug("Setting CampVisum %s (%s) to state SIGNABLE (category set state: %s)", visum.camp.name, visum.id, state)
+            logger.debug("Setting CampVisum %s (%s) to state SIGNABLE (category set state: %s)",
+                         visum.camp.name, visum.id, state)
             visum.state = CampVisumState.SIGNABLE
         else:
-            logger.debug("Setting CampVisum %s (%s) to state DATA_REQUIRED (category set state: %s)", visum.camp.name, visum.id, state)
+            logger.debug("Setting CampVisum %s (%s) to state DATA_REQUIRED (category set state: %s)",
+                         visum.camp.name, visum.id, state)
             visum.state = CampVisumState.DATA_REQUIRED
 
         visum.full_clean()
@@ -160,7 +164,7 @@ class ChangeHandlerService:
         from apps.visums.services import InuitsVisumMailService
         from apps.deadlines.services import LinkedDeadlineService
 
-        epoch = GroupadminSettings.get_responsibility_epoch_date()
+        epoch = GroupAdminSettings.get_responsibility_epoch_date()
         now = timezone.now()
         visum = instance.sub_category.category.category_set.visum
 

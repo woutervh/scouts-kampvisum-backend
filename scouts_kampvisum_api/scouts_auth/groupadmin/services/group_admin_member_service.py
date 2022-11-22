@@ -11,7 +11,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsFunction,
 )
 from scouts_auth.groupadmin.services import GroupAdmin
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.models import GenderHelper
 
@@ -60,7 +60,7 @@ class GroupAdminMemberService(GroupAdmin):
 
         current_datetime: datetime = datetime.now()
         activity_epoch: date = self._calculate_activity_epoch_date(
-            current_datetime, GroupadminSettings.get_activity_epoch()
+            current_datetime, GroupAdminSettings.get_activity_epoch()
         )
         preset_min_age = presets.get("min_age", None)
         if not preset_min_age:
@@ -315,7 +315,7 @@ class GroupAdminMemberService(GroupAdmin):
                         for grouping in function_description.groupings:
                             if (
                                 grouping.name
-                                == GroupadminSettings.get_section_leader_identifier()
+                                == GroupAdminSettings.get_section_leader_identifier()
                             ):
                                 if member_function.end:
                                     function_activities.append((True, False))

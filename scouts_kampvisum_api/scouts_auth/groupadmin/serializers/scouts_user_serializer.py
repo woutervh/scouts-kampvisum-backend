@@ -3,7 +3,7 @@ from typing import List
 from rest_framework import serializers
 
 from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.utils import ListUtils
 
@@ -32,13 +32,12 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         groups = []
         admin_groups = []
 
-        for admin_group in GroupadminSettings.get_administrator_groups():
+        for admin_group in GroupAdminSettings.get_administrator_groups():
             safe_result = ScoutsGroup.objects.safe_get(
                 group_admin_id=admin_group, raise_error=False
             )
             if safe_result:
                 admin_groups.append(safe_result)
-
 
         for admin_group in admin_groups:
             if admin_group and obj.has_role_leader(group=admin_group):

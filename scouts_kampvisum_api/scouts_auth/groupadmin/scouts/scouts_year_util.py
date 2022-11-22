@@ -1,6 +1,6 @@
 import datetime
 
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 
 # LOGGING
@@ -34,7 +34,7 @@ class ScoutsTemporalDetails:
         if the current date is later than this limit date.
         The next camp year is assumed to start on the 1st of May.
         """
-        epoch = GroupadminSettings.get_camp_registration_epoch_date()
+        epoch = GroupAdminSettings.get_camp_registration_epoch_date()
         if date.month < epoch.month:
             return datetime.date(date.year - 1, 9, 1)
 
@@ -49,7 +49,7 @@ class ScoutsTemporalDetails:
         if the current date is later than this limit date.
         The next camp year is assumed to start on the 1st of May.
         """
-        epoch = GroupadminSettings.get_camp_registration_epoch_date()
+        epoch = GroupAdminSettings.get_camp_registration_epoch_date()
         if date.month >= epoch.month:
             return datetime.date(date.year + 1, 8, 31)
 
@@ -74,4 +74,3 @@ class ScoutsTemporalDetails:
             return datetime.date(start_date.year, month, day)
         else:
             return datetime.date(end_date.year, month, day)
-

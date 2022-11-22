@@ -1,5 +1,7 @@
+import pytz
 from lib2to3.pgen2.token import EQUAL
 from typing import List
+from datetime import datetime
 
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -10,6 +12,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsGroup,
     ScoutsGroup,
     AbstractScoutsFunction,
+    AbstractScoutsFunctionDescription,
     ScoutsFunction,
 )
 from scouts_auth.groupadmin.services import (
@@ -17,7 +20,7 @@ from scouts_auth.groupadmin.services import (
     ScoutsGroupService,
     ScoutsFunctionService,
 )
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.utils import GlobalSettingsUtil
 
@@ -141,8 +144,8 @@ class ScoutsAuthorizationService(AuthorizationService):
                     ScoutsAuthorizationService.SECTION_LEADER,
                     scouts_group=scouts_group,
                 )
-        if GroupadminSettings.is_debug():
-            test_groups = GroupadminSettings.get_test_groups()
+        if GroupAdminSettings.is_debug():
+            test_groups = GroupAdminSettings.get_test_groups()
             if any(group in user.get_group_names() for group in test_groups):
                 logger.debug(
                     "User %s is member of a test group and DEBUG is set to True, adding user as administrator",
@@ -198,10 +201,10 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         return user
 
-    def get_active_leader_functions(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
+    def get_active_leader_functions(self, user: settings.AUTH_USER_MODEL) -> List[AbstractScoutsFunction]:
         leader_functions: List[AbstractScoutsFunction()] = []
-        functions: List[AbstractScoutsFunction] = self.service.get_functions(
-            active_user=user).functions
+        function_descriptions: List[AbstractScoutsFunctionDescription] = self.service.get_function_descriptions(
+            active_user=user).function_descriptions
         now = pytz.utc.localize(datetime.now())
 
         for user_function in user.functions:
@@ -210,10 +213,10 @@ class ScoutsAuthorizationService(AuthorizationService):
             #     function_end = pytz.utc.localize(value)
 
             if function_end is None or function_end >= now:
-                for function in functions:
-                    if function.group_admin_id == user_function.group_admin_id or function.group_admin_id == user_function.function:
-                        for grouping in function.groupings:
-                            if grouping.name == SettingsHelper.get_section_leader_identifier():
+                for function_description in function_descriptions:
+                    if function_description.group_admin_id == user_function.group_admin_id or function_description.group_admin_id == user_function.function:
+                        for grouping in function_description.groupings:
+                            if grouping.name == GroupAdminSettings.get_section_leader_identifier():
                                 leader_functions.append(user_function)
                                 # if user_function.group_admin_id not in [f.group_admin_id for f in leader_functions]:
                                 #     leader_functions.append(user_function)

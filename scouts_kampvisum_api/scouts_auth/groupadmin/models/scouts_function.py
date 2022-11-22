@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 
 from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsUser
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import (
@@ -74,7 +74,7 @@ class ScoutsFunctionManager(models.Manager):
         return (
             self.get_queryset()
             .filter(
-                name__iexact=GroupadminSettings.get_section_leader_identifier(),
+                name__iexact=GroupAdminSettings.get_section_leader_identifier(),
                 user=user,
             )
             .all()
@@ -126,7 +126,7 @@ class ScoutsFunction(AuditedBaseModel):
     def is_leader(self, scouts_group: ScoutsGroup = None) -> bool:
         if (
             self.name.lower()
-            == GroupadminSettings.get_section_leader_identifier().lower()
+            == GroupAdminSettings.get_section_leader_identifier().lower()
         ):
             if scouts_group:
                 return scouts_group in self.scouts_groups.all()

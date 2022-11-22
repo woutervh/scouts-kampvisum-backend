@@ -4,8 +4,8 @@ from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
-from scouts_auth.groupadmin.settings import GroupadminSettings
+from scouts_auth.groupadmin.models import AbstractScoutsFunction, ScoutsGroup
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 
 # LOGGING
@@ -23,23 +23,25 @@ class CampVisumQuerySet(models.QuerySet):
         from scouts_auth.groupadmin.services import ScoutsAuthorizationService
         service = ScoutsAuthorizationService()
 
-        leader_functions: List[ScoutsFunction] = service.get_active_leader_functions(user)
+        leader_functions: List[AbstractScoutsFunction] = service.get_active_leader_functions(
+            user)
 
         group_admin_ids = GroupAdminSettings.get_administrator_groups()
         for leader_function in leader_functions:
-            for group in leader_function.scouts_groups.all():
-                group_admin_ids.append(group.group_admin_id)
 
-                if user.has_role_district_commissioner():
-                    underlyingGroups: List[ScoutsGroup] = list(
-                        ScoutsGroup.objects.get_groups_with_parent(
-                            parent_group_admin_id=group.group_admin_id
-                        )
+            group_admin_ids.append(leader_function.scouts_group)
+
+            if user.has_role_district_commissioner():
+                underlyingGroups: List[ScoutsGroup] = list(
+                    ScoutsGroup.objects.get_groups_with_parent(
+                        parent_group_admin_id=leader_function.scouts_group
                     )
+                )
 
-                    for underlyingGroup in underlyingGroups:
-                        if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
-                            group_admin_ids.append(underlyingGroup.group_admin_id)
+                for underlyingGroup in underlyingGroups:
+                    if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
+                        group_admin_ids.append(
+                            underlyingGroup.group_admin_id)
 
         return self.filter(group__group_admin_id__in=group_admin_ids)
 
