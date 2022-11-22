@@ -24,7 +24,7 @@ class OIDCUserHelper:
             now,
             last_updated,
             delta_seconds,
-            delta_seconds / 60 > OIDCSettings.get_profile_refresh_time(),
+            delta_seconds / 60 < OIDCSettings.get_profile_refresh_time(),
         )
 
     @staticmethod

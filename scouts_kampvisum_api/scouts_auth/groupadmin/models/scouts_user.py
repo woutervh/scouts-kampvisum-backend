@@ -152,6 +152,7 @@ class ScoutsUser(User):
     # Some shortcut fields
     #
     is_administrator = False
+    is_personnel = False
     is_district_commissioner = False
 
     @property
@@ -251,6 +252,17 @@ class ScoutsUser(User):
         ):
             self.is_administrator = True
         return self.is_administrator
+
+    def has_role_personnel(self) -> bool:
+        """
+        Determines if the user is in a personnel group
+        """
+        if any(
+            name in self.get_group_names()
+            for name in GroupAdminSettings.get_personnel_group()
+        ):
+            self.is_personnel = True
+        return self.is_personnel
 
     @property
     def permissions(self):

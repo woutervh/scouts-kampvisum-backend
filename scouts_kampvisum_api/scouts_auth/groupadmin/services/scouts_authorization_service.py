@@ -53,6 +53,7 @@ class ScoutsAuthorizationService(AuthorizationService):
     GROUP_LEADER = "role_group_leader"
     DISTRICT_COMMISSIONER = "role_district_commissioner"
     ADMINISTRATOR = "role_administrator"
+    PERSONNEL = "role_personnel"
 
     known_roles = [
         USER,
@@ -60,6 +61,7 @@ class ScoutsAuthorizationService(AuthorizationService):
         GROUP_LEADER,
         DISTRICT_COMMISSIONER,
         ADMINISTRATOR,
+        PERSONNEL,
     ]
 
     service = GroupAdminMemberService()
@@ -87,9 +89,16 @@ class ScoutsAuthorizationService(AuthorizationService):
         logger.debug(
             "SCOUTS AUTHORIZATION SERVICE: updating user authorizations", user=user
         )
+
+        if user.has_role_personnel():
+            user = self.add_user_as_personnel(user)
+            return user
+
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
             user = self.add_user_as_admin(user)
+            return user
+
         allowed = False
         if scouts_group:
             if user.has_role_district_commissioner(group=scouts_group):
@@ -163,6 +172,13 @@ class ScoutsAuthorizationService(AuthorizationService):
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
         return self.add_user_to_group(user, ScoutsAuthorizationService.ADMINISTRATOR)
+
+    def add_user_as_personnel(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> settings.AUTH_USER_MODEL:
+        user = self.add_user_as_admin(user)
+
+        return self.add_user_to_group(user, ScoutsAuthorizationService.PERSONNEL)
 
     def add_user_to_group(
         self,
