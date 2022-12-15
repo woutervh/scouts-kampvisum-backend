@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 
 from django.db import transaction
 
@@ -118,6 +119,8 @@ class CampVisumService:
         instance.camp = self.camp_service.camp_update(
             request, instance=camp, **camp_fields
         )
+        instance.updated_by = request.user
+        instance.updated_on = datetime.now()
         instance.full_clean()
         instance.save()
 

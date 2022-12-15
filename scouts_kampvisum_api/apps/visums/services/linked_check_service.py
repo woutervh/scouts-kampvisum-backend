@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -45,6 +46,21 @@ class LinkedCheckService:
     groupadmin = GroupAdminMemberService()
     change_handler_service = ChangeHandlerService()
 
+    def _update(self, request, instance: LinkedCheck):
+        now = datetime.now()
+
+        instance.updated_by = request.user
+        instance.updated_on = now
+
+        instance.full_clean()
+        instance.save()
+
+        instance.sub_category.category.category_set.visum.updated_by = request.user
+        instance.sub_category.category.category_set.visum.updated_on = now
+
+        instance.sub_category.category.category_set.visum.full_clean()
+        instance.sub_category.category.category_set.visum.save()
+
     def notify_change(self, request, instance: LinkedCheck, data_changed: bool = False):
         data_changed = True
 
@@ -80,8 +96,7 @@ class LinkedCheckService:
         )
         instance.value = data.get("value", None)
 
-        instance.full_clean()
-        instance.save()
+        self._update(request=request, instance=instance)
 
         return self.notify_change(request=request, instance=instance)
 
@@ -100,8 +115,7 @@ class LinkedCheckService:
         )
         instance.value = data.get("value", None)
 
-        instance.full_clean()
-        instance.save()
+        self._update(request=request, instance=instance)
 
         return self.notify_change(request=request, instance=instance)
 
@@ -129,12 +143,9 @@ class LinkedCheckService:
         instance.start_date = start_date
         instance.end_date = end_date
 
-        instance.full_clean()
-        instance.save()
+        self._update(request=request, instance=instance)
 
-        return self.notify_change(
-            request=request, instance=instance, data_changed=data_changed
-        )
+        return self.notify_change(request=request, instance=instance, data_changed=data_changed)
 
     def get_location_check(self, check_id):
         try:
@@ -178,8 +189,7 @@ class LinkedCheckService:
 
         instance.is_camp_location = is_camp_location
 
-        instance.full_clean()
-        instance.save()
+        self._update(request=request, instance=instance)
 
         locations = data.get("locations", [])
         # All locations removed
@@ -284,9 +294,9 @@ class LinkedCheckService:
             if visum_participant not in instance.participants.all():
                 instance.participants.add(visum_participant)
 
-        return self.notify_change(
-            request=request, instance=instance, data_changed=data_changed
-        )
+        self._update(request=request, instance=instance)
+
+        return self.notify_change(request=request, instance=instance, data_changed=data_changed)
 
     @transaction.atomic
     def toggle_participant_payment_status(
@@ -361,8 +371,7 @@ class LinkedCheckService:
 
             instance.value.add(file)
 
-        instance.full_clean()
-        instance.save()
+        self._update(request=request, instance=instance)
 
         return self.notify_change(request=request, instance=instance)
 
@@ -402,8 +411,7 @@ class LinkedCheckService:
         )
         instance.value = data.get("value", None)
 
-        instance.full_clean()
-        instance.save()
+        self._update(request=request, instance=instance)
 
         return self.notify_change(request=request, instance=instance)
 
@@ -423,7 +431,6 @@ class LinkedCheckService:
         )
         instance.value = data.get("value", None)
 
-        instance.full_clean()
-        instance.save()
+        self._update(request=request, instance=instance)
 
         return self.notify_change(request=request, instance=instance)

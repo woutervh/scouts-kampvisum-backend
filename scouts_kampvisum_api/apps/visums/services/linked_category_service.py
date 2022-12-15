@@ -66,6 +66,7 @@ class LinkedCategoryService:
 
         linked_category.parent = category
         linked_category.category_set = linked_category_set
+        linked_category.created_by = request.user
 
         linked_category.full_clean()
         linked_category.save()
