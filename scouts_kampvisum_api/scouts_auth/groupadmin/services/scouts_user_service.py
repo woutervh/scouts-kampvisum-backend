@@ -124,7 +124,7 @@ class ScoutsUserService:
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
         group_count: int = len(user.scouts_groups)
-        persisted_group_count: int = user.persisted_scouts_groups.count()
+        persisted_group_count: int = len(user.persisted_scouts_groups)
         function_count: int = len(user.functions)
         persisted_function_count: int = user.persisted_scouts_functions.count()
 

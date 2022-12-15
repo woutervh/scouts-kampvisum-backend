@@ -183,15 +183,15 @@ class ScoutsFunctionService:
         begin = abstract_function.begin if abstract_function.begin else None
         end = abstract_function.end if abstract_function.end else None
 
-        # logger.debug(
-        #     "Creating scouts function with group_admin_id %s and code %s for groups %s",
-        #     group_admin_id,
-        #     code,
-        #     ", ".join(
-        #         abstract_scouts_group.group_admin_id
-        #         for abstract_scouts_group in abstract_scouts_groups
-        #     ),
-        # )
+        logger.debug(
+            "Creating scouts function with group_admin_id %s and code %s for groups %s",
+            group_admin_id,
+            code,
+            ", ".join(
+                abstract_scouts_group.group_admin_id
+                for abstract_scouts_group in abstract_scouts_groups
+            ),
+        )
 
         scouts_function: ScoutsFunction = ScoutsFunction()
 
@@ -275,14 +275,13 @@ class ScoutsFunctionService:
         #         instance.end,
         #     )
 
-        # logger.debug(
-        #     "Updating scouts function with group_admin_id %s and code %s for group %s (existing function end date: %s - abstract function end date: %s)",
-        #     group_admin_id,
-        #     code,
-        #     group_admin_id,
-        #     instance.end,
-        #     end,
-        # )
+        logger.debug(
+            "Updating scouts function with group_admin_id %s and code %s for group %s (existing function end date: %s)",
+            group_admin_id,
+            code,
+            group_admin_id,
+            instance.end,
+        )
 
         instance.group_admin_id = group_admin_id
         instance.code = code
@@ -325,4 +324,4 @@ class ScoutsFunctionService:
                         )
                     )
             else:
-                instance.scouts_groups.add(scouts_group)
+                instance.add_group(scouts_group)

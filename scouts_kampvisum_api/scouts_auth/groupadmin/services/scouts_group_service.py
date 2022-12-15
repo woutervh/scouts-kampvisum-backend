@@ -44,8 +44,10 @@ class ScoutsGroupService:
             scouts_group: ScoutsGroup = self.create_or_update_scouts_group(
                 user=user, abstract_group=abstract_group
             )
+            logger.debug(f"Created scouts group {scouts_group.group_admin_id}")
 
-            user.persisted_scouts_groups.add(scouts_group)
+            user.add_group(scouts_group)
+            logger.debug(f"Added scouts group {scouts_group.group_admin_id} for user {user.username}")
 
         return user.persisted_scouts_groups
 

@@ -23,7 +23,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScoutsUser
-        exclude = ["password", "persisted_scouts_groups"]
+        exclude = ["password"]
 
     def get_user_permissions(self, obj: ScoutsUser):
         return obj.permissions
@@ -77,6 +77,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         ]
 
     def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
+        functions = obj.persisted_scouts_functions.all()
         return [
             {
                 "group_admin_id": function.group_admin_id,
@@ -90,7 +91,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "is_district_commissioner": function.is_district_commissioner(),
                 "end": function.end,
             }
-            for function in obj.persisted_scouts_functions
+            for function in functions
         ]
 
     def to_internal_value(self, data: dict) -> dict:

@@ -171,6 +171,13 @@ class ScoutsUser(User):
         if self._persisted_scouts_groups_qs is None:
             self._persisted_scouts_groups_qs = self._persisted_scouts_groups.all()
         return self._persisted_scouts_groups_qs
+    
+    @persisted_scouts_groups.setter
+    def persisted_scouts_groups(self, persisted_scouts_groups):
+        self._persisted_scouts_groups = persisted_scouts_groups
+    
+    def add_group(self, scouts_group: ScoutsGroup):
+        self._persisted_scouts_groups.add(scouts_group)
 
     def get_function_codes(self) -> List[str]:
         return [function.code for function in self.functions]

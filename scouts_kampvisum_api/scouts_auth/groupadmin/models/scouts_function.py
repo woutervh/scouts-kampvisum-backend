@@ -48,7 +48,7 @@ class ScoutsFunctionManager(models.Manager):
 
         if user and group_admin_id:
             try:
-                return self.get_queryset().get(user=user, group_admin_id=group_admin_id)
+                return self.get_queryset().get(_user=user, group_admin_id=group_admin_id)
             except:
                 pass
 
@@ -75,7 +75,7 @@ class ScoutsFunctionManager(models.Manager):
             self.get_queryset()
             .filter(
                 name__iexact=GroupAdminSettings.get_section_leader_identifier(),
-                user=user,
+                _user=user,
             )
             .all()
         )
@@ -85,7 +85,7 @@ class ScoutsFunction(AuditedBaseModel):
 
     objects = ScoutsFunctionManager()
 
-    user = models.ForeignKey(
+    _user = models.ForeignKey(
         ScoutsUser,
         on_delete=models.CASCADE,
         related_name="persisted_scouts_functions",
@@ -106,9 +106,19 @@ class ScoutsFunction(AuditedBaseModel):
         ordering = ["group_admin_id"]
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "group_admin_id"], name="unique_user_for_function"
+                fields=["_user", "group_admin_id"], name="unique_user_for_function"
             )
         ]
+
+    @property
+    def user(self):
+        if self._user_qs is None:
+            self._user_qs = self._user
+        return self._user
+    
+    @user.setter
+    def user(self, user: settings.AUTH_USER_MODEL):
+        self._user = user
 
     @property
     def scouts_groups(self):
@@ -116,6 +126,9 @@ class ScoutsFunction(AuditedBaseModel):
             self._scouts_groups_qs = self._scouts_groups.all()
 
         return self._scouts_groups_qs
+    
+    def add_group(self, scouts_group: ScoutsGroup):
+        self._scouts_groups.add(scouts_group)
 
     def _has_function_for_group(self, scouts_group: ScoutsGroup = None) -> bool:
         return ScoutsFunction.objects.all().has_function_for_group(

@@ -25,7 +25,7 @@ class Command(BaseCommand):
 
         for user in users:
             user._persisted_scouts_groups.clear()
-            user._persisted_scouts_functions.clear()
+            user.persisted_scouts_functions.clear()
 
         logger.debug(
             "Removed persisted groups and functions for %d users", len(users))
