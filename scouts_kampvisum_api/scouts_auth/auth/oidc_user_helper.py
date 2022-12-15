@@ -71,7 +71,7 @@ class OIDCUserHelper:
 
     @staticmethod
     def requires_group_loading(user: settings.AUTH_USER_MODEL):
-        count = user.persisted_scouts_groups.count()
+        count = len(user.persisted_scouts_groups)
         if count == 0:
             return True
 
