@@ -13,7 +13,8 @@ class LinkedCategorySet(AbstractBaseModel):
     )
 
     def is_checked(self) -> CheckState:
-        for category in self.categories.all():
+        categories = self.categories.all()
+        for category in categories:
             if not category.is_checked():
                 return CheckState.UNCHECKED
         return CheckState.CHECKED
@@ -22,5 +23,6 @@ class LinkedCategorySet(AbstractBaseModel):
     def readable_name(self):
         return "{} {}".format(
             self.visum.camp.year.year,
-            ",".join(camp_type.camp_type for camp_type in self.visum.camp_types.all()),
+            ",".join(
+                camp_type.camp_type for camp_type in self.visum.camp_types.all()),
         )

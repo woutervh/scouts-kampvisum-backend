@@ -47,9 +47,9 @@ class SignalHandlerService:
     @staticmethod
     def _is_initial_db_ready() -> bool:
         try:
-            content_types = ContentType.objects.all()
+            content_type = ContentType.objects.last()
 
-            if content_types:
+            if content_type:
                 return True
         except:
             logger.debug(

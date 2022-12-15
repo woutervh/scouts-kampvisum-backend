@@ -194,7 +194,7 @@ class GroupAdmin:
 
         logger.info("GA CALL: %s (%s)", "get_accountable_groups",
                     self.url_groups_vga)
-        logger.trace("GA RESPONSE: %s", json_data)
+        logger.info("GA RESPONSE: %s", json_data)
 
         return json_data
 

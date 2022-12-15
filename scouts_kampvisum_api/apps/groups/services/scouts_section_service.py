@@ -153,7 +153,7 @@ class ScoutsSectionService:
         if not user:
             user = request.user
 
-        groups: List[ScoutsGroup] = user.persisted_scouts_groups.all()
+        groups: List[ScoutsGroup] = user.persisted_scouts_groups
         created_sections = list()
 
         for group in groups:
@@ -200,7 +200,8 @@ class ScoutsSectionService:
                 )
 
             if len(created_sections) == 0:
-                raise ValidationError("Attempted to create sections, but failed")
+                raise ValidationError(
+                    "Attempted to create sections, but failed")
 
             group.default_sections_loaded = True
             group.full_clean()

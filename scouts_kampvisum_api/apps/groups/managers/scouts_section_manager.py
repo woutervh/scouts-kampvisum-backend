@@ -22,7 +22,7 @@ class ScoutsSectionQuerySet(models.QuerySet):
 
         group_admin_ids = []
         for leader_function in leader_functions:
-            for group in leader_function.scouts_groups.all():
+            for group in leader_function.scouts_groups:
                 group_admin_ids.append(group.group_admin_id)
 
                 if user.has_role_district_commissioner():
@@ -34,7 +34,8 @@ class ScoutsSectionQuerySet(models.QuerySet):
 
                     for underlyingGroup in underlyingGroups:
                         if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
-                            group_admin_ids.append(underlyingGroup.group_admin_id)
+                            group_admin_ids.append(
+                                underlyingGroup.group_admin_id)
 
         return self.filter(group__group_admin_id__in=group_admin_ids)
 

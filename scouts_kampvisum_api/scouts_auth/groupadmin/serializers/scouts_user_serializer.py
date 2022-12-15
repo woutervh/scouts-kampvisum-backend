@@ -46,7 +46,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
             else:
                 groups: List[ScoutsGroup] = [
                     group
-                    for group in obj.persisted_scouts_groups.all()
+                    for group in obj.persisted_scouts_groups
                     if obj.has_role_leader(group=group)
                     or obj.has_role_district_commissioner(group=group)
                 ]
@@ -81,7 +81,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
             {
                 "group_admin_id": function.group_admin_id,
                 "scouts_groups": [
-                    group.group_admin_id for group in function.scouts_groups.all()
+                    group.group_admin_id for group in function.scouts_groups
                 ],
                 "code": function.code,
                 "description": function.description,
@@ -90,7 +90,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "is_district_commissioner": function.is_district_commissioner(),
                 "end": function.end,
             }
-            for function in obj.persisted_scouts_functions.all()
+            for function in obj.persisted_scouts_functions
         ]
 
     def to_internal_value(self, data: dict) -> dict:

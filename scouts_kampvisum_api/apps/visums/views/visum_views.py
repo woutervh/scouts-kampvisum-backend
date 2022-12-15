@@ -89,7 +89,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             or not group
             in [
                 group.group_admin_id
-                for group in request.user.persisted_scouts_groups.all()
+                for group in request.user.persisted_scouts_groups
             ]
             or not scouts_group
             or (not request.user.has_role_leader(group=scouts_group))

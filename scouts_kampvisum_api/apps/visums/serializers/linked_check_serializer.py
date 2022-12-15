@@ -75,7 +75,8 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
         elif check.parent.check_type.is_participant_leader_check():
             value = LinkedParticipantLeaderCheckSerializer.get_value(check)
         elif check.parent.check_type.is_participant_responsible_check():
-            value = LinkedParticipantResponsibleCheckSerializer.get_value(check)
+            value = LinkedParticipantResponsibleCheckSerializer.get_value(
+                check)
         elif check.parent.check_type.is_participant_adult_check():
             value = LinkedParticipantAdultCheckSerializer.get_value(check)
         elif check.parent.check_type.is_participant_check():
@@ -196,7 +197,8 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
         data["center_latitude"] = obj.center_latitude
         data["center_longitude"] = obj.center_longitude
         data["zoom"] = obj.zoom
-        data["locations"] = LinkedLocationSerializer(obj.locations, many=True).data
+        data["locations"] = LinkedLocationSerializer(
+            obj.locations, many=True).data
 
         return data
 

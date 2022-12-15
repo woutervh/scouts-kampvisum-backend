@@ -24,10 +24,11 @@ class Command(BaseCommand):
         users: List[ScoutsUser] = ScoutsUser.objects.all()
 
         for user in users:
-            user.persisted_scouts_groups.clear()
-            user.persisted_scouts_functions.clear()
+            user._persisted_scouts_groups.clear()
+            user._persisted_scouts_functions.clear()
 
-        logger.debug("Removed persisted groups and functions for %d users", len(users))
+        logger.debug(
+            "Removed persisted groups and functions for %d users", len(users))
 
         functions: List[ScoutsFunction] = ScoutsFunction.objects.all()
         for function in functions:

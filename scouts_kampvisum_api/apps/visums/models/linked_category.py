@@ -20,7 +20,8 @@ class LinkedCategory(AuditedArchiveableBaseModel):
         ordering = ["parent__index"]
 
     def is_checked(self) -> CheckState:
-        for sub_category in self.sub_categories.all():
+        sub_categories = self.sub_categories.all()
+        for sub_category in sub_categories:
             if not sub_category.is_checked():
                 return CheckState.UNCHECKED
         return CheckState.CHECKED

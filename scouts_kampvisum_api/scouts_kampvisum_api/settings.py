@@ -10,11 +10,19 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-from scouts_auth.inuits.logging import InuitsLogger
-import os
-import logging
-import logging.config
+# ############################################################################ #
+#                                                                              #
+# SENTRY                                                                       #
+#                                                                              #
+# ############################################################################ #
+# https://docs.sentry.io/platforms/python/guides/django/
+# ############################################################################ #
 from environs import Env
+import logging.config
+import logging
+import os
+from scouts_auth.inuits.logging import InuitsLogger
+
 
 # ############################################################################ #
 #                                                                              #
@@ -94,7 +102,7 @@ LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
 # LOGGING_LEVEL = "API"
 # LOGGING_LEVEL = "TRACE"
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
-LOGGING_LEVEL_DB = "INFO"
+LOGGING_LEVEL_DB = "DEBUG"
 LOGGING_LEVEL_S3 = "INFO"
 LOGGING = {
     "version": 1,
@@ -114,11 +122,11 @@ LOGGING = {
             "level": "DEBUG",
             "formatter": "verbose",
         },
-        # "file": {
-        #     "class": "logging.FileHandler",
-        #     "level": "DEBUG",
-        #     "filename": "scouts-kampvisum.debug.log",
-        # },
+        "file": {
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "filename": "scouts-kampvisum.debug.log",
+        },
     },
     "root": {
         "handlers": ["console"],
@@ -162,9 +170,10 @@ LOGGING = {
             "propagate": False,
         },
         "django.db.backends": {
-            "handlers": ["console"],
+            "handlers": ["console", "file"],
             "level": LOGGING_LEVEL_DB,
             "propagate": False,
+            "filename": "scouts-kampvisum.sql.debug.log",
         },
     },
 }

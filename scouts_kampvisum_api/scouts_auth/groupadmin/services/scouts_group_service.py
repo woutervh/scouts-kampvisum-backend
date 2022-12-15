@@ -47,7 +47,7 @@ class ScoutsGroupService:
 
             user.persisted_scouts_groups.add(scouts_group)
 
-        return user.persisted_scouts_groups.all()
+        return user.persisted_scouts_groups
 
     def create_or_update_scouts_group(
         self, user: settings.AUTH_USER_MODEL, abstract_group: AbstractScoutsGroup

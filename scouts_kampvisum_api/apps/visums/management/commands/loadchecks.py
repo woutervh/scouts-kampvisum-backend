@@ -1,4 +1,5 @@
-import os, json
+import os
+import json
 from pathlib import Path
 from typing import List
 
@@ -38,8 +39,9 @@ class Command(BaseCommand):
         tmp_path = os.path.join(parent_path, tmp_data_path)
 
         default_camp_type: str = CampType.objects.get_default().camp_type
+        selectable_camp_types = CampType.objects.all().selectable()
         all_camp_types: List[str] = [
-            [camp_type.camp_type] for camp_type in CampType.objects.all().selectable()
+            [camp_type.camp_type] for camp_type in selectable_camp_types
         ]
 
         logger.debug("Loading checks from %s", path)
@@ -74,7 +76,8 @@ class Command(BaseCommand):
                     model.get("fields")["is_member"] = False
 
                 # If not present, set the default camp type
-                camp_types: List[str] = model.get("fields").get("camp_types", [])
+                camp_types: List[str] = model.get(
+                    "fields").get("camp_types", [])
                 results = []
                 for camp_type in camp_types:
                     if isinstance(camp_type, str):
@@ -103,7 +106,8 @@ class Command(BaseCommand):
                 validators = model.get("fields").get("validators", [])
                 model.get("fields")["validators"] = ",".join(validators)
 
-                loaded_checks.append((model.get("fields").get("name"), sub_category))
+                loaded_checks.append(
+                    (model.get("fields").get("name"), sub_category))
 
                 logger.trace("MODEL DATA: %s", model)
 

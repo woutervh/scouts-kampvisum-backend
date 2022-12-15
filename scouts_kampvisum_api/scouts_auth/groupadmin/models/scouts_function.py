@@ -97,7 +97,8 @@ class ScoutsFunction(AuditedBaseModel):
     type = OptionalCharField()
     description = OptionalCharField()
     name = OptionalCharField()
-    scouts_groups = models.ManyToManyField(ScoutsGroup)
+    _scouts_groups = models.ManyToManyField(ScoutsGroup)
+    _scouts_groups_qs = None
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
 
@@ -108,6 +109,13 @@ class ScoutsFunction(AuditedBaseModel):
                 fields=["user", "group_admin_id"], name="unique_user_for_function"
             )
         ]
+
+    @property
+    def scouts_groups(self):
+        if self._scouts_groups_qs is None:
+            self._scouts_groups_qs = self._scouts_groups.all()
+
+        return self._scouts_groups_qs
 
     def _has_function_for_group(self, scouts_group: ScoutsGroup = None) -> bool:
         return ScoutsFunction.objects.all().has_function_for_group(
@@ -129,7 +137,7 @@ class ScoutsFunction(AuditedBaseModel):
             == GroupAdminSettings.get_section_leader_identifier().lower()
         ):
             if scouts_group:
-                return scouts_group in self.scouts_groups.all()
+                return scouts_group in self.scouts_groups
             return True
         return False
 
@@ -139,7 +147,7 @@ class ScoutsFunction(AuditedBaseModel):
     def is_group_leader(self, scouts_group: ScoutsGroup = None) -> bool:
         if AbstractScoutsFunctionCode(code=self.code).is_group_leader():
             if scouts_group:
-                return scouts_group in self.scouts_groups.all()
+                return scouts_group in self.scouts_groups
             return True
         return False
 
@@ -150,7 +158,7 @@ class ScoutsFunction(AuditedBaseModel):
         self, scouts_group: ScoutsGroup = None
     ) -> bool:
         if self.is_district_commissioner():
-            scouts_groups = self.scouts_groups.all()
+            scouts_groups = self.scouts_groups
 
             for group in scouts_groups:
                 if (

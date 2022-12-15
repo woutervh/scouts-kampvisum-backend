@@ -126,9 +126,10 @@ class ScoutsUser(User):
     # email = models.EmailField(blank=True)
 
     # Persisted fields
-    persisted_scouts_groups: List[ScoutsGroup] = models.ManyToManyField(
+    _persisted_scouts_groups: List[ScoutsGroup] = models.ManyToManyField(
         ScoutsGroup, related_name="user"
     )
+    _persisted_scouts_groups_qs = None
     # persisted_scouts_functions: List[ScoutsFunction] = models.ManyToManyField(
     #     ScoutsFunction, related_name="user"
     # )
@@ -142,6 +143,8 @@ class ScoutsUser(User):
     function_descriptions: List[AbstractScoutsFunctionDescription] = []
     group_specific_fields: List[AbstractScoutsGroupSpecificField] = []
     links: List[AbstractScoutsLink] = []
+
+    qs_scouts_groups = None
 
     #
     # The active access token, provided by group admin oidc
@@ -163,6 +166,12 @@ class ScoutsUser(User):
     def fully_loaded(self, is_fully_loaded: bool):
         self.is_fully_loaded = is_fully_loaded
 
+    @property
+    def persisted_scouts_groups(self):
+        if self._persisted_scouts_groups_qs is None:
+            self._persisted_scouts_groups_qs = self._persisted_scouts_groups.all()
+        return self._persisted_scouts_groups_qs
+
     def get_function_codes(self) -> List[str]:
         return [function.code for function in self.functions]
 
@@ -174,8 +183,7 @@ class ScoutsUser(User):
         ]
 
     def get_group_names(self) -> List[str]:
-        # return [group.group_admin_id for group in self.scouts_groups]
-        return [group.group_admin_id for group in self.persisted_scouts_groups.all()]
+        return [group.group_admin_id for group in self.persisted_scouts_groups]
 
     def has_role_leader(self, group: ScoutsGroup) -> bool:
         for function in self.persisted_scouts_functions.filter(end__isnull=True):
@@ -195,7 +203,7 @@ class ScoutsUser(User):
     def get_section_leader_groups(self) -> List[ScoutsGroup]:
         return [
             group
-            for group in self.persisted_scouts_groups.all()
+            for group in self.persisted_scouts_groups
             if self.has_role_section_leader(group=group)
         ]
 
@@ -212,7 +220,7 @@ class ScoutsUser(User):
     def get_group_leader_groups(self) -> List[ScoutsGroup]:
         return [
             group
-            for group in self.persisted_scouts_groups.all()
+            for group in self.persisted_scouts_groups
             if self.has_role_group_leader(group=group)
         ]
 
@@ -238,7 +246,7 @@ class ScoutsUser(User):
         # ]
         for function in self.persisted_scouts_functions.filter(end__isnull=True):
             if function.is_district_commissioner():
-                return function.scouts_groups.all()
+                return function.scouts_groups
 
         return []
 
@@ -386,7 +394,7 @@ class ScoutsUser(User):
                 groups) > 0 else "None",
             "SCOUTS GROUPS",
             ", ".join(
-                group.group_admin_id for group in self.persisted_scouts_groups.all()
+                group.group_admin_id for group in self.persisted_scouts_groups
             ),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),

@@ -23,7 +23,7 @@ class AuthenticationHelper:
 
         group_admin_ids = []
         for leader_function in leader_functions:
-            for group in leader_function.scouts_groups.all():
+            for group in leader_function.scouts_groups:
                 group_admin_ids.append(group.group_admin_id)
 
                 if user.has_role_district_commissioner():
