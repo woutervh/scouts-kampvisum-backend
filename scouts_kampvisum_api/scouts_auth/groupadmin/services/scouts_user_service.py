@@ -75,7 +75,8 @@ class ScoutsUserService:
 
         if OIDCUserHelper.requires_group_loading(user=user):
             try:
-                user = self.authorization_service.load_user_scouts_groups(user=user)
+                user = self.authorization_service.load_user_scouts_groups(
+                    user=user)
             except Exception as exc:
                 raise ValidationError(
                     "An error occured while loading user scouts groups", exc
@@ -109,7 +110,8 @@ class ScoutsUserService:
             logger.debug("Not reloading user functions", user=user)
 
         section_service = ScoutsSectionService()
-        section_service.setup_default_sections(request=SimpleNamespace(user=user))
+        section_service.setup_default_sections(
+            request=SimpleNamespace(user=user))
         # try:
         #     section_service = ScoutsSectionService()
         #     section_service.setup_default_sections(user=user)
@@ -153,11 +155,12 @@ class ScoutsUserService:
                 )
             )
 
-        for group in user.persisted_scouts_groups.all():
+        for group in user.persisted_scouts_groups:
             section_count: int = ScoutsSection.objects.all().filter(group=group)
             if section_count == 0:
                 raise ValidationError(
-                    "No ScoutsSection instances found for user {}".format(user.username)
+                    "No ScoutsSection instances found for user {}".format(
+                        user.username)
                 )
 
         logger.debug(user.to_descriptive_string())

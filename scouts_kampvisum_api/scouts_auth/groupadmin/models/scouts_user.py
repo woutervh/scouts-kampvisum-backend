@@ -129,7 +129,7 @@ class ScoutsUser(User):
     _persisted_scouts_groups: List[ScoutsGroup] = models.ManyToManyField(
         ScoutsGroup, related_name="user"
     )
-    _persisted_scouts_groups_qs = None
+    _persisted_scouts_groups_list = None
     # persisted_scouts_functions: List[ScoutsFunction] = models.ManyToManyField(
     #     ScoutsFunction, related_name="user"
     # )
@@ -168,14 +168,14 @@ class ScoutsUser(User):
 
     @property
     def persisted_scouts_groups(self):
-        if self._persisted_scouts_groups_qs is None:
-            self._persisted_scouts_groups_qs = self._persisted_scouts_groups.all()
-        return self._persisted_scouts_groups_qs
-    
+        if self._persisted_scouts_groups_list is None:
+            self._persisted_scouts_groups_list = self._persisted_scouts_groups.all()
+        return self._persisted_scouts_groups_list
+
     @persisted_scouts_groups.setter
     def persisted_scouts_groups(self, persisted_scouts_groups):
         self._persisted_scouts_groups = persisted_scouts_groups
-    
+
     def add_group(self, scouts_group: ScoutsGroup):
         self._persisted_scouts_groups.add(scouts_group)
 
@@ -295,9 +295,10 @@ class ScoutsUser(User):
             self.customer_number,
             self.birth_date,
             ", ".join(
-                group.group_admin_id for group in self.persisted_scouts_groups)
-            if self.scouts_groups
-            else "[]",
+                self.get_group_names()
+                if self.scouts_groups
+                else "[]"
+            ),
             ", ".join(address.to_descriptive_string()
                       for address in self.addresses)
             if self.addresses
@@ -401,7 +402,7 @@ class ScoutsUser(User):
                 groups) > 0 else "None",
             "SCOUTS GROUPS",
             ", ".join(
-                group.group_admin_id for group in self.persisted_scouts_groups
+                self.get_group_names()
             ),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
@@ -430,7 +431,7 @@ class ScoutsUser(User):
             self.last_updated_functions,
         )
 
-    @staticmethod
+    @ staticmethod
     def from_abstract_member(user=None, abstract_member: AbstractScoutsMember = None):
         if not abstract_member:
             raise ValidationError(

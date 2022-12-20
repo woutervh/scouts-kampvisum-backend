@@ -87,10 +87,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         if (
             not group
             or not group
-            in [
-                group.group_admin_id
-                for group in request.user.persisted_scouts_groups
-            ]
+            in request.user.get_group_names()
             or not scouts_group
             or (not request.user.has_role_leader(group=scouts_group))
             and (not request.user.has_role_district_commissioner(group=scouts_group))
