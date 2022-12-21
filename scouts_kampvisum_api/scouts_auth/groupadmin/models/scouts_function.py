@@ -92,13 +92,15 @@ class ScoutsFunction(AuditedBaseModel):
         null=True,
         blank=True,
     )
+    _user_obj = None
+
     group_admin_id = RequiredCharField()
     code = OptionalCharField()
     type = OptionalCharField()
     description = OptionalCharField()
     name = OptionalCharField()
     _scouts_groups = models.ManyToManyField(ScoutsGroup)
-    _scouts_groups_qs = None
+    _scouts_groups_list = None
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
 
@@ -112,21 +114,21 @@ class ScoutsFunction(AuditedBaseModel):
 
     @property
     def user(self):
-        if self._user_qs is None:
-            self._user_qs = self._user
-        return self._user
-    
+        if self._user_obj is None:
+            self._user_obj = self._user
+        return self._user_obj
+
     @user.setter
     def user(self, user: settings.AUTH_USER_MODEL):
         self._user = user
 
     @property
     def scouts_groups(self):
-        if self._scouts_groups_qs is None:
-            self._scouts_groups_qs = self._scouts_groups.all()
+        if self._scouts_groups_list is None:
+            self._scouts_groups_list = self._scouts_groups.all()
 
-        return self._scouts_groups_qs
-    
+        return self._scouts_groups_list
+
     def add_group(self, scouts_group: ScoutsGroup):
         self._scouts_groups.add(scouts_group)
 
