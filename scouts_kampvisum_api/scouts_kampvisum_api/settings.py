@@ -122,11 +122,11 @@ LOGGING = {
             "level": "DEBUG",
             "formatter": "verbose",
         },
-        "file": {
-            "class": "logging.FileHandler",
-            "level": "DEBUG",
-            "filename": "scouts-kampvisum.debug.log",
-        },
+        # "file": {
+        #     "class": "logging.FileHandler",
+        #     "level": "DEBUG",
+        #     "filename": "scouts-kampvisum.debug.log",
+        # },
     },
     "root": {
         "handlers": ["console"],
