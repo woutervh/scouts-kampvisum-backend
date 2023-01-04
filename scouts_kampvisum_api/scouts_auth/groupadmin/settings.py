@@ -106,11 +106,7 @@ class GroupAdminSettings(SettingsHelper):
     @staticmethod
     def get_administrator_groups() -> List[str]:
         return SettingsHelper.get_list("KNOWN_ADMIN_GROUPS")
-
-    @staticmethod
-    def get_personnel_group() -> str:
-        return SettingsHelper.get("KNOWN_PERSONNEL_GROUP")
-
+    
     @staticmethod
     def get_test_groups() -> List[str]:
         return SettingsHelper.get_list("KNOWN_TEST_GROUPS")

@@ -75,14 +75,8 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         # but adding it here avoids the need for changes to the frontend
         group_admin_id = self.request.query_params.get("group", None)
         # if no group filter then check if user is in X1027G to show all locations
-        if group_admin_id is None:
-            group_admin_id = GroupAdminSettings.get_personnel_group()
-        scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-            group_admin_id=group_admin_id, raise_error=True
-        )
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=scouts_group
-        )
+        if group_admin_id is None and not request.user.has_role_administrator():
+            raise PermissionDenied("You have to be an admin to make this call")
 
         campvisums = self.filter_queryset(self.get_queryset())
         locations = list()

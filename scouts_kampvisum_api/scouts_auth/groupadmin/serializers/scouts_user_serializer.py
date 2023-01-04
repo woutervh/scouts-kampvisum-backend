@@ -71,7 +71,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "is_district_commissioner": obj.has_role_district_commissioner(
                     group=group
                 ),
-                "is_personnel": obj.has_role_personnel(),
+                "is_admin": obj.has_role_administrator(),
             }
             for group in groups
         ]

@@ -45,7 +45,7 @@ class AuthenticationHelper:
                      AuthenticationHelper.load_groups(user=user))
         logger.debug("&&&&&&&&&&&&& %s", group_admin_id)
 
-        if user.has_role_personnel():
+        if user.has_role_administrator():
             return True
 
         if not group_admin_id in AuthenticationHelper.load_groups(user=user):

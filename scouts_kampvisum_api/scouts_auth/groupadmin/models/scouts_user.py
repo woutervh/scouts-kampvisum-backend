@@ -1,6 +1,7 @@
 from typing import List, Tuple
 from datetime import date, datetime
 
+from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import UserManager
@@ -27,6 +28,8 @@ from scouts_auth.inuits.models.fields import (
     DefaultCharField,
     TimezoneAwareDateTimeField,
 )
+
+from scouts_auth.inuits.utils import SettingsHelper
 
 
 # LOGGING
@@ -155,7 +158,6 @@ class ScoutsUser(User):
     # Some shortcut fields
     #
     is_administrator = False
-    is_personnel = False
     is_district_commissioner = False
 
     @property
@@ -268,17 +270,6 @@ class ScoutsUser(User):
             self.is_administrator = True
         return self.is_administrator
 
-    def has_role_personnel(self) -> bool:
-        """
-        Determines if the user is in a personnel group
-        """
-        if any(
-            name in self.get_group_names()
-            for name in GroupAdminSettings.get_personnel_group()
-        ):
-            self.is_personnel = True
-        return self.is_personnel
-
     @property
     def permissions(self):
         return self.get_all_permissions()
@@ -357,6 +348,16 @@ class ScoutsUser(User):
             "{:<24}: {}\n"  # group leader
             "{:<24}: {}\n"  # section leader
             "------------------------------------------------------------------------------------------------------------------------\n"
+            "{:<24}: {}\n"  # KNOWN_ADMIN_GROUPS
+            "{:<24}: {}\n"  # KNOWN_TEST_GROUPS
+            "{:<24}: {}\n"  # Administrator groups
+            "{:<24}: {}\n"  # Test groups
+            "{:<24}: {}\n"  # DEBUG
+            "{:<24}: {}\n"  # IS_ACCEPTANCE
+            "{:<24}: {}\n"  # Is debug ?
+            "{:<24}: {}\n"  # Is acceptance ?
+            "{:<24}: {}\n"  # Is test ?
+            "------------------------------------------------------------------------------------------------------------------------\n"
             "{:<24}: {}\n"  # last authenticated
             "{:<24}: {}\n"  # last refreshed
             "{:<24}: {}\n"  # last updated
@@ -419,6 +420,24 @@ class ScoutsUser(User):
             ", ".join(group.group_admin_id for group in section_leader_groups)
             if len(section_leader_groups) > 0
             else "None",
+            "KNOWN_ADMIN_GROUPS",
+            SettingsHelper.get_list("KNOWN_ADMIN_GROUPS"),
+            "KNOWN_TEST_GROUPS",
+            SettingsHelper.get_list("KNOWN_TEST_GROUPS"),
+            "Administrator groups",
+            GroupAdminSettings.get_administrator_groups(),
+            "Test groups",
+            GroupAdminSettings.get_test_groups(),
+            "DEBUG",
+            SettingsHelper.get_bool("DEBUG"),
+            "IS_ACCEPTANCE",
+            SettingsHelper.get_bool("IS_ACCEPTANCE"),
+            "Is debug ?",
+            GroupAdminSettings.is_debug(),
+            "Is acceptance ?",
+            GroupAdminSettings.is_acceptance(),
+            "Is test ?",
+            GroupAdminSettings.is_test(),
             "last authenticated",
             self.last_authenticated,
             "last refreshed",
