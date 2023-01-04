@@ -41,6 +41,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
         for admin_group in admin_groups:
             if admin_group and obj.has_role_leader(group=admin_group):
+                logger.debug(f"User has_role_leader for ADMIN GROUP: {admin_group.group_admin_id}")
                 groups = ScoutsGroup.objects.all()
                 break
             else:
