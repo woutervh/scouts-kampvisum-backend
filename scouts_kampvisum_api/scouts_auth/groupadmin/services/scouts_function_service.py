@@ -84,10 +84,10 @@ class ScoutsFunctionService:
                     scouts_function: ScoutsFunction = (
                         self.create_or_update_scouts_function(
                             user=user,
-                            abstract_function=function,
+                            abstract_function=abstract_function,
                             abstract_function_description=abstract_function_description,
                             abstract_scouts_groups=[
-                                function.scouts_group
+                                abstract_function.scouts_group
                             ],
                         )
                     )
