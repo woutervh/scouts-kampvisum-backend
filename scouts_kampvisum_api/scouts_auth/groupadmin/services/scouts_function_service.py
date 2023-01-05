@@ -79,7 +79,7 @@ class ScoutsFunctionService:
             for abstract_function_description in abstract_function_descriptions:
                 if (
                     abstract_function_description.group_admin_id
-                    == function.function
+                    == abstract_function.function
                 ):
                     scouts_function: ScoutsFunction = (
                         self.create_or_update_scouts_function(
