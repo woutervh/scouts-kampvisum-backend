@@ -1,6 +1,5 @@
 import pytz
 from typing import List
-from datetime import datetime
 
 from django.conf import settings
 from django.db import transaction
@@ -29,7 +28,7 @@ class ScoutsFunctionService:
     scouts_group_service = ScoutsGroupService()
 
     def create_or_update_scouts_functions_for_user(
-        self, user: settings.AUTH_USER_MODEL, abstract_functions: List[AbstractScoutsFunctionDescription]
+        self, user: settings.AUTH_USER_MODEL, abstract_functions: List[AbstractScoutsFunction]
     ) -> settings.AUTH_USER_MODEL:
         """
         LEADER:
@@ -73,7 +72,6 @@ class ScoutsFunctionService:
         ] = self.groupadmin.get_function_descriptions(
             active_user=user
         ).function_descriptions
-        now = pytz.utc.localize(datetime.now())
 
         user.function_descriptions = abstract_function_descriptions
 
