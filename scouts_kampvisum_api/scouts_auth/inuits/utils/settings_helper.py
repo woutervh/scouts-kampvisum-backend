@@ -4,6 +4,12 @@ from django.core.exceptions import ValidationError
 from scouts_auth.inuits.utils import GlobalSettingsUtil
 
 
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+
+logger: InuitsLogger = logging.getLogger(__name__)
+
 class SettingsHelper:
     @staticmethod
     def get_attribute(
@@ -53,13 +59,16 @@ class SettingsHelper:
             value = SettingsHelper.get_attribute(
                 attribute_name, attribute_default_value
             )
+            logger.debug(f"SETTINGS 1: {attribute_name} -> {value}")
         except:
             try:
                 value = SettingsHelper.get_attribute(
                     attribute_name, module_default_value
                 )
+                logger.debug(f"SETTINGS 2: {attribute_name} -> {value}")
             except:
                 value = []
+                logger.debug(f"SETTINGS 3: {attribute_name} -> {value}")
 
         if isinstance(value, str):
             return list(value)

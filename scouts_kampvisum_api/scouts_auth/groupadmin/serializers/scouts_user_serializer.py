@@ -32,34 +32,24 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         groups = []
         admin_groups = []
 
-        for admin_group in GroupAdminSettings.get_administrator_groups():
-            safe_result = ScoutsGroup.objects.safe_get(
-                group_admin_id=admin_group, raise_error=False
-            )
-            if safe_result:
-                admin_groups.append(safe_result)
-
-        for admin_group in admin_groups:
-            if admin_group and obj.has_role_leader(group=admin_group):
-                logger.debug(f"User has_role_leader for ADMIN GROUP: {admin_group.group_admin_id}")
-                groups = ScoutsGroup.objects.all()
-                break
-            else:
-                groups: List[ScoutsGroup] = [
+        if obj.has_role_administrator():
+            groups = ScoutsGroup.objects.all()
+        else:
+            groups: List[ScoutsGroup] = [
                     group
                     for group in obj.persisted_scouts_groups
                     if obj.has_role_leader(group=group)
                     or obj.has_role_district_commissioner(group=group)
                 ]
 
-                if obj.has_role_district_commissioner():
-                    district_commissioner_groups = obj.get_district_commissioner_groups()
+            if obj.has_role_district_commissioner():
+                district_commissioner_groups = obj.get_district_commissioner_groups()
 
-                    groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
+                groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
                         groups, district_commissioner_groups
-                    )
+                )
 
-                    groups.sort(key=lambda group: group.group_admin_id)
+                groups.sort(key=lambda group: group.group_admin_id)
 
         return [
             {

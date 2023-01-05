@@ -349,8 +349,8 @@ class ScoutsUser(User):
             "{:<24}: {}\n"  # section leader
             "------------------------------------------------------------------------------------------------------------------------\n"
             "{:<24}: {}\n"  # KNOWN_ADMIN_GROUPS
-            "{:<24}: {}\n"  # KNOWN_TEST_GROUPS
             "{:<24}: {}\n"  # Administrator groups
+            "{:<24}: {}\n"  # KNOWN_TEST_GROUPS
             "{:<24}: {}\n"  # Test groups
             "{:<24}: {}\n"  # DEBUG
             "{:<24}: {}\n"  # IS_ACCEPTANCE
@@ -422,10 +422,10 @@ class ScoutsUser(User):
             else "None",
             "KNOWN_ADMIN_GROUPS",
             SettingsHelper.get_list("KNOWN_ADMIN_GROUPS"),
-            "KNOWN_TEST_GROUPS",
-            SettingsHelper.get_list("KNOWN_TEST_GROUPS"),
             "Administrator groups",
             GroupAdminSettings.get_administrator_groups(),
+            "KNOWN_TEST_GROUPS",
+            SettingsHelper.get_list("KNOWN_TEST_GROUPS"),
             "Test groups",
             GroupAdminSettings.get_test_groups(),
             "DEBUG",
