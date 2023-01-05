@@ -28,7 +28,6 @@ class CampVisumQuerySet(models.QuerySet):
 
         group_admin_ids = GroupAdminSettings.get_administrator_groups()
         for leader_function in leader_functions:
-
             group_admin_ids.append(leader_function.scouts_group.group_admin_id)
 
             if user.has_role_district_commissioner():
