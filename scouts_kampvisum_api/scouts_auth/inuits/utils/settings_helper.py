@@ -60,16 +60,13 @@ class SettingsHelper:
             value = SettingsHelper.get_attribute(
                 attribute_name, attribute_default_value
             )
-            logger.debug(f"SETTINGS 1: {attribute_name} -> {value}")
         except:
             try:
                 value = SettingsHelper.get_attribute(
                     attribute_name, module_default_value
                 )
-                logger.debug(f"SETTINGS 2: {attribute_name} -> {value}")
             except:
                 value = []
-                logger.debug(f"SETTINGS 3: {attribute_name} -> {value}")
 
         if isinstance(value, str):
             return list(value)
