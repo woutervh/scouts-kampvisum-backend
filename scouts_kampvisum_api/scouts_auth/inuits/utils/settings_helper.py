@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from scouts_auth.inuits.utils import GlobalSettingsUtil
-
+import copy
 
 # LOGGING
 import logging
@@ -17,7 +17,8 @@ class SettingsHelper:
         attribute_default_value: any = None,
         module_default_value: any = None,
     ) -> any:
-        return getattr(settings, attribute_name, attribute_default_value)
+        data = getattr(settings, attribute_name, attribute_default_value)
+        return copy.copy(data)
 
     @staticmethod
     def get(
