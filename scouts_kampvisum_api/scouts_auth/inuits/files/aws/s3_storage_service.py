@@ -15,16 +15,16 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class S3StorageService(CustomStorage, S3Boto3Storage):
 
+    access_id = StorageSettings.get_s3_access_id()
+    access_key = StorageSettings.get_s3_access_key()
+
     bucket_name = StorageSettings.get_s3_bucket_name()
     # default_acl = StorageSettings.get_s3_default_acl()
     file_overwrite = StorageSettings.get_s3_file_overwrite()
 
-    # access_id = StorageSettings.get_s3_access_id()
-    # access_key = StorageSettings.get_s3_access_key()
-
     local_storage = FileSystemStorage()
 
-    def create_presigned_url(self, object_name, expiration=3600):
+    def generate_presigned_url(self, object_name, expiration=3600):
         """Generate a presigned URL to share an S3 object
 
         :param object_name: string
@@ -32,8 +32,10 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         :return: Presigned URL as string. If error, returns None.
         """
 
+        logger.debug(f"OBJECT NAME: {object_name}")
+
         # Generate a presigned URL for the S3 object
-        s3_client = boto3.client('s3')
+        s3_client = boto3.client('s3', aws_access_key_id = self.access_id, aws_secret_access_key = self.access_key)
         try:
             response = s3_client.generate_presigned_url('get_object',
                                                         Params={'Bucket': self.bucket_name,
