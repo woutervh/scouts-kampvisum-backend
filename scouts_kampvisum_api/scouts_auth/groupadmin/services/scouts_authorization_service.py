@@ -201,7 +201,7 @@ class ScoutsAuthorizationService(AuthorizationService):
             user=user,
         )
         user = self.scouts_function_service.create_or_update_scouts_functions_for_user(
-            user=user
+            user=user, abstract_functions = self.get_active_leader_functions(user=user)
         )
 
         return user

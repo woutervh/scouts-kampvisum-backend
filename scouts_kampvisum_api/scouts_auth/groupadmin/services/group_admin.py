@@ -49,8 +49,9 @@ class GroupAdmin:
     url_groups = GroupAdminSettings.get_group_admin_group_endpoint()
     url_groups_vga = GroupAdminSettings.get_group_admin_group_endpoint() + "/vga"
     url_group = GroupAdminSettings.get_group_admin_group_endpoint() + "/{}"
-    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep={group_group_admin_id_start_fragment}
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie
     url_functions = GroupAdminSettings.get_group_admin_functions_endpoint()
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep={group_group_admin_id_start_fragment}
     url_functions_for_group = (
         GroupAdminSettings.get_group_admin_functions_endpoint() + "?groep={}"
     )

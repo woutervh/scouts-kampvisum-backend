@@ -1,3 +1,4 @@
+import pytz
 from typing import List
 
 from django.conf import settings
@@ -27,7 +28,7 @@ class ScoutsFunctionService:
     scouts_group_service = ScoutsGroupService()
 
     def create_or_update_scouts_functions_for_user(
-        self, user: settings.AUTH_USER_MODEL
+        self, user: settings.AUTH_USER_MODEL, abstract_functions: List[AbstractScoutsFunctionDescription]
     ) -> settings.AUTH_USER_MODEL:
         """
         LEADER:
@@ -71,31 +72,23 @@ class ScoutsFunctionService:
         ] = self.groupadmin.get_function_descriptions(
             active_user=user
         ).function_descriptions
+        now = pytz.utc.localize(datetime.now())
 
         user.function_descriptions = abstract_function_descriptions
 
-        unique_user_functions = {}
         for abstract_function in user.functions:
-            if (
-                abstract_function.code not in unique_user_functions
-                or abstract_function.end is None
-            ):
-                unique_user_functions[abstract_function.code] = abstract_function
-
-        for key in unique_user_functions:
             for abstract_function_description in abstract_function_descriptions:
                 if (
                     abstract_function_description.group_admin_id
-                    == unique_user_functions[key].function
+                    == function.function
                 ):
-
                     scouts_function: ScoutsFunction = (
                         self.create_or_update_scouts_function(
                             user=user,
-                            abstract_function=unique_user_functions[key],
+                            abstract_function=function,
                             abstract_function_description=abstract_function_description,
                             abstract_scouts_groups=[
-                                unique_user_functions[key].scouts_group
+                                function.scouts_group
                             ],
                         )
                     )
