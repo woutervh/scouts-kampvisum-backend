@@ -19,3 +19,9 @@ class CampLocation(AbstractBaseModel):
     is_main_location = models.BooleanField(default=False)
     latitude = models.FloatField()
     longitude = models.FloatField()
+    
+    country = OptionalCharField(max_length=254)
+    postalcode = OptionalCharField(max_length=254)
+    township = OptionalCharField(max_length=254)
+    street = OptionalCharField(max_length=254)
+    house_number = OptionalCharField(max_length=254)

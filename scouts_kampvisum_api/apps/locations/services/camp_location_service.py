@@ -199,6 +199,12 @@ class CampLocationService:
         instance.latitude = data.get("latitude", None)
         instance.longitude = data.get("longitude", None)
         instance.created_by = request.user
+        instance.country = data.get("country", None)
+        instance.postalcode = data.get("postalcode", None)
+        instance.township = data.get("township", None)
+        instance.street = data.get("street", None)
+        instance.house_number = data.get("house_number", None)
+        
 
         instance.full_clean()
         instance.save()
@@ -222,6 +228,11 @@ class CampLocationService:
         instance.latitude = data.get("latitude", instance.latitude)
         instance.longitude = data.get("longitude", instance.longitude)
         instance.updated_by = request.user
+        instance.country = data.get("country", instance.longitude)
+        instance.postalcode = data.get("postalcode", instance.longitude)
+        instance.township = data.get("township", instance.longitude)
+        instance.street = data.get("street", instance.longitude)
+        instance.house_number = data.get("house_number", instance.longitude)
 
         instance.full_clean()
         instance.save()
