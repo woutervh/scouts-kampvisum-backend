@@ -50,6 +50,15 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 )
 
                 groups.sort(key=lambda group: group.group_admin_id)
+            
+            # if obj.has_role_shire_president():
+            #     shire_president_groups = obj.get_shire_president_groups()
+
+            #     groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
+            #             groups, shire_president_groups
+            #     )
+
+            #     groups.sort(key=lambda group: group.group_admin_id)
 
         return [
             {
