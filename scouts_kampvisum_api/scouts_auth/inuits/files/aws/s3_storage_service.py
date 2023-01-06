@@ -15,8 +15,8 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class S3StorageService(CustomStorage, S3Boto3Storage):
 
-    access_id = StorageSettings.get_s3_access_id()
-    access_key = StorageSettings.get_s3_access_key()
+    #access_id = StorageSettings.get_s3_access_id()
+    #access_key = StorageSettings.get_s3_access_key()
 
     bucket_name = StorageSettings.get_s3_bucket_name()
     # default_acl = StorageSettings.get_s3_default_acl()
