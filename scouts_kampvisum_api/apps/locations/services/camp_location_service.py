@@ -121,6 +121,8 @@ class CampLocationService:
         instance.center_longitude = data.get("center_longitude", None)
         instance.zoom = data.get("zoom", None)
         instance.created_by = request.user
+        instance.start_date = data.get("start_date", None)
+        instance.end_date = data.get("end_date", None)
 
         instance.full_clean()
         instance.save()
@@ -142,6 +144,8 @@ class CampLocationService:
         )
         instance.zoom = data.get("zoom", None)
         instance.updated_by = request.user
+        instance.start_date = data.get("start_date", instance.start_date)
+        instance.end_date = data.get("end_date", instance.end_date)
 
         instance.full_clean()
         instance.save()

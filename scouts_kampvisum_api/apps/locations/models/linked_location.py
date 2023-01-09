@@ -23,3 +23,5 @@ class LinkedLocation(AuditedBaseModel):
     center_latitude = models.FloatField(null=True, blank=True, default=50.4956754)
     center_longitude = models.FloatField(null=True, blank=True, default=3.3452037)
     zoom = DefaultIntegerField(null=True, blank=True, default=7)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
