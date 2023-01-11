@@ -231,6 +231,7 @@ MIDDLEWARE = [
     "scouts_auth.auth.middleware.ScoutsAuthSessionRefresh",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_cprofile_middleware.middleware.ProfilerMiddleware",
 ]
 
 
@@ -257,6 +258,14 @@ TEMPLATES = [
 # ############################################################################ #
 ROOT_URLCONF = "scouts_kampvisum_api.urls"
 WSGI_APPLICATION = "scouts_kampvisum_api.wsgi.application"
+
+
+# ############################################################################ #
+#                                                                              #
+# PROFILER                                                                     #
+#                                                                              #
+# ############################################################################ #
+DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 
 
 # ############################################################################ #

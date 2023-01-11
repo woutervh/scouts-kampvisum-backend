@@ -30,35 +30,31 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
         groups = []
-        admin_groups = []
 
-        if obj.has_role_administrator():
-            groups = ScoutsGroup.objects.all()
-        else:
+        admin_groups: List[ScoutsGroup] = list(ScoutsGroup.objects.get_by_group_admin_ids(
+            GroupAdminSettings.get_administrator_groups()))
+
+        for admin_group in admin_groups:
+            if obj.has_role_leader(group=admin_group):
+                groups = ScoutsGroup.objects.all()
+                break
+
+        if not groups:
             groups: List[ScoutsGroup] = [
-                    group
-                    for group in obj.persisted_scouts_groups
-                    if obj.has_role_leader(group=group)
-                    or obj.has_role_district_commissioner(group=group)
-                ]
+                group
+                for group in obj.persisted_scouts_groups
+                if obj.has_role_leader(group=group)
+                or obj.has_role_district_commissioner(group=group)
+            ]
 
             if obj.has_role_district_commissioner():
                 district_commissioner_groups = obj.get_district_commissioner_groups()
 
                 groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
-                        groups, district_commissioner_groups
+                    groups, district_commissioner_groups
                 )
 
                 groups.sort(key=lambda group: group.group_admin_id)
-            
-            # if obj.has_role_shire_president():
-            #     shire_president_groups = obj.get_shire_president_groups()
-
-            #     groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
-            #             groups, shire_president_groups
-            #     )
-
-            #     groups.sort(key=lambda group: group.group_admin_id)
 
         return [
             {

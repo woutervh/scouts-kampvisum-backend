@@ -28,6 +28,7 @@ class ScoutsGroupManager(models.Manager):
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         group_admin_id = kwargs.get("group_admin_id", None)
+        group_admin_ids = kwargs.get("group_admin_ids", None)
         raise_error = kwargs.get("raise_error", False)
 
         if pk:
@@ -67,6 +68,9 @@ class ScoutsGroupManager(models.Manager):
             .filter(parent_group_admin_id=parent_group_admin_id)
             .all()
         )
+
+    def get_by_group_admin_ids(self, group_admin_ids):
+        return self.get_queryset().filter(group_admin_id__in=group_admin_ids)
 
 
 class ScoutsGroup(AuditedBaseModel):

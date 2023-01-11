@@ -62,7 +62,6 @@ class ScoutsUserService:
     def _check_user_data(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
-
         if not OIDCUserHelper.requires_data_loading(user=user):
             logger.debug("Not reloading user data", user=user)
 
@@ -72,22 +71,6 @@ class ScoutsUserService:
             user.save()
 
             return user
-
-        if OIDCUserHelper.requires_group_loading(user=user):
-            try:
-                user = self.authorization_service.load_user_scouts_groups(
-                    user=user)
-            except Exception as exc:
-                raise ValidationError(
-                    "An error occured while loading user scouts groups", exc
-                )
-
-            user.last_updated_groups = timezone.now()
-
-            user.full_clean()
-            user.save()
-        else:
-            logger.debug("Not reloading user groups", user=user)
 
         if OIDCUserHelper.requires_functions_loading(user=user):
             user: settings.AUTH_USER_MODEL = (
@@ -108,6 +91,22 @@ class ScoutsUserService:
             user.save()
         else:
             logger.debug("Not reloading user functions", user=user)
+
+        if OIDCUserHelper.requires_group_loading(user=user):
+            try:
+                user = self.authorization_service.load_user_scouts_groups(
+                    user=user)
+            except Exception as exc:
+                raise ValidationError(
+                    "An error occured while loading user scouts groups", exc
+                )
+
+            user.last_updated_groups = timezone.now()
+
+            user.full_clean()
+            user.save()
+        else:
+            logger.debug("Not reloading user groups", user=user)
 
         section_service = ScoutsSectionService()
         section_service.setup_default_sections(
