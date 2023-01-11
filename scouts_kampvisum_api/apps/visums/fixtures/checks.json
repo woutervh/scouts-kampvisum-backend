@@ -2813,7 +2813,8 @@
                 "ParticipantCookCheck"
             ],
             "is_multiple": true,
-            "label": "Lijst van foerage"
+            "label": "Lijst van foerage",
+            "is_required_for_validation": false
         }
     },
     {
@@ -2830,7 +2831,8 @@
             "check_type": [
                 "CommentCheck"
             ],
-            "label": "Opmerkingen"
+            "label": "Opmerkingen",
+            "is_required_for_validation": false
         }
     },
     {
