@@ -24,7 +24,7 @@ class OIDCUserHelper:
             now,
             last_updated,
             delta_seconds,
-            delta_seconds / 60 < OIDCSettings.get_profile_refresh_time(),
+            delta_seconds / 60 < minutes_before_refresh,
         )
 
     @staticmethod
@@ -38,6 +38,10 @@ class OIDCUserHelper:
         if not user.last_updated:
             return True
 
+        refresh_time = OIDCSettings.get_profile_refresh_time()
+        if refresh_time == 0:
+            return True
+
         (
             now,
             last_updated,
@@ -45,7 +49,7 @@ class OIDCUserHelper:
             requires_loading,
         ) = OIDCUserHelper._requires_loading(
             last_updated=user.last_updated,
-            minutes_before_refresh=OIDCSettings.get_profile_refresh_time(),
+            minutes_before_refresh=refresh_time,
         )
         if requires_loading:
             logger.debug(
@@ -78,6 +82,10 @@ class OIDCUserHelper:
         if not user.last_updated_groups:
             return True
 
+        refresh_time = OIDCSettings.get_profile_refresh_groups_time()
+        if refresh_time == 0:
+            return True
+
         (
             now,
             last_updated,
@@ -85,7 +93,7 @@ class OIDCUserHelper:
             requires_loading,
         ) = OIDCUserHelper._requires_loading(
             last_updated=user.last_updated_groups,
-            minutes_before_refresh=OIDCSettings.get_profile_refresh_groups_time(),
+            minutes_before_refresh=refresh_time,
         )
         if requires_loading:
             logger.debug(
@@ -120,6 +128,10 @@ class OIDCUserHelper:
         if not user.last_updated_functions:
             return True
 
+        refresh_time = OIDCSettings.get_profile_refresh_functions_time()
+        if refresh_time == 0:
+            return True
+
         (
             now,
             last_updated,
@@ -127,7 +139,7 @@ class OIDCUserHelper:
             requires_loading,
         ) = OIDCUserHelper._requires_loading(
             last_updated=user.last_updated_functions,
-            minutes_before_refresh=OIDCSettings.get_profile_refresh_functions_time(),
+            minutes_before_refresh=refresh_time,
         )
         if requires_loading:
             logger.debug(
