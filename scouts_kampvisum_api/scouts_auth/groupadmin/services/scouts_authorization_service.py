@@ -200,16 +200,22 @@ class ScoutsAuthorizationService(AuthorizationService):
             "SCOUTS AUTHORIZATION SERVICE: loading user functions",
             user=user,
         )
+        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = self.service.get_function_descriptions(
+            active_user=user).function_descriptions
+        active_leader_functions: List[AbstractScoutsFunction] = self.get_active_leader_functions(
+            user=user, abstract_function_descriptions=abstract_function_descriptions)
         user = self.scouts_function_service.create_or_update_scouts_functions_for_user(
-            user=user, abstract_functions = self.get_active_leader_functions(user=user)
+            user=user, abstract_functions=active_leader_functions, abstract_function_descriptions=abstract_function_descriptions
         )
 
         return user
 
-    def get_active_leader_functions(self, user: settings.AUTH_USER_MODEL) -> List[AbstractScoutsFunction]:
+    def get_active_leader_functions(self, user: settings.AUTH_USER_MODEL, abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = None) -> List[AbstractScoutsFunction]:
         leader_functions: List[AbstractScoutsFunction()] = []
-        function_descriptions: List[AbstractScoutsFunctionDescription] = self.service.get_function_descriptions(
-            active_user=user).function_descriptions
+
+        if abstract_function_descriptions is None or len(abstract_function_descriptions) == 0:
+            abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = self.service.get_function_descriptions(
+                active_user=user).function_descriptions
         now = pytz.utc.localize(datetime.now())
 
         for user_function in user.functions:
@@ -218,9 +224,9 @@ class ScoutsAuthorizationService(AuthorizationService):
             #     function_end = pytz.utc.localize(value)
 
             if function_end is None or function_end >= now:
-                for function_description in function_descriptions:
-                    if function_description.group_admin_id == user_function.group_admin_id or function_description.group_admin_id == user_function.function:
-                        for grouping in function_description.groupings:
+                for abstract_function_description in abstract_function_descriptions:
+                    if abstract_function_description.group_admin_id == user_function.group_admin_id or abstract_function_description.group_admin_id == user_function.function:
+                        for grouping in abstract_function_description.groupings:
                             if grouping.name == GroupAdminSettings.get_section_leader_identifier():
                                 leader_functions.append(user_function)
                                 # if user_function.group_admin_id not in [f.group_admin_id for f in leader_functions]:
