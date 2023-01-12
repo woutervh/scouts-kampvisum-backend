@@ -38,6 +38,7 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
             "website": data.pop("website", None),
             "info": data.pop("vrijeInfo", None),
             "parent_group": data.pop("bovenliggendeGroep", None),
+            "child_groups": data.pop("onderliggendeGroepen", []),
             "type": data.pop("soort", None),
             "only_leaders": bool(data.pop("enkelLeiding", None)),
             "show_members_improved": bool(data.pop("ledenVerbeterdTonen", None)),
@@ -79,6 +80,7 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
         instance.website = validated_data.pop("website", None)
         instance.info = validated_data.pop("info", None)
         instance.parent_group = validated_data.pop("parent_group", None)
+        instance.child_groups = validated_data.pop("child_groups", None)
         instance.type = validated_data.pop("type", None)
         instance.only_leaders = validated_data.pop("only_leaders", None)
         instance.show_members_improved = validated_data.pop(

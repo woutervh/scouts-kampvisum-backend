@@ -239,12 +239,22 @@ class ScoutsUser(User):
         """
         for function in self.persisted_scouts_functions.filter(end__isnull=True):
             if group:
-                if function.is_district_commissioner_for_group(scouts_group=group):
-                    return True
+                return function.is_district_commissioner_for_group(scouts_group=group)
             else:
-                if function.is_district_commissioner():
-                    return True
+                return function.is_district_commissioner()
 
+        return False
+    
+    def has_role_shire_president(self, group: ScoutsGroup = None) -> bool:
+        """
+        Determines if the user is a shire president (gouwvoorzitter) baed on a function code
+        """
+        for function in self.persisted_scouts_functions.filter(end__isnull=True):
+            if group:
+                return function.is_shire_president_for_group(scouts_group=group)
+            else:
+                return function.is_shire_president()
+        
         return False
 
     def get_district_commissioner_groups(self) -> List[ScoutsGroup]:

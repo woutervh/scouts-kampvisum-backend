@@ -231,7 +231,7 @@ MIDDLEWARE = [
     "scouts_auth.auth.middleware.ScoutsAuthSessionRefresh",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_cprofile_middleware.middleware.ProfilerMiddleware",
+    # "django_cprofile_middleware.middleware.ProfilerMiddleware",
 ]
 
 

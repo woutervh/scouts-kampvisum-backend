@@ -14,6 +14,7 @@ from scouts_auth.inuits.models.fields import (
     OptionalCharField,
     OptionalEmailField,
     OptionalDateField,
+    ListField,
 )
 
 
@@ -29,6 +30,7 @@ class AbstractScoutsGroup(AbstractNonModel):
     website = OptionalCharField()
     info = OptionalCharField()
     parent_group = OptionalCharField()
+    child_groups = ListField()
     type = OptionalCharField()
     only_leaders = models.BooleanField(default=False)
     show_members_improved = models.BooleanField(default=False)
@@ -53,6 +55,7 @@ class AbstractScoutsGroup(AbstractNonModel):
         website: str = "",
         info: str = "",
         parent_group: str = "",
+        child_groups: List[str] = [],
         type: str = "",
         only_leaders: bool = False,
         show_members_improved: bool = False,
@@ -70,6 +73,7 @@ class AbstractScoutsGroup(AbstractNonModel):
         self.website = website
         self.info = info
         self.parent_group = parent_group
+        self.child_groups = child_groups
         self.type = type
         self.only_leaders = only_leaders
         self.show_members_improved = show_members_improved
@@ -87,7 +91,7 @@ class AbstractScoutsGroup(AbstractNonModel):
         return "{} {}".format(self.name, self.group_admin_id)
 
     def __str__(self):
-        return "group_admin_id({}), number({}), name({}), addresses({}), date_of_foundation({}), only_leaders({}), show_member_improved({}), bank_account({}), email({}), website({}), info({}), parent_group ({}), type({}), contacts({}), group_specific_fields ({}), links({})".format(
+        return "group_admin_id({}), number({}), name({}), addresses({}), date_of_foundation({}), only_leaders({}), show_member_improved({}), bank_account({}), email({}), website({}), info({}), parent_group ({}), child_groups ({}), type({}), contacts({}), group_specific_fields ({}), links({})".format(
             self.group_admin_id,
             self.number,
             self.name,
@@ -100,6 +104,7 @@ class AbstractScoutsGroup(AbstractNonModel):
             self.website,
             self.info,
             self.parent_group,
+            ", ".join(group for group in self.child_groups),
             self.type,
             ", ".join(str(contact) for contact in self.contacts)
             if self.contacts

@@ -183,3 +183,11 @@ class ScoutsFunction(AuditedBaseModel):
                     return True
 
         return False
+    
+    def is_shire_president(self) -> bool:
+        return AbstractScoutsFunctionCode(code=self.code).is_shire_president()
+    
+    def is_shire_president_for_group(self, scouts_group: ScoutsGroup = None) -> bool:
+        if self.is_shire_president():
+            return True
+        return False
