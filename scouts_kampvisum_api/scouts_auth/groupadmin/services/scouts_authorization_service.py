@@ -149,7 +149,7 @@ class ScoutsAuthorizationService(AuthorizationService):
                     ScoutsAuthorizationService.SECTION_LEADER,
                     scouts_group=scouts_group,
                 )
-        
+
         if GroupAdminSettings.is_debug():
             test_groups = GroupAdminSettings.get_test_groups()
             if any(group in user.get_group_names() for group in test_groups):

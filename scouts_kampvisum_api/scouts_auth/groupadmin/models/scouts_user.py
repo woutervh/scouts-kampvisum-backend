@@ -244,7 +244,7 @@ class ScoutsUser(User):
                 return function.is_district_commissioner()
 
         return False
-    
+
     def has_role_shire_president(self, group: ScoutsGroup = None) -> bool:
         """
         Determines if the user is a shire president (gouwvoorzitter) baed on a function code
@@ -254,7 +254,7 @@ class ScoutsUser(User):
                 return function.is_shire_president_for_group(scouts_group=group)
             else:
                 return function.is_shire_president()
-        
+
         return False
 
     def get_district_commissioner_groups(self) -> List[ScoutsGroup]:

@@ -79,7 +79,8 @@ class ScoutsGroup(AuditedBaseModel):
 
     group_admin_id = RequiredCharField()
     parent_group_admin_id = OptionalCharField(null=True)
-    child_groups
+    parent_group = models.ForeignKey(
+        'self', on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Parent group")
     number = OptionalCharField()
     name = OptionalCharField()
     group_type = OptionalCharField()
