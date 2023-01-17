@@ -119,6 +119,8 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
                                     ).data
                                     location["visum_id"] = campvisum.id
                                     location["name"] = linked_location.name
+                                    location["start_date"] = linked_location.start_date
+                                    location["end_date"] = linked_location.end_date
                                     location["camp"] = CampMinimalSerializer(
                                         campvisum.camp, many=False).data
                                     location["camp"]["group"] = ScoutsGroupSerializer(
