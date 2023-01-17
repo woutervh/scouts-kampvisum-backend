@@ -77,6 +77,9 @@ handle_feedback = CampVisumApprovalViewSet.as_view({"patch": "handle_feedback"})
 global_handle_feedback = CampVisumApprovalViewSet.as_view(
     {"patch": "global_handle_feedback"}
 )
+dates_leaders = CampVisumViewSet.as_view(
+    {"get": "dates_leaders"}
+)
 
 urlpatterns = [
     path("checks/simple/<uuid:check_id>", simple_check, name="simple_check"),
@@ -149,6 +152,11 @@ urlpatterns = [
         global_handle_feedback,
         name="global_handle_feedback",
     ),
+    path(
+        "visums/<uuid:pk>/dates/leaders",
+        dates_leaders,
+        name="visums",
+    ),
 ]
 
 
@@ -161,5 +169,6 @@ router.register(r"visums/locations", CampVisumLocationViewSet, "visums_locations
 router.register(r"visums", CampVisumViewSet, "visums")
 router.register(r"visums_categories", LinkedCategoryViewSet, "categories")
 router.register(r"checks", LinkedCheckViewSet, "checks")
+router.register(r"visums", CampVisumViewSet, "visums")
 
 urlpatterns += router.urls
