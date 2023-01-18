@@ -165,6 +165,12 @@ class ScoutsFunction(AuditedBaseModel):
                 return scouts_group in self.scouts_groups
             return True
         return False
+    
+    def is_function_with_underlying_groups(self) -> bool:
+        return (
+            self.is_district_commissioner() or
+            self.is_shire_president()
+        )
 
     def is_district_commissioner(self) -> bool:
         return AbstractScoutsFunctionCode(code=self.code).is_district_commissioner()

@@ -79,8 +79,8 @@ class ScoutsGroup(AuditedBaseModel):
 
     group_admin_id = RequiredCharField()
     parent_group_admin_id = OptionalCharField(null=True)
-    parent_group = models.ForeignKey(
-        'self', on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Parent group")
+    _child_groups = models.ManyToManyField('self', blank=True, symmetrical=False, verbose_name="Child groups")
+    _child_groups_list = None
     number = OptionalCharField()
     name = OptionalCharField()
     group_type = OptionalCharField()
@@ -106,6 +106,16 @@ class ScoutsGroup(AuditedBaseModel):
     @property
     def full_name(self):
         return "{} {}".format(self.name, self.group_admin_id)
+    
+    @property
+    def child_groups(self):
+        if self._child_groups_list is None:
+            self._child_groups_list = self._child_groups.all()
+
+        return self._child_groups_list
+    
+    def add_child_group(self, child_group):
+        self._child_groups.add(child_group)
 
     @staticmethod
     def from_abstract_scouts_group(abstract_group: AbstractScoutsGroup):
@@ -120,6 +130,11 @@ class ScoutsGroup(AuditedBaseModel):
         return group
 
     def equals_abstract_scouts_group(self, abstract_group: AbstractScoutsGroup):
+        if self.child_groups and abstract_group.child_groups:
+            for child_group in self.child_groups:
+                if child_group.group_admin_id not in abstract_group.child_groups:
+                    return False
+        
         return (
             self.group_admin_id == abstract_group.group_admin_id
             and self.parent_group_admin_id == abstract_group.parent_group

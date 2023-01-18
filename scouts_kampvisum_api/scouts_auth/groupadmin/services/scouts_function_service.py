@@ -311,3 +311,7 @@ class ScoutsFunctionService:
                     )
             else:
                 instance.add_group(scouts_group)
+                
+                if instance.is_function_with_underlying_groups():
+                    for child_group in scouts_group.child_groups:
+                        instance.add_group(child_group)

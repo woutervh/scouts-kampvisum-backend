@@ -1361,6 +1361,7 @@
                 "ParticipantMemberCheck"
             ],
             "is_multiple": true,
+            "requires_permission": "view_member_data",
             "label": "Lijst van leden"
         }
     },
@@ -2902,6 +2903,7 @@
                 "ParticipantMemberCheck"
             ],
             "is_multiple": true,
+            "requires_permission": "view_member_data",
             "label": "Lijst van leden"
         }
     },

@@ -63,6 +63,7 @@ class CampVisum(AuditedBaseModel):
             ("list_visum", "User can list visums for his/her group"),
             ("view_visum_notes", "User is a DC and can view approval notes"),
             ("edit_visum_notes", "User is a DC and can edit approval notes"),
+            ("view_member_data", "User is allowed to view gdpr-sensitive member data"),
         ]
 
     def is_signable(self):

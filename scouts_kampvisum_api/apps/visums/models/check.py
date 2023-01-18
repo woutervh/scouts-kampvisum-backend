@@ -37,6 +37,7 @@ class Check(
     is_multiple = models.BooleanField(default=False)
     is_member = models.BooleanField(default=False)
     is_required_for_validation = models.BooleanField(default=True)
+    requires_permission = OptionalCharField()
     sub_category = models.ForeignKey(
         SubCategory, related_name="checks", on_delete=models.CASCADE
     )
@@ -54,11 +55,14 @@ class Check(
         return (self.name, self.sub_category)
 
     def __str__(self):
-        return "OBJECT Check: name({}), sub_category({}), check_type({}), is_multiple ({}), camp_types ({})".format(
+        return "OBJECT Check: name({}), sub_category({}), check_type({}), is_multiple ({}), is_member({}), is_required_for_validation({}), requires_permission({}), camp_types ({})".format(
             self.name,
             str(self.sub_category),
             str(self.check_type),
             self.is_multiple,
+            self.is_member,
+            self.is_required_for_validation,
+            self.requires_permission,
             ", ".join(camp_type.camp_type for camp_type in self.camp_types.all())
             if self.camp_types
             else "[]",

@@ -23,6 +23,8 @@ from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CheckSerializer
 from apps.visums.urls import LinkedCheckEndpointFactory
 
+from scouts_auth.groupadmin.models import ScoutsGroup
+
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 from scouts_auth.inuits.serializers.fields import (
     DatetypeAwareDateSerializerField,
@@ -57,6 +59,17 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
     def get_value(self, obj: LinkedCheck):
         # logger.debug("Getting value for %s with id %s", type(obj).__name__, obj.id)
         check: LinkedCheck = obj.get_value_type()
+
+        if obj.parent.requires_permission:
+            user: settings.AUTH_USER_MODEL = self.context['request'].user
+
+            if not user.has_perm('visums.' + obj.parent.requires_permission):
+                return []
+            else:
+                group: ScoutsGroup = obj.sub_category.category.category_set.visum.group
+                logger.debug(f"GROUP: {group.group_admin_id}")
+                if not(user.has_role_section_leader(group=group) or user.has_role_group_leader(group=group) or user.has_role_administrator()):
+                    return []
 
         if check.parent.check_type.is_simple_check():
             value = LinkedSimpleCheckSerializer.get_value(check)
@@ -163,6 +176,8 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
         data["start_date"] = obj.start_date
         data["end_date"] = obj.end_date
 
+        
+
         return data
 
     def validate(self, obj: dict) -> dict:
@@ -192,13 +207,17 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
     @staticmethod
     def get_value(obj: LinkedLocationCheck) -> List[dict]:
         data = dict()
+        
+        if obj.has_value():
+            # data["is_camp_location"] = False
+            data["center_latitude"] = obj.center_latitude
+            data["center_longitude"] = obj.center_longitude
+            data["zoom"] = obj.zoom
+            data["locations"] = LinkedLocationSerializer(
+                obj.locations, many=(obj.parent.is_multiple)).data
 
-        # data["is_camp_location"] = False
-        data["center_latitude"] = obj.center_latitude
-        data["center_longitude"] = obj.center_longitude
-        data["zoom"] = obj.zoom
-        data["locations"] = LinkedLocationSerializer(
-            obj.locations, many=True).data
+            if obj.parent.is_multiple:
+                data["data_count"] = len(data["locations"])
 
         return data
 
@@ -237,6 +256,9 @@ class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
         data["participants"] = VisumParticipantSerializer(
             obj.participants.all(), many=True
         ).data
+
+        if obj.parent.is_multiple:
+            data["data_count"] = len(data["participants"])
 
         return data
 

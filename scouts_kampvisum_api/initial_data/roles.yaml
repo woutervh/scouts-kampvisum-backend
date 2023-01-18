@@ -9,6 +9,7 @@ role_section_leader:
   - visums.delete_visum
   - visums.view_visum_approval
   - visums.view_visum_feedback
+  - visums.view_member_data
 role_group_leader:
   - groups.view_section
   - groups.edit_section
@@ -20,6 +21,7 @@ role_group_leader:
   - visums.delete_visum
   - visums.view_visum_approval
   - visums.view_visum_feedback
+  - visums.view_member_data
 role_district_commissioner:
   - groups.view_section
   - groups.edit_section
@@ -46,12 +48,5 @@ role_administrator:
   - visums.view_visum_approval
   - visums.view_visum_feedback
   - visums.view_camp_locations
-role_personnel:
-  - groups.view_section
-  - groups.list_section
-  - visums.view_visum
-  - visums.list_visum
-  - visums.view_visum_approval
-  - visums.view_visum_feedback
-  - visums.view_visum_notes
+  - visums.view_member_data
 role_super_admin: [] # Doesn't need permissions because is made super user in django

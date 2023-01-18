@@ -177,6 +177,7 @@ class ScoutsAuthorizationService(AuthorizationService):
         if role not in self.known_roles:
             raise ValueError("Role " + role + " is not a known scouts role")
 
+        logger.debug(f"Adding user {user.username} to permission group {role}")
         super().add_user_to_group(user, group_name=role)
 
         return user

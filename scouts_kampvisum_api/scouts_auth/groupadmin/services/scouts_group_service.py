@@ -27,7 +27,7 @@ class ScoutsGroupService:
         user.scouts_groups = abstract_groups
 
         logger.debug(
-            "SCOUTS GROUP SERVICE: Found %d groups(s) for user %s",
+            "SCOUTS GROUP SERVICE: Found %d groups(s) on GA for user %s",
             len(abstract_groups),
             user.username,
             user=user,
@@ -40,34 +40,54 @@ class ScoutsGroupService:
     def create_or_update_scouts_groups(
         self, user: settings.AUTH_USER_MODEL
     ) -> List[ScoutsGroup]:
+        persisted_groups: List[ScoutsGroup] = []
+
         for abstract_group in user.scouts_groups:
             scouts_group: ScoutsGroup = self.create_or_update_scouts_group(
                 user=user, abstract_group=abstract_group
             )
-            logger.debug(f"Created scouts group {scouts_group.group_admin_id}")
 
             user.add_group(scouts_group)
-            logger.debug(f"Added scouts group {scouts_group.group_admin_id} for user {user.username}")
+            persisted_groups.append(scouts_group)
+        
+        for persisted_group in persisted_groups:
+            for abstract_group in user.scouts_groups:
+                if (
+                    persisted_group.group_admin_id == abstract_group.group_admin_id
+                    and abstract_group.child_groups
+                    and len(abstract_group.child_groups) > 0
+                ):
+                    self.link_child_groups(
+                        scouts_group=persisted_group,
+                        child_groups=[group for group in persisted_groups if group.group_admin_id in abstract_group.child_groups]
+                    )
 
         return user.persisted_scouts_groups
 
     def create_or_update_scouts_group(
-        self, user: settings.AUTH_USER_MODEL, abstract_group: AbstractScoutsGroup
+        self, user: settings.AUTH_USER_MODEL, abstract_group: AbstractScoutsGroup, child_groups: List[ScoutsGroup] = None
     ) -> ScoutsGroup:
         scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
             group_admin_id=abstract_group.group_admin_id
         )
 
+        if not child_groups:
+            child_groups = []
+
         if scouts_group:
-            return self.update_scouts_group(
+            scouts_group = self.update_scouts_group(
                 updated_by=user,
                 scouts_group=scouts_group,
                 abstract_group=abstract_group,
             )
+            logger.debug(f"Updated scouts group {scouts_group.group_admin_id}")
         else:
-            return self.create_scouts_group(
-                created_by=user, abstract_group=abstract_group
+            scouts_group = self.create_scouts_group(
+                created_by=user, abstract_group=abstract_group,
             )
+            logger.debug(f"Created scouts group {scouts_group.group_admin_id}")
+        
+        return scouts_group
 
     def create_scouts_group(
         self,
@@ -80,6 +100,7 @@ class ScoutsGroupService:
                 raise ValidationError(
                     "Can't load scouts group from GroupAdmin without a group_admin_id"
                 )
+            
             abstract_group: AbstractScoutsGroup = self.groupadmin.get_group(
                 active_user=created_by, group_group_admin_id=group_admin_id
             )
@@ -134,3 +155,8 @@ class ScoutsGroupService:
             scouts_group.save()
 
         return scouts_group
+    
+    def link_child_groups(self, scouts_group: ScoutsGroup, child_groups: List[ScoutsGroup]):
+        for child_group in child_groups:
+            if child_group not in scouts_group.child_groups:
+                scouts_group.add_child_group(child_group)
