@@ -120,6 +120,7 @@ class PermissionService:
         self, group: Group, permission: str, codename: str, app_label: str
     ):
         try:
+            logger.debug(f"Retrieving permission with codename {codename} for app {app_label}")
             permission = Permission.objects.get(
                 codename=codename, content_type__app_label=app_label
             )
