@@ -67,7 +67,6 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
                 return []
             else:
                 group: ScoutsGroup = obj.sub_category.category.category_set.visum.group
-                logger.debug(f"GROUP: {group.group_admin_id}")
                 if not (user.has_role_section_leader(group=group) or user.has_role_group_leader(group=group) or user.has_role_administrator()):
                     return []
 
