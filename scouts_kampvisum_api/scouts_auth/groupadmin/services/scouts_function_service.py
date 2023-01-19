@@ -302,16 +302,16 @@ class ScoutsFunctionService:
             if not scouts_group:
                 if not instance.end:
                     raise ValidationError(
-                        "Encountered an active ScoutsFunction %s (%s %s) for group %s and the user doesn't belong to that group".format(
-                            instance.group_admin_id,
+                        "Encountered an active ScoutsFunction (%s %s, id: %s) for group %s and the user doesn't belong to that group".format(
                             instance.code,
                             instance.description,
+                            instance.group_admin_id,
                             abstract_scouts_group.group_admin_id,
                         )
                     )
             else:
                 instance.add_group(scouts_group)
-                
+
                 if instance.is_function_with_underlying_groups():
                     for child_group in scouts_group.child_groups:
                         instance.add_group(child_group)
