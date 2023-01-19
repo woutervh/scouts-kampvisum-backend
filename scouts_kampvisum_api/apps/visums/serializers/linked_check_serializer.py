@@ -68,7 +68,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
             else:
                 group: ScoutsGroup = obj.sub_category.category.category_set.visum.group
                 logger.debug(f"GROUP: {group.group_admin_id}")
-                if not(user.has_role_section_leader(group=group) or user.has_role_group_leader(group=group) or user.has_role_administrator()):
+                if not (user.has_role_section_leader(group=group) or user.has_role_group_leader(group=group) or user.has_role_administrator()):
                     return []
 
         if check.parent.check_type.is_simple_check():
@@ -176,8 +176,6 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
         data["start_date"] = obj.start_date
         data["end_date"] = obj.end_date
 
-        
-
         return data
 
     def validate(self, obj: dict) -> dict:
@@ -207,7 +205,7 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
     @staticmethod
     def get_value(obj: LinkedLocationCheck) -> List[dict]:
         data = dict()
-        
+
         if obj.has_value():
             # data["is_camp_location"] = False
             data["center_latitude"] = obj.center_latitude
@@ -252,13 +250,14 @@ class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
     def get_value(obj: LinkedParticipantCheck) -> List[dict]:
         data = {}
 
-        data["participant_check_type"] = obj.participant_check_type
-        data["participants"] = VisumParticipantSerializer(
-            obj.participants.all(), many=True
-        ).data
+        if obj.has_value():
+            data["participant_check_type"] = obj.participant_check_type
+            data["participants"] = VisumParticipantSerializer(
+                obj.participants.all(), many=True
+            ).data
 
-        if obj.parent.is_multiple:
-            data["data_count"] = len(data["participants"])
+            if obj.parent.is_multiple:
+                data["data_count"] = len(data["participants"])
 
         return data
 
