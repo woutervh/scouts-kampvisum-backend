@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from apps.camps.managers import CampYearManager
 
@@ -29,7 +29,8 @@ class CampYear(AuditedBaseModel):
     end_date = models.DateField()
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["year"], name="unique_year")]
+        constraints = [models.UniqueConstraint(
+            fields=["year"], name="unique_year")]
 
     def natural_key(self):
         # logger.trace("NATURAL KEY CALLED CampYear")

@@ -6,29 +6,32 @@ authors = ["inuits <info@inuits.eu>"]
 license = "GPL v2.0"
 
 [tool.poetry.dependencies]
-python = "^3.7"
-Django = "^3.2.14"
-djangorestframework = "^3.13.1,!=3.14.0"
-django-cors-headers = "^3.7.0"
-django-sql-middleware = "^0.0.7"
-django-filter = "^2.4.0"
-mozilla-django-oidc = "^2.0.0"
-drf-yasg2 = "^1.19.4"
-cffi = "^1.14.6"
-PyYAML = "^5.4.1"
-environs = "^9.3.2"
-future = "^0.18.2"
-psycopg2-binary = "^2.9.1"
-django-safedelete = "^1.0.0"
-django-rest-enumfield = "^0.2.0"
-django-storages = "^1.11.1"
-boto3 = "^1.18.9"
-django-anymail = {extras = ["sendinblue"], version = "^8.4"}
-pdfrw = "^0.4"
-pyjwt = "^2.3.0"
+python = "^3.9.2"
+Django = "4.1.5"
+
+# Django-rest 3.14 breaks swagger, see: https://github.com/axnsan12/drf-yasg/issues/810
+#djangorestframework = "3.14.0"
+djangorestframework = "3.13.1"
+django-cors-headers = "3.13.0"
+django-sql-middleware = "0.0.7"
+django-filter = "22.1"
+mozilla-django-oidc = "3.0.0"
+drf-yasg2 = "1.19.4"
+cffi = "1.15.1"
+PyYAML = "6.0"
+environs = "9.5.0"
+future = "0.18.3"
+psycopg2-binary = "2.9.5"
+django-safedelete = "1.3.1"
+django-rest-enumfield = "0.2.0"
+django-storages = "1.13.2"
+boto3 = "1.26.52"
+django-anymail = {extras = ["sendinblue"], version = "9.0"}
+pdfrw = "0.4"
+pyjwt = "2.6.0"
 django-cprofile-middleware = "1.0.5"
 [tool.poetry.dev-dependencies]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core=1.4.0"]
 build-backend = "poetry.core.masonry.api"
