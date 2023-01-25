@@ -132,7 +132,8 @@ class LinkedCheck(AuditedArchiveableBaseModel):
 # A check that can be checked, unchecked or set as not applicable
 # ##############################################################################
 class LinkedSimpleCheck(LinkedCheck):
-    value = DefaultCharField(choices=CheckState.choices, default=CheckState.EMPTY)
+    value = DefaultCharField(choices=CheckState.choices,
+                             default=CheckState.EMPTY)
 
     def has_value(self) -> bool:
         if CheckState.is_checked_or_irrelevant(self.value) and CheckValidator.validate(
@@ -178,11 +179,13 @@ class LinkedDurationCheck(LinkedCheck):
 # ##############################################################################
 class LinkedLocationCheck(LinkedCheck):
     is_camp_location = models.BooleanField(default=False)
-    center_latitude = models.FloatField(null=True, blank=True, default=50.4956754)
-    center_longitude = models.FloatField(null=True, blank=True, default=3.3452037)
+    center_latitude = models.FloatField(
+        null=True, blank=True, default=50.4956754)
+    center_longitude = models.FloatField(
+        null=True, blank=True, default=3.3452037)
     zoom = DefaultIntegerField(default=7)
 
-    locations = models.ManyToManyField(LinkedLocation,  related_name="checks")
+    locations = models.ManyToManyField(LinkedLocation, related_name="checks")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -204,7 +207,8 @@ class LinkedParticipantCheck(LinkedCheck):
         default=ParticipantType.PARTICIPANT,
         max_length=1,
     )
-    participants = models.ManyToManyField(VisumParticipant, related_name="checks")
+    participants = models.ManyToManyField(
+        VisumParticipant, related_name="checks")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -219,7 +223,7 @@ class LinkedParticipantCheck(LinkedCheck):
         return self.participants.first()
 
     def has_value(self) -> bool:
-        return self.participants.count() > 0
+        return self.participants and self.participants.count() > 0
 
 
 # ##############################################################################

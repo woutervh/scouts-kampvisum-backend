@@ -29,7 +29,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
     category_set = LinkedCategorySetSerializer()
     engagement = CampVisumEngagementSerializer(required=False)
     notes = PermissionRequiredSerializerField(
-        permission="visums.view_visum_notes",
+        permission="visums.read_visum_notes",
         field=OptionalCharSerializerField(),
         required=False,
     )
@@ -61,6 +61,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
     def to_representation(self, obj: CampVisum) -> dict:
         data = super().to_representation(obj)
 
-        data["group_group_admin_id"] = data.get("group", {}).get("group_admin_id", None)
+        data["group_group_admin_id"] = data.get(
+            "group", {}).get("group_admin_id", None)
 
         return data

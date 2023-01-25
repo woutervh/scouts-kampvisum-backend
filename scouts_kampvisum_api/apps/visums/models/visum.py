@@ -30,11 +30,14 @@ class CampVisum(AuditedBaseModel):
     group = models.ForeignKey(
         ScoutsGroup, on_delete=models.CASCADE, related_name="visums"
     )
-    camp = models.OneToOneField(Camp, on_delete=models.CASCADE, related_name="visum")
+    camp = models.OneToOneField(
+        Camp, on_delete=models.CASCADE, related_name="visum")
     camp_types = models.ManyToManyField(CampType)
 
-    camp_registration_mail_sent_before_deadline = models.BooleanField(default=False)
-    camp_registration_mail_sent_after_deadline = models.BooleanField(default=False)
+    camp_registration_mail_sent_before_deadline = models.BooleanField(
+        default=False)
+    camp_registration_mail_sent_after_deadline = models.BooleanField(
+        default=False)
     camp_registration_mail_last_sent = OptionalDateTimeField()
 
     engagement = models.OneToOneField(
@@ -56,14 +59,15 @@ class CampVisum(AuditedBaseModel):
     class Meta:
         # ordering = ["camp__sections__age_group"]
         permissions = [
-            ("view_camp_locations", "User can view all camp locations"),
-            ("view_visum", "User can view a camp visum"),
-            ("edit_visum", "User can create and edit a camp visum"),
+            ("create_visum", "User can create  a camp visum"),
+            ("read_visum", "User can view a camp visum"),
+            ("update_visum", "User can edit a camp visum"),
             ("delete_visum", "User can delete a camp visum"),
             ("list_visum", "User can list visums for his/her group"),
-            ("view_visum_notes", "User is a DC and can view approval notes"),
-            ("edit_visum_notes", "User is a DC and can edit approval notes"),
-            ("view_member_data", "User is allowed to view gdpr-sensitive member data"),
+            ("read_camp_locations", "User can view all camp locations"),
+            ("read_member_data", "User is allowed to view gdpr-sensitive member data"),
+            ("read_visum_notes", "User is a DC and can view approval notes"),
+            ("update_visum_notes", "User is a DC and can edit approval notes"),
         ]
 
     def is_signable(self):

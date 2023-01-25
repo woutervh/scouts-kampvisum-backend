@@ -49,21 +49,21 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     def get_permissions(self):
         current_permissions = super().get_permissions()
 
-        if self.action == "retrieve":
+        if self.action == "create":
             current_permissions.append(
-                CustomDjangoPermission("visums.view_visum"))
-        elif self.action == "create":
+                CustomDjangoPermission("visums.create_visum"))
+        elif self.action == "retrieve":
             current_permissions.append(
-                CustomDjangoPermission("visums.edit_visum"))
+                CustomDjangoPermission("visums.read_visum"))
         elif self.action == "update" or self.action == "partial_update":
             current_permissions.append(
-                CustomDjangoPermission("visums.edit_visum"))
-        elif self.action == "list":
-            current_permissions.append(
-                CustomDjangoPermission("visums.list_visum"))
+                CustomDjangoPermission("visums.update_visum"))
         elif self.action == "destroy":
             current_permissions.append(
                 CustomDjangoPermission("visums.delete_visum"))
+        elif self.action == "list":
+            current_permissions.append(
+                CustomDjangoPermission("visums.list_visum"))
 
         return current_permissions
 
@@ -205,7 +205,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             request=request, instance=instance)
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-    
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def dates_leaders(self, request, pk=None):
         logger.debug(f"Requesting visum {pk}", user=request.user)
@@ -218,11 +218,11 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug("Reloaded user permissions")
         serializer = CampVisumSerializer(
             instance, context={"request": request})
-        
+
         for category in serializer.data['category_set']['categories']:
             if category['parent']['name'] == 'planning':
                 for sub_category in category['sub_categories']:
                     if sub_category['parent']['name'] == 'planning_date':
                         for check in sub_category['checks']:
                             if check['parent']['name'] == 'planning_date_leaders':
-                                return Response(check['value'])        
+                                return Response(check['value'])

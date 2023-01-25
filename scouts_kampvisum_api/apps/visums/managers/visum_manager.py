@@ -30,7 +30,7 @@ class CampVisumQuerySet(models.QuerySet):
         for leader_function in leader_functions:
             group_admin_ids.append(leader_function.scouts_group.group_admin_id)
 
-            if user.has_role_district_commissioner():
+            if user.has_role_district_commissioner() or user.has_role_shire_president():
                 underlyingGroups: List[ScoutsGroup] = list(
                     ScoutsGroup.objects.get_groups_with_parent(
                         parent_group_admin_id=leader_function.scouts_group.group_admin_id
@@ -38,7 +38,7 @@ class CampVisumQuerySet(models.QuerySet):
                 )
 
                 for underlyingGroup in underlyingGroups:
-                    if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
+                    if leader_function.is_district_commissioner_for_group(scouts_group=underlyingGroup) or leader_function.is_shire_president_for_group(scouts_group=underlyingGroup):
                         group_admin_ids.append(
                             underlyingGroup.group_admin_id)
 

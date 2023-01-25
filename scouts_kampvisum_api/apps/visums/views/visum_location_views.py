@@ -51,20 +51,23 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
     def get_permissions(self):
         current_permissions = super().get_permissions()
 
-        if self.action == "retrieve":
-            current_permissions.append(
-                CustomDjangoPermission("visums.view_visum"))
         if self.action == "create":
             current_permissions.append(
-                CustomDjangoPermission("visums.edit_visum"))
-        if self.action == "update" or self.action == "partial_update":
+                CustomDjangoPermission("visums.create_visum"))
+        elif self.action == "retrieve":
             current_permissions.append(
-                CustomDjangoPermission("visums.edit_visum"))
+                CustomDjangoPermission("visums.read_visum"))
+        elif self.action == "update" or self.action == "partial_update":
+            current_permissions.append(
+                CustomDjangoPermission("visums.update_visum"))
+        elif self.action == "destroy":
+            current_permissions.append(
+                CustomDjangoPermission("visums.delete_visum"))
         if self.action == "list":
             current_permissions.append(
                 CustomDjangoPermission("visums.list_visum"))
             current_permissions.append(
-                CustomDjangoPermission("visums.view_camp_locations"))
+                CustomDjangoPermission("visums.read_camp_locations"))
 
         return current_permissions
 

@@ -48,16 +48,21 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     def get_permissions(self):
         current_permissions = super().get_permissions()
 
-        if self.action == "retrieve":
-            current_permissions.append(CustomDjangoPermission("groups.view_section"))
-        elif self.action == "create":
-            current_permissions.append(CustomDjangoPermission("groups.edit_section"))
+        if self.action == "create":
+            current_permissions.append(
+                CustomDjangoPermission("groups.create_section"))
+        elif self.action == "retrieve":
+            current_permissions.append(
+                CustomDjangoPermission("groups.read_section"))
         elif self.action == "update" or self.action == "partial_update":
-            current_permissions.append(CustomDjangoPermission("groups.edit_section"))
-        elif self.action == "list":
-            current_permissions.append(CustomDjangoPermission("groups.list_section"))
+            current_permissions.append(
+                CustomDjangoPermission("groups.update_section"))
         elif self.action == "destroy":
-            current_permissions.append(CustomDjangoPermission("groups.delete_section"))
+            current_permissions.append(
+                CustomDjangoPermission("groups.delete_section"))
+        elif self.action == "list":
+            current_permissions.append(
+                CustomDjangoPermission("groups.list_section"))
 
         return current_permissions
 
@@ -100,7 +105,8 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         instance: ScoutsSection = self.get_object()
         self.check_user_allowed(request, instance)
-        serializer = ScoutsSectionSerializer(instance, context={"request": request})
+        serializer = ScoutsSectionSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -156,7 +162,8 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         Retrieves a list of all existing Section instances.
         """
-        instances: List[ScoutsSection] = self.filter_queryset(self.get_queryset())
+        instances: List[ScoutsSection] = self.filter_queryset(
+            self.get_queryset())
 
         page = self.paginate_queryset(instances)
 

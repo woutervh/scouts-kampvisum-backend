@@ -115,6 +115,7 @@ class ScoutsAuthorizationService(AuthorizationService):
                     ScoutsAuthorizationService.DISTRICT_COMMISSIONER,
                     scouts_group=scouts_group,
                 )
+
             else:
                 user = self.remove_user_from_group(
                     user,

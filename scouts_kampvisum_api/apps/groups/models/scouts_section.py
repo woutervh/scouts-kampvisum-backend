@@ -51,8 +51,9 @@ class ScoutsSection(AbstractBaseModel):
             )
         ]
         permissions = [
-            ("view_section", "User can view a group section"),
-            ("edit_section", "User can create and edit a group section"),
+            ("create_section", "User can create a group section"),
+            ("read_section", "User can view a group section"),
+            ("update_section", "User can edit a group section"),
             ("delete_section", "User can delete a group section"),
             ("list_section", "User can list sections for his/her group"),
         ]

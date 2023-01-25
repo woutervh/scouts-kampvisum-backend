@@ -1,52 +1,60 @@
 role_section_leader:
-  - groups.view_section
-  - groups.edit_section
+  - groups.create_section
+  - groups.read_section
+  - groups.update_section
   - groups.delete_section
   - groups.list_section
-  - visums.view_visum
-  - visums.edit_visum
-  - visums.list_visum
+  - visums.create_visum
+  - visums.read_visum
+  - visums.update_visum
   - visums.delete_visum
-  - visums.view_visum_approval
-  - visums.view_visum_feedback
-  - visums.view_member_data
+  - visums.list_visum
+  - visums.read_visum_approval
+  - visums.read_visum_feedback
+  - visums.read_member_data
 role_group_leader:
-  - groups.view_section
-  - groups.edit_section
+  - groups.create_section
+  - groups.read_section
+  - groups.update_section
   - groups.delete_section
   - groups.list_section
-  - visums.view_visum
-  - visums.edit_visum
-  - visums.list_visum
+  - visums.create_visum
+  - visums.read_visum
+  - visums.update_visum
   - visums.delete_visum
-  - visums.view_visum_approval
-  - visums.view_visum_feedback
-  - visums.view_member_data
+  - visums.list_visum
+  - visums.read_visum_approval
+  - visums.read_visum_feedback
+  - visums.read_member_data
 role_district_commissioner:
-  - groups.view_section
-  - groups.edit_section
+  - groups.create_section
+  - groups.read_section
+  - groups.update_section
   - groups.delete_section
   - groups.list_section
-  - visums.view_visum
-  - visums.edit_visum
-  - visums.list_visum
+  - visums.read_visum
+  - visums.update_visum
   - visums.delete_visum
-  - visums.view_visum_approval
-  - visums.edit_visum_approval
-  - visums.view_visum_feedback
-  - visums.edit_visum_feedback
-  - visums.view_visum_notes
-  - visums.edit_visum_notes
+  - visums.list_visum
+  - visums.read_camp_locations
+  - visums.read_visum_approval
+  - visums.update_visum_approval
+  - visums.read_visum_feedback
+  - visums.update_visum_feedback
+  - visums.read_visum_notes
+  - visums.update_visum_notes
 role_administrator:
-  - groups.view_section
-  - groups.edit_section
+  - groups.create_section
+  - groups.read_section
+  - groups.update_section
   - groups.delete_section
   - groups.list_section
-  - visums.view_visum
-  - visums.edit_visum
+  - visums.read_visum
+  - visums.update_visum
+  - visums.delete_visum
   - visums.list_visum
-  - visums.view_visum_approval
-  - visums.view_visum_feedback
-  - visums.view_camp_locations
-  - visums.view_member_data
+  - visums.read_camp_locations
+  - visums.read_member_data
+  - visums.read_visum_approval
+  - visums.read_visum_feedback
 role_super_admin: [] # Doesn't need permissions because is made super user in django

@@ -82,7 +82,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
             msg = "Claims verification failed"
             raise ValidationError(msg)
 
-        # email based filtering
+        # group admin id based filtering
         users = self.filter_users_by_claims(user_info)
 
         logger.debug("GET OR CREATE USER FOUND %d user(s)", len(users))
@@ -106,8 +106,8 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
     def filter_users_by_claims(self, claims):
         """Return all users matching the group admin id."""
-        # logger.debug("CLAIMS: %s", claims)
-        group_admin_id = claims.get("id")
+        #logger.debug("CLAIMS: %s", claims)
+        group_admin_id = claims.get("id", None)
         if not group_admin_id:
             return self.UserModel.objects.none()
         return self.UserModel.objects.filter(group_admin_id=group_admin_id)
@@ -128,7 +128,8 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
                 )
                 username = decoded.get("preferred_username", None)
             except:
-                logger.error("Unable to decode JWT token - Do you need a refresh ?")
+                logger.error(
+                    "Unable to decode JWT token - Do you need a refresh ?")
         # logger.debug("USER: create user %s", username)
 
         member: AbstractScoutsMember = self._load_member_data(data=claims)
@@ -156,7 +157,8 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         # logger.debug("USER: update user")
 
         member: AbstractScoutsMember = self._load_member_data(data=claims)
-        user: settings.AUTH_USER_MODEL = self._merge_member_data(user, member, claims)
+        user: settings.AUTH_USER_MODEL = self._merge_member_data(
+            user, member, claims)
 
         logger.info(
             "SCOUTS OIDC AUTHENTICATION: Updated user",
@@ -195,5 +197,6 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Override the mapping in InuitsOIDCAuthenticationBackend to handle scouts-specific data.
         """
-        logger.debug("SCOUTS OIDC AUTHENTICATION: mapping user claims", user=user)
+        logger.debug(
+            "SCOUTS OIDC AUTHENTICATION: mapping user claims", user=user)
         return self.authorization_service.update_user_authorizations(user=user)
