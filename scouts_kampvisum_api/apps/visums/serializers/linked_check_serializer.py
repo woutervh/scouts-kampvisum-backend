@@ -63,7 +63,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
         if obj.parent.requires_permission:
             user: settings.AUTH_USER_MODEL = self.context['request'].user
 
-            if not user.has_perm('visums.' + obj.parent.requires_permission):
+            if not user.has_perm(obj.parent.requires_permission):
                 return []
             else:
                 group: ScoutsGroup = obj.sub_category.category.category_set.visum.group
@@ -211,7 +211,7 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
             data["center_longitude"] = obj.center_longitude
             data["zoom"] = obj.zoom
             data["locations"] = LinkedLocationSerializer(
-                obj.locations, many=(obj.parent.is_multiple)).data
+                obj.locations, many=(obj.parent.is_multiple), read_only=True).data
 
             if obj.parent.is_multiple:
                 data["data_count"] = len(data["locations"])
