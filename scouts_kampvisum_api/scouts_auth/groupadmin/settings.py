@@ -21,6 +21,10 @@ class GroupAdminSettings(SettingsHelper):
         return GroupAdminSettings.get_bool("DEBUG", False)
 
     @staticmethod
+    def get_username_from_access_token() -> bool:
+        return GroupAdminSettings.get_bool("USERNAME_FROM_ACCESS_TOKEN", True)
+
+    @staticmethod
     def get_group_admin_base_url(default_value=None):
         return GroupAdminSettings.get("GROUP_ADMIN_BASE_URL", default_value)
 
@@ -106,7 +110,7 @@ class GroupAdminSettings(SettingsHelper):
     @staticmethod
     def get_administrator_groups() -> List[str]:
         return SettingsHelper.get_list("KNOWN_ADMIN_GROUPS")
-    
+
     @staticmethod
     def get_test_groups() -> List[str]:
         return SettingsHelper.get_list("KNOWN_TEST_GROUPS")

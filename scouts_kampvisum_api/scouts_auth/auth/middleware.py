@@ -18,55 +18,27 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class ScoutsAuthSessionRefresh(SessionRefresh):
     def is_refreshable_url(self, request):
-        # Do not attempt to refresh the session if the OIDC backend is not used
-        # backend_session = request.session.get(BACKEND_SESSION_KEY)
-        # is_oidc_enabled = True
-        # if backend_session:
-        #     auth_backend = import_string(backend_session)
-        #     is_oidc_enabled = issubclass(auth_backend, OIDCAuthenticationBackend)
+        """Takes a request and returns whether it triggers a refresh examination
 
-        # logger.debug("request: %s (%s)", request.user, type(request.user).__name__)
-        # # logger.debug("request: %s", dir(request))
-        # # logger.debug(
-        # #     "request headers: %s", request.headers
-        # # )  # logger.debug("request access token: %s", request.access_token)
-        # # logger.debug("auth: %s", request.headers.get("Authorization"))
+        :arg HttpRequest request:
 
-        # logger.debug("request.method = 'GET' -> %s", request.method == "GET")
-        # logger.debug(
-        #     "request.user.is_authenticated -> %s", request.user.is_authenticated
-        # )
-        # logger.debug("is_oidc_enable -> %s", is_oidc_enabled)
+        :returns: boolean
 
-        # auth = request.headers.get("Authorization", None)
+        """
+        # This method call always returns false, because user.is_authenticated() always returns false
+        # Seems to be a DRF problem, that should have been fixed, but clearly it's not
+        # Results in the annoying 'request is not refreshable' message
+        # See: https://github.com/mozilla/mozilla-django-oidc/issues/328
+        #
+        # The problem is that DRF instantiates an AnonymousUser that always returns false on
+        # is_authenticated(). This should not happen, because
+        """Takes a request and returns whether it triggers a refresh examination
 
-        # if auth:
-        #     access_token = auth.split(" ")[1]
-        #     decoded = jwt.decode(
-        #         access_token,
-        #         algorithms=["RS256"],
-        #         verify=False,
-        #         options={"verify_signature": False},
-        #     )
-        #     username = decoded.get("preferred_username", None)
-        #     logger.debug("USERNAME: %s", username)
+        :arg HttpRequest request:
 
-        #     if username:
-        #         logger.debug("SETTING USERNAME on request")
-        #         user = ScoutsUser.objects.safe_get(username=username)
+        :returns: boolean
 
-        #         request.user = user
-        #         request._force_auth_user = user
-        #         # request._force_auth_token = Token.objects.get(user=user)
-        #         request._force_auth_token = access_token
-
-        is_refreshable = super().is_refreshable_url(request)
-
-        # logger.debug("request: %s (%s)", request.user, type(request.user).__name__)
-        # logger.debug("request.method = 'GET' -> %s", request.method == "GET")
-        # logger.debug(
-        #     "request.user.is_authenticated -> %s", request.user.is_authenticated
-        # )
-        # logger.debug("is_oidc_enable -> %s", is_oidc_enabled)
-
-        return is_refreshable
+        """
+        logger.debug(f"REQUEST.USER type: {type(request.user).__name__}")
+        logger.debug(f"REQUEST.USER: {request.user}")
+        return super().is_refreshable_url(request)

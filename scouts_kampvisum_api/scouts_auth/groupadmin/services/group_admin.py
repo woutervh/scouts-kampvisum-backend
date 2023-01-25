@@ -139,7 +139,7 @@ class GroupAdmin:
 
         logger.info("GA CALL: %s (%s)", "get_allowed_calls",
                     self.url_allowed_calls)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -168,7 +168,7 @@ class GroupAdmin:
         json_data = self.get(self.url_groups, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_groups", self.url_groups)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -224,7 +224,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_group", url)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -301,7 +301,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_function_descriptions", url)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -339,7 +339,7 @@ class GroupAdmin:
 
         logger.info("GA CALL: %s (%s) for id %s",
                     "get_function", url, function_id)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -366,7 +366,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_member_profile", url)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -395,7 +395,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_member_info", url)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -480,7 +480,7 @@ class GroupAdmin:
 
         logger.info("GA CALL: %s (%s)", "get_member_list",
                     self.url_member_list)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -507,7 +507,7 @@ class GroupAdmin:
 
         logger.info("GA CALL: %s (%s)", "get_member_list_filtered",
                     self.url_member_list_filtered)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -567,7 +567,7 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "search_member", url)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -597,6 +597,6 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "search_similar_member", url)
-        logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data

@@ -23,6 +23,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class GroupAdminMemberService(GroupAdmin):
+
     def search_member_filtered(
         self,
         active_user: settings.AUTH_USER_MODEL,

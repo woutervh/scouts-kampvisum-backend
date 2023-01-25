@@ -227,7 +227,6 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "mozilla_django_oidc.middleware.SessionRefresh",
     "scouts_auth.auth.middleware.ScoutsAuthSessionRefresh",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -336,6 +335,7 @@ USE_TZ = True
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "scouts_auth.auth.oidc.InuitsOIDCAuthentication",
+        'rest_framework.authentication.SessionAuthentication',
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -368,6 +368,7 @@ CHECK_CHANGED = "default_check_changed"
 # SCOUTS                                                                       #
 #                                                                              #
 # ############################################################################ #
+USERNAME_FROM_ACCESS_TOKEN = env.bool("USERNAME_FROM_ACCESS_TOKEN", True)
 SCOUTS_YEAR_START = env.str("SCOUTS_YEAR_START", "09-01")
 SCOUTS_YEAR_END = env.str("SCOUTS_YEAR_END", "09-01")
 INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool(
@@ -612,9 +613,10 @@ setup_mail()
 AUTH_USER_MODEL = "scouts_auth.ScoutsUser"
 AUTHORIZATION_ROLES_CONFIG_PACKAGE = "initial_data"
 AUTHORIZATION_ROLES_CONFIG_YAML = "roles.yaml"
-AUTHENTICATION_BACKENDS = {
-    "scouts_auth.groupadmin.services.ScoutsOIDCAuthenticationBackend",
-}
+# AUTHENTICATION_BACKENDS = [
+#     "scouts_auth.scouts.services.ScoutsOIDCAuthenticationBackend",
+# ]
+
 OIDC_OP_ISSUER = env.str("OIDC_OP_ISSUER")
 # URL of your OpenID Connect provider authorization endpoint
 # REQUIRED
@@ -693,7 +695,6 @@ OIDC_MAX_STATES = env.int("OIDC_MAX_STATES", default=50)
 # Sets the GET parameter that is being used to define the redirect URL after
 # succesful authentication
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_REDIRECT_FIELD_NAME
-
 # OIDC_REDIRECT_FIELD_NAME = env.str(
 #    'OIDC_REDIRECT_FIELD_NAME', default = 'next')
 # Allows you to substitute a custom class-based view to be used as
@@ -722,6 +723,7 @@ OIDC_MAX_STATES = env.int("OIDC_MAX_STATES", default=50)
 # user session. The session key used to store the data is oidc_id_token.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_STORE_ID_TOKEN
 # OIDC_STORE_ID_TOKEN = env.bool('OIDC_STORE_ID_TOKEN', default = False)
+OIDC_STORE_ID_TOKEN = True
 # Additional parameters to include in the initial authorization request.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_AUTH_REQUEST_EXTRA_PARAMS
 # OIDC_AUTH_REQUEST_EXTRA_PARAMS = env.list(
@@ -767,9 +769,7 @@ OIDC_ALLOW_UNSECURED_JWT = env.bool("OIDC_ALLOW_UNSECURED_JWT", default=False)
 # to your AUTHENTICATION_BACKENDS, the DRF class should be smart enough to
 # figure that out. Alternatively, you can manually set the OIDC backend to use:
 # https://mozilla-django-oidc.readthedocs.io/en/stable/drf.html
-OIDC_DRF_AUTH_BACKEND = (
-    "scouts_auth.groupadmin.services.ScoutsOIDCAuthenticationBackend"
-)
+OIDC_DRF_AUTH_BACKEND = "scouts_auth.scouts.services.ScoutsOIDCAuthenticationBackend"
 # Depending on your OpenID Connect provider (OP) you might need to change the
 # default signing algorithm from HS256 to RS256 by settings the
 # OIDC_RP_SIGN_ALGO value accordingly.

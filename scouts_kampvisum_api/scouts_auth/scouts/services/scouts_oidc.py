@@ -1,4 +1,5 @@
-import jwt
+from types import SimpleNamespace
+from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -6,6 +7,7 @@ from django.utils import timezone
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
 
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
 from scouts_auth.groupadmin.services import (
@@ -27,73 +29,30 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
     scouts_user_service = ScoutsUserService()
     authorization_service = ScoutsAuthorizationService()
 
-    def get_userinfo(self, access_token, id_token, payload) -> dict:
+    def get_user(self, *args, **kwargs):
+        logger.debug("HERE HERE HERE")
+        logger.debug(f"ARGS: {args}")
+        logger.debug(f"KWARGS: {kwargs}")
+
+    # This is the method that's called by DRF's OIDCAuthentication (in the authenticate() method),
+    # subclassed in InuitsOIDCAuthentication.
+    def get_or_create_user(self, access_token, id_token, payload) -> settings.AUTH_USER_MODEL:
         """
-        Return user details dictionary. The id_token and payload are not used
-        in the default implementation, but may be used when overriding
-        this method.
+        Returns a User instance if 1 user is found. Creates a user if not found
+        and configured to do so. Returns nothing if multiple users are matched.
         """
-
-        # now = timezone.now()
-        # logger.debug("SCOUTS OIDC AUTHENTICATION: requesting user info (%s)", now)
-        result = super().get_userinfo(access_token, id_token, payload)
-        # after = timezone.now()
-        # logger.debug("SCOUTS OIDC AUTHENTICATION: user info requested (%s)", after)
-        # logger.debug(
-        #     "SCOUTS OIDC AUTHENTICATION: user info request took %s", after - now
-        # )
-
-        return result
-
-    def get_or_create_user(self, access_token, id_token, payload):
-        """Returns a User instance if 1 user is found. Creates a user if not found
-        and configured to do so. Returns nothing if multiple users are matched."""
-        # logger.debug("")
-        # logger.debug("")
-        # logger.debug("")
-        # logger.debug("")
-        # logger.debug("")
-        # logger.debug("")
-        # logger.debug("")
-        # logger.debug("GET OR CREATE USER")
-
-        # # access_token = auth.split(" ")[1]
-        # decoded = jwt.decode(
-        #     access_token,
-        #     algorithms=["RS256"],
-        #     verify=False,
-        #     options={"verify_signature": False},
-        # )
-        # username = decoded.get("preferred_username", None)
-        # logger.debug("USERNAME: %s", username)
-
-        # if username:
-        #     logger.debug("SETTING USERNAME on request")
-        #     user = ScoutsUser.objects.safe_get(username=username)
-
-        #     if user:
-        #         logger.debug("USER FOUND: %s", user.username)
-        #         return user
+        username = self.get_username_from_access_token(access_token)
 
         user_info = self.get_userinfo(access_token, id_token, payload)
 
-        claims_verified = self.verify_claims(user_info)
-        if not claims_verified:
-            msg = "Claims verification failed"
-            raise ValidationError(msg)
+        users: List[settings.AUTH_USER_MODEL] = self.filter_users_by_claims(
+            user_info)
 
-        # group admin id based filtering
-        users = self.filter_users_by_claims(user_info)
-
-        logger.debug("GET OR CREATE USER FOUND %d user(s)", len(users))
-
-        if len(users) == 1:
+        user_count = len(users)
+        if user_count == 1:
             return self.update_user(users[0], user_info)
-        elif len(users) > 1:
-            # In the rare case that two user accounts have the same email address,
-            # bail. Randomly selecting one seems really wrong.
-            msg = "Multiple users returned"
-            raise ValidationError(msg)
+        elif user_count > 1:
+            raise ValidationError(f"Multiple users returned: {user_count}")
         elif self.get_settings("OIDC_CREATE_USER", True):
             user = self.create_user(user_info)
             return user
@@ -104,20 +63,50 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
             )
             return None
 
-    def filter_users_by_claims(self, claims):
-        """Return all users matching the group admin id."""
-        #logger.debug("CLAIMS: %s", claims)
-        group_admin_id = claims.get("id", None)
-        if not group_admin_id:
-            return self.UserModel.objects.none()
-        return self.UserModel.objects.filter(group_admin_id=group_admin_id)
+    def get_userinfo(self, access_token, id_token, payload) -> dict:
+        """
+        Return user details dictionary. The id_token and payload are not used
+        in the default implementation, but may be used when overriding
+        this method.
+        """
 
-    def create_user(self, claims: dict) -> settings.AUTH_USER_MODEL:
+        # Don't deserialise yet
+        result = self.service.get_member_profile_raw(
+            active_user=SimpleNamespace(access_token=access_token)
+        )
+
+        # Add token to user response so we can access it later
+        result["access_token"] = access_token
+        result["username"] = self.get_username(
+            claims=result, access_token=access_token)
+
+        return result
+
+    def get_username(self, claims: dict, access_token: str) -> str:
         """
-        Create and return a new user object.
+        Gets the username from any of the provided or configured data
         """
-        username = None
-        access_token = claims.get("access_token", None)
+        if GroupAdminSettings.get_username_from_access_token():
+            return self.get_username_from_access_token(access_token)
+
+        if "username" in claims:
+            return claims["username"]
+
+        if "preferred_username" in claims:
+            return claims["preferred_username"]
+
+        if "gebruikersnaam" in claims:
+            return claims["gebruikersnaam"]
+
+        return None
+
+    def get_username_from_access_token(self, access_token) -> str:
+        """
+        Parses the username from the JWT access token if configured to
+        do so (through the env variable USERNAME_FROM_ACCESS_TOKEN).
+        """
+        import jwt
+
         if access_token:
             try:
                 decoded = jwt.decode(
@@ -126,11 +115,30 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
                     verify=False,
                     options={"verify_signature": False},
                 )
-                username = decoded.get("preferred_username", None)
+                return decoded.get("preferred_username", None)
             except:
                 logger.error(
                     "Unable to decode JWT token - Do you need a refresh ?")
-        # logger.debug("USER: create user %s", username)
+
+        return None
+
+    def filter_users_by_claims(self, claims) -> List[settings.AUTH_USER_MODEL]:
+        """Return all users matching the group admin id."""
+        group_admin_id = claims.get("id", None)
+        if group_admin_id:
+            return self.UserModel.objects.filter(group_admin_id=group_admin_id)
+
+        username = claims.get("username", None)
+        if username:
+            return self.UserModel.objects.filter(username=username)
+
+        return []
+
+    def create_user(self, claims: dict) -> settings.AUTH_USER_MODEL:
+        """
+        Create and return a new user object.
+        """
+        username = None
 
         member: AbstractScoutsMember = self._load_member_data(data=claims)
         username = username if username else member.username
@@ -185,6 +193,8 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         user.access_token = claims.get("access_token")
         user = self.map_user_with_claims(user=user)
+
+        user.is_staff = True
 
         user.full_clean()
         user.save()

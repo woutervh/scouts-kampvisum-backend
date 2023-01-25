@@ -460,7 +460,7 @@ class ScoutsUser(User):
             self.last_updated_functions,
         )
 
-    @ staticmethod
+    @staticmethod
     def from_abstract_member(user=None, abstract_member: AbstractScoutsMember = None):
         if not abstract_member:
             raise ValidationError(

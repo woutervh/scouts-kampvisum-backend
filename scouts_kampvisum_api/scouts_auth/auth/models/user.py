@@ -55,49 +55,24 @@ class User(AbstractUser):
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
 
-    #
-    # Fields inherited from django.contrib.auth.models.PermissionsMixin
-    #
-
-    # is_superuser = models.BooleanField(
-    #     default=False,
-    #     help_text="Designates that this user has all permissions without explicitly assigning them.",
-    # )
-    # groups = models.ManyToManyField(
-    #     blank=True,
-    #     help_text="The groups this user belongs to. A user will get all permissions "
-    #     "granted to each of their groups.",
-    #     related_name="user_groups",
-    #     related_query_name="user",
-    #     to="auth.group",
-    # )
-    # user_permissions = models.ManyToManyField(
-    #     blank=True,
-    #     help_text="Specific permissions for this user.",
-    #     related_name="user_permissions",
-    #     related_query_name="user",
-    #     to="auth.permission",
-    # )
-
     class Meta:
-        permissions = (("access_disabled_entities", "Access disabled entities"),)
         abstract = True
+        permissions = [
+            ("access_disabled_entities", "Access disabled entities"),
+        ]
 
     def __str__(self):
-        return "id({}), username({}), first_name({}), last_name({}), email({}), is_staff({}), is_active({}), date_joined({}), last_login({}), is_superuser({}), groups({}), user_permissions({})".format(
-            str(self.id),
-            str(self.username),
-            str(self.first_name),
-            str(self.last_name),
-            str(self.email),
-            str(self.is_staff),
-            str(self.is_active),
-            str(self.date_joined),
-            str(self.last_login),
-            str(self.is_superuser),
-            ", ".join(self.groups)
-            if self.groups and isinstance(self.groups, list)
-            else "[]",
-            "[]",
-            # ", ".join((permission.codename + "(" + permission.name + ")") for permission in self.user_permissions),
+        return (
+            f"id({str(self.id)}), "
+            f"username({str(self.username)}), "
+            f"first_name({str(self.first_name)}), "
+            f"last_name({str(self.last_name)}), "
+            f"email({str(self.email)}), "
+            f"is_staff({str(self.is_staff)}), "
+            f"is_active({str(self.is_active)}), "
+            f"date_joined({str(self.date_joined)}), "
+            f"last_login({str(self.last_login)}), "
+            f"is_superuser({str(self.is_superuser)}), "
+            f"groups({', '.join(self.groups) if self.groups and isinstance(self.groups, list) else '[]'}), "
+            f"user_permissions({', '.join(self.user_permissions) if self.user_permissions and isinstance(self.user_permissions, list) else '[]'})"
         )
