@@ -18,7 +18,7 @@ class LinkedLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = LinkedLocation
         fields = ["name", "contact_name", "contact_phone", "contact_email", "is_camp_location",
-                  "center_latitude", "center_longitude", "zoom", "start_date", "end_date"]
+                  "center_latitude", "center_longitude", "zoom", "start_date", "end_date", "locations"]
 
     def to_internal_value(self, data: dict) -> dict:
         # logger.debug("LINKED LOCATION SERIALIZER TO_INTERNAL_VALUE: %s", data)
