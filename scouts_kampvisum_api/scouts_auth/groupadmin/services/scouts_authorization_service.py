@@ -192,6 +192,7 @@ class ScoutsAuthorizationService(AuthorizationService):
         if role not in self.known_roles:
             raise ValueError("Role " + role + " is not a known scouts role")
 
+        logger.debug(f"Removing user {user.username} from permission group {role}")
         super().remove_user_from_group(user, group_name=role)
 
         return user
