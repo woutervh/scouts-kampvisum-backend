@@ -1595,23 +1595,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "planning_date_comments",
-            "sub_category": [
-                "planning_date",
-                [
-                    "planning",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "planning_activities_camp",
             "sub_category": [
                 "planning_activities",
@@ -1702,23 +1685,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "planning_activities_comments",
-            "sub_category": [
-                "planning_activities",
-                [
-                    "planning",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "planning_activities_upload_general_planning",
             "sub_category": [
                 "planning_activities",
@@ -1772,23 +1738,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "planning_menu_comments",
-            "sub_category": [
-                "planning_menu",
-                [
-                    "planning",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "planning_menu_upload",
             "sub_category": [
                 "planning_menu",
@@ -1802,6 +1751,23 @@
             ],
             "is_multiple": true,
             "label": "Upload hier je menu"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_comments",
+            "sub_category": [
+                "planning_menu",
+                [
+                    "planning",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
         }
     },
     {
@@ -1918,23 +1884,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "logistics_location_comments",
-            "sub_category": [
-                "logistics_locations",
-                [
-                    "logistics",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "logistics_location_contract",
             "sub_category": [
                 "logistics_locations",
@@ -2005,23 +1954,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "logistics_transport_comments",
-            "sub_category": [
-                "logistics_transport",
-                [
-                    "logistics",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "logistics_transport_upload",
             "sub_category": [
                 "logistics_transport",
@@ -2058,23 +1990,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "logistics_materials_comments",
-            "sub_category": [
-                "logistics_material",
-                [
-                    "logistics",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "logistics_materials_upload",
             "sub_category": [
                 "logistics_material",
@@ -2088,6 +2003,23 @@
             ],
             "is_multiple": true,
             "label": "Laad hier je materiaallijst op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_comments",
+            "sub_category": [
+                "logistics_material",
+                [
+                    "logistics",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
         }
     },
     {
@@ -2142,23 +2074,6 @@
             ],
             "is_required_for_validation": false,
             "label": "Naam aanspreekpunt"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "communication_agreements_parents_comments",
-            "sub_category": [
-                "communication_agreements_parents",
-                [
-                    "communication_agreements",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
         }
     },
     {
@@ -2270,23 +2185,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_agreements_agreements_comments",
-            "sub_category": [
-                "communication_agreements_agreements",
-                [
-                    "communication_agreements",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "communication_agreements_agreements_upload",
             "sub_category": [
                 "communication_agreements_agreements",
@@ -2300,6 +2198,23 @@
             ],
             "is_multiple": true,
             "label": "Laad hier je afspraken op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "communication_comments",
+            "sub_category": [
+                "communication_agreements_agreements",
+                [
+                    "communication_agreements",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
         }
     },
     {
@@ -2395,23 +2310,6 @@
             ],
             "label": "Europese ziekteverzekeringskaart",
             "explanation": ""
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "safety_insurance_comments",
-            "sub_category": [
-                "safety_insurance",
-                [
-                    "safety",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
         }
     },
     {
@@ -2521,23 +2419,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "safety_healthcare_comments",
-            "sub_category": [
-                "safety_healthcare",
-                [
-                    "safety",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "safety_healthcare_hospital_emergency_contact",
             "sub_category": [
                 "safety_healthcare",
@@ -2551,6 +2432,23 @@
             ],
             "is_multiple": true,
             "label": "Upload hier de lijst met noodnummers"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_comments",
+            "sub_category": [
+                "safety_healthcare",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
         }
     },
     {
@@ -2623,23 +2521,6 @@
             ],
             "label": "Gezondheid en medicatie",
             "explanation": "Ga na of medicatie die je wil meenemen ook toegelaten is in het land van bestemming. Verder kan je via de handige website <a href='https://www.wanda.be/nl/' target='_blank'>Wanda</a> ook bekijken welke vaccinaties verplicht of aangeraden zijn in het land waar je naartoe gaat."
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "safety_foreign_rules_comments",
-            "sub_category": [
-                "safety_foreign_rules",
-                [
-                    "safety",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
         }
     },
     {
@@ -2792,23 +2673,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "members_leaders_leaders_comments",
-            "sub_category": [
-                "members_leaders_leaders",
-                [
-                    "members_leaders",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "members_leaders_cooks_sufficient",
             "sub_category": [
                 "members_leaders_cooks",
@@ -2839,24 +2703,6 @@
             ],
             "is_multiple": true,
             "label": "Lijst van foerage",
-            "is_required_for_validation": false
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "members_leaders_cooks_comments",
-            "sub_category": [
-                "members_leaders_cooks",
-                [
-                    "members_leaders",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen",
             "is_required_for_validation": false
         }
     },
@@ -2934,7 +2780,7 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "members_leaders_members_comments",
+            "name": "members_leaders_comments",
             "sub_category": [
                 "members_leaders_members",
                 [
@@ -3004,23 +2850,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "budget_budget_comments",
-            "sub_category": [
-                "budget_budget",
-                [
-                    "budget",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "budget_budget_upload",
             "sub_category": [
                 "budget_budget",
@@ -3034,6 +2863,23 @@
             ],
             "is_multiple": true,
             "label": "Laad hier de digitale begroting op"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "budget_comments",
+            "sub_category": [
+                "budget_budget",
+                [
+                    "budget",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "CommentCheck"
+            ],
+            "label": "Opmerkingen"
         }
     },
     {
@@ -3086,23 +2932,6 @@
                 "SimpleCheck"
             ],
             "label": "Backup van de bankkaart"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
-            "name": "budget_banccard_comments",
-            "sub_category": [
-                "budget_banccard",
-                [
-                    "budget",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "CommentCheck"
-            ],
-            "label": "Opmerkingen"
         }
     }
 ]

@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from typing import List
 
 from django.core.management import call_command
@@ -30,6 +31,8 @@ class Command(BaseCommand):
     camp_visum_service = CampVisumService()
 
     def handle(self, *args, **kwargs):
+        from scouts_auth.groupadmin.models import ScoutsUser
+        
         for command in self.COMMANDS:
             call_command(command)
 
@@ -41,4 +44,4 @@ class Command(BaseCommand):
         )
 
         for visum in visums:
-            self.camp_visum_service.visum_update(request=None, instance=visum, **{})
+            self.camp_visum_service.visum_update(request=SimpleNamespace(user=ScoutsUser.objects.safe_get(username="FIXTURES")), instance=visum, **{})
