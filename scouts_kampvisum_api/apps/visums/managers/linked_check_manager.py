@@ -27,6 +27,7 @@ class LinkedCheckManager(models.Manager):
         sub_category = kwargs.get("sub_category", None)
         parent = kwargs.get("parent", None)
         visum = kwargs.get("visum", None)
+        linked_to = kwargs.get("linked_to", None)
         is_archived = kwargs.get("is_archived", False)
         raise_error = kwargs.get("raise_error", False)
 
@@ -51,14 +52,24 @@ class LinkedCheckManager(models.Manager):
                 )
             except:
                 pass
+        
+        if visum and linked_to:
+            try:
+                return self.get_queryset().get(
+                    sub_category__category__category_set__visum=visum,
+                    parent__name=linked_to)
+            except:
+                pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate LinkedCheck instance(s) with provided params (id: {}, (sub_category: {}, parent: {}), (parent: {}, visum: {})".format(
+                "Unable to locate LinkedCheck instance(s) with provided params (id: {}, (sub_category: {}, parent: {}), (parent: {}, visum: {}), (linked_to: {}, visum: {})".format(
                     pk,
                     sub_category.to_simple_str() if sub_category else None,
                     parent.to_simple_str() if parent else None,
                     parent.to_simple_str() if parent else None,
+                    visum.to_simple_str() if visum else None,
+                    linked_to if linked_to else None,
                     visum.to_simple_str() if visum else None,
                 )
             )

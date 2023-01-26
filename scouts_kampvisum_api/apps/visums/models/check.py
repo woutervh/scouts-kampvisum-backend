@@ -42,6 +42,7 @@ class Check(
         SubCategory, related_name="checks", on_delete=models.CASCADE
     )
     check_type = models.ForeignKey(CheckType, on_delete=models.CASCADE)
+    linked_to = OptionalCharField()
     change_handlers = OptionalCharField()
     validators = OptionalCharField()
     camp_types = models.ManyToManyField(CampType)
@@ -55,10 +56,11 @@ class Check(
         return (self.name, self.sub_category)
 
     def __str__(self):
-        return "OBJECT Check: name({}), sub_category({}), check_type({}), is_multiple ({}), is_member({}), is_required_for_validation({}), requires_permission({}), camp_types ({})".format(
+        return "OBJECT Check: name({}), sub_category({}), check_type({}), linked_to ({}), is_multiple ({}), is_member({}), is_required_for_validation({}), requires_permission({}), camp_types ({})".format(
             self.name,
             str(self.sub_category),
             str(self.check_type),
+            str(self.linked_to),
             self.is_multiple,
             self.is_member,
             self.is_required_for_validation,

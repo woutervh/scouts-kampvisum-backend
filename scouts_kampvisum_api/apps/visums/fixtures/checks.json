@@ -1104,6 +1104,12 @@
             "check_type": [
                 "ParticipantResponsibleCheck"
             ],
+            "linked_to": [
+                "members_leaders_responsible_adjunct"
+            ],
+            "validators": [
+                "validate_responsible_unique"
+            ],
             "change_handlers": [
                 "change_camp_responsible"
             ],
@@ -1124,6 +1130,12 @@
             ],
             "check_type": [
                 "ParticipantResponsibleCheck"
+            ],
+            "linked_to": [
+                "members_leaders_responsible_main"
+            ],
+            "validators": [
+                "validate_responsible_unique"
             ],
             "label": "Contactgegevens 2de kampverantwoordelijke",
             "explanation": "Wijzigen deze gegevens na de deadline van de kampregistratie? Bezorg ze dan nog aan de gemeente waar je op kamp gaat."
@@ -2644,6 +2656,12 @@
             "check_type": [
                 "ParticipantResponsibleCheck"
             ],
+            "linked_to": [
+                "members_leaders_responsible_adjunct"
+            ],
+            "validators": [
+                "validate_responsible_unique"
+            ],
             "change_handlers": [
                 "change_camp_responsible"
             ],
@@ -2664,6 +2682,12 @@
             ],
             "check_type": [
                 "ParticipantResponsibleCheck"
+            ],
+            "linked_to": [
+                "members_leaders_responsible_main"
+            ],
+            "validators": [
+                "validate_responsible_unique"
             ],
             "label": "Contactgegevens 2de kampverantwoordelijke",
             "explanation": "Wijzigen deze gegevens na de deadline van de kampregistratie? Bezorg ze dan nog aan de gemeente waar je op kamp gaat."

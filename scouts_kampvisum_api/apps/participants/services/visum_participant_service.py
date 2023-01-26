@@ -32,9 +32,6 @@ class VisumParticipantService:
         scouts_member: AbstractScoutsMember = None,
         **fields: dict,
     ) -> VisumParticipant:
-        logger.debug("FIELDS: %s", fields)
-        # participant_type:
-
         visum_participant = VisumParticipant(**fields)
         existing_visum_participant = VisumParticipant.objects.safe_get(
             id=visum_participant.id,

@@ -27,6 +27,4 @@ class VisumParticipantSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        data = super().to_internal_value(data)
-
-        return data
+        return super().to_internal_value(data)

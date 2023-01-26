@@ -75,6 +75,13 @@ class LinkedCheck(AuditedArchiveableBaseModel):
         check = concrete_type.__class__.objects.get(linkedcheck_ptr=self.id)
 
         return check
+    
+    def validate_value(self, value: any):
+        if self.parent.validators:
+            if not CheckValidator.validate(self.parent.validators, value):
+                raise ValidationError(f"LinkedCheck does not validate: {value}")
+        
+        return True
 
     @staticmethod
     def get_concrete_check_type_by_id(check_id):
@@ -136,9 +143,7 @@ class LinkedSimpleCheck(LinkedCheck):
                              default=CheckState.EMPTY)
 
     def has_value(self) -> bool:
-        if CheckState.is_checked_or_irrelevant(self.value) and CheckValidator.validate(
-            self.parent.validators, self.value
-        ):
+        if CheckState.is_checked_or_irrelevant(self.value) and self.validate_value(self.value):
             return True
         return False
 
@@ -152,7 +157,7 @@ class LinkedDateCheck(LinkedCheck):
     value = DatetypeAwareDateField(null=True, blank=True)
 
     def has_value(self) -> bool:
-        if self.value and CheckValidator.validate(self.parent.validators, self.value):
+        if self.value and self.validate_value(self.value):
             return True
         return False
 

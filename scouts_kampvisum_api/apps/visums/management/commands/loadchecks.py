@@ -102,6 +102,10 @@ class Command(BaseCommand):
                     data=model.get("fields", {})
                 )
 
+                # Setup linked checks
+                linked_to = model.get("fields").get("linked_to", [])
+                model.get("fields")["linked_to"] = ", ".join(linked_to)
+
                 # Setup validators
                 validators = model.get("fields").get("validators", [])
                 model.get("fields")["validators"] = ",".join(validators)

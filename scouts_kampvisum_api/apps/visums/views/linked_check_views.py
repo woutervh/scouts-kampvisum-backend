@@ -35,6 +35,7 @@ from apps.visums.serializers import (
     LinkedNumberCheckSerializer,
 )
 from apps.visums.services import LinkedCheckService
+from apps.visums.utils import CheckValidator
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 from scouts_auth.inuits.models import PersistedFile
@@ -96,7 +97,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedSimpleCheckSerializer},
     )
     def partial_update_simple_check(self, request, check_id):
-        logger.debug("SIMPLE CHECK UPDATE REQUEST DATA: %s", request.data)
+        # logger.debug("SIMPLE CHECK UPDATE REQUEST DATA: %s", request.data)
         instance: LinkedSimpleCheck = self.linked_check_service.get_simple_check(
             check_id
         )
@@ -111,7 +112,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("SIMPLE CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("SIMPLE CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_simple_check(
             request=request, instance=instance, **validated_data
@@ -150,7 +151,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedDateCheckSerializer},
     )
     def partial_update_date_check(self, request, check_id):
-        logger.debug("DATE CHECK UPDATE REQUEST DATA: %s", request.data)
+        # logger.debug("DATE CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_date_check(check_id)
         self.check_user_allowed(request, instance)
 
@@ -163,7 +164,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("DATE CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("DATE CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_date_check(
             request=request, instance=instance, **validated_data
@@ -206,7 +207,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedDurationCheckSerializer},
     )
     def partial_update_duration_check(self, request, check_id):
-        logger.debug("DURATION CHECK UPDATE REQUEST DATA: %s", request.data)
+        # logger.debug("DURATION CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_duration_check(check_id)
         self.check_user_allowed(request, instance)
 
@@ -219,7 +220,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("DURATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("DURATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_duration_check(
             request=request, instance=instance, **validated_data
@@ -262,7 +263,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedLocationCheckSerializer},
     )
     def partial_update_location_check(self, request, check_id):
-        logger.debug("LOCATION CHECK UPDATE REQUEST DATA: %s", request.data)
+        # logger.debug("LOCATION CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_location_check(check_id)
         self.check_user_allowed(request, instance)
 
@@ -275,7 +276,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_location_check(
             request=request, instance=instance, **validated_data
@@ -352,7 +353,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                 for check in location.checks.all():
                     self.check_user_allowed(request, check)
 
-        logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_camp_location_check(
             request=request, instance=instance, **validated_data
@@ -439,7 +440,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
     )
     def partial_update_participant_check(self, request, check_id):
-        logger.debug("PARTICIPANT CHECK UPDATE REQUEST DATA: %s", request.data)
+        # logger.debug("PARTICIPANT CHECK UPDATE REQUEST DATA: %s", request.data)
         instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
             check_id=check_id
         )
@@ -456,6 +457,10 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("PARTICIPANT CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
+        if instance.parent.validators:
+            if not CheckValidator.validate(instance.parent.validators, instance, group_admin_id=validated_data.get("participants", [])[0].get("participant", None).group_admin_id):
+                raise ValidationError(f"LinkedParticipantCheck is not valid: {instance}")
+        
         instance = self.linked_check_service.update_participant_check(
             request=request, instance=instance, **validated_data
         )
@@ -495,7 +500,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
     )
     def unlink_participant(self, request, check_id, visum_participant_id):
-        logger.debug("PARTICIPANT CHECK UNLINK REQUEST DATA: %s", request.data)
+        # logger.debug("PARTICIPANT CHECK UNLINK REQUEST DATA: %s", request.data)
         instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
             check_id=check_id
         )
@@ -510,7 +515,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("PARTICIPANT CHECK UNLINK VALIDATED DATA: %s", validated_data)
+        # logger.debug("PARTICIPANT CHECK UNLINK VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.unlink_participant(
             request=request,
@@ -603,7 +608,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer},
     )
     def partial_update_file_upload_check(self, request, check_id):
-        logger.debug("FILE UPLOAD CHECK UPDATE REQUEST DATA: %s", request.data)
+        # logger.debug("FILE UPLOAD CHECK UPDATE REQUEST DATA: %s", request.data)
         instance: LinkedFileUploadCheck = (
             self.linked_check_service.get_file_upload_check(check_id)
         )
@@ -619,7 +624,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("FILE UPLOAD CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("FILE UPLOAD CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         for file in validated_data:
             for check in file.checks.all():
@@ -640,7 +645,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer},
     )
     def unlink_file(self, request, check_id, persisted_file_id):
-        logger.debug("FILE UPLOAD CHECK UNLINK REQUEST DATA: %s", request.data)
+        # logger.debug("FILE UPLOAD CHECK UNLINK REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_file_upload_check(check_id)
         self.check_user_allowed(request, instance)
 
@@ -659,7 +664,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("FILE UPLOAD CHECK UNLINK VALIDATED DATA: %s", validated_data)
+        # logger.debug("FILE UPLOAD CHECK UNLINK VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.unlink_file(
             request=request,
@@ -796,7 +801,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedCommentCheckSerializer},
     )
     def partial_update_comment_check(self, request, check_id):
-        logger.debug("COMMENT CHECK UPDATE REQUEST DATA: %s", request.data)
+        # logger.debug("COMMENT CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_comment_check(check_id)
         self.check_user_allowed(request, instance)
 
@@ -809,7 +814,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("COMMENT CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("COMMENT CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_comment_check(
             request=request, instance=instance, **validated_data
@@ -850,7 +855,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedNumberCheckSerializer},
     )
     def partial_update_number_check(self, request, check_id):
-        logger.debug("NUMBER CHECK UPDATE REQUEST DATA: %s", request.data)
+        # logger.debug("NUMBER CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_number_check(check_id)
         self.check_user_allowed(request, instance)
 
@@ -863,7 +868,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("NUMBER CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        # logger.debug("NUMBER CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_number_check(
             request=request, instance=instance, **validated_data
