@@ -37,10 +37,10 @@ class CampVisumQuerySet(models.QuerySet):
                     )
                 )
 
-                for underlyingGroup in underlyingGroups:
-                    if leader_function.is_district_commissioner_for_group(scouts_group=underlyingGroup) or leader_function.is_shire_president_for_group(scouts_group=underlyingGroup):
-                        group_admin_ids.append(
-                            underlyingGroup.group_admin_id)
+                # for underlyingGroup in underlyingGroups:
+                #     if leader_function.is_district_commissioner_for_group(scouts_group=underlyingGroup) or leader_function.is_shire_president_for_group(scouts_group=underlyingGroup):
+                #         group_admin_ids.append(
+                #             underlyingGroup.group_admin_id)
 
         return self.filter(group__group_admin_id__in=group_admin_ids)
     
