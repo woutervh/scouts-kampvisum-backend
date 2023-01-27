@@ -215,6 +215,8 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
 
             if obj.parent.is_multiple:
                 data["data_count"] = len(data["locations"])
+        else:
+            data["locations"] = []
 
         return data
 
