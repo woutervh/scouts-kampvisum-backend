@@ -41,8 +41,6 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         Returns a User instance if 1 user is found. Creates a user if not found
         and configured to do so. Returns nothing if multiple users are matched.
         """
-        username = self.get_username_from_access_token(access_token)
-
         user_info = self.get_userinfo(access_token, id_token, payload)
 
         users: List[settings.AUTH_USER_MODEL] = self.filter_users_by_claims(
@@ -54,11 +52,10 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         elif user_count > 1:
             raise ValidationError(f"Multiple users returned: {user_count}")
         elif self.get_settings("OIDC_CREATE_USER", True):
-            user = self.create_user(user_info)
-            return user
+            return self.create_user(user_info)
         else:
             logger.debug(
-                "Login failed: No user with %s found, and " "OIDC_CREATE_USER is False",
+                "Login failed: No user with %s found, and OIDC_CREATE_USER is False",
                 self.describe_user_by_claims(user_info),
             )
             return None

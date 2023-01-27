@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 
 from apps.deadlines.models import DeadlineItem, DeadlineFlag
 
-from apps.signals.services import ChangeHandlerService
+from apps.visums.services import ChangeHandlerService
 
 
 # LOGGING

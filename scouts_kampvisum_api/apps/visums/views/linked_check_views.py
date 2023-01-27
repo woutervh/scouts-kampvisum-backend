@@ -353,7 +353,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                 for check in location.checks.all():
                     self.check_user_allowed(request, check)
 
-        # logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_camp_location_check(
             request=request, instance=instance, **validated_data

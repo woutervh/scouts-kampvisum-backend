@@ -98,9 +98,6 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 # https://stackoverflow.com/questions/53014435/why-is-logging-in-my-django-settings-py-ignored
 LOGGING_CONFIG = None
 LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
-# LOGGING_LEVEL = "INFO"
-# LOGGING_LEVEL = "API"
-# LOGGING_LEVEL = "TRACE"
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
 LOGGING_LEVEL_DB = "DEBUG"
 LOGGING_LEVEL_S3 = "INFO"
@@ -194,11 +191,9 @@ def correct_url(issuer, url):
 #                                                                              #
 # ############################################################################ #
 INSTALLED_APPS = [
-    "apps.signals",
     "django.contrib.admin",
     "django.contrib.auth",
     "scouts_auth",
-    # "django_redis",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",

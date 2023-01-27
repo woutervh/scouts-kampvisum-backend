@@ -3,7 +3,7 @@ from django.db import transaction
 from apps.deadlines.models import LinkedDeadline, DeadlineFlag, LinkedDeadlineFlag
 from apps.deadlines.services import DeadlineFlagService
 
-from apps.signals.services import ChangeHandlerService
+from apps.visums.services import ChangeHandlerService
 
 
 # LOGGING

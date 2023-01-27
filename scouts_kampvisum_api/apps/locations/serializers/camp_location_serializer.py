@@ -16,8 +16,8 @@ class CampLocationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        id = data.get("id", None)
+        pk = data.get("id", None)
         data = super().to_internal_value(data)
-        data["id"] = id
+        data["id"] = pk
 
         return data
