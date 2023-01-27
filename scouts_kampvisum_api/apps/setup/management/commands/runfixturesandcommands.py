@@ -16,16 +16,16 @@ class Command(BaseCommand):
     COMMANDS = [
         "runfixtures",
         "setupcampyears",
-        # "loadcategories",
-        # "loadsubcategories",
-        # "loadchecks",
+        "loadcategories",
+        "loadsubcategories",
+        "loadchecks",
         "loaddefaultdeadlines",
         # "fix92074",
         # "fix92074bis",
         # "sprint7fix91022",
         # "fix93032",
         # "fix92544tris",
-        "updatevisums",
+        # "updatevisums",
         "fix91782",
     ]
 
