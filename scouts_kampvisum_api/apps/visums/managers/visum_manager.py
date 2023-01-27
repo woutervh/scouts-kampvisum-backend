@@ -43,6 +43,9 @@ class CampVisumQuerySet(models.QuerySet):
                             underlyingGroup.group_admin_id)
 
         return self.filter(group__group_admin_id__in=group_admin_ids)
+    
+    def get_for_group_and_year():
+        pass
 
 
 class CampVisumManager(models.Manager):
