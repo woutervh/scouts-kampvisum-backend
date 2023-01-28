@@ -20,4 +20,6 @@ class CampLocationSerializer(serializers.ModelSerializer):
         data = super().to_internal_value(data)
         data["id"] = pk
 
+        logger.debug(f"CAMP LOCATION SERIALIZER TO_INTERNAL_VALUE: {data}")
+
         return data
