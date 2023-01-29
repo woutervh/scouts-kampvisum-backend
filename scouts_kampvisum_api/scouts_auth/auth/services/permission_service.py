@@ -1,10 +1,12 @@
-import yaml, importlib
+import yaml
+import importlib
 from typing import List
 
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ObjectDoesNotExist
 
 from scouts_auth.auth.settings import OIDCSettings
+from scouts_auth.inuits.django import DjangoDbUtil
 
 
 # LOGGING
@@ -15,7 +17,22 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PermissionService:
-    def populate_roles(self, **kwargs):
+    @staticmethod
+    def setup_roles():
+        if not DjangoDbUtil.is_initial_db_ready():
+            logger.debug(
+                "Will not attempt to populate user permissions until migrations have been performed."
+            )
+            return
+
+        try:
+            # logger.debug("Populating user permissions")
+            PermissionService.populate_roles()
+        except Exception as exc:
+            logger.error("Unable to populate user roles", exc)
+
+    @staticmethod
+    def populate_roles(**kwargs):
         # Will populate groups and add permissions to them, won't create permissions
         # these need to be created in models
         #
@@ -46,7 +63,7 @@ class PermissionService:
                 group: Group = Group.objects.get_or_create(name=group_name)[0]
                 group_permissions = group.permissions.all()
 
-                permissions = self._purge_group_permissions(
+                permissions = PermissionService._purge_group_permissions(
                     group, group_permissions, permissions
                 )
 
@@ -54,7 +71,7 @@ class PermissionService:
                 #     "Adding %d PERMISSIONS to group %s", len(permissions), group_name
                 # )
                 for permission in permissions:
-                    self._add_permission_by_name(
+                    PermissionService._add_permission_by_name(
                         group,
                         permission.get("permission"),
                         permission.get("codename"),
@@ -64,8 +81,9 @@ class PermissionService:
         except yaml.YAMLError as exc:
             logger.error("Error while importing permissions groups", exc)
 
+    @staticmethod
     def _purge_group_permissions(
-        self, group: Group, group_permissions: List[Permission], permissions: List[str]
+        group: Group, group_permissions: List[Permission], permissions: List[str]
     ) -> List[dict]:
         """
         Removes revoked and already existing permissions.
@@ -91,7 +109,8 @@ class PermissionService:
             remove_permission = True
             for parsed_permission in parsed_permissions:
                 if (
-                    parsed_permission.get("codename") == group_permission.codename
+                    parsed_permission.get(
+                        "codename") == group_permission.codename
                     and parsed_permission.get("app_label")
                     == group_permission.content_type.app_label
                 ):
@@ -116,11 +135,13 @@ class PermissionService:
         # Return a list of permissions
         return parsed_permissions
 
+    @staticmethod
     def _add_permission_by_name(
-        self, group: Group, permission: str, codename: str, app_label: str
+        group: Group, permission: str, codename: str, app_label: str
     ):
         try:
-            logger.debug(f"Retrieving permission with codename {codename} for app {app_label}")
+            logger.debug(
+                f"Retrieving permission with codename {codename} for app {app_label}")
             permission = Permission.objects.get(
                 codename=codename, content_type__app_label=app_label
             )

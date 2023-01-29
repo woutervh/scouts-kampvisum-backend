@@ -43,6 +43,23 @@ role_district_commissioner:
   - visums.update_visum_feedback
   - visums.read_visum_notes
   - visums.update_visum_notes
+role_shire_president:
+  - groups.create_section
+  - groups.read_section
+  - groups.update_section
+  - groups.delete_section
+  - groups.list_section
+  - visums.read_visum
+  - visums.update_visum
+  - visums.delete_visum
+  - visums.list_visum
+  - visums.read_camp_locations
+  - visums.read_visum_approval
+  - visums.update_visum_approval
+  - visums.read_visum_feedback
+  - visums.update_visum_feedback
+  - visums.read_visum_notes
+  - visums.update_visum_notes
 role_administrator:
   - groups.create_section
   - groups.read_section

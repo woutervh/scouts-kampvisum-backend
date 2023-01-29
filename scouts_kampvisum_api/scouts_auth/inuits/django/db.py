@@ -19,7 +19,7 @@ class DjangoDbUtil:
             if content_type:
                 return True
         except Exception:
-            raise DbNotReadyException (
+            raise DbNotReadyException(
                 "Unable to load authentication groups, database is probably not ready yet"
             )
 

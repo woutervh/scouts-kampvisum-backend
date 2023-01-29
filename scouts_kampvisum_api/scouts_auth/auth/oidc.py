@@ -39,6 +39,10 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
             logger.debug(
                 "OIDC AUTHENTICATION: Authenticating user with OIDC backend")
 
+            from scouts_auth.auth.services import PermissionService
+            PermissionService.setup_roles()
+
+            # This calls get_or_create_user() in ScoutsOIDCAuthenticationBackend
             result = super().authenticate(request)
 
             if result is None:

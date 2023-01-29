@@ -52,6 +52,7 @@ class ScoutsAuthorizationService(AuthorizationService):
     SECTION_LEADER = "role_section_leader"
     GROUP_LEADER = "role_group_leader"
     DISTRICT_COMMISSIONER = "role_district_commissioner"
+    SHIRE_PRESIDENT = "role_shire_president"
     ADMINISTRATOR = "role_administrator"
 
     known_roles = [
@@ -59,6 +60,7 @@ class ScoutsAuthorizationService(AuthorizationService):
         SECTION_LEADER,
         GROUP_LEADER,
         DISTRICT_COMMISSIONER,
+        SHIRE_PRESIDENT,
         ADMINISTRATOR,
     ]
 
@@ -95,13 +97,25 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         allowed = False
         if scouts_group:
+            is_shire_president = False
+            is_district_commissioner = False
+            is_group_leader = False
+            is_section_leader = False
+
+            if user.has_role_shire_president(group=scouts_group):
+                is_shire_president = True
+                allowed = True
+
             if user.has_role_district_commissioner(group=scouts_group):
+                is_district_commissioner = True
                 allowed = True
 
             if user.has_role_group_leader(group=scouts_group):
+                is_group_leader = True
                 allowed = True
 
             if user.has_role_section_leader(group=scouts_group):
+                is_section_leader = True
                 allowed = True
 
             if not allowed:
@@ -109,7 +123,11 @@ class ScoutsAuthorizationService(AuthorizationService):
                             scouts_group.group_admin_id, user=user)
                 raise PermissionDenied()
 
-            if user.has_role_district_commissioner(group=scouts_group):
+            if is_shire_president:
+                user = self.add_user_to_group(
+                    user, ScoutsAuthorizationService.SHIRE_PRESIDENT, scouts_group=scouts_group,)
+
+            if is_district_commissioner:
                 user = self.add_user_to_group(
                     user,
                     ScoutsAuthorizationService.DISTRICT_COMMISSIONER,
@@ -123,7 +141,7 @@ class ScoutsAuthorizationService(AuthorizationService):
                     scouts_group=scouts_group,
                 )
 
-            if user.has_role_group_leader(group=scouts_group):
+            if is_group_leader:
                 user = self.add_user_to_group(
                     user,
                     ScoutsAuthorizationService.GROUP_LEADER,
@@ -137,7 +155,7 @@ class ScoutsAuthorizationService(AuthorizationService):
                     scouts_group=scouts_group,
                 )
 
-            if user.has_role_section_leader(group=scouts_group):
+            if is_section_leader:
                 user = self.add_user_to_group(
                     user,
                     ScoutsAuthorizationService.SECTION_LEADER,
@@ -192,7 +210,8 @@ class ScoutsAuthorizationService(AuthorizationService):
         if role not in self.known_roles:
             raise ValueError("Role " + role + " is not a known scouts role")
 
-        logger.debug(f"Removing user {user.username} from permission group {role}")
+        logger.debug(
+            f"Removing user {user.username} from permission group {role}")
         super().remove_user_from_group(user, group_name=role)
 
         return user
