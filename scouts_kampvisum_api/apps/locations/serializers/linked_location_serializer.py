@@ -13,7 +13,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class LinkedLocationSerializer(serializers.ModelSerializer):
 
-    locations = CampLocationSerializer(many=True)
+    locations = CampLocationSerializer(many=True, default=[])
 
     class Meta:
         model = LinkedLocation
