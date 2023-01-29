@@ -40,7 +40,7 @@ from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
-from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction 
+from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction
 
 # LOGGING
 import logging
@@ -72,7 +72,8 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
     def retrieve(self, request, pk=None):
         instance: LinkedCheck = get_object_or_404(LinkedCheck.objects, pk=pk)
-        serializer = LinkedCheckSerializer(instance, context={"request": request})
+        serializer = LinkedCheckSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -86,9 +87,11 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
     def retrieve_simple_check(self, request, check_id=None):
-        instance: LinkedCheck = self.linked_check_service.get_simple_check(check_id)
+        instance: LinkedCheck = self.linked_check_service.get_simple_check(
+            check_id)
         self.check_user_allowed(request, instance)
-        serializer = LinkedCheckSerializer(instance, context={"request": request})
+        serializer = LinkedCheckSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -139,10 +142,12 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDateCheckSerializer})
     def retrieve_data_check(self, request, check_id=None):
-        instance: LinkedDateCheck = self.linked_check_service.get_date_check(check_id)
+        instance: LinkedDateCheck = self.linked_check_service.get_date_check(
+            check_id)
         self.check_user_allowed(request, instance)
 
-        serializer = LinkedDateCheckSerializer(instance, context={"request": request})
+        serializer = LinkedDateCheckSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -344,16 +349,19 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             context={"request": request},
             partial=True,
         )
-
         serializer.is_valid(raise_exception=True)
-
         validated_data = serializer.validated_data
+
+        logger.debug(
+            "CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+
         for location in validated_data["locations"]:
             if hasattr(location, 'checks'):
                 for check in location.checks.all():
                     self.check_user_allowed(request, check)
 
-        # logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug(
+            "CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_camp_location_check(
             request=request, instance=instance, **validated_data
@@ -455,12 +463,14 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("PARTICIPANT CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug(
+            "PARTICIPANT CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         if instance.parent.validators:
             if not CheckValidator.validate(instance.parent.validators, instance, group_admin_id=validated_data.get("participants", [])[0].get("participant", None).group_admin_id):
-                raise ValidationError(f"LinkedParticipantCheck is not valid: {instance}")
-        
+                raise ValidationError(
+                    f"LinkedParticipantCheck is not valid: {instance}")
+
         instance = self.linked_check_service.update_participant_check(
             request=request, instance=instance, **validated_data
         )
@@ -629,7 +639,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         for file in validated_data:
             for check in file.checks.all():
                 self.check_user_allowed(request, check)
-        
+
         instance = self.linked_check_service.update_file_upload_check(
             request=request, instance=instance, files=validated_data
         )
@@ -650,9 +660,11 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         self.check_user_allowed(request, instance)
 
         if not instance:
-            logger.error("Can't unlink file: Unknown file check with id {}", check_id)
+            logger.error(
+                "Can't unlink file: Unknown file check with id {}", check_id)
             raise ValidationError(
-                "Can't unlink file: Unknown file check with id {}".format(check_id)
+                "Can't unlink file: Unknown file check with id {}".format(
+                    check_id)
             )
 
         serializer = LinkedFileUploadCheckSerializer(
@@ -729,7 +741,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         if term:
             leader_functions: List[ScoutsFunction] = list(
                 ScoutsFunction.objects.get_leader_functions(user=request.user)
-            ) 
+            )
 
             group_admin_ids = []
             for leader_function in leader_functions:
@@ -745,7 +757,8 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
                         for underlyingGroup in underlyingGroups:
                             if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
-                                group_admin_ids.append(underlyingGroup.group_admin_id)
+                                group_admin_ids.append(
+                                    underlyingGroup.group_admin_id)
 
             if not group_admin_id in group_admin_ids:
                 raise PermissionDenied(
@@ -846,7 +859,8 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         )
         self.check_user_allowed(request, instance)
 
-        serializer = LinkedNumberCheckSerializer(instance, context={"request": request})
+        serializer = LinkedNumberCheckSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 

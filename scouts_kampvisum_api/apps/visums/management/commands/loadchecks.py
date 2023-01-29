@@ -11,7 +11,7 @@ from apps.camps.models import CampType
 
 from apps.visums.models import Check
 
-from apps.signals.services import ChangeHandlerService
+from apps.visums.services import ChangeHandlerService
 
 
 # LOGGING

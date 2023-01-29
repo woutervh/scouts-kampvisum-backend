@@ -23,7 +23,7 @@ from apps.visums.models import (
     CampVisum,
 )
 
-from apps.signals.services import ChangeHandlerService
+from apps.visums.services import ChangeHandlerService
 
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.models import PersistedFile

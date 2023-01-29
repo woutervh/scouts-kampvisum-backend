@@ -44,6 +44,4 @@ class OIDCService:
 
         result = self.service.post(self.oidc_endpoint, payload)
 
-        # ScoutsAuthSignalSender().send_oidc_refresh(user=user)
-
         return result

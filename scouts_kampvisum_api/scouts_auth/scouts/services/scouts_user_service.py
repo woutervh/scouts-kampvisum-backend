@@ -21,6 +21,8 @@ class ScoutsUserService:
         user: AbstractScoutsMember = self.group_admin.get_member_profile(
             active_user=active_user)
 
+        for abstract_function in user.functions
+
         # 2) GROUPS (rest-ga/groep)
         # Get the groups that the user has rights to see
         #

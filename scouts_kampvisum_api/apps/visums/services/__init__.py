@@ -1,3 +1,4 @@
+from .change_handler_service import ChangeHandlerService
 from .sub_category_service import SubCategoryService
 from .category_service import CategoryService
 from .linked_check_service import LinkedCheckService

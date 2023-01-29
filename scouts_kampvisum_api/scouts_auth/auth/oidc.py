@@ -1,4 +1,5 @@
 from types import SimpleNamespace
+from typing import Tuple
 from requests.exceptions import HTTPError
 
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
@@ -12,9 +13,6 @@ from django.utils import timezone
 from rest_framework import exceptions
 
 from scouts_auth.auth.models import User
-
-# from scouts_auth.auth.settings import OIDCSettings
-from scouts_auth.auth.signals import ScoutsAuthSignalSender
 
 
 # LOGGING
@@ -32,7 +30,7 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
     def get_user(self, request):
         logger.debug("EREH EREH EREH")
 
-    def authenticate(self, request):
+    def authenticate(self, request) -> Tuple:
         """ "
         Call parent authenticate but catch HTTPError 401 always,
         even without www-authenticate.
@@ -55,8 +53,6 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
                 user.last_authenticated = timezone.now()
                 user.full_clean()
                 user.save()
-
-                ScoutsAuthSignalSender().send_oidc_authenticated(user)
 
                 return (user, token)
         except HTTPError as exc:

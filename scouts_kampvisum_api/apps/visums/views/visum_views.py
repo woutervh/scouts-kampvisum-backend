@@ -86,8 +86,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         scouts_group = ScoutsGroup.objects.safe_get(group_admin_id=group)
         if (
             not group
-            or not group
-            in request.user.get_group_names()
+            or group not in request.user.get_group_names()
             or not scouts_group
             or (not request.user.has_role_leader(group=scouts_group))
             and (not request.user.has_role_district_commissioner(group=scouts_group))

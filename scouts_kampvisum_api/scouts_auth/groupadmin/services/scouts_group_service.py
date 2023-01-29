@@ -155,7 +155,7 @@ class ScoutsGroupService:
             scouts_group.save()
 
         return scouts_group
-    
+
     def link_child_groups(self, scouts_group: ScoutsGroup, child_groups: List[ScoutsGroup]):
         for child_group in child_groups:
             if child_group not in scouts_group.child_groups:

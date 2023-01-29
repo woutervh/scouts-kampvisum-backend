@@ -202,19 +202,20 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedLocationCheck) -> List[dict]:
+    def get_value(obj: LinkedLocationCheck) -> dict:
         data = dict()
 
         if obj.has_value():
-            # data["is_camp_location"] = False
             data["center_latitude"] = obj.center_latitude
             data["center_longitude"] = obj.center_longitude
             data["zoom"] = obj.zoom
             data["locations"] = LinkedLocationSerializer(
-                obj.locations, many=(obj.parent.is_multiple), read_only=True).data
+                obj.locations, many=(obj.parent.is_multiple)).data
+        else:
+            data["locations"] = []
 
-            if obj.parent.is_multiple:
-                data["data_count"] = len(data["locations"])
+        if obj.parent.is_multiple:
+            data["data_count"] = len(data["locations"])
         else:
             data["locations"] = []
 
