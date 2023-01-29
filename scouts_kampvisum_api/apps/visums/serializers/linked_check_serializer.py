@@ -206,16 +206,16 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
         data = dict()
 
         if obj.has_value():
-            linked_locations = obj.locations if obj.locations else []
-
             data["center_latitude"] = obj.center_latitude
             data["center_longitude"] = obj.center_longitude
             data["zoom"] = obj.zoom
             data["locations"] = LinkedLocationSerializer(
-                linked_locations, many=(obj.parent.is_multiple)).data
+                obj.locations, many=(obj.parent.is_multiple)).data
+        else:
+            data["locations"] = []
 
-            if obj.parent.is_multiple:
-                data["data_count"] = len(data["locations"])
+        if obj.parent.is_multiple:
+            data["data_count"] = len(data["locations"])
         else:
             data["locations"] = []
 

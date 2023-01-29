@@ -17,6 +17,8 @@ class LinkedLocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LinkedLocation
+        # fields = ["name", "contact_name", "contact_phone", "contact_email", "is_camp_location",
+        #           "center_latitude", "center_longitude", "zoom", "start_date", "end_date", "locations"]
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
@@ -24,7 +26,7 @@ class LinkedLocationSerializer(serializers.ModelSerializer):
 
         pk = data.get("id", None)
         if id and len(data.keys()) == 1:
-            instance = LinkedLocation.objects.safe_get(id=id)
+            instance = LinkedLocation.objects.safe_get(id=id, raise_error=True)
             if instance:
                 return instance
 
@@ -37,6 +39,6 @@ class LinkedLocationSerializer(serializers.ModelSerializer):
     def to_representation(self, obj: LinkedLocation) -> dict:
         data = super().to_representation(obj)
 
-        logger.debug("LINKED LOCATION TO_REPRESENTATION: %s", data)
+        logger.debug("LINKED LOCATION SERIALIZER TO_REPRESENTATION: %s", data)
 
         return data
