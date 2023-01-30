@@ -378,7 +378,7 @@ CAMP_REGISTRATION_DEADLINE = env.str("CAMP_REGISTRATION_DEADLINE", "01-15")
 RESPONSIBILITY_EPOCH = env.str(
     "RESPONSIBILITY_EPOCH", CAMP_REGISTRATION_DEADLINE)
 # Camp registration mails should be sent only once during this period (in hours)
-CAMP_REGISTRATION_MAIL_DELTA = env.int("CAMP_REGISTRATION_MAIL_DELTA", 1)
+CAMP_REGISTRATION_MAIL_DELTA = env.int("CAMP_REGISTRATION_MAIL_DELTA", 24)
 ENFORCE_MEMBER_CHECKS = env.list(
     "ENFORCE_MEMBER_CHECKS",
     ["ParticipantMemberCheck", "ParticipantLeaderCheck",
