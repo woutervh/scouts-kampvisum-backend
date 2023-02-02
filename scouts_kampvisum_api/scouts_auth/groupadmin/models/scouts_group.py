@@ -77,7 +77,7 @@ class ScoutsGroup():
             f"email ({self.email}), "
             f"website ({self.website}), "
             f"parent_group ({self.parent_group}), "
-            f"child_groups ({[str(child_group) for child_group in self.child_groups]}), "
+            f"child_groups ({[str(child_group) for child_group in self._child_groups]}), "
             f"type ({self.type})"
         )
 
