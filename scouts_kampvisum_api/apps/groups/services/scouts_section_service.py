@@ -1,4 +1,5 @@
 from typing import List
+from types import SimpleNamespace
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -49,7 +50,7 @@ class ScoutsSectionService:
 
         if instance is None:
             instance = ScoutsSection.objects.safe_get(
-                group=group,
+                group=group.group_admin_id,
                 name=name,
                 gender=gender,
                 age_group=age_group,
@@ -89,7 +90,7 @@ class ScoutsSectionService:
 
         instance = ScoutsSection()
 
-        instance.group = group
+        instance.group = group.group_admin_id
         instance.name = name
         instance.gender = gender
         instance.age_group = age_group
@@ -120,7 +121,7 @@ class ScoutsSectionService:
         logger.debug(
             f"Updating Section with name {name}, gender {gender} and age_group {age_group} in group {group}", user=request.user)
 
-        instance.group = group
+        instance.group = group.group_admin_id
         instance.name = name
         instance.gender = gender
         instance.age_group = age_group
@@ -137,8 +138,8 @@ class ScoutsSectionService:
         """
         Links default sections to a group.
         """
-        if not user:
-            user = request.user
+        if not request or not request.user:
+            request = SimpleNamespace(user=user)
 
         created_sections = list()
 

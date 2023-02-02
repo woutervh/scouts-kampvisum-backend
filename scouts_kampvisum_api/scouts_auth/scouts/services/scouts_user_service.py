@@ -4,6 +4,8 @@ from datetime import datetime
 
 from django.conf import settings
 
+from apps.groups.services import ScoutsSectionService
+
 from scouts_auth.scouts.services import ScoutsPermissionService
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMember,
@@ -30,6 +32,7 @@ class ScoutsUserService:
 
     groupadmin = GroupAdminMemberService()
     permission_service = ScoutsPermissionService()
+    section_service = ScoutsSectionService()
 
     def get_scouts_user(self, active_user: settings.AUTH_USER_MODEL, abstract_member: AbstractScoutsMember) -> settings.AUTH_USER_MODEL:
         # Get from GA: the function descriptions
@@ -119,6 +122,7 @@ class ScoutsUserService:
         #
 
         self.permission_service.update_user_authorizations(user=active_user)
+        self.section_service.setup_default_sections(user=active_user)
 
         logger.debug(active_user.to_descriptive_string())
 

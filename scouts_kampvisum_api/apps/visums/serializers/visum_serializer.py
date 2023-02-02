@@ -54,7 +54,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
         if not group:
             sections = data.get("camp", {}).get("sections", [])
             if sections and len(sections) > 0:
-                data["group"] = sections[0].group.group_admin_id
+                data["group"] = sections[0].group
 
         return data
 

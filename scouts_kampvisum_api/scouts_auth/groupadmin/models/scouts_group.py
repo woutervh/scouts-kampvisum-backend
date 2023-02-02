@@ -25,7 +25,7 @@ class ScoutsGroup():
     email = OptionalEmailField()
     website = OptionalCharField()
     parent_group = GroupAdminIdField()
-    child_groups = ListField(max_length=48)
+    child_groups = []
     type = OptionalCharField()
 
     def __init__(

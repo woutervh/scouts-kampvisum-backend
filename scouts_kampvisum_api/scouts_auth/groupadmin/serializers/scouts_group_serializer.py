@@ -29,12 +29,15 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
         return data
 
     def to_representation(self, obj: ScoutsGroup) -> dict:
+        if not isinstance(obj, ScoutsGroup):
+            obj = self.context['request'].user.get_scouts_group(obj)
+
         return {
             "group_admin_id": obj.group_admin_id,
             "number": obj.number,
             "name": obj.name,
             "full_name": obj.full_name,
-            "type": obj.group_type,
+            "type": obj.type,
         }
 
     def validate(self, data: dict) -> ScoutsGroup:
