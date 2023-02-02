@@ -17,6 +17,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class ScoutsUserSerializer(serializers.ModelSerializer):
 
+    groups = serializers.SerializerMethodField()
     user_permissions = serializers.SerializerMethodField()
     scouts_groups = serializers.SerializerMethodField()
     scouts_functions = serializers.SerializerMethodField()
@@ -25,8 +26,12 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         model = ScoutsUser
         exclude = ["password"]
 
-    def get_user_permissions(self, obj: ScoutsUser):
-        return obj.permissions
+    def get_groups(self, obj: ScoutsUser) -> List[str]:
+        groups = obj.groups.all()
+        return [group.name for group in groups]
+
+    def get_user_permissions(self, obj: ScoutsUser) -> List:
+        return obj.get_all_permissions()
 
     def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
         # groups = []

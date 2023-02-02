@@ -311,10 +311,6 @@ class ScoutsUser(User):
             return True
         return False
 
-    @property
-    def permissions(self):
-        return self.get_all_permissions()
-
     def __str__(self):
         return (
             f"group_admin_id ({self.group_admin_id}), "

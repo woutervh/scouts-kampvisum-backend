@@ -60,7 +60,8 @@ class ScoutsPermissionService(PermissionService):
             return user
 
         allowed = False
-        if scouts_group:
+        # if scouts_group:
+        for scouts_group in user.scouts_groups:
             is_shire_president = False
             is_district_commissioner = False
             is_group_leader = False
@@ -92,17 +93,23 @@ class ScoutsPermissionService(PermissionService):
                     user=user,
                     group_name=ScoutsPermissionService.SHIRE_PRESIDENT)
 
+            # else:
+            #     user = self.remove_user_from_group(
+            #         user=user,
+            #         group_name=ScoutsPermissionService.SHIRE_PRESIDENT
+            #     )
+
             if is_district_commissioner:
                 user = self.add_user_to_group(
                     user=user,
                     group_name=ScoutsPermissionService.DISTRICT_COMMISSIONER
                 )
 
-            else:
-                user = self.remove_user_from_group(
-                    user=user,
-                    group_name=ScoutsPermissionService.DISTRICT_COMMISSIONER
-                )
+            # else:
+            #     user = self.remove_user_from_group(
+            #         user=user,
+            #         group_name=ScoutsPermissionService.DISTRICT_COMMISSIONER
+            #     )
 
             if is_group_leader:
                 user = self.add_user_to_group(
@@ -110,11 +117,11 @@ class ScoutsPermissionService(PermissionService):
                     group_name=ScoutsPermissionService.GROUP_LEADER
                 )
 
-            else:
-                user = self.remove_user_from_group(
-                    user=user,
-                    group_name=ScoutsPermissionService.GROUP_LEADER
-                )
+            # else:
+            #     user = self.remove_user_from_group(
+            #         user=user,
+            #         group_name=ScoutsPermissionService.GROUP_LEADER
+            #     )
 
             if is_section_leader:
                 user = self.add_user_to_group(
@@ -122,11 +129,11 @@ class ScoutsPermissionService(PermissionService):
                     group_name=ScoutsPermissionService.SECTION_LEADER
                 )
 
-            else:
-                user = self.remove_user_from_group(
-                    user=user,
-                    group_name=ScoutsPermissionService.SECTION_LEADER
-                )
+            # else:
+            #     user = self.remove_user_from_group(
+            #         user=user,
+            #         group_name=ScoutsPermissionService.SECTION_LEADER
+            #     )
 
         if GroupAdminSettings.is_debug():
             test_groups = GroupAdminSettings.get_test_groups()
