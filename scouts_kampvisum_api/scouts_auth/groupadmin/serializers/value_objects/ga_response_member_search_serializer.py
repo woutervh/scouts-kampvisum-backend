@@ -23,7 +23,7 @@ class AbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "group_admin_id": data.pop("id", None),
@@ -76,7 +76,7 @@ class AbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSeriali
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "members": AbstractScoutsMemberSearchMemberSerializer(
@@ -84,7 +84,8 @@ class AbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSeriali
             ).to_internal_value(data.pop("leden", [])),
         }
 
-        validated_data = {**validated_data, **(super().to_internal_value(data))}
+        validated_data = {**validated_data, **
+                          (super().to_internal_value(data))}
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:

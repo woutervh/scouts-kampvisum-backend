@@ -18,7 +18,7 @@ class AbstractScoutsGroupSpecificFieldSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> list:
         if data is None:
-            return None
+            return {}
 
         validated_data = []
         groups = data.keys()

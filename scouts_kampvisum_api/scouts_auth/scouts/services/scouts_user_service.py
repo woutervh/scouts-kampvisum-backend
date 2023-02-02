@@ -1,33 +1,247 @@
-
+import pytz
+from typing import List, Tuple
+from datetime import datetime
 
 from django.conf import settings
 
-from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGroupListResponse
+from scouts_auth.scouts.services import ScoutsPermissionService
+from scouts_auth.groupadmin.models import (
+    AbstractScoutsMember,
+    AbstractScoutsGroup,
+    AbstractScoutsFunctionDescription,
+    AbstractScoutsFunction,
+    ScoutsGroup,
+    ScoutsFunction,
+    ScoutsUser
+)
 from scouts_auth.groupadmin.services import GroupAdminMemberService
+from scouts_auth.groupadmin.settings import GroupAdminSettings
+
+from scouts_auth.inuits.utils import ListUtils
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserService:
 
-    group_admin = GroupAdminMemberService()
+    groupadmin = GroupAdminMemberService()
+    permission_service = ScoutsPermissionService()
 
-    def get_scouts_user(self, active_user: settings.AUTH_USER_MODEL):
+    def get_scouts_user(self, active_user: settings.AUTH_USER_MODEL, abstract_member: AbstractScoutsMember) -> settings.AUTH_USER_MODEL:
+        # Get from GA: the function descriptions
+        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = [
+        ]
+        # Get from GA: the scouts groups
+        abstract_groups: List[AbstractScoutsGroup] = []
+        # Derive from functions in user profile: the groups to persist functions for
+        abstract_function_groups: List[AbstractScoutsGroup] = []
 
-        # 1) MEMBER PROFILE (rest-ga/lid/profiel)
+        # To persist: user functions
+        user_functions = list()
+        # To persist: user groups
+        user_groups = list()
+
+        # #######
+        # 1. MEMBER PROFILE (rest-ga/lid/profiel)
+        #
         # Get the member profile from groepsadmin
         #
         # This contains:
         # - basic user data (username, first_name, phone number, ...)
         # - a list of scouts functions, for a particular group
-        user: AbstractScoutsMember = self.group_admin.get_member_profile(
-            active_user=active_user)
-
-        for abstract_function in user.functions
-
-        # 2) GROUPS (rest-ga/groep)
-        # Get the groups that the user has rights to see
+        # abstract_user: AbstractScoutsMember = self.group_admin.get_member_profile(
+        #     active_user=active_user)
         #
-        # This list contains:
-        # - the group admin id
-        # - the name of the group
-        groups: AbstractScoutsGroupListResponse = self.group_admin.get_groups(
-            active_user=active_user)
+        # -- Already done by the authentication backend
+        logger.debug(f"Constructing a ScoutsUser object", user=active_user)
+
+        logger.debug(active_user.to_descriptive_string())
+
+        # #######
+        # 2. FUNCTION DESCRIPTIONS (rest-ga/functie)
+        #
+        # Get the list of function descriptions for which the user has rights
+        #
+        # This contains all the functions the user can see, including
+        # - active functions
+        # - inactive functions
+        # - functions the user doesn't have, but can see the description of
+        # - functions that denote leadership status ("Leiding")
+        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = self.groupadmin.get_function_descriptions(
+            active_user=active_user).function_descriptions
+
+        # #######
+        # 3. GROUPS (rest-ga/groep)
+        #
+        # Get the list of scouts groups for which the user has rights
+        #
+        # This contains all the scouts groups the user is allowed to see
+        # An AbstractScoutsGroup contains:
+        # - The group's group admin id
+        # - The group's name
+        abstract_groups: List[AbstractScoutsGroup] = self.groupadmin.get_groups(
+            active_user=active_user).scouts_groups
+
+        for abstract_group in abstract_groups:
+            active_user.add_scouts_group(
+                ScoutsGroup.from_abstract_scouts_group(abstract_group=abstract_group))
+
+        # #######
+        # 4. PROCESS FUNCTIONS
+        #
+        # Result of this should be:
+        # - A list of abstract functions we want to persist
+        # - A list of scouts groups for which the user has an included function
+        #
+        # The following settings apply:
+        # - INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE
+        # - INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE
+        # - LEADERSHIP_STATUS_IDENTIFIER
+        (user_functions, abstract_function_groups) = self.process_functions(
+            active_user=active_user,
+            abstract_member=abstract_member,
+            user_functions=user_functions,
+            abstract_function_groups=abstract_function_groups,
+            abstract_function_descriptions=abstract_function_descriptions)
+
+        for scouts_function in user_functions:
+            active_user.add_scouts_function(scouts_function)
+
+        # #######
+        # 5. PROCESS GROUPS
+        #
+        #
+        #
+        #
+
+        self.permission_service.update_user_authorizations(user=active_user)
+
+        logger.debug(active_user.to_descriptive_string())
+
+        return active_user
+
+    # #######
+    # LEADER:
+    # To definitively find out if a user is a leader, the function description
+    # must be queried. This is because the scouts maintain a flexible approach
+    # to section naming.
+    # A code like GVL (gidsen-verkennerleiding) in the function list of the
+    # profile call is not sufficient, because a scouts group might not have
+    # that section (gidsen/verkenners). To know for sure, the function
+    # description must be queried. If it contains the word "Leiding" under the
+    # key "naam" in the element "groeperingen", then you know it's a leader
+    # function.
+    # Required calls:
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie
+
+    # GROUP LEADER:
+    # These functions do follow a convention that can be derived from the
+    # profile call: if the function code is GRL (groepsleider), AGRL (adjunct
+    # groepsleider) or GRLP (groepsleidingsploeg), then the user is a group
+    # leader.
+    # Required calls:
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
+
+    # DISTRICT COMMISSIONER:
+    # DC is different yet again. When a user is a DC, it could be that only 1
+    # group is listed in the profile call. Usually however, a DC has
+    # responsibilities for more than 1 group. A list of these groups can be
+    # derived by looking at the underlying and upper groups (keys
+    # "onderliggendeGroepen" and "bovenliggendeGroep") in a group call.
+    # This follows a convention that if someone is DC for group A1234B, that
+    # user is also a DC for all groups that have a name starting with A12.
+
+    # SHIRE PRESIDENT:
+    # A shire president (gouwvoorzitter) more or less follows the logic for a DC,
+    # but the underlying groups are DC groups.
+    # To get the complete list of scouts groups under the responsibility of the
+    # shire president, there is currently no other option than to make separate calls
+    # for every underlying group of every DC group.
+
+    # Required calls:
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/<GROUP NAME>
+    #
+    def process_functions(
+        self,
+        active_user: ScoutsUser,
+        abstract_member: AbstractScoutsMember,
+        user_functions: List[ScoutsFunction],
+        abstract_function_groups: List[AbstractScoutsGroup],
+        abstract_function_descriptions: List[AbstractScoutsFunctionDescription]
+    ) -> Tuple[List[AbstractScoutsFunction], List[AbstractScoutsGroup]]:
+        now = pytz.utc.localize(datetime.now())
+
+        ignore_inactive = GroupAdminSettings.include_inactive_functions_in_profile()
+        ignore_non_leader = GroupAdminSettings.include_only_leader_functions_in_profile()
+        leadership_status_identifier = GroupAdminSettings.get_leadership_status_identifier()
+
+        for abstract_function in abstract_member.functions:
+            # Ignore inactive functions ?
+            if abstract_function.end and abstract_function.end <= now and ignore_inactive:
+                continue
+
+            # Ignore non-leader functions ?
+            if not ignore_non_leader:
+                abstract_function.abstract_function_description = abstract_function_description
+
+                user_functions.append(self.create_scouts_function(
+                    active_user=active_user, abstract_function=abstract_function))
+                abstract_function_groups.append(abstract_function.scouts_group)
+            else:
+                (user_functions, abstract_function_groups) = self.process_leader_functions(
+                    active_user=active_user,
+                    leadership_status_identifier=leadership_status_identifier,
+                    user_functions=user_functions,
+                    abstract_function_groups=abstract_function_groups,
+                    abstract_function=abstract_function,
+                    abstract_function_descriptions=abstract_function_descriptions
+                )
+
+        abstract_function_groups = ListUtils.unique_element_list(
+            abstract_function_groups)
+
+        return (user_functions, abstract_function_groups)
+
+    def process_leader_functions(
+        self,
+        active_user: ScoutsUser,
+        leadership_status_identifier: str,
+        user_functions: List[ScoutsFunction],
+        abstract_function_groups: List[AbstractScoutsGroup],
+        abstract_function: AbstractScoutsFunction,
+        abstract_function_descriptions: List[AbstractScoutsFunctionDescription]
+    ) -> Tuple[List[AbstractScoutsFunction], List[AbstractScoutsGroup]]:
+        for abstract_function_description in abstract_function_descriptions:
+            if abstract_function_description.group_admin_id == abstract_function.function:
+                for grouping in abstract_function_description.groupings:
+                    if grouping.name == leadership_status_identifier:
+                        abstract_function.abstract_function_description = abstract_function_description
+
+                        user_functions.append(self.create_scouts_function(
+                            active_user=active_user, abstract_function=abstract_function, is_leader=True))
+
+                        abstract_function_groups.append(
+                            abstract_function.scouts_group)
+
+        return (user_functions, abstract_function_groups)
+
+    def create_scouts_function(self, active_user: ScoutsUser, abstract_function: AbstractScoutsFunction, is_leader: bool = False) -> ScoutsFunction:
+        scouts_function = ScoutsFunction.from_abstract_function(
+            abstract_function=abstract_function, abstract_function_description=abstract_function.abstract_function_description)
+        scouts_group = active_user.get_scouts_group(
+            group_admin_id=abstract_function.scouts_group.group_admin_id)
+
+        if not scouts_group:
+            raise ScoutsAuthException(
+                f"Scouts group {abstract_function.scouts_group.group_admin_id} is not registered for user", user=active_user)
+
+        scouts_function.scouts_group = scouts_group
+        scouts_function.is_leader = is_leader
+
+        return scouts_function

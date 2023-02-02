@@ -1,4 +1,5 @@
-import warnings, ast
+import warnings
+import ast
 from typing import Iterable
 
 from django.db import models
@@ -276,8 +277,6 @@ class ListField(models.CharField):
             return SubList(self.token)
 
         return SubList(self.token, value.split(self.token))
-
-        return ast.literal_eval(value)
 
     def from_db_value(self, value, expression, connection):
         return self.to_python(value)

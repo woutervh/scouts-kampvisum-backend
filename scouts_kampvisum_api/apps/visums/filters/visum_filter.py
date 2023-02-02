@@ -28,7 +28,7 @@ class CampVisumFilter(filters.FilterSet):
 
         query_filters = dict()
         if group_admin_id:
-            query_filters["group__group_admin_id"] = group_admin_id
+            query_filters["group"] = group_admin_id
         if year:
             query_filters["camp__year__year"] = year
 
@@ -36,4 +36,4 @@ class CampVisumFilter(filters.FilterSet):
         for key, value in query_filters.items():
             and_condition.add(Q(**{key: value}), Q.AND)
 
-        return parent.allowed(user=self.request.user).filter(and_condition).distinct()
+        return parent.filter(and_condition).distinct()

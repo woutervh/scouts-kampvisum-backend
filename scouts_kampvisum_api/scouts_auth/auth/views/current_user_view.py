@@ -26,9 +26,7 @@ class CurrentUserView(views.APIView):
     @swagger_auto_schema(responses={status.HTTP_200_OK: UserSerializer})
     def get(self, request):
         try:
-            user: User = request.user
-
-            logger.debug("USER: %s", user.username)
+            logger.debug("/me", user=request.user)
 
             # group_data = self.service.get_groups(request.user)
             # scouts_groups: List[AbstractScoutsGroup] = group_data.scouts_groups
@@ -39,4 +37,5 @@ class CurrentUserView(views.APIView):
 
             return Response(data)
         except Exception as exc:
-            logger.error("SCOUTS_AUTH: Error while performing the me call", exc)
+            logger.error(
+                f"SCOUTS_AUTH: Error while performing the me call: {exc}")

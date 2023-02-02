@@ -22,7 +22,7 @@ class AbstractScoutsFunctionDescriptionSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "group_admin_id": data.pop("id", None),
@@ -30,7 +30,6 @@ class AbstractScoutsFunctionDescriptionSerializer(NonModelSerializer):
             "scouts_group": AbstractScoutsGroupSerializer().to_internal_value(
                 {"id": data.pop("groep", None)}
             ),
-            "function": data.pop("functie", None),
             "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value(
                 [{"id": group} for group in data.pop("groepen", [])]
             ),
@@ -50,7 +49,8 @@ class AbstractScoutsFunctionDescriptionSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", str(remaining_keys))
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s",
+                       str(remaining_keys))
             for key in remaining_keys:
                 logger.trace("UNPARSED DATA: %s", data[key])
 
@@ -70,7 +70,6 @@ class AbstractScoutsFunctionDescriptionSerializer(NonModelSerializer):
         instance.scouts_group = AbstractScoutsGroupSerializer().create(
             validated_data.pop("scouts_group", None)
         )
-        instance.function = validated_data.pop("function", None)
         instance.scouts_groups = AbstractScoutsGroupSerializer(many=True).create(
             validated_data.pop("scouts_groups", [])
         )

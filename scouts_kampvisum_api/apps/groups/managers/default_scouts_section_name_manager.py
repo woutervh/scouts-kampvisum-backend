@@ -36,7 +36,7 @@ class DefaultScoutsSectionNameManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if group_type:
@@ -47,7 +47,7 @@ class DefaultScoutsSectionNameManager(models.Manager):
                         .filter(group_type=group_type, gender=gender)
                         .distinct()
                     )
-                except:
+                except Exception:
                     pass
 
             if name and gender and age_group:
@@ -58,7 +58,7 @@ class DefaultScoutsSectionNameManager(models.Manager):
                         gender=gender,
                         age_group=age_group,
                     )
-                except:
+                except Exception:
                     pass
 
             if gender and age_group:
@@ -68,7 +68,7 @@ class DefaultScoutsSectionNameManager(models.Manager):
                         gender=gender,
                         age_group=age_group,
                     )
-                except:
+                except Exception:
                     pass
 
         if raise_error:

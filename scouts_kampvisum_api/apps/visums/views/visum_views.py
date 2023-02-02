@@ -14,7 +14,7 @@ from apps.visums.services import CampVisumService
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
 from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.groupadmin.services import ScoutsAuthorizationService
+from scouts_auth.scouts.permissions import IsLeaderForGroup
 
 # LOGGING
 import logging
@@ -28,26 +28,17 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing camp instances.
     """
 
-    permission_classes = [permissions.IsAuthenticated]
     serializer_class = CampVisumSerializer
     queryset = CampVisum.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()
-    authorization_service = ScoutsAuthorizationService()
-
-    def check_user_allowed(self, request, group):
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
-        logger.debug("Updated user authorisations with group %s",
-                     group.group_admin_id, user=request.user)
 
     def get_permissions(self):
-        current_permissions = super().get_permissions()
+        current_permissions = []
+
+        current_permissions.append(permissions.IsAuthenticated())
 
         if self.action == "create":
             current_permissions.append(
@@ -62,6 +53,8 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             current_permissions.append(
                 CustomDjangoPermission("visums.delete_visum"))
         elif self.action == "list":
+            current_permissions.append(
+                IsLeaderForGroup())
             current_permissions.append(
                 CustomDjangoPermission("visums.list_visum"))
 
@@ -83,13 +76,14 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug("CAMP VISUM CREATE VALIDATED DATA: %s", validated_data)
 
         group = validated_data.get("group", None)
-        scouts_group = ScoutsGroup.objects.safe_get(group_admin_id=group)
+        # scouts_group = ScoutsGroup.objects.safe_get(group_admin_id=group)
         if (
             not group
             or group not in request.user.get_group_names()
-            or not scouts_group
-            or (not request.user.has_role_leader(group=scouts_group))
-            and (not request.user.has_role_district_commissioner(group=scouts_group))
+            # @TODO
+            # or not scouts_group
+            # or (not request.user.has_role_leader(group=scouts_group))
+            # and (not request.user.has_role_district_commissioner(group=scouts_group))
         ):
             raise PermissionDenied(
                 {
@@ -113,10 +107,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug(f"Requesting visum {pk}", user=request.user)
         instance = self.get_object()
         logger.debug(f"Visum retrieved: {instance.camp.name}")
-        # HACKETY HACK
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.check_user_allowed(request, instance.group)
         logger.debug("Reloaded user permissions")
         serializer = CampVisumSerializer(
             instance, context={"request": request})
@@ -129,7 +119,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     )
     def partial_update(self, request, pk=None):
         instance = self.get_object()
-        self.check_user_allowed(request, instance.group)
 
         logger.debug("CAMP VISUM UPDATE REQUEST DATA: %s", request.data)
 
@@ -158,16 +147,9 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def list(self, request):
-        # HACKETY HACK
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
         group_admin_id = self.request.query_params.get("group", None)
         logger.debug("Listing visums for group %s",
                      group_admin_id, user=request.user)
-        scouts_group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-            group_admin_id=group_admin_id, raise_error=True
-        )
-        self.check_user_allowed(request, scouts_group)
 
         instances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(instances)
@@ -198,7 +180,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     )
     def destroy(self, request, pk):
         instance = CampVisum.objects.safe_get(id=pk)
-        self.check_user_allowed(request, instance.group)
 
         self.camp_visum_service.delete_visum(
             request=request, instance=instance)
@@ -213,7 +194,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         # HACKETY HACK
         # This should probably be handled by a rest call when changing groups in the frontend,
         # but adding it here avoids the need for changes to the frontend
-        self.check_user_allowed(request, instance.group)
         logger.debug("Reloaded user permissions")
         serializer = CampVisumSerializer(
             instance, context={"request": request})

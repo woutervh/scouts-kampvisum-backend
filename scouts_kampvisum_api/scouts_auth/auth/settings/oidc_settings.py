@@ -1,7 +1,7 @@
 from scouts_auth.inuits.utils import SettingsHelper
 
 
-class OIDCSettings(SettingsHelper):
+class InuitsOIDCSettings(SettingsHelper):
     """Convenience class with static methods to easily distinguish what settings are required for dependent packages."""
 
     @staticmethod

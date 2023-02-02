@@ -7,9 +7,7 @@ from django.utils import timezone
 from apps.groups.models import ScoutsSection
 from apps.groups.services import ScoutsSectionService
 
-from scouts_auth.auth.oidc_user_helper import OIDCUserHelper
-
-from scouts_auth.groupadmin.services import ScoutsAuthorizationService
+from scouts_auth.scouts.services import ScoutsPermissionService
 
 # LOGGING
 import logging
@@ -18,9 +16,9 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ScoutsUserService:
+class ScoutsUserHelperService:
 
-    authorization_service = ScoutsAuthorizationService()
+    authorization_service = ScoutsPermissionService()
     section_service = ScoutsSectionService()
 
     handling_login = False
@@ -62,70 +60,13 @@ class ScoutsUserService:
     def _check_user_data(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
-        if not OIDCUserHelper.requires_data_loading(user=user):
-            logger.debug("Not reloading user data", user=user)
-
-            user.last_updated = timezone.now()
-
-            user.full_clean()
-            user.save()
-
-            return user
-
-        if OIDCUserHelper.requires_group_loading(user=user):
-            try:
-                user = self.authorization_service.load_user_scouts_groups(
-                    user=user)
-            except Exception as exc:
-                raise ValidationError(
-                    "An error occured while loading user scouts groups", exc
-                )
-
-            user.last_updated_groups = timezone.now()
-
-            user.full_clean()
-            user.save()
-        else:
-            logger.debug("Not reloading user groups", user=user)
-
-        if OIDCUserHelper.requires_functions_loading(user=user):
-            user: settings.AUTH_USER_MODEL = (
-                self.authorization_service.load_user_functions(user=user)
-            )
-            # try:
-            #     user: settings.AUTH_USER_MODEL = (
-            #         self.authorization_service.load_user_functions(user=user)
-            #     )
-            # except Exception as exc:
-            #     raise ValidationError(
-            #         "An error occured while loading user scouts functions", exc
-            #     )
-
-            user.last_updated_functions = timezone.now()
-
-            user.full_clean()
-            user.save()
-        else:
-            logger.debug("Not reloading user functions", user=user)
-
-        section_service = ScoutsSectionService()
-        section_service.setup_default_sections(
-            request=SimpleNamespace(user=user))
-        # try:
-        #     section_service = ScoutsSectionService()
-        #     section_service.setup_default_sections(user=user)
-        # except Exception as exc:
-        #     raise ValidationError(
-        #         "An error occured while setting up default scouts sections", exc
-        #     )
-
         return user
 
     def _validate_user_data(
         self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
         group_count: int = len(user.scouts_groups)
-        persisted_group_count: int = len(user.persisted_scouts_groups)
+        persisted_group_count: int = len(user.scouts_groups)
         function_count: int = len(user.functions)
         persisted_function_count: int = user.persisted_scouts_functions.count()
 
@@ -154,7 +95,7 @@ class ScoutsUserService:
                 )
             )
 
-        for group in user.persisted_scouts_groups:
+        for group in user.scouts_groups:
             section_count: int = ScoutsSection.objects.all().filter(group=group)
             if section_count == 0:
                 raise ValidationError(

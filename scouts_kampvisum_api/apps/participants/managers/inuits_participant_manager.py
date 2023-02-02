@@ -16,9 +16,6 @@ class InuitsParticipantQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def allowed(self, user: settings.AUTH_USER_MODEL):
-        return self.filter(group_group_admin_id__in=AuthenticationHelper.load_groups(user=user))
-
     def members(self):
         return self.filter(Q(is_member=True) & Q(group_admin_id__isnull=False))
 

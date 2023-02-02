@@ -33,19 +33,19 @@ class ScoutsGroupTypeManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if group_type:
             try:
                 return self.get_queryset().get(group_type=group_type)
-            except:
+            except Exception:
                 pass
 
         if is_default:
             try:
                 return self.get_queryset().get(is_default=is_default)
-            except:
+            except Exception:
                 pass
 
         if raise_error:

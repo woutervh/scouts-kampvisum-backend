@@ -26,7 +26,7 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data: dict = {
             "group_admin_id": data.pop("id", None),
@@ -74,7 +74,8 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.number = validated_data.pop("number", None)
         instance.name = validated_data.pop("name", None)
-        instance.date_of_foundation = validated_data.pop("date_of_foundation", None)
+        instance.date_of_foundation = validated_data.pop(
+            "date_of_foundation", None)
         instance.bank_account = validated_data.pop("bank_account", None)
         instance.email = validated_data.pop("email", None)
         instance.website = validated_data.pop("website", None)

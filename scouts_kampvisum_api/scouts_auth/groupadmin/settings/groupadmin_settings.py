@@ -67,6 +67,18 @@ class GroupAdminSettings(SettingsHelper):
         return GroupAdminSettings.get("GROUP_ADMIN_MEMBER_LIST_FILTERED_ENDPOINT", default_value)
 
     @staticmethod
+    def include_inactive_functions_in_profile(default_value=False):
+        return GroupAdminSettings.get_bool(
+            "INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE", default_value
+        )
+
+    @staticmethod
+    def include_only_leader_functions_in_profile(default_value=True):
+        return GroupAdminSettings.get_bool(
+            "INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE", default_value
+        )
+
+    @staticmethod
     def include_inactive_members_in_search(default_value=False):
         return GroupAdminSettings.get_bool(
             "INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", default_value
@@ -120,8 +132,8 @@ class GroupAdminSettings(SettingsHelper):
         return SettingsHelper.get_list("KNOWN_ROLES")
 
     @staticmethod
-    def get_section_leader_identifier() -> str:
-        return SettingsHelper.get("SECTION_LEADER_IDENTIFIER")
+    def get_leadership_status_identifier() -> str:
+        return SettingsHelper.get("LEADERSHIP_STATUS_IDENTIFIER")
 
     @staticmethod
     def get_group_gender_identifier_male() -> str:

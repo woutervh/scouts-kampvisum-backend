@@ -1,18 +1,18 @@
-from django.conf import settings
-from django.db import models
-from django.db.models import Q
-from django.core.exceptions import ValidationError
+from typing import List
 
-from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsUser
-from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
-from scouts_auth.groupadmin.settings import GroupAdminSettings
+from scouts_auth.auth.exceptions import ScoutsAuthException
 
-from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import (
-    RequiredCharField,
-    OptionalCharField,
-    OptionalDateTimeField,
+from scouts_auth.groupadmin.models import (
+    AbstractScoutsFunction,
+    AbstractScoutsFunctionDescription,
+    AbstractScoutsLink,
+    AbstractScoutsFunctionCode,
+    ScoutsGroup
 )
+from scouts_auth.groupadmin.models.fields import GroupAdminIdField
+
+from scouts_auth.inuits.models import AbstractNonModel
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateTimeField, OptionalDateField
 
 
 # LOGGING
@@ -22,178 +22,86 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ScoutsFunctionQuerySet(models.QuerySet):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class ScoutsFunction():
 
-    def has_function_for_group(self, group_admin_id: str):
-        return self.filter(scouts_groups__group_admin_id=group_admin_id).count() > 0
-
-
-class ScoutsFunctionManager(models.Manager):
-    def get_queryset(self):
-        return ScoutsFunctionQuerySet(self.model, using=self._db)
-
-    def safe_get(self, *args, **kwargs):
-        pk = kwargs.get("id", kwargs.get("pk", None))
-        user = kwargs.get("user", None)
-        group_admin_id = kwargs.get("group_admin_id", None)
-        raise_error = kwargs.get("raise_error", False)
-
-        if pk:
-            try:
-                return self.get_queryset().get(pk=pk)
-            except:
-                pass
-
-        if user and group_admin_id:
-            try:
-                return self.get_queryset().get(_user=user, group_admin_id=group_admin_id)
-            except:
-                pass
-
-        if raise_error:
-            raise ValidationError(
-                "Unable to locate ScoutsFunction instance(s) with the provided params: (id: {}, user: {}, group_admin_id: {})".format(
-                    pk, user.username, group_admin_id
-                )
-            )
-        return None
-
-    def get_by_natural_key(self, group_admin_id):
-        logger.trace(
-            "GET BY NATURAL KEY %s: (group_admin_id: %s (%s))",
-            "ScoutsFunction",
-            group_admin_id,
-            type(group_admin_id).__name__,
-        )
-
-        return self.get(group_admin_id=group_admin_id)
-
-    def get_leader_functions(self, user: settings.AUTH_USER_MODEL):
-        return (
-            self.get_queryset()
-            .filter(
-                name__iexact=GroupAdminSettings.get_section_leader_identifier(),
-                _user=user,
-            )
-            .all()
-        )
-
-
-class ScoutsFunction(AuditedBaseModel):
-
-    objects = ScoutsFunctionManager()
-
-    _user = models.ForeignKey(
-        ScoutsUser,
-        on_delete=models.CASCADE,
-        related_name="persisted_scouts_functions",
-        null=True,
-        blank=True,
-    )
-    _user_obj = None
-
-    group_admin_id = RequiredCharField()
-    code = OptionalCharField()
-    type = OptionalCharField()
-    description = OptionalCharField()
-    name = OptionalCharField()
-    _scouts_groups = models.ManyToManyField(ScoutsGroup)
-    _scouts_groups_list = None
+    group_admin_id = GroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
+    scouts_group: ScoutsGroup
 
-    class Meta:
-        ordering = ["group_admin_id"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["_user", "group_admin_id"], name="unique_user_for_function"
-            )
-        ]
+    code = OptionalCharField()
+    description = OptionalCharField()
 
-    @property
-    def user(self):
-        if self._user_obj is None:
-            self._user_obj = self._user
-        return self._user_obj
+    # Fields derived from the function description
+    type = OptionalCharField()
+    max_birth_date = OptionalDateField()
+    adjunct = OptionalCharField()
 
-    @user.setter
-    def user(self, user: settings.AUTH_USER_MODEL):
-        self._user = user
+    is_leader: bool = False
+
+    # Runtime data
+    _scouts_function_code: AbstractScoutsFunctionCode = None
 
     @property
-    def scouts_groups(self):
-        if self._scouts_groups_list is None:
-            self._scouts_groups_list = self._scouts_groups.all()
+    def scouts_function_code(self):
+        if not self._scouts_function_code:
+            self._scouts_function_code = AbstractScoutsFunctionCode(
+                code=self.code)
+        return self._scouts_function_code
 
-        return self._scouts_groups_list
+    def is_leader_function(self) -> bool:
+        return self.is_leader
 
-    def add_group(self, scouts_group: ScoutsGroup):
-        self._scouts_groups.add(scouts_group)
+    def is_section_leader_function(self) -> bool:
+        return self.is_leader_function()
 
-    def _has_function_for_group(self, scouts_group: ScoutsGroup = None) -> bool:
-        return ScoutsFunction.objects.all().has_function_for_group(
-            group_admin_id=scouts_group.group_admin_id
-        )
+    def is_group_leader_function(self) -> bool:
+        return self.scouts_function_code.is_group_leader()
 
-    def _has_function_for_parent_group(self, scouts_group: ScoutsGroup = None) -> bool:
+    def is_district_commissioner_function(self) -> bool:
+        return self.scouts_function_code.is_district_commissioner()
+
+    def is_shire_president_function(self) -> bool:
+        return self.scouts_function_code.is_shire_president()
+
+    def __str__(self):
         return (
-            ScoutsFunction.objects.all().has_function_for_group(
-                group_admin_id=scouts_group.parent_group_admin_id
-            )
-            if scouts_group.parent_group_admin_id
-            else False
+            f"group_admin_id ({self.group_admin_id})"
+            f"begin({self.begin})"
+            f"end({self.end})"
+            f"code ({self.code})"
+            f"description ({self.description})"
+            f"type ({self.type})"
+            f"max_birth_date ({self.max_birth_date})"
+            f"adjunct ({self.adjunct})"
+            f"scouts_group ({self.scouts_group})"
         )
 
-    def is_leader(self, scouts_group: ScoutsGroup = None) -> bool:
-        if (
-            self.name.lower()
-            == GroupAdminSettings.get_section_leader_identifier().lower()
-        ):
-            if scouts_group:
-                return scouts_group in self.scouts_groups
-            return True
-        return False
+    def to_descriptive_string(self):
+        return f"{self.code} - {self.description}: {self.scouts_group}"
 
-    def is_section_leader(self, scouts_group: ScoutsGroup = None) -> bool:
-        return self.is_leader(scouts_group=scouts_group)
+    @staticmethod
+    def from_abstract_function(
+        scouts_function=None,
+        abstract_function: AbstractScoutsFunction = None,
+        abstract_function_description: AbstractScoutsFunctionDescription = None,
+    ):
+        if not abstract_function:
+            raise ScoutsAuthException(
+                "Can't construct a ScoutsFunction without an AbstractScoutsFunction")
+        if not abstract_function_description:
+            raise ScoutsAuthExeption(
+                "Can't construct a ScoutsFunction without an AbstractScoutsFunctionDescription")
 
-    def is_group_leader(self, scouts_group: ScoutsGroup = None) -> bool:
-        if AbstractScoutsFunctionCode(code=self.code).is_group_leader():
-            if scouts_group:
-                return scouts_group in self.scouts_groups
-            return True
-        return False
-    
-    def is_function_with_underlying_groups(self) -> bool:
-        return (
-            self.is_district_commissioner() or
-            self.is_shire_president()
-        )
+        scouts_function: ScoutsFunction = scouts_function if scouts_function else ScoutsFunction()
 
-    def is_district_commissioner(self) -> bool:
-        return AbstractScoutsFunctionCode(code=self.code).is_district_commissioner()
+        scouts_function.group_admin_id = abstract_function.function
+        scouts_function.begin = abstract_function.begin
+        scouts_function.end = abstract_function.end
+        scouts_function.code = abstract_function.code
+        scouts_function.description = abstract_function.description
+        scouts_function.type = abstract_function_description.type
+        scouts_function.max_birth_date = abstract_function_description.max_birth_date
+        scouts_function.adjunct = abstract_function_description.adjunct
 
-    def is_district_commissioner_for_group(
-        self, scouts_group: ScoutsGroup = None
-    ) -> bool:
-        if self.is_district_commissioner():
-            scouts_groups = self.scouts_groups
-
-            for group in scouts_groups:
-                if (
-                    scouts_group.group_admin_id == group.group_admin_id
-                    or scouts_group.parent_group_admin_id == group.group_admin_id
-                ):
-                    return True
-
-        return False
-
-    def is_shire_president(self) -> bool:
-        return AbstractScoutsFunctionCode(code=self.code).is_shire_president()
-
-    def is_shire_president_for_group(self, scouts_group: ScoutsGroup = None) -> bool:
-        if self.is_shire_president():
-            return True
-        return False
+        return scouts_function

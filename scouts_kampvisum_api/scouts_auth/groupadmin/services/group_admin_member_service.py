@@ -316,7 +316,7 @@ class GroupAdminMemberService(GroupAdmin):
                         for grouping in function_description.groupings:
                             if (
                                 grouping.name
-                                == GroupAdminSettings.get_section_leader_identifier()
+                                == GroupAdminSettings.get_leadership_status_identifier()
                             ):
                                 if member_function.end:
                                     function_activities.append((True, False))

@@ -1,6 +1,8 @@
 from typing import List
 from datetime import date, datetime
 
+
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
     AbstractScoutsGroup,
     AbstractScoutsGrouping,
@@ -23,7 +25,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class AbstractScoutsFunctionDescription(AbstractNonModel):
 
-    group_admin_id = OptionalCharField()
+    group_admin_id = OptionalGroupAdminIdField()
     type = OptionalCharField()
     max_birth_date = OptionalDateField()
     code = OptionalCharField()
@@ -31,9 +33,9 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
     adjunct = OptionalCharField()
 
     # Declare as foreign keys in concrete subclasses
-    scouts_groups: List[AbstractScoutsGroup]
-    groupings: List[AbstractScoutsGrouping]
-    links: List[AbstractScoutsLink]
+    scouts_groups: List[AbstractScoutsGroup] = []
+    groupings: List[AbstractScoutsGrouping] = []
+    links: List[AbstractScoutsLink] = []
 
     # Runtime data
     _scouts_function_code: AbstractScoutsFunctionCode = None
@@ -45,7 +47,6 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
         self,
         group_admin_id: str = None,
         type: str = None,
-        function: str = None,
         scouts_groups: List[AbstractScoutsGroup] = None,
         groupings: List[AbstractScoutsGrouping] = None,
         begin: datetime = None,
@@ -58,7 +59,6 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
     ):
         self.group_admin_id = group_admin_id
         self.type = type
-        self.function = function
         self.scouts_groups = scouts_groups
         self.groupings = groupings
         self.begin = begin
@@ -69,14 +69,16 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
         self.adjunct = adjunct
         self.links = links if links else []
 
+    # Necessary for comparison
+    @property
+    def pk(self):
+        return self.group_admin_id
+
     @property
     def function_code(self):
         if self._scouts_function_code is None:
             self._scouts_function_code = AbstractScoutsFunctionCode(self.code)
         return self._scouts_function_code
-
-    def is_district_commissioner(self) -> bool:
-        return self.function_code.is_district_commissioner()
 
     def get_groupings_name(self):
         index = 0
@@ -89,10 +91,9 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
         return name
 
     def __str__(self):
-        return "group_admin_id ({}), type ({}), function({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
+        return "group_admin_id ({}), type ({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
             self.group_admin_id,
             self.type,
-            self.function,
             ", ".join(str(group) for group in self.scouts_groups)
             if self.scouts_groups
             else "[]",
@@ -105,7 +106,8 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
             self.code,
             self.description,
             self.adjunct,
-            ", ".join(str(link) for link in self.links) if self.links else "[]",
+            ", ".join(str(link)
+                      for link in self.links) if self.links else "[]",
         )
 
     def to_descriptive_string(self):

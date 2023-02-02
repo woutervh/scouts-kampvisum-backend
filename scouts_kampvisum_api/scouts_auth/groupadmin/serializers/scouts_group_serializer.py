@@ -16,10 +16,11 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        id = data.get("id", None)
+        pk = data.get("id", None)
         group_admin_id = data.get("group_admin_id", None)
 
-        instance = ScoutsGroup.objects.safe_get(id=id, group_admin_id=group_admin_id)
+        instance = ScoutsGroup.objects.safe_get(
+            id=pk, group_admin_id=group_admin_id)
         if instance:
             return instance
 
@@ -41,7 +42,8 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
             return data
 
         logger.debug("SCOUTS GROUP SERIALIZER VALIDATE: %s", data)
-        group = ScoutsGroup.objects.safe_get(group_admin_id=data.get("group_admin_id"))
+        group = ScoutsGroup.objects.safe_get(
+            group_admin_id=data.get("group_admin_id"))
 
         if group:
             return group

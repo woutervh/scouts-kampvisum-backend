@@ -26,7 +26,7 @@ class ScoutsSectionNameManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if name and gender and age_group:
@@ -34,11 +34,12 @@ class ScoutsSectionNameManager(models.Manager):
                 return self.get_queryset().get(
                     name=name, gender=gender, age_group=age_group
                 )
-            except:
+            except Exception:
                 pass
 
         if name and gender:
-            results = list(self.get_queryset().all().filter(name=name, gender=gender))
+            results = list(self.get_queryset().all().filter(
+                name=name, gender=gender))
 
             if len(results) == 1:
                 return results[0]

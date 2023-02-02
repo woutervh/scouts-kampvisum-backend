@@ -20,7 +20,7 @@ class AbstractScoutsGroupListResponseSerializer(AbstractScoutsResponseSerializer
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value(

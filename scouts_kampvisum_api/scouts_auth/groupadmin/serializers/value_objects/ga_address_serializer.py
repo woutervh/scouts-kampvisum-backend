@@ -19,10 +19,10 @@ class AbstractScoutsAddressSerializer(NonModelSerializer):
 
     def to_internal_value(self, data) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
-            "id": data.pop("id", None),
+            "group_admin_id": data.pop("id", None),
             "street": data.pop("straat", None),
             "number": data.pop("nummer", None),
             "letter_box": data.pop("bus", None),
@@ -54,7 +54,7 @@ class AbstractScoutsAddressSerializer(NonModelSerializer):
 
         instance = AbstractScoutsAddress()
 
-        instance.group_admin_id = validated_data.pop("id", None)
+        instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.street = validated_data.pop("street", None)
         instance.number = validated_data.pop("number", None)
         instance.letter_box = validated_data.pop("letter_box", None)

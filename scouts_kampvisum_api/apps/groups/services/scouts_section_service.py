@@ -9,7 +9,6 @@ from apps.groups.models import (
 )
 from apps.groups.services import DefaultScoutsSectionNameService
 
-from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.models import Gender
@@ -31,7 +30,7 @@ class ScoutsSectionService:
         self,
         request=None,
         instance: ScoutsSection = None,
-        group: ScoutsGroup = None,
+        group: str = None,
         name: str = None,
         gender: Gender = Gender.MIXED,
         age_group: int = 0,
@@ -79,20 +78,14 @@ class ScoutsSectionService:
     def _section_create(
         self,
         request=None,
-        group: ScoutsGroup = None,
+        group: str = None,
         name: str = None,
         gender: Gender = Gender.MIXED,
         age_group: int = 0,
         hidden: bool = False,
     ) -> ScoutsSection:
         logger.debug(
-            "Creating a ScoutsSection with name '%s', gender %s and age_group %s for group %s",
-            name,
-            gender,
-            age_group,
-            group.group_admin_id,
-            user=request.user,
-        )
+            f"Creating a ScoutsSection with name {name}, gender {gender} and age_group {age_group} for group {group}", user=request.user)
 
         instance = ScoutsSection()
 
@@ -111,7 +104,7 @@ class ScoutsSectionService:
         self,
         request=None,
         instance: ScoutsSection = None,
-        group: ScoutsGroup = None,
+        group: str = None,
         name: str = None,
         gender: Gender = None,
         age_group: int = None,
@@ -125,13 +118,7 @@ class ScoutsSectionService:
         age_group = age_group if age_group else instance.age_group
 
         logger.debug(
-            "Updating Section with name '%s', gender %s and age_group %s in group %s",
-            name,
-            gender,
-            age_group,
-            group.group_admin_id,
-            user=request.user,
-        )
+            f"Updating Section with name {name}, gender {gender} and age_group {age_group} in group {group}", user=request.user)
 
         instance.group = group
         instance.name = name
@@ -153,23 +140,11 @@ class ScoutsSectionService:
         if not user:
             user = request.user
 
-        groups: List[ScoutsGroup] = user.persisted_scouts_groups
         created_sections = list()
 
-        for group in groups:
-            if group.default_sections_loaded:
-                # logger.debug(
-                #     "Default sections for group %s already loaded (%d section(s))",
-                #     group.group_admin_id,
-                #     group.sections.count(),
-                # )
-                continue
-
+        for group in user.scouts_groups:
             logger.debug(
-                "Linking sections to GROUP: %s (%s)",
-                group.group_admin_id,
-                group.name,
-            )
+                f"Linking sections to GROUP: {group.group_admin_id} ({group.name})")
             default_scouts_section_names: List[
                 DefaultScoutsSectionName
             ] = self.default_section_name_service.load_for_group(
@@ -178,16 +153,12 @@ class ScoutsSectionService:
 
             if len(default_scouts_section_names) == 0:
                 raise ValidationError(
-                    "No DefaultScoutsSectionName instances found for group_type {}".format(
-                        group.group_type
-                    )
-                )
+                    f"No DefaultScoutsSectionName instances found for group_type {group.type}")
+
             for default_name in default_scouts_section_names:
                 logger.debug(
-                    "Linking DefaultSectionName %s to group %s",
-                    default_name.name,
-                    group.group_admin_id,
-                )
+                    f"Linking DefaultSectionName {default_name.name} to group {group.group_admin_id}")
+
                 created_sections.append(
                     self.section_create_or_update(
                         request=request,
@@ -202,9 +173,5 @@ class ScoutsSectionService:
             if len(created_sections) == 0:
                 raise ValidationError(
                     "Attempted to create sections, but failed")
-
-            group.default_sections_loaded = True
-            group.full_clean()
-            group.save()
 
         return created_sections

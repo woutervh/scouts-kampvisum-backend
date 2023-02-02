@@ -16,9 +16,6 @@ from apps.groups.filters import ScoutsSectionFilter
 
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
-from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.groupadmin.services import ScoutsAuthorizationService
-
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
@@ -33,17 +30,8 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     filterset_class = ScoutsSectionFilter
 
     section_service = ScoutsSectionService()
-    authorization_service = ScoutsAuthorizationService()
 
     permission_classes = [permissions.IsAuthenticated]
-
-    def check_user_allowed(self, request, instance: ScoutsSection):
-        group = instance.group
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
 
     def get_permissions(self):
         current_permissions = super().get_permissions()
@@ -83,9 +71,6 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=validated_data.group
-        )
         logger.debug("SECTION CREATE VALIDATED DATA: %s", validated_data)
 
         instance = self.section_service.section_create_or_update(
@@ -104,7 +89,6 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         Retrieves an existing ScoutSectionName object.
         """
         instance: ScoutsSection = self.get_object()
-        self.check_user_allowed(request, instance)
         serializer = ScoutsSectionSerializer(
             instance, context={"request": request})
 
@@ -119,7 +103,6 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         Updates an existing ScoutsSection object.
         """
         instance = ScoutsSection.objects.safe_get(pk=pk, raise_error=True)
-        self.check_user_allowed(request, instance)
 
         serializer = ScoutsSectionSerializer(
             data=request.data,
@@ -147,7 +130,6 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         Deletes a ScoutsSection instance by uuid
         """
         instance = ScoutsSection.objects.get(pk=pk)
-        self.check_user_allowed(request, instance)
 
         if not instance:
             logger.error("No Section found with id '%s'", pk)
@@ -186,15 +168,9 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
     def list_by_group(self, request, group_admin_id):
-        group: ScoutsGroup = ScoutsGroup.objects.safe_get(
-            group_admin_id=group_admin_id, raise_error=True
-        )
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
         instances: List[ScoutsSection] = self.filter_queryset(
             self.get_queryset()
-        ).filter(group__group_admin_id=group_admin_id, hidden=False)
+        ).filter(group=group_admin_id, hidden=False)
         page = self.paginate_queryset(instances)
 
         if page is not None:

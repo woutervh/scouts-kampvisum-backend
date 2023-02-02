@@ -3,6 +3,8 @@ from datetime import date
 
 from django.db import models
 
+
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
     AbstractScoutsAddress,
     AbstractScoutsContact,
@@ -21,7 +23,7 @@ from scouts_auth.inuits.models.fields import (
 class AbstractScoutsGroup(AbstractNonModel):
     """Models the scouts groups a user has rights to."""
 
-    group_admin_id = OptionalCharField()
+    group_admin_id = OptionalGroupAdminIdField()
     number = OptionalCharField()
     name = OptionalCharField()
     date_of_foundation = OptionalDateField()
@@ -36,10 +38,10 @@ class AbstractScoutsGroup(AbstractNonModel):
     show_members_improved = models.BooleanField(default=False)
 
     # Declare as foreign keys in concrete subclasses
-    # addresses: List[AbstractScoutsAddress]
-    # contacts: List[AbstractScoutsContact]
-    # group_specific_fields: List[AbstractScoutsGroupSpecificField]
-    # links: List[AbstractScoutsLink]
+    addresses: List[AbstractScoutsAddress] = []
+    contacts: List[AbstractScoutsContact] = []
+    group_specific_fields: List[AbstractScoutsGroupSpecificField] = []
+    links: List[AbstractScoutsLink] = []
 
     class Meta:
         abstract = True
@@ -84,21 +86,21 @@ class AbstractScoutsGroup(AbstractNonModel):
         )
         self.links = links if links else []
 
-        # super().__init__([], {})
+    # Necessary for comparison
+    @property
+    def pk(self):
+        return self.group_admin_id
 
     @property
     def full_name(self):
         return "{} {}".format(self.name, self.group_admin_id)
 
     def __str__(self):
-        return "group_admin_id({}), number({}), name({}), addresses({}), date_of_foundation({}), only_leaders({}), show_member_improved({}), bank_account({}), email({}), website({}), info({}), parent_group ({}), child_groups ({}), type({}), contacts({}), group_specific_fields ({}), links({})".format(
+        return "group_admin_id({}), number({}), name({}), date_of_foundation({}), bank_account({}), email({}), website({}), info({}), parent_group ({}), child_groups ({}), type({}), only_leaders({}), show_member_improved({}), addresses({}), contacts({}), group_specific_fields ({}), links({})".format(
             self.group_admin_id,
             self.number,
             self.name,
-            ", ".join(str(address) for address in self.addresses),
             self.date_of_foundation,
-            self.only_leaders,
-            self.show_members_improved,
             self.bank_account,
             self.email,
             self.website,
@@ -106,13 +108,17 @@ class AbstractScoutsGroup(AbstractNonModel):
             self.parent_group,
             ", ".join(group for group in self.child_groups),
             self.type,
+            self.only_leaders,
+            self.show_members_improved,
+            ", ".join(str(address) for address in self.addresses),
             ", ".join(str(contact) for contact in self.contacts)
             if self.contacts
             else "[]",
             ", ".join(str(field) for field in self.group_specific_fields)
             if self.group_specific_fields
             else "[]",
-            ", ".join(str(link) for link in self.links) if self.links else "[]",
+            ", ".join(str(link)
+                      for link in self.links) if self.links else "[]",
         )
 
     def to_simple_string(self) -> str:

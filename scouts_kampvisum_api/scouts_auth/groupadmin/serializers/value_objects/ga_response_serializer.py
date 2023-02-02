@@ -19,7 +19,7 @@ class AbstractScoutsResponseSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "count": data.pop("aantal", None),
@@ -51,7 +51,8 @@ class AbstractScoutsResponseSerializer(NonModelSerializer):
         instance.count = validated_data.pop("count", None)
         instance.total = validated_data.pop("total", None)
         instance.offset = validated_data.pop("offset", None)
-        instance.filter_criterium = validated_data.pop("filter_criterium", None)
+        instance.filter_criterium = validated_data.pop(
+            "filter_criterium", None)
         instance.criteria = validated_data.pop("criteria", None)
         instance.links = AbstractScoutsLinkSerializer(many=True).create(
             validated_data.pop("links", [])

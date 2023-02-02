@@ -5,7 +5,9 @@ from scouts_auth.groupadmin.models.value_objects import (
     AbstractScoutsGroup,
     AbstractScoutsLink,
 )
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
+
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import (
     OptionalCharField,
@@ -15,8 +17,7 @@ from scouts_auth.inuits.models.fields import (
 
 class AbstractScoutsFunction(AbstractNonModel):
 
-    group_admin_id = OptionalCharField()
-    function = OptionalCharField()
+    function = OptionalGroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
 
@@ -24,7 +25,7 @@ class AbstractScoutsFunction(AbstractNonModel):
     description = OptionalCharField()
 
     # Declare as foreign keys in concrete subclasses
-    scouts_group: AbstractScoutsGroup
+    scouts_group: AbstractScoutsGroup = None
 
     links: List[AbstractScoutsLink]
 
@@ -36,7 +37,6 @@ class AbstractScoutsFunction(AbstractNonModel):
 
     def __init__(
         self,
-        group_admin_id: str = None,
         scouts_group: AbstractScoutsGroup = None,
         function: str = None,
         begin: datetime = None,
@@ -45,7 +45,6 @@ class AbstractScoutsFunction(AbstractNonModel):
         description: str = None,
         links: List[AbstractScoutsLink] = None,
     ):
-        self.group_admin_id = group_admin_id
         self.function = function
         self.scouts_group = scouts_group
         self.begin = begin
@@ -54,6 +53,11 @@ class AbstractScoutsFunction(AbstractNonModel):
         self.description = description
         self.links = links if links else []
 
+    # Necessary for comparison
+    @property
+    def pk(self):
+        return self.function
+
     @property
     def function_code(self):
         if self._scouts_function_code is None:
@@ -61,15 +65,15 @@ class AbstractScoutsFunction(AbstractNonModel):
         return self._scouts_function_code
 
     def __str__(self):
-        return "group_admin_id ({}), function({}), scouts_group({}), begin({}), end ({}), code({}), description({}), links({})".format(
-            self.group_admin_id,
+        return "function({}), scouts_group({}), begin({}), end ({}), code({}), description({}), links({})".format(
             self.function,
             str(self.scouts_group),
             self.begin,
             self.end,
             self.code,
             self.description,
-            ", ".join(str(link) for link in self.links) if self.links else "[]",
+            ", ".join(str(link)
+                      for link in self.links) if self.links else "[]",
         )
 
     def to_descriptive_string(self):

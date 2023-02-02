@@ -6,8 +6,6 @@ from apps.groups.serializers import (
     ScoutsSectionNameSerializer,
 )
 
-from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
-
 
 # LOGGING
 import logging
@@ -22,7 +20,6 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
     """
 
     # group_type = ScoutsGroupTypeSerializer()
-    group = ScoutsGroupSerializer()
     section_name = ScoutsSectionNameSerializer(required=False)
     hidden = serializers.BooleanField(default=False)
 
@@ -73,16 +70,15 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         if isinstance(data, ScoutsSection):
             return data
 
-        id = data.get("id")
+        pk = data.get("id")
         group = data.get("group", None)
         group_admin_id = (
-            group.group_admin_id if group else data.get("group_group_admin_id", None)
+            group if group else data.get("group_group_admin_id", None)
         )
 
-        if not id:
-            if not group_admin_id and data.get("name"):
-                raise serializers.ValidationError(
-                    "A ScoutsSection can only be identified by either a uuid or the combination of a name and the group's group admin id"
-                )
+        if not pk and not group_admin_id and data.get("name"):
+            raise serializers.ValidationError(
+                "A ScoutsSection can only be identified by either a uuid or the combination of a name and the group's group admin id"
+            )
 
         return ScoutsSection(**data)

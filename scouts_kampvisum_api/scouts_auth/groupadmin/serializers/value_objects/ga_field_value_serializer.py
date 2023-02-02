@@ -16,7 +16,7 @@ class AbstractScoutsValueSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: tuple) -> dict:
         if data is None:
-            return None
+            return {}
 
         if data and len(data) == 2:
             (key, value) = data

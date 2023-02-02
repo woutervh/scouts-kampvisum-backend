@@ -22,7 +22,7 @@ class AbstractScoutsFunctionDescriptionListResponseSerializer(
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "function_descriptions": AbstractScoutsFunctionDescriptionSerializer(

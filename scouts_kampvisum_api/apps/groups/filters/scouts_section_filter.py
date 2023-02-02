@@ -10,4 +10,4 @@ class ScoutsSectionFilter(filters.FilterSet):
 
     @property
     def qs(self):
-        return super().qs.allowed(user=self.request.user).filter(hidden=False)
+        return super().qs.filter(hidden=False)

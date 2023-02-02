@@ -4,7 +4,7 @@ from rest_framework import status, views, permissions
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
-from scouts_auth.auth.services import OIDCService
+from scouts_auth.auth.oidc import OIDCService
 from scouts_auth.auth.serializers import (
     RefreshSerializer,
     TokenSerializer,

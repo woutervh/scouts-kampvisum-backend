@@ -222,7 +222,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "scouts_auth.auth.middleware.ScoutsAuthSessionRefresh",
+    "scouts_auth.auth.oidc.InuitsOIDCSessionRefresh",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_cprofile_middleware.middleware.ProfilerMiddleware",
@@ -366,6 +366,10 @@ CHECK_CHANGED = "default_check_changed"
 USERNAME_FROM_ACCESS_TOKEN = env.bool("USERNAME_FROM_ACCESS_TOKEN", True)
 SCOUTS_YEAR_START = env.str("SCOUTS_YEAR_START", "09-01")
 SCOUTS_YEAR_END = env.str("SCOUTS_YEAR_END", "09-01")
+INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE = env.bool(
+    "INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE", False)
+INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE = env.bool(
+    "INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE", True)
 INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool(
     "INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", False
 )
@@ -393,23 +397,11 @@ PROFILE_REFRESH_FUNCTIONS = env.int("PROFILE_REFRESH_FUNCTIONS", 15)
 KNOWN_ADMIN_GROUPS = env.list("KNOWN_ADMIN_GROUPS")
 KNOWN_TEST_GROUPS = env.list("KNOWN_TEST_GROUPS")
 KNOWN_ROLES = env.list("KNOWN_ROLES")
-SECTION_LEADER_IDENTIFIER = env.str("SECTION_LEADER_IDENTIFIER")
+LEADERSHIP_STATUS_IDENTIFIER = env.str(
+    "LEADERSHIP_STATUS_IDENTIFIER", "Leiding")
 GROUP_GENDER_IDENTIFIER_MALE = "S"
 GROUP_GENDER_IDENTIFIER_FEMALE = "M"
 CAMP_RESPONSIBLE_MIN_AGE = env.int("CAMP_RESPONSIBLE_MIN_AGE", 16)
-
-
-# ############################################################################ #
-#                                                                              #
-# PAGINATION                                                                   #
-#                                                                              #
-# ############################################################################ #
-DEFAULT_PAGINATION_RESULTS = env.int("DEFAULT_PAGINATION_RESULTS", 10)
-DEFAULT_PAGINATION_MAX_RESULTS = env.int(
-    "DEFAULT_PAGINATION_MAX_RESULTS", 1000)
-PARTICIPANT_PAGINATION_RESULTS = env.int("PARTICIPANT_PAGINATION_RESULTS", 20)
-PARTICIPANT_PAGINATION_MAX_RESULTS = env.int(
-    "PARTICIPANT_PAGINATION_MAX_RESULTS", 1000)
 
 
 # ############################################################################ #
@@ -427,6 +419,19 @@ GROUP_ADMIN_MEMBER_LIST_FILTERED_ENDPOINT = GROUP_ADMIN_BASE_URL + \
     "/ledenlijst/filter/stateless"
 GROUP_ADMIN_GROUP_ENDPOINT = GROUP_ADMIN_BASE_URL + "/groep"
 GROUP_ADMIN_FUNCTIONS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/functie"
+
+
+# ############################################################################ #
+#                                                                              #
+# PAGINATION                                                                   #
+#                                                                              #
+# ############################################################################ #
+DEFAULT_PAGINATION_RESULTS = env.int("DEFAULT_PAGINATION_RESULTS", 10)
+DEFAULT_PAGINATION_MAX_RESULTS = env.int(
+    "DEFAULT_PAGINATION_MAX_RESULTS", 1000)
+PARTICIPANT_PAGINATION_RESULTS = env.int("PARTICIPANT_PAGINATION_RESULTS", 20)
+PARTICIPANT_PAGINATION_MAX_RESULTS = env.int(
+    "PARTICIPANT_PAGINATION_MAX_RESULTS", 1000)
 
 
 # ############################################################################ #
@@ -608,9 +613,9 @@ setup_mail()
 AUTH_USER_MODEL = "scouts_auth.ScoutsUser"
 AUTHORIZATION_ROLES_CONFIG_PACKAGE = "initial_data"
 AUTHORIZATION_ROLES_CONFIG_YAML = "roles.yaml"
-# AUTHENTICATION_BACKENDS = [
-#     "scouts_auth.scouts.services.ScoutsOIDCAuthenticationBackend",
-# ]
+AUTHENTICATION_BACKENDS = [
+    "scouts_auth.scouts.services.ScoutsOIDCAuthenticationBackend",
+]
 
 OIDC_OP_ISSUER = env.str("OIDC_OP_ISSUER")
 # URL of your OpenID Connect provider authorization endpoint
@@ -714,6 +719,7 @@ OIDC_MAX_STATES = env.int("OIDC_MAX_STATES", default=50)
 # this feature defaults to False and it’s use is discouraged.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_STORE_ACCESS_TOKEN
 # OIDC_STORE_ACCESS_TOKEN = env.bool('OIDC_STORE_ACCESS_TOKEN', default = False)
+OIDC_STORE_ACCESS_TOKEN = True
 # Controls whether the OpenID Connect client stores the OIDC id_token in the
 # user session. The session key used to store the data is oidc_id_token.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_STORE_ID_TOKEN

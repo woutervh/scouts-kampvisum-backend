@@ -20,7 +20,7 @@ class AbstractScoutsFunctionListResponseSerializer(AbstractScoutsResponseSeriali
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "functions": AbstractScoutsFunctionSerializer(many=True).to_internal_value(

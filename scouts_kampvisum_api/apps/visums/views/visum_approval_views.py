@@ -16,7 +16,6 @@ from apps.visums.services import CampVisumApprovalService
 # LOGGING
 import logging
 
-from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -25,21 +24,11 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class CampVisumApprovalViewSet(viewsets.GenericViewSet):
 
     approval_service = CampVisumApprovalService()
-    authorization_service = ScoutsAuthorizationService()
-
-    def check_user_allowed(self, request, instance: LinkedSubCategory):
-        group = instance.category.category_set.visum.group
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
 
     def partial_update_feedback(self, request, linked_sub_category_id):
         instance: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
             id=linked_sub_category_id, raise_error=True
         )
-        self.check_user_allowed(request, instance)
         logger.debug("FEEDBACK UPDATE REQUEST DATA: %s", request.data)
 
         serializer = LinkedSubCategoryFeedbackSerializer(
@@ -54,7 +43,8 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         logger.debug("FEEDBACK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.approval_service.update_feedback(
-            request=request, instance=instance, feedback=validated_data.get("feedback")
+            request=request, instance=instance, feedback=validated_data.get(
+                "feedback")
         )
 
         output_serializer = LinkedSubCategorySerializer(
@@ -67,7 +57,6 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         instance: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
             id=linked_sub_category_id, raise_error=True
         )
-        self.check_user_allowed(request, instance)
 
         logger.debug("APPROVAL UPDATE REQUEST DATA: %s", request.data)
 
@@ -83,7 +72,8 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         logger.debug("APPROVAL UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.approval_service.update_approval(
-            request=request, instance=instance, approval=validated_data.get("approval")
+            request=request, instance=instance, approval=validated_data.get(
+                "approval")
         )
 
         output_serializer = LinkedSubCategorySerializer(
@@ -93,41 +83,36 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     def global_update_approval(self, request, visum_id):
-        instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=instance.group
-        )
-
+        instance: CampVisum = CampVisum.objects.safe_get(
+            id=visum_id, raise_error=True)
         instance = self.approval_service.global_update_approval(
             request=request,
             instance=instance,
             approval=CampVisumApprovalState.APPROVED,
         )
 
-        output_serializer = CampVisumSerializer(instance, context={"request": request})
+        output_serializer = CampVisumSerializer(
+            instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     def global_update_disapproval(self, request, visum_id):
-        instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=instance.group
-        )
+        instance: CampVisum = CampVisum.objects.safe_get(
+            id=visum_id, raise_error=True)
         instance = self.approval_service.global_update_approval(
             request=request,
             instance=instance,
             approval=CampVisumApprovalState.DISAPPROVED,
         )
 
-        output_serializer = CampVisumSerializer(instance, context={"request": request})
+        output_serializer = CampVisumSerializer(
+            instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     def partial_update_dc_notes(self, request, visum_id):
-        instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=instance.group
-        )
+        instance: CampVisum = CampVisum.objects.safe_get(
+            id=visum_id, raise_error=True)
         logger.debug("DC NOTES UPDATE REQUEST DATA: %s", request.data)
 
         serializer = CampVisumNotesSerializer(
@@ -142,10 +127,12 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         logger.debug("DC NOTES UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.approval_service.update_dc_notes(
-            request=request, instance=instance, notes=validated_data.get("notes")
+            request=request, instance=instance, notes=validated_data.get(
+                "notes")
         )
 
-        output_serializer = CampVisumSerializer(instance, context={"request": request})
+        output_serializer = CampVisumSerializer(
+            instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -153,7 +140,6 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         instance: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
             id=linked_sub_category_id, raise_error=True
         )
-        self.check_user_allowed(request, instance)
         instance = self.approval_service.handle_feedback(
             request=request, instance=instance
         )
@@ -165,14 +151,13 @@ class CampVisumApprovalViewSet(viewsets.GenericViewSet):
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     def global_handle_feedback(self, request, visum_id):
-        instance: CampVisum = CampVisum.objects.safe_get(id=visum_id, raise_error=True)
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=instance.group
-        )
+        instance: CampVisum = CampVisum.objects.safe_get(
+            id=visum_id, raise_error=True)
         instance = self.approval_service.global_handle_feedback(
             request=request, instance=instance
         )
 
-        output_serializer = CampVisumSerializer(instance, context={"request": request})
+        output_serializer = CampVisumSerializer(
+            instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

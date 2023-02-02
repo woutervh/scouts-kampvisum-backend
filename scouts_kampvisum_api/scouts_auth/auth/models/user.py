@@ -57,9 +57,6 @@ class User(AbstractUser):
 
     class Meta:
         abstract = True
-        permissions = [
-            ("access_disabled_entities", "Access disabled entities"),
-        ]
 
     def __str__(self):
         return (
@@ -73,6 +70,6 @@ class User(AbstractUser):
             f"date_joined({str(self.date_joined)}), "
             f"last_login({str(self.last_login)}), "
             f"is_superuser({str(self.is_superuser)}), "
-            f"groups({', '.join(self.groups) if self.groups and isinstance(self.groups, list) else '[]'}), "
+            f"groups({', '.join([group.name for group in self.groups]) if self.groups and isinstance(self.groups, list) else '[]'}), "
             f"user_permissions({', '.join(self.user_permissions) if self.user_permissions and isinstance(self.user_permissions, list) else '[]'})"
         )

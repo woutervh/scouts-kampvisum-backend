@@ -3,6 +3,8 @@ import datetime
 
 from django.db import models
 
+
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
     AbstractScoutsAddress,
     AbstractScoutsContact,
@@ -63,7 +65,8 @@ class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
         if isinstance(birth_date, datetime.date):
             self.birth_date = birth_date
         if isinstance(birth_date, str):
-            self.birth_date = datetime.datetime.strptime(birth_date, "%Y-%m-%d").date()
+            self.birth_date = datetime.datetime.strptime(
+                birth_date, "%Y-%m-%d").date()
 
         # super().__init__([], {})
 
@@ -100,7 +103,7 @@ class AbstractScoutsMember(AbstractNonModel):
     scouts_data: AbstractScoutsMemberScoutsData
     email: str
     username: str
-    group_admin_id: str
+    group_admin_id = OptionalGroupAdminIdField()
     _inactive_member: bool = False
     addresses: List[AbstractScoutsAddress]
     contacts: List[AbstractScoutsContact]
@@ -152,7 +155,10 @@ class AbstractScoutsMember(AbstractNonModel):
         )
         self.links = links if links else []
 
-        # super().__init__([], {})
+    # Necessary for comparison
+    @property
+    def pk(self):
+        return self.group_admin_id
 
     def get_function_codes(self) -> List[str]:
         return [function.code for function in self.functions]
@@ -268,7 +274,8 @@ class AbstractScoutsMember(AbstractNonModel):
             ", ".join(str(field) for field in self.group_specific_fields)
             if self.group_specific_fields
             else "[]",
-            ", ".join(str(link) for link in self.links) if self.links else "[]",
+            ", ".join(str(link)
+                      for link in self.links) if self.links else "[]",
         )
 
     def to_search_member(self) -> AbstractScoutsMemberSearchMember:

@@ -5,6 +5,13 @@ from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
 from scouts_auth.inuits.serializers import NonModelSerializer
 
 
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+
+logger: InuitsLogger = logging.getLogger(__name__)
+
+
 # class UserSerializer(serializers.ModelSerializer):
 class UserSerializer(NonModelSerializer):
     """
@@ -33,5 +40,7 @@ class UserSerializer(NonModelSerializer):
             "group_admin_id",
         )
 
-    def get_permissions(self, obj):
-        return obj.get_all_permissions()
+    def get_permissions(self, obj: User):
+        permissions = obj.get_all_permissions()
+        logger.debug(f"USER PERMISSIONS: {permissions}")
+        return permissions

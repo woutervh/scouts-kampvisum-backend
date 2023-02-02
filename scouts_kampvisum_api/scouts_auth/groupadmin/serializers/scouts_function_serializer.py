@@ -13,9 +13,8 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class ScoutsFunctionSerializer(serializers.ModelSerializer):
 
-    scouts_groups = ScoutsGroupSerializer(many=True)
+    # scouts_group = ScoutsGroupSerializer(many=True)
 
     class Meta:
         model = ScoutsFunction
-        # fields = "__all__"
-        exclude = ["user"]
+        fields = "__all__"

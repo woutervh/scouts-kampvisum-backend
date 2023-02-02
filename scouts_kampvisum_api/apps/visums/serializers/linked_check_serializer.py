@@ -65,10 +65,11 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
             if not user.has_perm(obj.parent.requires_permission):
                 return []
-            else:
-                group: ScoutsGroup = obj.sub_category.category.category_set.visum.group
-                if not (user.has_role_section_leader(group=group) or user.has_role_group_leader(group=group) or user.has_role_administrator()):
-                    return []
+            # @TODO
+            # else:
+            #     group: str = obj.sub_category.category.category_set.visum.group
+            #     if not (user.has_role_section_leader(group=group) or user.has_role_group_leader(group=group) or user.has_role_administrator()):
+            #         return []
 
         if check.parent.check_type.is_simple_check():
             value = LinkedSimpleCheckSerializer.get_value(check)

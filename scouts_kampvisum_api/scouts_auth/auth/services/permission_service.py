@@ -2,10 +2,12 @@ import yaml
 import importlib
 from typing import List
 
+from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ObjectDoesNotExist
 
-from scouts_auth.auth.settings import OIDCSettings
+from scouts_auth.auth.exceptions import ScoutsAuthException
+from scouts_auth.auth.settings import InuitsOIDCSettings
 from scouts_auth.inuits.django import DjangoDbUtil
 
 
@@ -17,8 +19,67 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PermissionService:
-    @staticmethod
-    def setup_roles():
+
+    SUPER_ADMIN = "role_super_admin"
+
+    _permission_groups = {}
+
+    def add_user_to_group(
+        self,
+        user: settings.AUTH_USER_MODEL,
+        group: Group = None,
+        group_name: str = None,
+    ) -> settings.AUTH_USER_MODEL:
+        group: Group = self._get_group(group=group, group_name=group_name)
+
+        logger.debug(
+            f"Adding user to permission group {group.name}", user=user)
+
+        group.user_set.add(user)
+
+        user.is_superuser = (group.name == self.SUPER_ADMIN)
+
+        user.full_clean()
+        user.save()
+
+        return user
+
+    def remove_user_from_group(
+        self,
+        user: settings.AUTH_USER_MODEL,
+        group: Group = None,
+        group_name: str = None,
+    ) -> settings.AUTH_USER_MODEL:
+        group: Group = self._get_group(group=group, group_name=group_name)
+
+        logger.debug(
+            f"Removing user from permission group {group.name}", user=user)
+
+        group.user_set.remove(user)
+
+        user.full_clean()
+        user.save()
+
+        return user
+
+    def _get_group(self, group: Group = None, group_name: str = None) -> Group:
+        if not group and not group_name:
+            raise ScoutsAuthException("Group or group name must be supplied")
+
+        if group and group.name in self._permission_groups:
+            return self._permission_groups.get(group.name)
+
+        try:
+            group: Group = Group.objects.get(name=group_name)
+
+            self._permission_groups[group.name] = group
+
+            return group
+        except ObjectDoesNotExist:
+            raise ScoutsAuthException(
+                f"Permission group with name {group_name} does not exist")
+
+    def setup_permission_groups(self):
         if not DjangoDbUtil.is_initial_db_ready():
             logger.debug(
                 "Will not attempt to populate user permissions until migrations have been performed."
@@ -26,13 +87,11 @@ class PermissionService:
             return
 
         try:
-            # logger.debug("Populating user permissions")
-            PermissionService.populate_roles()
+            self._populate_permission_groups()
         except Exception as exc:
             logger.error("Unable to populate user roles", exc)
 
-    @staticmethod
-    def populate_roles(**kwargs):
+    def _populate_permission_groups(self):
         # Will populate groups and add permissions to them, won't create permissions
         # these need to be created in models
         #
@@ -44,8 +103,8 @@ class PermissionService:
         # After a makemigrations and migrate, you can then specify the particular permissions that apply in the viewset
         import importlib.resources as pkg_resources
 
-        roles_package = OIDCSettings.get_authorization_roles_config_package()
-        roles_yaml = OIDCSettings.get_authorization_roles_config_yaml()
+        roles_package = InuitsOIDCSettings.get_authorization_roles_config_package()
+        roles_yaml = InuitsOIDCSettings.get_authorization_roles_config_yaml()
 
         # logger.debug(
         #     "SCOUTS_AUTH: importing roles and permissions from %s/%s",
@@ -59,21 +118,18 @@ class PermissionService:
         try:
             groups = yaml.safe_load(yaml_data)
             for group_name, permissions in groups.items():
-                # @TODO clean groups that no longer have permissions attached
                 group: Group = Group.objects.get_or_create(name=group_name)[0]
                 group_permissions = group.permissions.all()
 
-                permissions = PermissionService._purge_group_permissions(
-                    group, group_permissions, permissions
+                # Clean groups that no longer have permissions attached
+                permissions = self._purge_group_permissions(
+                    group_permissions, permissions
                 )
 
-                # logger.debug(
-                #     "Adding %d PERMISSIONS to group %s", len(permissions), group_name
-                # )
+                # Link permission groups to permission
                 for permission in permissions:
-                    PermissionService._add_permission_by_name(
+                    self._add_permission_by_name(
                         group,
-                        permission.get("permission"),
                         permission.get("codename"),
                         permission.get("app_label"),
                     )
@@ -81,9 +137,8 @@ class PermissionService:
         except yaml.YAMLError as exc:
             logger.error("Error while importing permissions groups", exc)
 
-    @staticmethod
     def _purge_group_permissions(
-        group: Group, group_permissions: List[Permission], permissions: List[str]
+        self, group_permissions: List[Permission], permissions: List[str]
     ) -> List[dict]:
         """
         Removes revoked and already existing permissions.
@@ -121,12 +176,6 @@ class PermissionService:
 
             # If we're here, then the group permission has been revoked
             if remove_permission:
-                # logger.debug(
-                #     "Removing permission %s.%s from group %s",
-                #     group_permission.content_type.app_label,
-                #     group_permission.codename,
-                #     group.name,
-                # )
                 group_permission.delete()
 
         for remove_permission in remove_permissions:
@@ -137,7 +186,7 @@ class PermissionService:
 
     @staticmethod
     def _add_permission_by_name(
-        group: Group, permission: str, codename: str, app_label: str
+        group: Group, codename: str, app_label: str
     ):
         try:
             logger.debug(
@@ -147,9 +196,6 @@ class PermissionService:
             )
             group.permissions.add(permission)
         except ObjectDoesNotExist:
-            logger.error(
-                "Permission %s with codename %s doesn't exist for app_label %s",
-                permission,
-                codename,
-                app_label,
+            raise ScoutsAuthException(
+                f"Permission {permission} with codename {codename} doesn't exist for app_label {app_label}"
             )

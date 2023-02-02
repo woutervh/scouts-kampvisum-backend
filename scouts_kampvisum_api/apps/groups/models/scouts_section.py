@@ -3,7 +3,7 @@ from django.db import models
 from apps.groups.models import ScoutsSectionName
 from apps.groups.managers import ScoutsSectionManager
 
-from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 
 from scouts_auth.inuits.models import AbstractBaseModel, Gender
 from scouts_auth.inuits.models.fields import (
@@ -27,9 +27,7 @@ class ScoutsSection(AbstractBaseModel):
 
     objects = ScoutsSectionManager()
 
-    group = models.ForeignKey(
-        ScoutsGroup, on_delete=models.CASCADE, related_name="sections"
-    )
+    group = GroupAdminIdField()
     section_name = models.ForeignKey(
         ScoutsSectionName, on_delete=models.DO_NOTHING, null=True, blank=True
     )

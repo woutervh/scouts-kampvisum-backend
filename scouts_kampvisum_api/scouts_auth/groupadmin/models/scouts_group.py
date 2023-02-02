@@ -1,12 +1,13 @@
-from django.conf import settings
-from django.db import models
-from django.core.exceptions import ValidationError
+from typing import List
+
+from scouts_auth.auth.exceptions import ScoutsAuthException
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
-from scouts_auth.inuits.models import AuditedBaseModel, Gender
-from scouts_auth.inuits.models.fields import RequiredCharField, OptionalCharField
+from scouts_auth.inuits.models import AbstractNonModel, Gender
+from scouts_auth.inuits.models.fields import OptionalCharField, ListField, OptionalEmailField
 
 
 # LOGGING
@@ -16,83 +17,34 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ScoutsGroupQuerySet(models.QuerySet):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class ScoutsGroup():
 
-
-class ScoutsGroupManager(models.Manager):
-    def get_queryset(self):
-        return ScoutsGroupQuerySet(self.model, using=self._db)
-
-    def safe_get(self, *args, **kwargs):
-        pk = kwargs.get("id", kwargs.get("pk", None))
-        group_admin_id = kwargs.get("group_admin_id", None)
-        group_admin_ids = kwargs.get("group_admin_ids", None)
-        raise_error = kwargs.get("raise_error", False)
-
-        if pk:
-            try:
-                return self.get_queryset().get(pk=pk)
-            except:
-                pass
-
-        if group_admin_id:
-            try:
-                return self.get_queryset().get(group_admin_id=group_admin_id)
-            except:
-                pass
-
-        if raise_error:
-            raise ValidationError(
-                "Unable to locate ScoutsGroup instance(s) with the provided params: (id: {}, group_admin_id: {})".format(
-                    pk,
-                    group_admin_id,
-                )
-            )
-        return None
-
-    def get_by_natural_key(self, group_admin_id):
-        logger.trace(
-            "GET BY NATURAL KEY %s: (group_admin_id: %s (%s))",
-            "ScoutsGroup",
-            group_admin_id,
-            type(group_admin_id).__name__,
-        )
-
-        return self.get(group_admin_id=group_admin_id)
-
-    def get_groups_with_parent(self, parent_group_admin_id):
-        return (
-            self.get_queryset()
-            .filter(parent_group_admin_id=parent_group_admin_id)
-            .all()
-        )
-
-    def get_by_group_admin_ids(self, group_admin_ids):
-        return self.get_queryset().filter(group_admin_id__in=group_admin_ids)
-
-
-class ScoutsGroup(AuditedBaseModel):
-
-    objects = ScoutsGroupManager()
-
-    group_admin_id = RequiredCharField()
-    parent_group_admin_id = OptionalCharField(null=True)
-    _child_groups = models.ManyToManyField('self', blank=True, symmetrical=False, verbose_name="Child groups")
-    _child_groups_list = None
+    group_admin_id = GroupAdminIdField()
     number = OptionalCharField()
     name = OptionalCharField()
-    group_type = OptionalCharField()
-    default_sections_loaded = models.BooleanField(default=False)
+    email = OptionalEmailField()
+    website = OptionalCharField()
+    parent_group = GroupAdminIdField()
+    child_groups = ListField(max_length=48)
+    type = OptionalCharField()
 
-    class Meta:
-        ordering = ["number"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["group_admin_id"], name="unique_group_admin_id_for_group"
-            )
-        ]
+    def __init__(
+        self,
+        group_admin_id: str = None,
+        number: str = None,
+        name: str = None,
+        email: str = None,
+        website: str = None,
+        parent_group: str = None,
+        type: str = None
+    ):
+        self.group_admin_id = group_admin_id
+        self.number = number
+        self.name = name
+        self.email = email
+        self.website = website
+        self.parent_group = parent_group
+        self.type = type
 
     @property
     def gender(self) -> Gender:
@@ -106,39 +58,40 @@ class ScoutsGroup(AuditedBaseModel):
     @property
     def full_name(self):
         return "{} {}".format(self.name, self.group_admin_id)
-    
-    @property
-    def child_groups(self):
-        if self._child_groups_list is None:
-            self._child_groups_list = self._child_groups.all()
 
-        return self._child_groups_list
-    
     def add_child_group(self, child_group):
-        self._child_groups.add(child_group)
+        if child_group not in self.child_groups:
+            self.child_groups.append(child_group)
+
+    def __str__(self):
+        return (
+            f"group_admin_id ({self.group_admin_id}), "
+            f"number ({self.number}), "
+            f"name ({self.name}), "
+            f"email ({self.email}), "
+            f"website ({self.website}), "
+            f"parent_group ({self.parent_group}), "
+            f"child_groups ({[str(child_group) for child_group in self.child_groups]}), "
+            f"type ({self.type})"
+        )
 
     @staticmethod
-    def from_abstract_scouts_group(abstract_group: AbstractScoutsGroup):
-        group = ScoutsGroup()
+    def from_abstract_scouts_group(
+        group=None,
+        abstract_group: AbstractScoutsGroup = None
+    ):
+        if not abstract_group:
+            raise ScoutsAuthException(
+                "Can't construct a ScoutsGroup without an AbstractScoutsGroup")
+
+        group = group if group else ScoutsGroup()
 
         group.group_admin_id = abstract_group.group_admin_id
-        group.parent_group_admin_id = abstract_group.parent_group
         group.number = abstract_group.number
         group.name = abstract_group.name
-        group.group_type = abstract_group.type
+        group.email = abstract_group.email
+        group.website = abstract_group.website
+        group.parent_group = abstract_group.parent_group
+        group.type = abstract_group.type
 
         return group
-
-    def equals_abstract_scouts_group(self, abstract_group: AbstractScoutsGroup):
-        if self.child_groups and abstract_group.child_groups:
-            for child_group in self.child_groups:
-                if child_group.group_admin_id not in abstract_group.child_groups:
-                    return False
-        
-        return (
-            self.group_admin_id == abstract_group.group_admin_id
-            and self.parent_group_admin_id == abstract_group.parent_group
-            and self.number == abstract_group.number
-            and self.name == abstract_group.name
-            and self.group_type == abstract_group.type
-        )

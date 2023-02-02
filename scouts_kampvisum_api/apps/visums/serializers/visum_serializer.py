@@ -42,8 +42,8 @@ class CampVisumSerializer(serializers.ModelSerializer):
         data["category_set"] = {}
         data["engagement"] = {}
 
-        id = data.get("id", None)
-        instance: CampVisum = CampVisum.objects.safe_get(id=id)
+        pk = data.get("id", None)
+        instance: CampVisum = CampVisum.objects.safe_get(id=pk)
         if instance:
             return instance
 

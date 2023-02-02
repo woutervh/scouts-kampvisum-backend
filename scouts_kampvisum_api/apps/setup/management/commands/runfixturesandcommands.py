@@ -14,6 +14,7 @@ class Command(BaseCommand):
     exception = True
 
     COMMANDS = [
+        # "empty_functions_groups",
         "runfixtures",
         "setupcampyears",
         "loadcategories",
@@ -26,7 +27,7 @@ class Command(BaseCommand):
         # "fix93032",
         # "fix92544tris",
         # "updatevisums",
-        "fix91782",
+        # "fix91782",
     ]
 
     def handle(self, *args, **kwargs):

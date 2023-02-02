@@ -6,7 +6,7 @@ from apps.visums.models import CampVisumEngagement
 from apps.visums.models.enums import CampVisumState
 from apps.visums.managers import CampVisumManager
 
-from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import (
@@ -27,9 +27,7 @@ class CampVisum(AuditedBaseModel):
 
     objects = CampVisumManager()
 
-    group = models.ForeignKey(
-        ScoutsGroup, on_delete=models.CASCADE, related_name="visums"
-    )
+    group = GroupAdminIdField()
     camp = models.OneToOneField(
         Camp, on_delete=models.CASCADE, related_name="visum")
     camp_types = models.ManyToManyField(CampType)

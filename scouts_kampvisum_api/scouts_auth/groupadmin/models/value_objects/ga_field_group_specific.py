@@ -2,6 +2,7 @@ from typing import List
 
 from django.db import models
 
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsValue
 
 from scouts_auth.inuits.models import AbstractNonModel
@@ -10,9 +11,9 @@ from scouts_auth.inuits.models.fields import OptionalCharField
 
 class AbstractScoutsGroupSpecificField(AbstractNonModel):
 
-    group_admin_id = OptionalCharField()
+    group_admin_id = OptionalGroupAdminIdField()
     schema = models.JSONField()
-    values: List[AbstractScoutsValue]
+    values: List[AbstractScoutsValue] = []
 
     class Meta:
         abstract = True
@@ -27,7 +28,10 @@ class AbstractScoutsGroupSpecificField(AbstractNonModel):
         self.schema = schema if schema else []
         self.values = values if values else []
 
-        # super().__init__([], {})
+    # Necessary for comparison
+    @property
+    def pk(self):
+        return self.group_admin_id
 
     def __str__(self):
         return "group ({}), schema({}), values({})".format(

@@ -12,7 +12,7 @@ class ScoutsAuthException(APIException):
 
 class TokenRequestException(ScoutsAuthException):
     def __init__(self, http_exception: HTTPError):
-        return super().__init__(
+        super().__init__(
             "SCOUTS_AUTH: OIDC auth token request failed with error: %s with message: %s",
             http_exception,
         )
@@ -20,7 +20,12 @@ class TokenRequestException(ScoutsAuthException):
 
 class TokenRefreshException(ScoutsAuthException):
     def __init__(self, http_exception: HTTPError):
-        return super().__init__(
+        super().__init__(
             "SCOUTS_AUTH: OIDC token refresh failed with error: %s with message: %s",
             http_exception,
         )
+
+
+class InvalidArgumentException(APIException):
+    def __init__(self, message):
+        super().__init__(message)

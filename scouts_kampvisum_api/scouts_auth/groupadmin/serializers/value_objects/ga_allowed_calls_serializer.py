@@ -19,7 +19,7 @@ class ScoutsAllowedCallsSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(

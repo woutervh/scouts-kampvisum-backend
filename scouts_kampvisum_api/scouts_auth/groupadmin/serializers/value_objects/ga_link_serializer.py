@@ -14,7 +14,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class AbstractScoutsLinkSectionSerializer(NonModelSerializer):
     def to_internal_value(self, data: List[str]) -> list:
         if data is None:
-            return None
+            return []
 
         return data
 
@@ -23,7 +23,7 @@ class AbstractScoutsLinkSectionSerializer(NonModelSerializer):
 
     def create(self, validated_data: List[str]) -> List[str]:
         if validated_data is None:
-            return None
+            return []
 
         return validated_data
 
@@ -35,7 +35,7 @@ class AbstractScoutsLinkSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "rel": data.pop("rel", None),

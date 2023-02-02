@@ -25,7 +25,7 @@ class AbstractScoutsMemberListMemberSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "group_admin_id": data.pop("id", None),
@@ -40,7 +40,8 @@ class AbstractScoutsMemberListMemberSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", str(remaining_keys))
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s",
+                       str(remaining_keys))
 
         return validated_data
 
@@ -76,7 +77,7 @@ class AbstractScoutsMemberListResponseSerializer(AbstractScoutsResponseSerialize
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "members": AbstractScoutsMemberListMemberSerializer(
@@ -84,11 +85,13 @@ class AbstractScoutsMemberListResponseSerializer(AbstractScoutsResponseSerialize
             ).to_internal_value(data.pop("leden", [])),
         }
 
-        validated_data = {**validated_data, **(super().to_internal_value(data))}
+        validated_data = {**validated_data, **
+                          (super().to_internal_value(data))}
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", str(remaining_keys))
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s",
+                       str(remaining_keys))
 
         return validated_data
 

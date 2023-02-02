@@ -2,7 +2,7 @@ import datetime
 
 from apps.camps.models import CampYear
 
-from scouts_auth.groupadmin.scouts import ScoutsTemporalDetails
+from scouts_auth.scouts.util import ScoutsTemporalDetails
 
 
 # LOGGING
@@ -55,7 +55,8 @@ class CampYearService:
             end_date,
         ) = ScoutsTemporalDetails.get_start_and_end_date_of_camp_year(date)
         # logger.debug("Start date of camp year for date %s: %s", date, start_date)
-        qs = CampYear.objects.filter(start_date__lte=start_date, end_date__gte=end_date)
+        qs = CampYear.objects.filter(
+            start_date__lte=start_date, end_date__gte=end_date)
         if qs.count() == 1:
             logger.debug("Found a year: %s", qs[0])
             return qs[0]
@@ -107,4 +108,3 @@ class CampYearService:
         # logger.debug("CampYear for date (%s) already exists: %s", current, year)
 
         return [year]
-

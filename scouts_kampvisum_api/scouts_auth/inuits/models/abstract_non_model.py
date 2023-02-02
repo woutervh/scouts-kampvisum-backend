@@ -7,11 +7,3 @@ class AbstractNonModel(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-    # @classmethod
-    # def get_serializer(cls):
-    #     class BaseSerializer(serializers.ModelSerializer):
-    #         class Meta:
-    #             model = cls
-
-    #     return BaseSerializer

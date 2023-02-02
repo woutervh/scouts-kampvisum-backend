@@ -20,7 +20,7 @@ from scouts_auth.auth.permissions import CustomDjangoPermission
 
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
-from scouts_auth.groupadmin.services import ScoutsAuthorizationService
+from scouts_auth.scouts.services import ScoutsPermissionService
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 # LOGGING
@@ -46,7 +46,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
     filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()
-    authorization_service = ScoutsAuthorizationService()
+    authorization_service = ScoutsPermissionService()
 
     def get_permissions(self):
         current_permissions = super().get_permissions()

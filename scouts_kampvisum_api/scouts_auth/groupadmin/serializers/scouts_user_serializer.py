@@ -2,7 +2,7 @@ from typing import List
 
 from rest_framework import serializers
 
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup, ScoutsFunction
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.utils import ListUtils
@@ -29,65 +29,67 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         return obj.permissions
 
     def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
-        groups = []
+        # groups = []
 
-        admin_groups: List[ScoutsGroup] = list(ScoutsGroup.objects.get_by_group_admin_ids(
-            GroupAdminSettings.get_administrator_groups()))
+        # admin_groups: List[ScoutsGroup] = list(ScoutsGroup.objects.get_by_group_admin_ids(
+        #     GroupAdminSettings.get_administrator_groups()))
 
-        for admin_group in admin_groups:
-            if obj.has_role_leader(group=admin_group):
-                groups = ScoutsGroup.objects.all()
-                break
+        # for admin_group in admin_groups:
+        #     if obj.has_role_leader(group=admin_group):
+        #         groups = ScoutsGroup.objects.all()
+        #         break
 
-        if not groups:
-            groups: List[ScoutsGroup] = [
-                group
-                for group in obj.persisted_scouts_groups
-                if obj.has_role_leader(group=group)
-                or obj.has_role_district_commissioner(group=group)
-            ]
+        # if not groups:
+        #     groups: List[ScoutsGroup] = [
+        #         group
+        #         for group in obj.scouts_groups
+        #         if obj.has_role_leader(group=group)
+        #         or obj.has_role_district_commissioner(group=group)
+        #     ]
 
-            if obj.has_role_district_commissioner():
-                district_commissioner_groups = obj.get_district_commissioner_groups()
+        #     if obj.has_role_district_commissioner():
+        #         district_commissioner_groups = obj.get_district_commissioner_groups()
 
-                groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
-                    groups, district_commissioner_groups
-                )
+        #         groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
+        #             groups, district_commissioner_groups
+        #         )
 
-                groups.sort(key=lambda group: group.group_admin_id)
+        #         groups.sort(key=lambda group: group.group_admin_id)
 
         return [
             {
-                "group_admin_id": group.group_admin_id,
-                "name": group.name,
-                "full_name": group.full_name,
-                "type": group.group_type,
-                "is_section_leader": obj.has_role_section_leader(group=group),
-                "is_group_leader": obj.has_role_group_leader(group=group),
+                "group_admin_id": scouts_group.group_admin_id,
+                "name": scouts_group.name,
+                "full_name": scouts_group.full_name,
+                "type": scouts_group.type,
+                "is_section_leader": obj.has_role_section_leader(scouts_group=scouts_group),
+                "is_group_leader": obj.has_role_group_leader(scouts_group=scouts_group),
                 "is_district_commissioner": obj.has_role_district_commissioner(
-                    group=group
+                    scouts_group=scouts_group
+                ),
+                "is_shire_president": obj.has_role_shire_president(
+                    scouts_group=scouts_group
                 ),
                 "is_admin": obj.has_role_administrator(),
             }
-            for group in groups
+            for scouts_group in obj.scouts_groups
         ]
 
     def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
-        functions = obj.persisted_scouts_functions.all()
         return [
             {
-                "group_admin_id": function.group_admin_id,
-                "scouts_groups": [
-                    group.group_admin_id for group in function.scouts_groups
-                ],
-                "code": function.code,
-                "description": function.description,
-                "is_leader": function.is_leader(),
-                "is_group_leader": function.is_group_leader(),
-                "is_district_commissioner": function.is_district_commissioner(),
-                "end": function.end,
+                "group_admin_id": scouts_function.group_admin_id,
+                "scouts_group": scouts_function.scouts_group.group_admin_id,
+                "code": scouts_function.code,
+                "description": scouts_function.description,
+                "is_leader": scouts_function.is_leader_function(),
+                "is_section_leader": scouts_function.is_section_leader_function(),
+                "is_group_leader": scouts_function.is_group_leader_function(),
+                "is_district_commissioner": scouts_function.is_district_commissioner_function(),
+                "is_shire_president": scouts_function.is_shire_president_function(),
+                "end": scouts_function.end,
             }
-            for function in functions
+            for scouts_function in obj.scouts_functions
         ]
 
     def to_internal_value(self, data: dict) -> dict:

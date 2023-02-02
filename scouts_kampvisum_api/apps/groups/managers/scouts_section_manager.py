@@ -15,29 +15,8 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionQuerySet(models.QuerySet):
-    def allowed(self, user: settings.AUTH_USER_MODEL):
-        leader_functions: List[ScoutsFunction] = list(
-            ScoutsFunction.objects.get_leader_functions(user=user)
-        )
-
-        group_admin_ids = []
-        for leader_function in leader_functions:
-            for group in leader_function.scouts_groups:
-                group_admin_ids.append(group.group_admin_id)
-
-                if user.has_role_district_commissioner():
-                    underlyingGroups: List[ScoutsGroup] = list(
-                        ScoutsGroup.objects.get_groups_with_parent(
-                            parent_group_admin_id=group.group_admin_id
-                        )
-                    )
-
-                    for underlyingGroup in underlyingGroups:
-                        if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
-                            group_admin_ids.append(
-                                underlyingGroup.group_admin_id)
-
-        return self.filter(group__group_admin_id__in=group_admin_ids)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class ScoutsSectionManager(models.Manager):
@@ -49,6 +28,7 @@ class ScoutsSectionManager(models.Manager):
         name = kwargs.get("name", None)
         gender = kwargs.get("gender", None)
         age_group = kwargs.get("age_group", None)
+        # @TODO remove group_group_admin_id
         group = kwargs.get("group", None)
         group_group_admin_id = kwargs.get("group_group_admin_id", None)
         raise_error = kwargs.get("raise_error", False)
@@ -56,7 +36,7 @@ class ScoutsSectionManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if name and gender and age_group:
@@ -65,18 +45,18 @@ class ScoutsSectionManager(models.Manager):
                     return self.get_queryset().get(
                         group=group, name=name, gender=gender, age_group=age_group
                     )
-                except:
+                except Exception:
                     pass
 
             if group_group_admin_id:
                 try:
                     return self.get_queryset().get(
-                        group__group_admin_id=group_group_admin_id,
+                        group=group_group_admin_id,
                         name=name,
                         gender=gender,
                         age_group=age_group,
                     )
-                except:
+                except Exception:
                     pass
 
         if raise_error:
@@ -109,9 +89,6 @@ class ScoutsSectionManager(models.Manager):
             type(age_group).__name__,
         )
 
-        if isinstance(group, ScoutsGroup):
-            return self.get(group=group, name=name, gender=gender, age_group=age_group)
-
         return self.get(
-            group__group_admin_id=group, name=name, gender=gender, age_group=age_group
+            group=group, name=name, gender=gender, age_group=age_group
         )

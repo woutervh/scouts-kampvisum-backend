@@ -1,13 +1,15 @@
 from django.db import models
 
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsPosition
+
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class AbstractScoutsAddress(AbstractNonModel):
 
-    group_admin_id = models.CharField()
+    group_admin_id = OptionalGroupAdminIdField()
     street = OptionalCharField()
     number = OptionalCharField()
     letter_box = OptionalCharField()
@@ -20,7 +22,7 @@ class AbstractScoutsAddress(AbstractNonModel):
     giscode = OptionalCharField()
     description = OptionalCharField()
     # Declare as foreign key in concrete subclasses
-    position: AbstractScoutsPosition
+    position: AbstractScoutsPosition()
 
     class Meta:
         abstract = True
@@ -55,7 +57,10 @@ class AbstractScoutsAddress(AbstractNonModel):
         self.description = description
         self.position = position
 
-        # super().__init__([], {})
+    # Necessary for comparison
+    @property
+    def pk(self):
+        return self.group_admin_id
 
     def __str__(self):
         return "group_admin_id({}), street({}), number({}), letter_box({}), postal_code({}), city({}), country({}), phone_number({}), postal_address({}), status({}), giscode({}), description({}), position({})".format(

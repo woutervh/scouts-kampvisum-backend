@@ -19,7 +19,7 @@ class AbstractScoutsContactSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "member": data.pop("oidLid", data.pop("lid", None)),

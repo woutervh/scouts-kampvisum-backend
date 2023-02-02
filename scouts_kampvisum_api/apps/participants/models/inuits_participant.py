@@ -4,8 +4,8 @@ from django.core.exceptions import ValidationError
 
 from apps.participants.managers import InuitsParticipantManager
 
-from scouts_auth.groupadmin.scouts import GroupAdminIdField
 from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 
 from scouts_auth.inuits.models import InuitsPerson, GenderHelper
 from scouts_auth.inuits.models.fields import OptionalCharField
@@ -21,14 +21,15 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class InuitsParticipant(InuitsPerson):
     objects = InuitsParticipantManager()
 
-    group_group_admin_id = GroupAdminIdField(null=True)
-    group_admin_id = GroupAdminIdField(null=True)
+    group_group_admin_id = OptionalGroupAdminIdField(null=True)
+    group_admin_id = OptionalGroupAdminIdField(null=True)
     is_member = models.BooleanField(default=False)
     comment = OptionalCharField(max_length=300)
     inactive_member = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ["first_name", "last_name", "birth_date", "group_group_admin_id"]
+        ordering = ["first_name", "last_name",
+                    "birth_date", "group_group_admin_id"]
         constraints = [
             models.UniqueConstraint(
                 fields=["group_group_admin_id", "email"],

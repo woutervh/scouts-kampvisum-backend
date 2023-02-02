@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from scouts_auth.auth.settings import OIDCSettings
+from scouts_auth.auth.settings import InuitsOIDCSettings
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -13,9 +13,9 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class OIDCService:
 
-    oidc_endpoint = OIDCSettings.get_oidc_op_token_endpoint()
-    oidc_rp_client_id = OIDCSettings.get_oidc_rp_client_id()
-    oidc_rp_client_secret = OIDCSettings.get_oidc_rp_client_secret()
+    oidc_endpoint = InuitsOIDCSettings.get_oidc_op_token_endpoint()
+    oidc_rp_client_id = InuitsOIDCSettings.get_oidc_rp_client_id()
+    oidc_rp_client_secret = InuitsOIDCSettings.get_oidc_rp_client_secret()
 
     service = GroupAdmin()
 
@@ -40,7 +40,8 @@ class OIDCService:
             "client_id": self.oidc_rp_client_id,
             "client_secret": self.oidc_rp_client_secret,
         }
-        logger.debug("SCOUTS_AUTH: OIDC - refreshing authentication")
+        logger.debug(
+            "SCOUTS_AUTH: OIDC - refreshing authentication", user=user)
 
         result = self.service.post(self.oidc_endpoint, payload)
 

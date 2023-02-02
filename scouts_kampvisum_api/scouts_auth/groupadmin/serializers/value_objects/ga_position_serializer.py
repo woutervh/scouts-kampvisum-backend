@@ -19,7 +19,7 @@ class AbstractScoutsGeoCoordinateSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         validated_data = {
             "imaginary": data.pop("imag", None),
@@ -62,7 +62,8 @@ class AbstractScoutsPositionSerializer(NonModelSerializer):
             real = geo_coordinate.pop("real", None)
 
             if imaginary is None and real is None:
-                logger.error("GA: returned a %s without imaginary or real part", name)
+                logger.error(
+                    "GA: returned a %s without imaginary or real part", name)
             else:
                 geo_coordinate = {"imag": imaginary, "real": real}
         else:
@@ -72,13 +73,14 @@ class AbstractScoutsPositionSerializer(NonModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
-            return None
+            return {}
 
         latitude = data.pop("latitude", None)
         longitude = data.pop("longitude", None)
 
         if latitude is None or longitude is None:
-            logger.error("GA: returned a position without latitude and longitude")
+            logger.error(
+                "GA: returned a position without latitude and longitude")
 
         latitude = self._parse_geo_coordinate(latitude, "latitude")
         longitude = self._parse_geo_coordinate(longitude, "longitude")

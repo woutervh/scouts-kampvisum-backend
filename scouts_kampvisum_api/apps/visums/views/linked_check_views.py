@@ -36,7 +36,6 @@ from apps.visums.serializers import (
 )
 from apps.visums.services import LinkedCheckService
 from apps.visums.utils import CheckValidator
-from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
@@ -59,15 +58,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.DjangoFilterBackend]
 
     linked_check_service = LinkedCheckService()
-    authorization_service = ScoutsAuthorizationService()
-
-    def check_user_allowed(self, request, instance: LinkedCheck):
-        group = instance.sub_category.category.category_set.visum.group
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
     def retrieve(self, request, pk=None):
@@ -89,7 +79,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def retrieve_simple_check(self, request, check_id=None):
         instance: LinkedCheck = self.linked_check_service.get_simple_check(
             check_id)
-        self.check_user_allowed(request, instance)
         serializer = LinkedCheckSerializer(
             instance, context={"request": request})
 
@@ -104,7 +93,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedSimpleCheck = self.linked_check_service.get_simple_check(
             check_id
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedSimpleCheckSerializer(
             data=request.data,
@@ -144,7 +132,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def retrieve_data_check(self, request, check_id=None):
         instance: LinkedDateCheck = self.linked_check_service.get_date_check(
             check_id)
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedDateCheckSerializer(
             instance, context={"request": request})
@@ -158,7 +145,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def partial_update_date_check(self, request, check_id):
         # logger.debug("DATE CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_date_check(check_id)
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedDateCheckSerializer(
             data=request.data,
@@ -199,7 +185,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedDurationCheck = self.linked_check_service.get_duration_check(
             check_id
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedDurationCheckSerializer(
             instance, context={"request": request}
@@ -214,7 +199,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def partial_update_duration_check(self, request, check_id):
         # logger.debug("DURATION CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_duration_check(check_id)
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedDurationCheckSerializer(
             data=request.data,
@@ -255,7 +239,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedLocationCheck = self.linked_check_service.get_location_check(
             check_id
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedLocationCheckSerializer(
             instance, context={"request": request}
@@ -270,7 +253,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def partial_update_location_check(self, request, check_id):
         # logger.debug("LOCATION CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_location_check(check_id)
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedLocationCheckSerializer(
             data=request.data,
@@ -327,7 +309,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedLocationCheck = (
             self.linked_check_service.get_camp_location_check(check_id)
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedCampLocationCheckSerializer(
             instance, context={"request": request}
@@ -341,7 +322,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     def partial_update_camp_location_check(self, request, check_id):
         instance = self.linked_check_service.get_camp_location_check(check_id)
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedCampLocationCheckSerializer(
             data=request.data,
@@ -435,7 +415,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
             check_id=check_id
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedParticipantCheckSerializer(
             instance, context={"request": request}
@@ -452,7 +431,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
             check_id=check_id
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedParticipantCheckSerializer(
             data=request.data,
@@ -491,7 +469,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
             check_id=check_id
         )
-        self.check_user_allowed(request, instance)
 
         instance = self.linked_check_service.toggle_participant_payment_status(
             request=request,
@@ -514,7 +491,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
             check_id=check_id
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedParticipantCheckSerializer(
             data=request.data,
@@ -605,7 +581,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedFileUploadCheck = (
             self.linked_check_service.get_file_upload_check(check_id)
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedFileUploadCheckSerializer(
             instance, context={"request": request}
@@ -622,7 +597,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedFileUploadCheck = (
             self.linked_check_service.get_file_upload_check(check_id)
         )
-        self.check_user_allowed(request, instance)
 
         files = request.data.get("value", [])
         if not files or len(files) == 0:
@@ -657,7 +631,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def unlink_file(self, request, check_id, persisted_file_id):
         # logger.debug("FILE UPLOAD CHECK UNLINK REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_file_upload_check(check_id)
-        self.check_user_allowed(request, instance)
 
         if not instance:
             logger.error(
@@ -748,17 +721,18 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                 for group in leader_function.scouts_groups.all():
                     group_admin_ids.append(group.group_admin_id)
 
-                    if request.user.has_role_district_commissioner():
-                        underlyingGroups: List[ScoutsGroup] = list(
-                            ScoutsGroup.objects.get_groups_with_parent(
-                                parent_group_admin_id=group.group_admin_id
-                            )
-                        )
+                    # @TODO
+                    # if request.user.has_role_district_commissioner():
+                    #     underlyingGroups: List[ScoutsGroup] = list(
+                    #         ScoutsGroup.objects.get_groups_with_parent(
+                    #             parent_group_admin_id=group.group_admin_id
+                    #         )
+                    #     )
 
-                        for underlyingGroup in underlyingGroups:
-                            if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
-                                group_admin_ids.append(
-                                    underlyingGroup.group_admin_id)
+                    #     for underlyingGroup in underlyingGroups:
+                    #         if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
+                    #             group_admin_ids.append(
+                    #                 underlyingGroup.group_admin_id)
 
             if not group_admin_id in group_admin_ids:
                 raise PermissionDenied(
@@ -801,7 +775,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedCommentCheck = self.linked_check_service.get_comment_check(
             check_id
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedCommentCheckSerializer(
             instance, context={"request": request}
@@ -816,7 +789,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def partial_update_comment_check(self, request, check_id):
         # logger.debug("COMMENT CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_comment_check(check_id)
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedCommentCheckSerializer(
             data=request.data,
@@ -857,7 +829,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance: LinkedNumberCheck = self.linked_check_service.get_number_check(
             check_id
         )
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedNumberCheckSerializer(
             instance, context={"request": request})
@@ -871,7 +842,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def partial_update_number_check(self, request, check_id):
         # logger.debug("NUMBER CHECK UPDATE REQUEST DATA: %s", request.data)
         instance = self.linked_check_service.get_number_check(check_id)
-        self.check_user_allowed(request, instance)
 
         serializer = LinkedNumberCheckSerializer(
             data=request.data,

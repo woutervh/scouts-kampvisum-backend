@@ -18,7 +18,7 @@ class CampFilter(filters.FilterSet):
 
     @property
     def qs(self):
-        parent = super().qs.allowed(user=self.request.user)
+        parent = super().qs
         group_admin_id = self.request.query_params.get("group", None)
         year = self.request.query_params.get("year", None)
 

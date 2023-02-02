@@ -10,7 +10,7 @@ from apps.camps.services import CampYearService
 from apps.deadlines.models import Deadline, DeadlineDate, LinkedDeadlineItem
 from apps.deadlines.services import DeadlineItemService
 
-from scouts_auth.groupadmin.scouts import ScoutsTemporalDetails
+from scouts_auth.scouts.util import ScoutsTemporalDetails
 
 
 # LOGGING
@@ -189,6 +189,7 @@ class DeadlineService:
         if year:
             year = year
         else:
-            year = ScoutsTemporalDetails.get_date_in_camp_year(month=month, day=day).year
+            year = ScoutsTemporalDetails.get_date_in_camp_year(
+                month=month, day=day).year
 
         return datetime.datetime(year, month, day).date()

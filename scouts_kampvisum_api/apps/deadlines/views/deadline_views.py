@@ -20,7 +20,6 @@ from apps.deadlines.services import LinkedDeadlineService, LinkedDeadlineFlagSer
 # LOGGING
 import logging
 
-from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 from scouts_auth.inuits.logging import InuitsLogger
 from apps.visums.models import CampVisum
 
@@ -38,15 +37,6 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
 
     linked_deadline_service = LinkedDeadlineService()
     linked_deadline_flag_service = LinkedDeadlineFlagService()
-    authorization_service = ScoutsAuthorizationService()
-
-    def check_user_allowed(self, request, instance: LinkedDeadline):
-        group = instance.visum.group
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
 
     @swagger_auto_schema(
         request_body=LinkedDeadlineInputSerializer,
@@ -64,12 +54,9 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
 
         validated_data = input_serializer.validated_data
         group = validated_data.visum.group
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
-        logger.debug("LINKED DEADLINE CREATE VALIDATED DATA: %s", validated_data)
+
+        logger.debug("LINKED DEADLINE CREATE VALIDATED DATA: %s",
+                     validated_data)
 
         instance = self.linked_deadline_service.create_or_update_linked_deadline(
             request, **validated_data
@@ -86,8 +73,8 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         instance: LinkedDeadline = LinkedDeadline.objects.safe_get(
             pk=pk, raise_error=True
         )
-        self.check_user_allowed(request,instance)
-        serializer = LinkedDeadlineSerializer(instance, context={"request": request})
+        serializer = LinkedDeadlineSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -100,7 +87,6 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         instance: LinkedDeadline = self.linked_deadline_service.get_linked_deadline(
             linked_deadline_id=pk
         )
-        self.check_user_allowed(request, instance)
         serializer = LinkedDeadlineInputSerializer(
             instance=instance,
             data=request.data,
@@ -110,7 +96,8 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("LINKED DEADLINE UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug("LINKED DEADLINE UPDATE VALIDATED DATA: %s",
+                     validated_data)
 
         instance = self.linked_deadline_service.update_linked_deadline(
             request, instance, **validated_data
@@ -151,11 +138,7 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         )
         visum = CampVisum.objects.safe_get(id=visum_id)
         group = visum.group
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        self.authorization_service.update_user_authorizations(
-            user=request.user, scouts_group=group
-        )
+
         page = self.paginate_queryset(instances)
 
         if page is not None:
@@ -176,14 +159,14 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
     def partial_update_linked_deadline_flag(
         self, request, linked_deadline_id, linked_deadline_flag_id
     ):
-        logger.debug("LINKED DEADLINE FLAG UPDATE REQUEST DATA: %s", request.data)
+        logger.debug(
+            "LINKED DEADLINE FLAG UPDATE REQUEST DATA: %s", request.data)
         instance: LinkedDeadlineFlag = LinkedDeadlineFlag.objects.safe_get(
             id=linked_deadline_flag_id, raise_error=True
         )
         instance_linked_deadline: LinkedDeadline = self.linked_deadline_service.get_visum_deadline(
             linked_deadline=linked_deadline_id
         )
-        self.check_user_allowed(request, instance_linked_deadline)
 
         serializer = LinkedDeadlineFlagSerializer(
             data=request.data,
@@ -194,7 +177,8 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("LINKED DEADLINE FLAG UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug(
+            "LINKED DEADLINE FLAG UPDATE VALIDATED DATA: %s", validated_data)
 
         instance: LinkedDeadlineFlag = (
             self.linked_deadline_flag_service.update_linked_deadline_flag(
@@ -205,6 +189,7 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         instance: LinkedDeadline = self.linked_deadline_service.get_visum_deadline(
             linked_deadline=linked_deadline_id
         )
-        serializer = VisumDeadlineSerializer(instance, context={"request": request})
+        serializer = VisumDeadlineSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)

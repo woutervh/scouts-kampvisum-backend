@@ -80,13 +80,14 @@ class GroupAdmin:
 
     def post(self, endpoint: str, payload: dict, active_user: settings.AUTH_USER_MODEL = None) -> str:
         """Post the payload to the specified GA endpoint and returns the response as json_data."""
-        logger.debug("GA: Posting data to endpoint %s", endpoint)
+        logger.debug(
+            f"GA: Posting data to endpoint {endpoint}", user=active_user)
         try:
             if active_user:
                 response = requests.post(
                     endpoint,
                     headers={
-                        "Authorization": "Bearer {0}".format(active_user.access_token),
+                        "Authorization": f"Bearer {active_user.access_token}",
                     },
                     json=payload
                 )
@@ -96,9 +97,7 @@ class GroupAdmin:
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
                 raise Http404(
-                    "404 - Unable to post to endpoint {} with payload {}".format(
-                        endpoint, payload
-                    )
+                    f"404 - Unable to post to endpoint {endpoint} with payload {payload}"
                 )
             raise error
 
@@ -106,20 +105,19 @@ class GroupAdmin:
 
     def get(self, endpoint: str, active_user: settings.AUTH_USER_MODEL):
         """Makes a request to the GA with the given url and returns the response as json_data."""
-        logger.debug("GA: Fetching data from endpoint %s", endpoint)
+        logger.debug(f"GA: Fetching data from endpoint {endpoint}")
         try:
             response = requests.get(
                 endpoint,
                 headers={
-                    "Authorization": "Bearer {0}".format(active_user.access_token)
+                    "Authorization": f"Bearer {active_user.access_token}"
                 },
             )
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
                 raise Http404(
-                    "404 GET - Unable to get data from endpoint {}".format(
-                        endpoint)
+                    f"404 GET - Unable to get data from endpoint {endpoint}"
                 )
             # elif error.response.status_code == 401:
             #     raise Http404(
@@ -137,8 +135,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_allowed_calls, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_allowed_calls",
-                    self.url_allowed_calls)
+        logger.info(f"GA CALL: get_allowed_calls ({self.url_allowed_calls})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -167,7 +164,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_groups, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_groups", self.url_groups)
+        logger.info(f"GA CALL: get_groups ({self.url_groups})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -193,9 +190,8 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_groups_vga, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_accountable_groups",
-                    self.url_groups_vga)
-        logger.info("GA RESPONSE: %s", json_data)
+        logger.info(f"GA CALL: get_accountable_groups ({self.url_groups_vga})")
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -223,7 +219,7 @@ class GroupAdmin:
         url = self.url_group.format(group_group_admin_id)
         json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_group", url)
+        logger.info(f"GA CALL: get_group ({url})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -242,10 +238,9 @@ class GroupAdmin:
 
         group: AbstractScoutsGroup = serializer.save()
 
-        if not group.group_admin_id == group_group_admin_id:
+        if group.group_admin_id != group_group_admin_id:
             logger.warn(
-                "GA: unknown group with group admin id %s", group_group_admin_id
-            )
+                f"GA: unknown group with group admin id {group_group_admin_id}")
             return None
 
         return group
@@ -300,7 +295,7 @@ class GroupAdmin:
 
         json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_function_descriptions", url)
+        logger.info(f"GA CALL: get_function_descriptions ({url})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -337,8 +332,7 @@ class GroupAdmin:
         url = self.url_function.format(function_id)
         json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s) for id %s",
-                    "get_function", url, function_id)
+        logger.info(f"GA CALL: get_function ({url}) for id {function_id}")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -351,9 +345,9 @@ class GroupAdmin:
         serializer = AbstractScoutsFunctionSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        function: AbstractScoutsFunction = serializer.save()
+        scouts_function: AbstractScoutsFunction = serializer.save()
 
-        return function
+        return scouts_function
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
     def get_member_profile_raw(self, active_user: settings.AUTH_USER_MODEL) -> str:
@@ -365,7 +359,7 @@ class GroupAdmin:
         url = self.url_member_profile
         json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_member_profile", url)
+        logger.info(f"GA CALL: get_member_profile ({url})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -394,7 +388,7 @@ class GroupAdmin:
         url = self.url_member_info.format(group_admin_id)
         json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_member_info", url)
+        logger.info(f"GA CALL: get_member_info ({url})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -409,9 +403,9 @@ class GroupAdmin:
 
         member: AbstractScoutsMember = serializer.save()
 
-        if not member.group_admin_id == group_admin_id:
+        if member.group_admin_id != group_admin_id:
             logger.warn(
-                "GA: Unknown member with group admin id %s", group_admin_id)
+                f"GA: Unknown member with group admin id {group_admin_id}")
             return None
 
         return member
@@ -478,8 +472,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_member_list, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_member_list",
-                    self.url_member_list)
+        logger.info(f"GA CALL: get_member_list ({self.url_member_list})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -505,8 +498,8 @@ class GroupAdmin:
             url = f"{url}?offset={offset}"
         json_data = self.post(url, payload, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_member_list_filtered",
-                    self.url_member_list_filtered)
+        logger.info(
+            f"GA CALL: get_member_list_filtered ({self.url_member_list_filtered})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -566,7 +559,7 @@ class GroupAdmin:
         url = self.url_member_search.format(term)
         json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "search_member", url)
+        logger.info(f"GA CALL: search_member ({url})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -596,7 +589,7 @@ class GroupAdmin:
         url = self.url_member_search_similar.format(first_name, last_name)
         json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "search_similar_member", url)
+        logger.info(f"GA CALL: search_similar_member ({url})")
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
