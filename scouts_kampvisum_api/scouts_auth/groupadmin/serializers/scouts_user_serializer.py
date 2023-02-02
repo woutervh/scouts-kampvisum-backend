@@ -34,33 +34,6 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         return obj.get_all_permissions()
 
     def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
-        # groups = []
-
-        # admin_groups: List[ScoutsGroup] = list(ScoutsGroup.objects.get_by_group_admin_ids(
-        #     GroupAdminSettings.get_administrator_groups()))
-
-        # for admin_group in admin_groups:
-        #     if obj.has_role_leader(group=admin_group):
-        #         groups = ScoutsGroup.objects.all()
-        #         break
-
-        # if not groups:
-        #     groups: List[ScoutsGroup] = [
-        #         group
-        #         for group in obj.scouts_groups
-        #         if obj.has_role_leader(group=group)
-        #         or obj.has_role_district_commissioner(group=group)
-        #     ]
-
-        #     if obj.has_role_district_commissioner():
-        #         district_commissioner_groups = obj.get_district_commissioner_groups()
-
-        #         groups: List[ScoutsGroup] = ListUtils.concatenate_unique_lists(
-        #             groups, district_commissioner_groups
-        #         )
-
-        #         groups.sort(key=lambda group: group.group_admin_id)
-
         return [
             {
                 "group_admin_id": scouts_group.group_admin_id,
@@ -77,7 +50,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 ),
                 "is_admin": obj.has_role_administrator(),
             }
-            for scouts_group in obj.scouts_groups
+            for scouts_group in obj.get_scouts_groups(include_underlying_groups=True)
         ]
 
     def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
@@ -94,7 +67,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "is_shire_president": scouts_function.is_shire_president_function(),
                 "end": scouts_function.end,
             }
-            for scouts_function in obj.scouts_functions
+            for scouts_function in obj.get_scouts_functions()
         ]
 
     def to_internal_value(self, data: dict) -> dict:

@@ -35,18 +35,9 @@ class ScoutsUserService:
     section_service = ScoutsSectionService()
 
     def get_scouts_user(self, active_user: settings.AUTH_USER_MODEL, abstract_member: AbstractScoutsMember) -> settings.AUTH_USER_MODEL:
-        # Get from GA: the function descriptions
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = [
-        ]
-        # Get from GA: the scouts groups
-        abstract_groups: List[AbstractScoutsGroup] = []
-        # Derive from functions in user profile: the groups to persist functions for
-        abstract_function_groups: List[AbstractScoutsGroup] = []
-
-        # To persist: user functions
-        user_functions = list()
-        # To persist: user groups
-        user_groups = list()
+        # Clear any lingering data
+        active_user.clear_scouts_functions()
+        active_user.clear_scouts_groups()
 
         # #######
         # 1. MEMBER PROFILE (rest-ga/lid/profiel)
@@ -89,9 +80,10 @@ class ScoutsUserService:
         abstract_groups: List[AbstractScoutsGroup] = self.groupadmin.get_groups(
             active_user=active_user).scouts_groups
 
-        for abstract_group in abstract_groups:
-            active_user.add_scouts_group(
-                ScoutsGroup.from_abstract_scouts_group(abstract_group=abstract_group))
+        user_groups = self.process_groups(abstract_groups=abstract_groups)
+
+        for scouts_group in user_groups:
+            active_user.add_scouts_group(scouts_group=scouts_group)
 
         # #######
         # 4. PROCESS FUNCTIONS
@@ -104,11 +96,9 @@ class ScoutsUserService:
         # - INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE
         # - INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE
         # - LEADERSHIP_STATUS_IDENTIFIER
-        (user_functions, abstract_function_groups) = self.process_functions(
+        user_functions = self.process_functions(
             active_user=active_user,
             abstract_member=abstract_member,
-            user_functions=user_functions,
-            abstract_function_groups=abstract_function_groups,
             abstract_function_descriptions=abstract_function_descriptions)
 
         for scouts_function in user_functions:
@@ -175,71 +165,69 @@ class ScoutsUserService:
         self,
         active_user: ScoutsUser,
         abstract_member: AbstractScoutsMember,
-        user_functions: List[ScoutsFunction],
-        abstract_function_groups: List[AbstractScoutsGroup],
         abstract_function_descriptions: List[AbstractScoutsFunctionDescription]
-    ) -> Tuple[List[AbstractScoutsFunction], List[AbstractScoutsGroup]]:
+    ) -> List[AbstractScoutsFunction]:
+        user_functions: List[ScoutsFunction] = []
+
         now = pytz.utc.localize(datetime.now())
 
-        ignore_inactive = GroupAdminSettings.include_inactive_functions_in_profile()
-        ignore_non_leader = GroupAdminSettings.include_only_leader_functions_in_profile()
+        include_inactive = GroupAdminSettings.include_inactive_functions_in_profile()
+        include_only_leader_functions = GroupAdminSettings.include_only_leader_functions_in_profile()
         leadership_status_identifier = GroupAdminSettings.get_leadership_status_identifier()
 
         for abstract_function in abstract_member.functions:
             # Ignore inactive functions ?
-            if abstract_function.end and abstract_function.end <= now and ignore_inactive:
+            if not include_inactive and abstract_function.end and abstract_function.end <= now:
                 continue
 
-            # Ignore non-leader functions ?
-            if not ignore_non_leader:
-                abstract_function.abstract_function_description = abstract_function_description
+            user_functions = self.process_function(
+                active_user=active_user,
+                leadership_status_identifier=leadership_status_identifier,
+                user_functions=user_functions,
+                abstract_function=abstract_function,
+                abstract_function_descriptions=abstract_function_descriptions,
+                include_only_leader_functions=include_only_leader_functions,
+            )
 
-                user_functions.append(self.create_scouts_function(
-                    active_user=active_user, abstract_function=abstract_function))
-                abstract_function_groups.append(abstract_function.scouts_group)
-            else:
-                (user_functions, abstract_function_groups) = self.process_leader_functions(
-                    active_user=active_user,
-                    leadership_status_identifier=leadership_status_identifier,
-                    user_functions=user_functions,
-                    abstract_function_groups=abstract_function_groups,
-                    abstract_function=abstract_function,
-                    abstract_function_descriptions=abstract_function_descriptions
-                )
+        return user_functions
 
-        abstract_function_groups = ListUtils.unique_element_list(
-            abstract_function_groups)
-
-        return (user_functions, abstract_function_groups)
-
-    def process_leader_functions(
+    def process_function(
         self,
         active_user: ScoutsUser,
         leadership_status_identifier: str,
         user_functions: List[ScoutsFunction],
-        abstract_function_groups: List[AbstractScoutsGroup],
         abstract_function: AbstractScoutsFunction,
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription]
-    ) -> Tuple[List[AbstractScoutsFunction], List[AbstractScoutsGroup]]:
+        abstract_function_descriptions: List[AbstractScoutsFunctionDescription],
+        include_only_leader_functions: bool = False,
+    ) -> List[AbstractScoutsFunction]:
+        is_leader_function = False
         for abstract_function_description in abstract_function_descriptions:
             if abstract_function_description.group_admin_id == abstract_function.function:
                 for grouping in abstract_function_description.groupings:
                     if grouping.name == leadership_status_identifier:
-                        abstract_function.abstract_function_description = abstract_function_description
+                        is_leader_function = True
+                        break
 
-                        user_functions.append(self.create_scouts_function(
-                            active_user=active_user, abstract_function=abstract_function, is_leader=True))
+        # Ignore non-leader functions ?
+        if not include_only_leader_functions or is_leader_function:
+            user_functions.append(self.create_scouts_function(
+                active_user=active_user,
+                abstract_function=abstract_function,
+                abstract_function_description=abstract_function_description,
+                is_leader=is_leader_function))
 
-                        abstract_function_groups.append(
-                            abstract_function.scouts_group)
+        return user_functions
 
-        return (user_functions, abstract_function_groups)
-
-    def create_scouts_function(self, active_user: ScoutsUser, abstract_function: AbstractScoutsFunction, is_leader: bool = False) -> ScoutsFunction:
+    def create_scouts_function(
+            self,
+            active_user: ScoutsUser,
+            abstract_function: AbstractScoutsFunction,
+            abstract_function_description: AbstractScoutsFunctionDescription,
+            is_leader: bool = False) -> ScoutsFunction:
         scouts_function = ScoutsFunction.from_abstract_function(
-            abstract_function=abstract_function, abstract_function_description=abstract_function.abstract_function_description)
+            abstract_function=abstract_function, abstract_function_description=abstract_function_description)
         scouts_group = active_user.get_scouts_group(
-            group_admin_id=abstract_function.scouts_group.group_admin_id)
+            group_admin_id=abstract_function.scouts_group.group_admin_id, raise_exception=True)
 
         if not scouts_group:
             raise ScoutsAuthException(
@@ -249,3 +237,26 @@ class ScoutsUserService:
         scouts_function.is_leader = is_leader
 
         return scouts_function
+
+    def process_groups(self, abstract_groups: List[AbstractScoutsGroup]) -> List[ScoutsGroup]:
+        user_groups: List[ScoutsGroup] = []
+
+        # First construct a list of ScoutsGroup instances
+        for abstract_group in abstract_groups:
+            user_groups.append(
+                ScoutsGroup.from_abstract_scouts_group(abstract_group=abstract_group))
+
+        return self.process_child_groups(user_groups=user_groups, abstract_groups=abstract_groups)
+
+    def process_child_groups(self, user_groups: List[ScoutsGroup], abstract_groups: List[AbstractScoutsGroup]) -> List[ScoutsGroup]:
+        # Now loop over the list and find child groups, filtering out groups that weren't in the group call
+        # (this is because groups may be listed as underlying groups, without them having any activity)
+        for parent_group in user_groups:
+            for abstract_group in abstract_groups:
+                if abstract_group.child_groups and len(abstract_group.child_groups) > 0:
+                    for child_group in abstract_group.child_groups:
+                        for scouts_group in user_groups:
+                            if scouts_group.group_admin_id == child_group:
+                                parent_group.add_child_group(child_group)
+
+        return user_groups

@@ -25,7 +25,7 @@ class ScoutsGroup():
     email = OptionalEmailField()
     website = OptionalCharField()
     parent_group = GroupAdminIdField()
-    child_groups = []
+    _child_groups = []
     type = OptionalCharField()
 
     def __init__(
@@ -59,9 +59,15 @@ class ScoutsGroup():
     def full_name(self):
         return "{} {}".format(self.name, self.group_admin_id)
 
-    def add_child_group(self, child_group):
-        if child_group not in self.child_groups:
-            self.child_groups.append(child_group)
+    def add_child_group(self, child_group: str):
+        if child_group not in self._child_groups:
+            self._child_groups.append(child_group)
+
+    def has_child_groups(self) -> bool:
+        return self._child_groups and isinstance(self._child_groups, list) and len(self._child_groups) > 0
+
+    def get_child_groups(self) -> List[str]:
+        return self._child_groups
 
     def __str__(self):
         return (
@@ -75,23 +81,34 @@ class ScoutsGroup():
             f"type ({self.type})"
         )
 
+    def __key__(self):
+        return (self.group_admin_id, )
+
+    def __hash__(self):
+        return hash(self.__key__())
+
+    def __eq__(self, other):
+        if isinstance(other, ScoutsGroup):
+            return self.__hash__() == other.__hash__()
+        return NotImplemented
+
     @staticmethod
     def from_abstract_scouts_group(
-        group=None,
+        scouts_group=None,
         abstract_group: AbstractScoutsGroup = None
     ):
         if not abstract_group:
             raise ScoutsAuthException(
                 "Can't construct a ScoutsGroup without an AbstractScoutsGroup")
 
-        group = group if group else ScoutsGroup()
+        scouts_group = scouts_group if scouts_group else ScoutsGroup()
 
-        group.group_admin_id = abstract_group.group_admin_id
-        group.number = abstract_group.number
-        group.name = abstract_group.name
-        group.email = abstract_group.email
-        group.website = abstract_group.website
-        group.parent_group = abstract_group.parent_group
-        group.type = abstract_group.type
+        scouts_group.group_admin_id = abstract_group.group_admin_id
+        scouts_group.number = abstract_group.number
+        scouts_group.name = abstract_group.name
+        scouts_group.email = abstract_group.email
+        scouts_group.website = abstract_group.website
+        scouts_group.parent_group = abstract_group.parent_group
+        scouts_group.type = abstract_group.type
 
-        return group
+        return scouts_group

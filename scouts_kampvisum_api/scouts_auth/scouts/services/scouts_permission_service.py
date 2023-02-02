@@ -61,7 +61,7 @@ class ScoutsPermissionService(PermissionService):
 
         allowed = False
         # if scouts_group:
-        for scouts_group in user.scouts_groups:
+        for scouts_group in user.get_scouts_groups():
             is_shire_president = False
             is_district_commissioner = False
             is_group_leader = False

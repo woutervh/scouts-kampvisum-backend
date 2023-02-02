@@ -25,17 +25,9 @@ class CurrentUserView(views.APIView):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: UserSerializer})
     def get(self, request):
-        try:
-            logger.debug("/me", user=request.user)
+        logger.debug("/me", user=request.user)
 
-            # group_data = self.service.get_groups(request.user)
-            # scouts_groups: List[AbstractScoutsGroup] = group_data.scouts_groups
-            # user.scouts_groups = scouts_groups
+        serializer = ScoutsUserSerializer(request.user)
+        data = serializer.data
 
-            serializer = ScoutsUserSerializer(request.user)
-            data = serializer.data
-
-            return Response(data)
-        except Exception as exc:
-            logger.error(
-                f"SCOUTS_AUTH: Error while performing the me call: {exc}")
+        return Response(data)

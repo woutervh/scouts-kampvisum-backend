@@ -143,36 +143,37 @@ class ScoutsSectionService:
 
         created_sections = list()
 
-        for group in user.scouts_groups:
-            logger.debug(
-                f"Linking sections to GROUP: {group.group_admin_id} ({group.name})")
-            default_scouts_section_names: List[
-                DefaultScoutsSectionName
-            ] = self.default_section_name_service.load_for_group(
-                request=request, group=group
-            )
-
-            if len(default_scouts_section_names) == 0:
-                raise ValidationError(
-                    f"No DefaultScoutsSectionName instances found for group_type {group.type}")
-
-            for default_name in default_scouts_section_names:
+        for group in user.get_scouts_groups():
+            if ScoutsSection.objects.filter(group=group.group_admin_id).count() == 0:
                 logger.debug(
-                    f"Linking DefaultSectionName {default_name.name} to group {group.group_admin_id}")
-
-                created_sections.append(
-                    self.section_create_or_update(
-                        request=request,
-                        group=group,
-                        name=default_name.name,
-                        gender=default_name.gender,
-                        age_group=default_name.age_group,
-                        hidden=default_name.hidden,
-                    )
+                    f"Linking sections to GROUP: {group.group_admin_id} ({group.name})")
+                default_scouts_section_names: List[
+                    DefaultScoutsSectionName
+                ] = self.default_section_name_service.load_for_group(
+                    request=request, group=group
                 )
 
-            if len(created_sections) == 0:
-                raise ValidationError(
-                    "Attempted to create sections, but failed")
+                if len(default_scouts_section_names) == 0:
+                    raise ValidationError(
+                        f"No DefaultScoutsSectionName instances found for group_type {group.type}")
 
-        return created_sections
+                for default_name in default_scouts_section_names:
+                    logger.debug(
+                        f"Linking DefaultSectionName {default_name.name} to group {group.group_admin_id}")
+
+                    created_sections.append(
+                        self.section_create_or_update(
+                            request=request,
+                            group=group,
+                            name=default_name.name,
+                            gender=default_name.gender,
+                            age_group=default_name.age_group,
+                            hidden=default_name.hidden,
+                        )
+                    )
+
+                if len(created_sections) == 0:
+                    raise ValidationError(
+                        "Attempted to create sections, but failed")
+
+            return created_sections

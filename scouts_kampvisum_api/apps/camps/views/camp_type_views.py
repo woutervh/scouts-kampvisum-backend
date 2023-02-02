@@ -1,13 +1,19 @@
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
-from rest_framework import viewsets, status
+
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
+
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from apps.camps.models import CampType
 from apps.camps.services import CampTypeService
 from apps.camps.serializers import CampTypeSerializer
+
+from scouts_auth.auth.permissions import CustomDjangoPermission
+
+from scouts_auth.scouts.permissions import IsActiveLeaderInGroup
 
 
 # LOGGING
@@ -26,6 +32,14 @@ class CampTypeViewSet(viewsets.GenericViewSet):
     queryset = CampType.objects.all().selectable()
 
     camp_type_service = CampTypeService()
+
+    def get_permissions(self):
+        current_permissions = []
+
+        current_permissions.append(permissions.IsAuthenticated())
+        current_permissions.append(IsActiveLeaderInGroup())
+
+        return current_permissions
 
     @swagger_auto_schema(
         request_body=CampTypeSerializer,
@@ -46,7 +60,8 @@ class CampTypeViewSet(viewsets.GenericViewSet):
 
         instance = self.camp_type_service.create(request, **validated_data)
 
-        output_serializer = CampTypeSerializer(instance, context={"request": request})
+        output_serializer = CampTypeSerializer(
+            instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 

@@ -1,4 +1,6 @@
+import pytz
 from typing import List
+from datetime import datetime
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 
@@ -48,6 +50,9 @@ class ScoutsFunction():
             self._scouts_function_code = AbstractScoutsFunctionCode(
                 code=self.code)
         return self._scouts_function_code
+
+    def is_active_function(self) -> bool:
+        return not self.end or self.end <= pytz.utc.localize(datetime.now())
 
     def is_leader_function(self) -> bool:
         return self.is_leader

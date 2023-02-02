@@ -202,7 +202,7 @@ class PersistedScoutsUser(User):
                 return True
         return False
 
-    def get_section_leader_groups(self) -> List[ScoutsGroup]:
+    def get_scouts_section_leader_groups(self) -> List[ScoutsGroup]:
         return [
             group
             for group in self.scouts_groups
@@ -219,7 +219,7 @@ class PersistedScoutsUser(User):
 
         return False
 
-    def get_group_leader_groups(self) -> List[ScoutsGroup]:
+    def get_scouts_group_leader_groups(self) -> List[ScoutsGroup]:
         return [
             group
             for group in self.scouts_groups
@@ -250,7 +250,7 @@ class PersistedScoutsUser(User):
 
         return False
 
-    def get_district_commissioner_groups(self) -> List[ScoutsGroup]:
+    def get_scouts_district_commissioner_groups(self) -> List[ScoutsGroup]:
         # return [
         #     group
         #     for group in self.persisted_scouts_groups.all()
@@ -321,9 +321,10 @@ class PersistedScoutsUser(User):
         groups = self.groups.all()
         district_commissioner_groups: List[
             ScoutsGroup
-        ] = self.get_district_commissioner_groups()
-        group_leader_groups: List[ScoutsGroup] = self.get_group_leader_groups()
-        section_leader_groups: List[ScoutsGroup] = self.get_section_leader_groups(
+        ] = self.get_scouts_district_commissioner_groups()
+        group_leader_groups: List[ScoutsGroup] = self.get_scouts_group_leader_groups(
+        )
+        section_leader_groups: List[ScoutsGroup] = self.get_scouts_section_leader_groups(
         )
 
         return (

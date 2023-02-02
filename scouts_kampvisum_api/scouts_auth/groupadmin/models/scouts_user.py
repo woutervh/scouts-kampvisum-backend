@@ -100,215 +100,287 @@ class ScoutsUser(User):
     customer_number: str = OptionalCharField(max_length=48)
     birth_date: date = models.DateField(blank=True, null=True)
 
-    scouts_groups: List[ScoutsGroup] = []
-    scouts_leader_groups: List[ScoutsGroup] = []
-    scouts_functions: List[ScoutsFunction] = []
+    _scouts_functions: List[ScoutsFunction] = []
+    _scouts_function_names: List[str] = None
+    _scouts_function_descriptions: List[str] = None
+
+    _scouts_groups: List[ScoutsGroup] = []
+    _scouts_group_names: List[str] = None
+    _scouts_groups_with_underlying_groups: List[ScoutsGroup] = []
+    _scouts_leader_groups: List[ScoutsGroup] = []
+    _scouts_leader_group_names: List[str] = None
+    _scouts_section_leader_groups: List[ScoutsGroup] = None
+    _scouts_section_leader_group_names: List[str] = None
+    _scouts_group_leader_groups: List[ScoutsGroup] = None
+    _scouts_group_leader_group_names: List[str] = None
+    _scouts_district_commissioner_groups: List[ScoutsGroup] = None
+    _scouts_district_commissioner_group_names: List[str] = None
+    _scouts_shire_president_groups: List[ScoutsGroup] = None
+    _scouts_shire_president_group_names: List[str] = None
 
     #
     # The active access token, provided by group admin oidc
     #
     access_token: str = ""
 
+    def clear_scouts_functions(self):
+        self._scouts_functions = []
+        self._scouts_function_names = None
+        self._scouts_function_descriptions = None
+
+    def clear_scouts_groups(self):
+        self._scouts_groups = []
+        self._scouts_group_names = None
+        self._scouts_groups_with_underlying_groups = []
+        self._scouts_leader_groups = []
+        self._scouts_leader_group_names = None
+        self._scouts_section_leader_groups = None
+        self._scouts_section_leader_group_names = None
+        self._scouts_group_leader_groups = None
+        self._scouts_group_leader_group_names = None
+        self._scouts_district_commissioner_groups = None
+        self._scouts_district_commissioner_group_names = None
+        self._scouts_shire_president_groups = None
+        self._scouts_shire_president_group_names = None
+
     def add_scouts_function(self, scouts_function: ScoutsFunction):
         if scouts_function.group_admin_id not in self.get_scouts_function_names():
-            logger.debug(
-                f"Adding function {scouts_function.code} ({scouts_function.__class__.__name__} - {len(self.scouts_functions)})")
-            self.scouts_functions.append(scouts_function)
-            self.scouts_functions.sort(key=lambda x: x.group_admin_id)
+            self._scouts_functions.append(scouts_function)
+            self._scouts_functions.sort(key=lambda x: x.group_admin_id)
+
+    def get_scouts_functions(self) -> List[ScoutsFunction]:
+        return self._scouts_functions
 
     def get_scouts_function_names(self) -> List[str]:
-        return [scouts_function.group_admin_id for scouts_function in self.scouts_functions]
+        if not self._scouts_function_names:
+            self._scouts_function_names = [
+                scouts_function.group_admin_id for scouts_function in self._scouts_functions]
+        return self._scouts_function_names
 
     def get_scouts_function_descriptions(self) -> List[str]:
-        return [scouts_function.description for scouts_function in self.scouts_functions]
+        if not self._scouts_function_descriptions:
+            self._scouts_function_descriptions = [
+                scouts_function.description for scouts_function in self._scouts_functions]
+        return self._scouts_function_descriptions
 
     def add_scouts_group(self, scouts_group: ScoutsGroup):
         if scouts_group.group_admin_id not in self.get_scouts_group_names():
-            logger.debug(
-                f"Adding scouts group {scouts_group.group_admin_id} ({scouts_group.__class__.__name__} - {len(self.scouts_groups)})")
-            self.scouts_groups.append(scouts_group)
-            self.scouts_groups.sort(key=lambda x: x.group_admin_id)
+            self._scouts_groups.append(scouts_group)
+            self._scouts_groups.sort(key=lambda x: x.group_admin_id)
 
     def get_scouts_group(self, group_admin_id: str, raise_exception: bool = False) -> ScoutsGroup:
-        for scouts_group in self.scouts_groups:
+        for scouts_group in self._scouts_groups:
             if scouts_group.group_admin_id == group_admin_id:
                 return scouts_group
 
         if raise_exception:
             raise InvalidArgumentException(
-                "This user doesn't have access to group {group_admin_id}", user=self)
+                f"This user doesn't have access to group {group_admin_id}", user=self)
 
         return None
 
+    def get_scouts_groups(self, include_underlying_groups=False) -> List[ScoutsGroup]:
+        if not include_underlying_groups:
+            return self._scouts_groups
+        return self.get_scouts_groups_with_underlying_groups()
+
+    def get_scouts_groups_with_underlying_groups(self) -> List[ScoutsGroup]:
+        if not self._scouts_groups_with_underlying_groups:
+            combined_groups: List[ScoutsGroup] = list()
+            for scouts_group in self._scouts_groups:
+                if scouts_group.group_admin_id not in combined_groups:
+                    combined_groups.append(scouts_group)
+
+                    if scouts_group.has_child_groups():
+                        child_groups = scouts_group.get_child_groups()
+                        for child_group in child_groups:
+                            child_scouts_group = self.get_scouts_group(
+                                group_admin_id=child_group, raise_exception=True)
+
+                            if child_scouts_group not in combined_groups:
+                                combined_groups.append(child_scouts_group)
+            combined_groups = list(set(combined_groups))
+            combined_groups.sort(key=lambda x: x.group_admin_id)
+            self._scouts_groups_with_underlying_groups = combined_groups
+        return self._scouts_groups_with_underlying_groups
+
     def get_scouts_group_names(self) -> List[str]:
-        return [group.group_admin_id for group in self.scouts_groups]
+        if not self._scouts_group_names:
+            self._scouts_group_names = [
+                group.group_admin_id for group in self._scouts_groups]
+        return self._scouts_group_names
 
-    def get_function_codes(self) -> List[str]:
-        return [function.code for function in self.functions]
-
-    def get_group_functions(self) -> List[Tuple]:
-        return []
-
-    def get_group_names(self) -> List[str]:
-        return [group.group_admin_id for group in self.scouts_groups]
-
-    def has_role_leader(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None) -> bool:
+    def has_role_leader(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None, include_inactive: bool = False) -> bool:
         """
         Determines if the user is has a leader function in the specified group
         """
-
-        if not scouts_group and not group_admin_id:
-            raise InvalidArgumentException(
-                "Can't determine leader role without a group or group admin id")
-
-        if not scouts_group:
-            scouts_group = self.get_scouts_group(
-                group_admin_id=group_admin_id, raise_exception=True)
-
-        for scouts_function in self.scouts_functions:
-            if (
-                scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id
-                and scouts_function.is_section_leader_function()
-            ):
-                return True
-
-        return False
+        return self._has_role(
+            scouts_group=scouts_group,
+            group_admin_id=group_admin_id,
+            role="leader",
+            scouts_function_name="is_leader_function",
+            include_inactive=include_inactive,)
 
     def get_scouts_leader_groups(self) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self.scouts_groups
-            if self.has_role_leader(scouts_group=scouts_group)
-        ]
+        if not self._scouts_leader_groups:
+            self._scouts_leader_groups = [
+                scouts_group
+                for scouts_group in self._scouts_groups
+                if self.has_role_leader(scouts_group=scouts_group)
+            ]
+        return self._scouts_leader_groups
 
     def get_scouts_leader_group_names(self) -> List[str]:
-        return [scouts_group.group_admin_id for scouts_group in self.get_scouts_leader_groups()]
+        if not self._scouts_leader_group_names:
+            self._scouts_leader_group_names = [
+                scouts_group.group_admin_id for scouts_group in self.get_scouts_leader_groups()]
+        return self._scouts_leader_group_names
 
-    def has_role_section_leader(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None) -> bool:
+    def has_role_section_leader(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None, include_inactive: bool = False) -> bool:
         """
         Determines if the user is a section leader based on a function in the specified group
         """
+        return self._has_role(
+            scouts_group=scouts_group,
+            group_admin_id=group_admin_id,
+            role="section leader",
+            scouts_function_name="is_section_leader_function",
+            include_inactive=include_inactive,)
 
-        if not scouts_group and not group_admin_id:
-            raise InvalidArgumentException(
-                "Can't determine section leader role without a group or group admin id")
+    def get_scouts_section_leader_groups(self) -> List[ScoutsGroup]:
+        if not self._scouts_section_leader_groups:
+            self._scouts_section_leader_groups = [
+                scouts_group
+                for scouts_group in self._scouts_groups
+                if self.has_role_section_leader(scouts_group=scouts_group)
+            ]
+        return self._scouts_section_leader_groups
 
-        if not scouts_group:
-            scouts_group = self.get_scouts_group(
-                group_admin_id=group_admin_id, raise_exception=True)
+    def get_scouts_section_leader_group_names(self) -> List[str]:
+        if not self._scouts_section_leader_group_names:
+            self._scouts_section_leader_group_names = [
+                scouts_group.group_admin_id for scouts_group in self.get_scouts_section_leader_groups()]
+        return self._scouts_section_leader_group_names
 
-        for scouts_function in self.scouts_functions:
-            if (
-                scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id
-                and scouts_function.is_section_leader_function()
-            ):
-                return True
-
-        return False
-
-    def get_section_leader_groups(self) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self.scouts_groups
-            if self.has_role_section_leader(scouts_group=scouts_group)
-        ]
-
-    def has_role_group_leader(self, scouts_group: ScoutsGroup) -> bool:
+    def has_role_group_leader(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None, include_inactive: bool = False) -> bool:
         """
         Determines if the user is a group leader based on a function in the specified group
         """
+        return self._has_role(
+            scouts_group=scouts_group,
+            group_admin_id=group_admin_id,
+            role="group leader",
+            scouts_function_name="is_group_leader_function",
+            include_inactive=include_inactive,)
 
-        if not scouts_group and not group_admin_id:
-            raise InvalidArgumentException(
-                "Can't determine group leader role without a group or group admin id")
+    def get_scouts_group_leader_groups(self) -> List[ScoutsGroup]:
+        if not self._scouts_group_leader_groups:
+            self._scouts_group_leader_groups = [
+                scouts_group
+                for scouts_group in self._scouts_groups
+                if self.has_role_group_leader(scouts_group=scouts_group)
+            ]
+        return self._scouts_group_leader_groups
 
-        if not scouts_group:
-            scouts_group = self.get_scouts_group(
-                group_admin_id=group_admin_id, raise_exception=True)
+    def get_scouts_group_leader_group_names(self) -> List[str]:
+        if not self._scouts_group_leader_group_names:
+            self._scouts_group_leader_group_names = [
+                scouts_group.group_admin_id for scouts_group in self.get_scouts_group_leader_groups()]
+        return self._scouts_group_leader_group_names
 
-        for scouts_function in self.scouts_functions:
-            if (
-                scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id
-                and scouts_function.is_group_leader_function()
-            ):
-                return True
-
-        return False
-
-    def get_group_leader_groups(self) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self.scouts_groups
-            if self.has_role_group_leader(scouts_group=scouts_group)
-        ]
-
-    def has_role_district_commissioner(self, scouts_group: ScoutsGroup = None) -> bool:
+    def has_role_district_commissioner(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None, include_inactive: bool = False) -> bool:
         """
         Determines if the user is a district commissioner based on a function code
         """
+        return self._has_role(
+            scouts_group=scouts_group,
+            group_admin_id=group_admin_id,
+            role="district commissioner",
+            scouts_function_name="is_district_commissioner_function",
+            include_inactive=include_inactive,)
 
-        if not scouts_group and not group_admin_id:
-            raise InvalidArgumentException(
-                "Can't determine district commissioner role without a group or group admin id")
+    def get_scouts_district_commissioner_groups(self) -> List[ScoutsGroup]:
+        if not self._scouts_district_commissioner_groups:
+            self._scouts_district_commissioner_groups = [
+                scouts_group
+                for scouts_group in self._scouts_groups
+                if self.has_role_district_commissioner(scouts_group=scouts_group)
+            ]
+        return self._scouts_district_commissioner_groups
 
-        if not scouts_group:
-            scouts_group = self.get_scouts_group(
-                group_admin_id=group_admin_id, raise_exception=True)
+    def get_scouts_district_commissioner_group_names(self) -> List[str]:
+        if not self._scouts_district_commissioner_group_names:
+            self._scouts_district_commissioner_group_names = [
+                scouts_group.group_admin_id for scouts_group in self.get_scouts_district_commissioner_groups()]
+        return self._scouts_district_commissioner_group_names
 
-        for scouts_function in self.scouts_functions:
-            if (
-                scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id
-                and scouts_function.is_district_commissioner_function()
-            ):
-                return True
-
-        return False
-
-    def get_district_commissioner_groups(self) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self.scouts_groups
-            if self.has_role_district_commissioner(scouts_group=scouts_group)
-        ]
-
-    def has_role_shire_president(self, scouts_group: ScoutsGroup = None) -> bool:
+    def has_role_shire_president(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None, include_inactive: bool = False) -> bool:
         """
-        Determines if the user is a shire president (gouwvoorzitter) baed on a function code
+        Determines if the user is a shire president (gouwvoorzitter) based on a function code
         """
+        return self._has_role(
+            scouts_group=scouts_group,
+            group_admin_id=group_admin_id,
+            role="shire president",
+            scouts_function_name="is_shire_president_function",
+            include_inactive=include_inactive,)
 
-        if not scouts_group and not group_admin_id:
-            raise InvalidArgumentException(
-                "Can't determine shire president role without a group or group admin id")
+    def get_scouts_shire_president_groups(self) -> List[ScoutsGroup]:
+        if not self._scouts_shire_president_groups:
+            self._scouts_shire_president_groups = [
+                scouts_group
+                for scouts_group in self._scouts_groups
+                if self.has_role_shire_president(scouts_group=scouts_group)
+            ]
+        return self._scouts_shire_president_groups
 
-        if not scouts_group:
-            scouts_group = self.get_scouts_group(
-                group_admin_id=group_admin_id, raise_exception=True)
-
-        for scouts_function in self.scouts_functions:
-            if (
-                scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id
-                and scouts_function.is_shire_president_function()
-            ):
-                return True
-
-        return False
-
-    def get_shire_president_groups(self) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self.scouts_groups
-            if self.has_role_shire_president(scouts_group=scouts_group)
-        ]
+    def get_scouts_shire_president_group_names(self) -> List[str]:
+        if not self._scouts_shire_president_group_names:
+            self._scouts_shire_president_group_names = [
+                scouts_group.group_admin_id for scouts_group in self.get_scouts_shire_president_groups()]
+        return self._scouts_shire_president_group_names
 
     def has_role_administrator(self) -> bool:
         """
         Determines if the user is an administrative worker based on membership of an administrative group
         """
         if any(
-            name in self.get_group_names()
+            name in self.get_scouts_group_names()
             for name in GroupAdminSettings.get_administrator_groups()
         ):
             return True
+        return False
+
+    def _has_role(
+            self,
+            role: str,
+            scouts_function_name: str,
+            scouts_group: ScoutsGroup = None,
+            group_admin_id: str = None,
+            ignore_group: bool = False,
+            for_underlying_scouts_groups=False,
+            include_inactive: bool = False) -> bool:
+        """
+        Determines if the user is has the specified function in the specified group
+        """
+
+        if not scouts_group and not group_admin_id and not ignore_group:
+            raise InvalidArgumentException(
+                f"Can't determine {role} role without a group or group admin id")
+
+        if not scouts_group:
+            scouts_group = self.get_scouts_group(
+                group_admin_id=group_admin_id, raise_exception=True)
+
+        for scouts_function in self._scouts_functions:
+            if (
+                scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id
+                and getattr(scouts_function, scouts_function_name)()
+            ):
+                if not include_inactive:
+                    return scouts_function.is_active_function()
+                return True
+
         return False
 
     def __str__(self):
@@ -325,12 +397,13 @@ class ScoutsUser(User):
 
     def to_descriptive_string(self):
         groups = self.groups.all()
-        shire_president_groups: List[ScoutsGroup] = self.get_shire_president_groups(
+        shire_president_groups: List[ScoutsGroup] = self.get_scouts_shire_president_groups(
         )
-        district_commissioner_groups: List[ScoutsGroup] = self.get_district_commissioner_groups(
+        district_commissioner_groups: List[ScoutsGroup] = self.get_scouts_district_commissioner_groups(
         )
-        group_leader_groups: List[ScoutsGroup] = self.get_group_leader_groups()
-        section_leader_groups: List[ScoutsGroup] = self.get_section_leader_groups(
+        group_leader_groups: List[ScoutsGroup] = self.get_scouts_group_leader_groups(
+        )
+        section_leader_groups: List[ScoutsGroup] = self.get_scouts_section_leader_groups(
         )
 
         scouts_group_names: List[str] = self.get_scouts_group_names()
@@ -338,7 +411,7 @@ class ScoutsUser(User):
         )
 
         descriptive_scouts_functions: List[List[str]] = [
-            scouts_function.description + "(" + scouts_function.scouts_group.group_admin_id + ")" for scouts_function in self.scouts_functions]
+            scouts_function.description + "(" + scouts_function.scouts_group.group_admin_id + ")" for scouts_function in self._scouts_functions]
 
         return (
             "\n------------------------------------------------------------------------------------------------------------------------\n"

@@ -14,7 +14,7 @@ from apps.visums.services import CampVisumService
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
 from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.scouts.permissions import IsLeaderForGroup
+from scouts_auth.scouts.permissions import IsActiveLeaderInGroup
 
 # LOGGING
 import logging
@@ -41,20 +41,23 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         current_permissions.append(permissions.IsAuthenticated())
 
         if self.action == "create":
+            current_permissions.append(IsActiveLeaderInGroup())
             current_permissions.append(
                 CustomDjangoPermission("visums.create_visum"))
         elif self.action == "retrieve":
+            current_permissions.append(IsActiveLeaderInGroup())
             current_permissions.append(
                 CustomDjangoPermission("visums.read_visum"))
         elif self.action == "update" or self.action == "partial_update":
+            current_permissions.append(IsActiveLeaderInGroup())
             current_permissions.append(
                 CustomDjangoPermission("visums.update_visum"))
         elif self.action == "destroy":
+            current_permissions.append(IsActiveLeaderInGroup())
             current_permissions.append(
                 CustomDjangoPermission("visums.delete_visum"))
         elif self.action == "list":
-            current_permissions.append(
-                IsLeaderForGroup())
+            current_permissions.append(IsActiveLeaderInGroup())
             current_permissions.append(
                 CustomDjangoPermission("visums.list_visum"))
 
