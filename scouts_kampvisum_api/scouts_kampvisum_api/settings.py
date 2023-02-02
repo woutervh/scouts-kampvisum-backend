@@ -329,7 +329,7 @@ USE_TZ = True
 # ############################################################################ #
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "scouts_auth.auth.oidc.InuitsOIDCAuthentication",
+        "scouts_auth.auth.oidc_auth.InuitsOIDCAuthentication",
         'rest_framework.authentication.SessionAuthentication',
     ],
     "DEFAULT_PERMISSION_CLASSES": [
