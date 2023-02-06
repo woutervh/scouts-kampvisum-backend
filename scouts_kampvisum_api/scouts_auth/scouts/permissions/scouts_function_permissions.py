@@ -43,13 +43,12 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
 
         group_admin_id = request.GET.get("auth", None)
 
-        logger.debug(f"BASE: {self.base_auth_roles}")
-
         for group in user.groups.all():
             # If the user role is not included in the base authentication roles, then ignore
             if group.name in self.base_auth_roles:
                 for role in user.get_roles_for_group(group_admin_id=group_admin_id):
-                    logger.debug(f"ROLE FOR GROUP {group_admin_id}: {role}")
+                    logger.debug(
+                        f"ROLE FOR GROUP {group_admin_id}: {role}", user=user)
                     if (
                         # If the user role for the specified groups is not included in the base authentication roles, then ignore
                         role in self.base_auth_roles and role == group.name

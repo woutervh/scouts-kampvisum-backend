@@ -143,7 +143,8 @@ class ScoutsSectionService:
 
         created_sections = list()
 
-        logger.debug(f"Setting up default scouts sections", user=request.user)
+        logger.debug(
+            f"Setting up default scouts sections for {len(user.get_scouts_groups())} group(s)", user=request.user)
         for group in user.get_scouts_groups():
             group_count = ScoutsSection.objects.filter(
                 group=group.group_admin_id).count()
