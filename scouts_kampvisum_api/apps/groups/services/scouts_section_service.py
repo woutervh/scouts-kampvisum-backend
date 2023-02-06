@@ -10,8 +10,8 @@ from apps.groups.models import (
 )
 from apps.groups.services import DefaultScoutsSectionNameService
 
+from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
-
 from scouts_auth.inuits.models import Gender
 
 
@@ -31,7 +31,7 @@ class ScoutsSectionService:
         self,
         request=None,
         instance: ScoutsSection = None,
-        group: str = None,
+        group: ScoutsGroup = None,
         name: str = None,
         gender: Gender = Gender.MIXED,
         age_group: int = 0,
@@ -79,14 +79,14 @@ class ScoutsSectionService:
     def _section_create(
         self,
         request=None,
-        group: str = None,
+        group: ScoutsGroup = None,
         name: str = None,
         gender: Gender = Gender.MIXED,
         age_group: int = 0,
         hidden: bool = False,
     ) -> ScoutsSection:
         logger.debug(
-            f"Creating a ScoutsSection with name {name}, gender {gender} and age_group {age_group} for group {group}", user=request.user)
+            f"Creating a ScoutsSection with name {name}, gender {gender} and age_group {age_group} for group {group.group_admin_id}", user=request.user)
 
         instance = ScoutsSection()
 
@@ -105,7 +105,7 @@ class ScoutsSectionService:
         self,
         request=None,
         instance: ScoutsSection = None,
-        group: str = None,
+        group: ScoutsGroup = None,
         name: str = None,
         gender: Gender = None,
         age_group: int = None,
@@ -119,7 +119,7 @@ class ScoutsSectionService:
         age_group = age_group if age_group else instance.age_group
 
         logger.debug(
-            f"Updating Section with name {name}, gender {gender} and age_group {age_group} in group {group}", user=request.user)
+            f"Updating Section with name {name}, gender {gender} and age_group {age_group} in group {group.group_admin_id}", user=request.user)
 
         instance.group = group.group_admin_id
         instance.name = name
@@ -153,7 +153,7 @@ class ScoutsSectionService:
 
             if group_count == 0:
                 # logger.debug(
-                #     f"Linking sections to GROUP: {group.group_admin_id} ({group.name})")
+                #     f"Linking sections to GROUP: {group.group_admin_id} ({group.name})", user=request.user)
                 default_scouts_section_names: List[
                     DefaultScoutsSectionName
                 ] = self.default_section_name_service.load_for_group(

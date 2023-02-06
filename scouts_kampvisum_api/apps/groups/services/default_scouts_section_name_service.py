@@ -6,6 +6,7 @@ from apps.groups.models import (
     ScoutsGroupType,
 )
 
+from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.models import Gender
 
 
@@ -17,8 +18,9 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DefaultScoutsSectionNameService:
+
     def load_for_group(
-        self, request, group: str
+        self, request, group: ScoutsGroup
     ) -> List[DefaultScoutsSectionName]:
         """
         Loads default names based on group type or the parent group type.
@@ -27,7 +29,7 @@ class DefaultScoutsSectionNameService:
             group_type=group.type, is_default=True, raise_error=True
         )
         logger.debug(
-            f"Loading DefaultScoutsSectionName instances for group {group} (group_type {group_type})")
+            f"Loading DefaultScoutsSectionName instances for group {group.group_admin_id} (group_type {group_type.group_type})")
         names: List[
             DefaultScoutsSectionName
         ] = DefaultScoutsSectionName.objects.safe_get_list(
