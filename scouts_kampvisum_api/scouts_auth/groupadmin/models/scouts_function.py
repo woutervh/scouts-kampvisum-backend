@@ -24,7 +24,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ScoutsFunction():
+class ScoutsFunction(AbstractNonModel):
 
     group_admin_id = GroupAdminIdField()
     begin = OptionalDateTimeField()
@@ -45,7 +45,7 @@ class ScoutsFunction():
     _scouts_function_code: AbstractScoutsFunctionCode = None
 
     class Meta:
-        abstract = True
+        managed = False
 
     @property
     def scouts_function_code(self):

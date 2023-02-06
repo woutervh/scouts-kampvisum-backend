@@ -17,7 +17,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ScoutsGroup():
+class ScoutsGroup(AbstractNonModel):
 
     group_admin_id = GroupAdminIdField()
     number = OptionalCharField()
@@ -29,7 +29,7 @@ class ScoutsGroup():
     type = OptionalCharField()
 
     class Meta:
-        abstract = True
+        managed = False
 
     def __init__(
         self,
