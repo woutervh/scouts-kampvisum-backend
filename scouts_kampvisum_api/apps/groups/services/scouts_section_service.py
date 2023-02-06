@@ -143,13 +143,13 @@ class ScoutsSectionService:
 
         created_sections = list()
 
-        logger.debug(
-            f"Setting up default scouts sections for {len(user.get_scouts_groups())} group(s)", user=request.user)
+        # logger.debug(
+        #     f"Setting up default scouts sections for {len(user.get_scouts_groups())} group(s)", user=request.user)
         for group in user.get_scouts_groups():
             group_count = ScoutsSection.objects.filter(
                 group=group.group_admin_id).count()
-            logger.debug(
-                f"Found {group_count} scouts sections for group {group.group_admin_id}", user=request.user)
+            # logger.debug(
+            #     f"Found {group_count} scouts sections for group {group.group_admin_id}", user=request.user)
 
             if group_count == 0:
                 logger.debug(
