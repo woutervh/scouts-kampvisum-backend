@@ -43,12 +43,13 @@ class LinkedDeadlineSerializer(serializers.ModelSerializer):
         # logger.debug("LINKED DEADLINE SERIALIZER TO_REPRESENTATION: %s", obj)
 
         visum = obj.visum.id
+        group = obj.visum.group
         obj.visum = None
 
         data = super().to_representation(obj)
 
         data["visum"] = visum
-        data["group"] = visum.group
+        data["group"] = group
 
         return data
 
