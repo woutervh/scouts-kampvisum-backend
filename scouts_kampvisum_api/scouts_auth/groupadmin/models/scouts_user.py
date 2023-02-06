@@ -216,7 +216,8 @@ class ScoutsUser(User):
                 "Can't determine roles for group without a scouts group or group admin id")
 
         if not scouts_group:
-            scouts_group = self.get_scouts_group(group_admin_id=group_admin_id)
+            scouts_group = self.get_scouts_group(
+                group_admin_id=group_admin_id, raise_exception=True)
 
         if not scouts_group:
             return []
@@ -396,6 +397,8 @@ class ScoutsUser(User):
         """
         Determines if the user is has the specified function in the specified group
         """
+
+        logger.debug(f"Determining if user has role {role}", user=self)
 
         if not scouts_group and not group_admin_id and not ignore_group:
             raise InvalidArgumentException(

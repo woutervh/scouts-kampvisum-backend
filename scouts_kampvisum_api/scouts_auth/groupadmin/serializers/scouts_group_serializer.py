@@ -30,7 +30,8 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj: ScoutsGroup) -> dict:
         if not isinstance(obj, ScoutsGroup):
-            obj = self.context['request'].user.get_scouts_group(obj)
+            obj = self.context['request'].user.get_scouts_group(
+                obj, raise_exception=True)
 
         if not obj:
             return {}
