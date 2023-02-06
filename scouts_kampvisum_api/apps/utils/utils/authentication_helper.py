@@ -58,4 +58,4 @@ class AuthenticationHelper:
                 }
             )
 
-        return True
+        return False

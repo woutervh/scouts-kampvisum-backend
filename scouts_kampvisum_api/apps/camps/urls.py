@@ -1,5 +1,6 @@
 from rest_framework import routers
-from .views import CampViewSet, CampYearViewSet, CampTypeViewSet
+
+from apps.camps.views import CampViewSet, CampYearViewSet, CampTypeViewSet
 
 
 router = routers.SimpleRouter()

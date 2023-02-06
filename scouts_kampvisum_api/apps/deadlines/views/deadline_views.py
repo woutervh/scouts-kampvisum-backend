@@ -16,6 +16,8 @@ from apps.deadlines.serializers import (
 )
 from apps.deadlines.services import LinkedDeadlineService, LinkedDeadlineFlagService
 
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
 
 # LOGGING
 import logging
@@ -33,6 +35,7 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
 
     serializer_class = LinkedDeadlineSerializer
     queryset = LinkedDeadline.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.DjangoFilterBackend]
 
     linked_deadline_service = LinkedDeadlineService()

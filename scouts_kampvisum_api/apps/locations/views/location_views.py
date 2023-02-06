@@ -8,7 +8,7 @@ from apps.locations.serializers import LinkedLocationSerializer
 from apps.locations.filters import LinkedLocationFilter
 from django.db.models import Q
 
-from apps.utils.utils import AuthenticationHelper
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 
 # LOGGING
@@ -20,23 +20,22 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class LocationViewSet(viewsets.GenericViewSet):
 
-    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
-    filterset_class = LinkedLocationFilter
+    filterset_class = LinkedLocationFilter()
+    permission_classes = (ScoutsFunctionPermissions, )
     ordering_fields = ["id"]
     ordering = ["id"]
 
     def get_queryset(self, group_admin_id: str):
         return LinkedLocation.objects.filter(
-                    Q(
-                        checks__sub_category__category__category_set__visum__group__group_admin_id=group_admin_id
-                    )
-                )
+            Q(
+                checks__sub_category__category__category_set__visum__group__group_admin_id=group_admin_id
+            )
+        )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationSerializer})
     def list(self, request):
         group_admin_id = self.request.GET.get("group", None)
-        AuthenticationHelper.has_rights_for_group(request.user, group_admin_id)
 
         queryset = self.get_queryset(group_admin_id=group_admin_id)
         instances = self.filter_queryset(queryset)
@@ -52,7 +51,6 @@ class LocationViewSet(viewsets.GenericViewSet):
                 instances, many=True, context={"request": request}
             )
             return Response(serializer.data)
-
 
     # @swagger_auto_schema(
     #     request_body=CampLocationSerializer,

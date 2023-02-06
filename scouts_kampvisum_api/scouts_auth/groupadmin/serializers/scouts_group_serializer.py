@@ -32,6 +32,9 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
         if not isinstance(obj, ScoutsGroup):
             obj = self.context['request'].user.get_scouts_group(obj)
 
+        if not obj:
+            return {}
+
         return {
             "group_admin_id": obj.group_admin_id,
             "number": obj.number,

@@ -86,10 +86,7 @@ class PermissionService:
             )
             return
 
-        try:
-            self._populate_permission_groups()
-        except Exception as exc:
-            logger.error("Unable to populate user roles", exc)
+        self._populate_permission_groups()
 
     def _populate_permission_groups(self):
         # Will populate groups and add permissions to them, won't create permissions
@@ -130,6 +127,7 @@ class PermissionService:
                 for permission in permissions:
                     self._add_permission_by_name(
                         group,
+                        permission,
                         permission.get("codename"),
                         permission.get("app_label"),
                     )
@@ -186,7 +184,7 @@ class PermissionService:
 
     @staticmethod
     def _add_permission_by_name(
-        group: Group, codename: str, app_label: str
+        group: Group, permission: Permission, codename: str, app_label: str
     ):
         try:
             logger.debug(

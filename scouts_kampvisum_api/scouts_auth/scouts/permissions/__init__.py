@@ -6,3 +6,4 @@ from .permissions import (
     IsDistrictCommissioner,
     IsShirePresident,
 )
+from .scouts_function_permissions import ScoutsFunctionPermissions

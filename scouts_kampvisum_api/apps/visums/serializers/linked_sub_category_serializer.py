@@ -42,9 +42,9 @@ class LinkedSubCategorySerializer(serializers.ModelSerializer):
         exclude = ["category"]
 
     def to_internal_value(self, data: dict) -> dict:
-        id = data.get("id", None)
+        pk = data.get("id", None)
         if id and len(data.keys()) == 1:
-            sub_category = LinkedSubCategory.objects.safe_get(id=id)
+            sub_category = LinkedSubCategory.objects.safe_get(id=pk)
             if sub_category:
                 return sub_category
 

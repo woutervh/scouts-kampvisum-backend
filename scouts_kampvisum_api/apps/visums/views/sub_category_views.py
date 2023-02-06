@@ -9,6 +9,8 @@ from apps.visums.models import SubCategory
 from apps.visums.services import SubCategoryService
 from apps.visums.serializers import SubCategorySerializer
 
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
 
 # LOGGING
 import logging
@@ -24,6 +26,7 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = SubCategorySerializer
     queryset = SubCategory.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
 
     sub_category_service = SubCategoryService()
 
@@ -44,7 +47,8 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("SUB CATEGORY CREATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.sub_category_service.camp_create(request, **validated_data)
+        instance = self.sub_category_service.camp_create(
+            request, **validated_data)
 
         output_serializer = SubCategorySerializer(
             instance, context={"request": request}
@@ -59,7 +63,8 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         """
 
         instance = self.get_object()
-        serializer = SubCategorySerializer(instance, context={"request": request})
+        serializer = SubCategorySerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 

@@ -9,6 +9,8 @@ from apps.groups.services import ScoutsSectionNameService
 from apps.groups.serializers import ScoutsSectionNameSerializer
 from apps.groups.filters import ScoutsSectionFilter
 
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
 
 # LOGGING
 import logging
@@ -24,6 +26,7 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
 
     serializer_class = ScoutsSectionNameSerializer
     queryset = ScoutsSectionName.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
     filterset_class = ScoutsSectionFilter()
 
     section_name_service = ScoutsSectionNameService()
@@ -57,7 +60,8 @@ class ScoutsSectionNameViewSet(viewsets.GenericViewSet):
         Retrieves an existing ScoutSectionName object.
         """
         instance = self.get_object()
-        serializer = ScoutsSectionNameSerializer(instance, context={"request": request})
+        serializer = ScoutsSectionNameSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 

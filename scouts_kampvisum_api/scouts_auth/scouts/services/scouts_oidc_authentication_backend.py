@@ -24,6 +24,14 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
     groupadmin = GroupAdmin()
     user_service = ScoutsUserService()
 
+    def has_perm(self, user_obj, perm, obj=None) -> bool:
+        result = super().has_perm(user_obj, perm, obj)
+
+        # logger.debug(
+        #     f"SCOUTS OIDC AUTHENTICATION BACKEND: has_perm: {result}, user_obj -> {user_obj.username}, perm -> {perm}, obj -> {obj}")
+
+        return result
+
     # This is the method that's called by DRF's OIDCAuthentication (in the authenticate() method),
     # subclassed in InuitsOIDCAuthentication.
     def get_or_create_user(self, access_token, id_token, payload) -> settings.AUTH_USER_MODEL:

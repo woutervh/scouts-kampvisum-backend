@@ -48,6 +48,7 @@ class LinkedDeadlineSerializer(serializers.ModelSerializer):
         data = super().to_representation(obj)
 
         data["visum"] = visum
+        data["group"] = visum.group
 
         return data
 

@@ -16,6 +16,8 @@ from apps.groups.filters import ScoutsSectionFilter
 
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
@@ -24,35 +26,14 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionViewSet(viewsets.GenericViewSet):
+
     serializer_class = ScoutsSectionSerializer
     queryset = ScoutsSection.objects.all().filter(hidden=False)
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = ScoutsSectionFilter
 
     section_service = ScoutsSectionService()
-
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_permissions(self):
-        current_permissions = super().get_permissions()
-
-        if self.action == "create":
-            current_permissions.append(
-                CustomDjangoPermission("groups.create_section"))
-        elif self.action == "retrieve":
-            current_permissions.append(
-                CustomDjangoPermission("groups.read_section"))
-        elif self.action == "update" or self.action == "partial_update":
-            current_permissions.append(
-                CustomDjangoPermission("groups.update_section"))
-        elif self.action == "destroy":
-            current_permissions.append(
-                CustomDjangoPermission("groups.delete_section"))
-        elif self.action == "list":
-            current_permissions.append(
-                CustomDjangoPermission("groups.list_section"))
-
-        return current_permissions
 
     @swagger_auto_schema(
         request_body=ScoutsSectionSerializer,

@@ -17,11 +17,11 @@ from apps.locations.serializers import CampLocationMinimalSerializer
 from apps.camps.serializers import CampMinimalSerializer
 
 from scouts_auth.auth.permissions import CustomDjangoPermission
-
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
-from scouts_auth.scouts.services import ScoutsPermissionService
 from scouts_auth.groupadmin.settings import GroupAdminSettings
+from scouts_auth.scouts.services import ScoutsPermissionService
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 # LOGGING
 import logging
@@ -39,37 +39,13 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
     A viewset for viewing and editing camp instances.
     """
 
-    permission_classes = [permissions.IsAuthenticated]
     serializer_class = CampLocationMinimalSerializer
     queryset = CampVisum.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()
-    authorization_service = ScoutsPermissionService()
-
-    def get_permissions(self):
-        current_permissions = super().get_permissions()
-
-        if self.action == "create":
-            current_permissions.append(
-                CustomDjangoPermission("visums.create_visum"))
-        elif self.action == "retrieve":
-            current_permissions.append(
-                CustomDjangoPermission("visums.read_visum"))
-        elif self.action == "update" or self.action == "partial_update":
-            current_permissions.append(
-                CustomDjangoPermission("visums.update_visum"))
-        elif self.action == "destroy":
-            current_permissions.append(
-                CustomDjangoPermission("visums.delete_visum"))
-        if self.action == "list":
-            current_permissions.append(
-                CustomDjangoPermission("visums.list_visum"))
-            current_permissions.append(
-                CustomDjangoPermission("visums.read_camp_locations"))
-
-        return current_permissions
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampLocationMinimalSerializer})
     def list(self, request):

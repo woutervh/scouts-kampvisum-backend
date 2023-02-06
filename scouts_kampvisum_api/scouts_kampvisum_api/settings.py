@@ -373,6 +373,8 @@ INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE = env.bool(
 INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool(
     "INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", False
 )
+BASE_AUTH_ROLES = env.list("BASE_AUTH_ROLES", [
+                           "role_section_leader", "role_group_leader", "role_district_commissioner", "role_shire_president", "role_administrator", "role_developer"])
 ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)
 # Day after which a new camp registration is considered to be in the next camp year - FORMAT: MM-DD
 CAMP_REGISTRATION_EPOCH = env.str("CAMP_REGISTRATION_EPOCH", "09-01")

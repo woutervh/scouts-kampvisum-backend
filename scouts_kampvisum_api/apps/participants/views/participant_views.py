@@ -8,8 +8,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
-from apps.utils.utils import AuthenticationHelper
-
 from apps.participants.models import InuitsParticipant
 from apps.participants.models.enums import ParticipantType
 from apps.participants.serializers import InuitsParticipantSerializer
@@ -23,6 +21,8 @@ from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
 
 # LOGGING
 import logging
@@ -34,8 +34,9 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class ParticipantViewSet(viewsets.GenericViewSet):
 
     serializer_class = InuitsParticipantSerializer
+    queryset = InuitsParticipant.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
     pagination_class = InuitsParticipantPagination
-    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = InuitsParticipantFilter
     ordering_fields = ["id"]
@@ -44,17 +45,12 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     participant_service = InuitsParticipantService()
     groupadmin = GroupAdminMemberService()
 
-    def get_queryset(self):
-        return InuitsParticipant.objects.all()
-
     @swagger_auto_schema(
         request_body=InuitsParticipantSerializer,
         responses={status.HTTP_201_CREATED: InuitsParticipantSerializer},
     )
     def create(self, request):
         # logger.debug("PARTICIPANT CREATE REQUEST DATA: %s", request.data)
-        AuthenticationHelper.has_rights_for_group(
-            request.user, request.data["group_group_admin_id"])
         input_serializer = InuitsParticipantSerializer(
             data=request.data, context={"request": request}
         )
@@ -97,10 +93,6 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: InuitsParticipantSerializer},
     )
     def partial_update(self, request, pk=None):
-        AuthenticationHelper.has_rights_for_group(
-            request.user, request.data["group_group_admin_id"])
-        AuthenticationHelper.has_rights_for_group(
-            request.user, self.get_object().group_group_admin_id)
         participant = self.get_object()
         logger.debug("PARTICIPANT: %s", self.get_object())
         logger.debug(
@@ -153,9 +145,6 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         return self._list(request=request, only_scouts_members=True, all_members=True)
 
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False, all_members=False):
-        AuthenticationHelper.has_rights_for_group(
-            request.user, self.request.GET.get("group", None))
-
         check = self.request.GET.get("check", None)
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)

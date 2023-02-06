@@ -27,10 +27,10 @@ class LinkedSubCategory(AuditedArchiveableBaseModel):
     class Meta:
         ordering = ["parent__index"]
         permissions = [
-            ("read_visum_feedback", "User can view the DC's feedback"),
-            ("update_visum_feedback", "User is a DC and can edit the feedback"),
-            ("read_visum_approval", "User can view approval status"),
-            ("update_visum_approval", "User is a DC and can set approval status"),
+            ("view_campvisum_feedback", "User can view the DC's feedback"),
+            ("change_campvisum_feedback", "User is a DC and can edit the feedback"),
+            ("view_campvisum_approval", "User can view approval status"),
+            ("change_campvisum_approval", "User is a DC and can set approval status"),
         ]
 
     # def is_checked(self) -> CheckState:

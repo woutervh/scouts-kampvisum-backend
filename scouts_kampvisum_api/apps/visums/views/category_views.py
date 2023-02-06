@@ -11,6 +11,8 @@ from apps.visums.models import Category
 from apps.visums.services import CategoryService
 from apps.visums.serializers import CategorySerializer, SubCategorySerializer
 
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
 
 # LOGGING
 import logging
@@ -26,6 +28,7 @@ class CategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
 
     category_service = CategoryService()
 
@@ -48,7 +51,8 @@ class CategoryViewSet(viewsets.GenericViewSet):
 
         instance = self.category_service.camp_create(request, **validated_data)
 
-        output_serializer = CategorySerializer(instance, context={"request": request})
+        output_serializer = CategorySerializer(
+            instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 

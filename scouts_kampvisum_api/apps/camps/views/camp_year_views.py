@@ -12,6 +12,8 @@ from apps.camps.models import CampYear
 from apps.camps.serializers import CampYearSerializer
 from apps.camps.services import CampYearService
 
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
 
 # LOGGING
 import logging
@@ -27,6 +29,7 @@ class CampYearViewSet(viewsets.GenericViewSet):
 
     serializer_class = CampYearSerializer
     queryset = CampYear.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.DjangoFilterBackend]
 
     camp_year_service = CampYearService()
@@ -38,7 +41,8 @@ class CampYearViewSet(viewsets.GenericViewSet):
     def create(self, request):
         # logger.debug("CAMP YEAR CREATE REQUEST DATA: %s", request.data)
 
-        serializer = CampYearSerializer(data=request.data, context={"request": request})
+        serializer = CampYearSerializer(
+            data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
@@ -46,7 +50,8 @@ class CampYearViewSet(viewsets.GenericViewSet):
 
         camp = self.camp_year_service.create_year(request, **validated_data)
 
-        output_serializer = CampYearSerializer(camp, context={"request": request})
+        output_serializer = CampYearSerializer(
+            camp, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 

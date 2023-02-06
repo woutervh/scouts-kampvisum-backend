@@ -69,6 +69,17 @@ class ScoutsFunction():
     def is_shire_president_function(self) -> bool:
         return self.scouts_function_code.is_shire_president()
 
+    def get_role_name(self) -> str:
+        if self.is_section_leader_function():
+            return "role_section_leader"
+        if self.is_group_leader_function():
+            return "role_group_leader"
+        if self.is_district_commissioner_function():
+            return "role_district_commissioner"
+        if self.is_shire_president_function():
+            return "role_shire_president"
+        return "role_regular_member"
+
     def __str__(self):
         return (
             f"group_admin_id ({self.group_admin_id})"

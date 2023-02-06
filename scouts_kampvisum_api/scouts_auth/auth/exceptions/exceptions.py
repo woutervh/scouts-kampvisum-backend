@@ -5,7 +5,10 @@ from requests.exceptions import HTTPError
 class ScoutsAuthException(APIException):
     def __init__(self, message, http_exception: HTTPError = None):
         if http_exception:
-            super().__init__(message % (http_exception, http_exception.response.text))
+            if isinstance(http_exception, HTTPError):
+                super().__init__(message % (http_exception, http_exception.response.text))
+            else:
+                super().__init__(message)
         else:
             super().__init__(message)
 

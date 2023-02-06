@@ -6,6 +6,8 @@ from apps.visums.models import CampVisumEngagement
 from apps.visums.serializers import CampVisumEngagementSerializer
 from apps.visums.services import CampVisumEngagementService
 
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
 
 # LOGGING
 import logging
@@ -22,6 +24,7 @@ class CampVisumEngagementViewSet(viewsets.GenericViewSet):
 
     serializer_class = CampVisumEngagementSerializer
     queryset = CampVisumEngagement.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
 
     camp_visum_engagement_service = CampVisumEngagementService()
 

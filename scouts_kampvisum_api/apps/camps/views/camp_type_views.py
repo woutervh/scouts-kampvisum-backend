@@ -12,8 +12,7 @@ from apps.camps.services import CampTypeService
 from apps.camps.serializers import CampTypeSerializer
 
 from scouts_auth.auth.permissions import CustomDjangoPermission
-
-from scouts_auth.scouts.permissions import IsActiveLeaderInGroup
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 
 # LOGGING
@@ -30,16 +29,9 @@ class CampTypeViewSet(viewsets.GenericViewSet):
 
     serializer_class = CampTypeSerializer
     queryset = CampType.objects.all().selectable()
+    permission_classes = (ScoutsFunctionPermissions, )
 
     camp_type_service = CampTypeService()
-
-    def get_permissions(self):
-        current_permissions = []
-
-        current_permissions.append(permissions.IsAuthenticated())
-        current_permissions.append(IsActiveLeaderInGroup())
-
-        return current_permissions
 
     @swagger_auto_schema(
         request_body=CampTypeSerializer,
@@ -128,8 +120,8 @@ class CampTypeViewSet(viewsets.GenericViewSet):
         Gets all CampType instances (filtered).
         """
 
-        # instances = self.filter_queryset(self.get_queryset())
-        instances = CampType.objects.all()
+        instances = self.filter_queryset(self.queryset)
+        #instances = CampType.objects.all()
         page = self.paginate_queryset(instances)
 
         if page is not None:

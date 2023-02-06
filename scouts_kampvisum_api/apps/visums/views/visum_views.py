@@ -14,7 +14,7 @@ from apps.visums.services import CampVisumService
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
 from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.scouts.permissions import IsActiveLeaderInGroup
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 # LOGGING
 import logging
@@ -30,38 +30,11 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     serializer_class = CampVisumSerializer
     queryset = CampVisum.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()
-
-    def get_permissions(self):
-        current_permissions = []
-
-        current_permissions.append(permissions.IsAuthenticated())
-
-        if self.action == "create":
-            current_permissions.append(IsActiveLeaderInGroup())
-            current_permissions.append(
-                CustomDjangoPermission("visums.create_visum"))
-        elif self.action == "retrieve":
-            current_permissions.append(IsActiveLeaderInGroup())
-            current_permissions.append(
-                CustomDjangoPermission("visums.read_visum"))
-        elif self.action == "update" or self.action == "partial_update":
-            current_permissions.append(IsActiveLeaderInGroup())
-            current_permissions.append(
-                CustomDjangoPermission("visums.update_visum"))
-        elif self.action == "destroy":
-            current_permissions.append(IsActiveLeaderInGroup())
-            current_permissions.append(
-                CustomDjangoPermission("visums.delete_visum"))
-        elif self.action == "list":
-            current_permissions.append(IsActiveLeaderInGroup())
-            current_permissions.append(
-                CustomDjangoPermission("visums.list_visum"))
-
-        return current_permissions
 
     @swagger_auto_schema(
         request_body=CampVisumSerializer,

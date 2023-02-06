@@ -57,15 +57,11 @@ class CampVisum(AuditedBaseModel):
     class Meta:
         # ordering = ["camp__sections__age_group"]
         permissions = [
-            ("create_visum", "User can create  a camp visum"),
-            ("read_visum", "User can view a camp visum"),
-            ("update_visum", "User can edit a camp visum"),
-            ("delete_visum", "User can delete a camp visum"),
-            ("list_visum", "User can list visums for his/her group"),
-            ("read_camp_locations", "User can view all camp locations"),
-            ("read_member_data", "User is allowed to view gdpr-sensitive member data"),
-            ("read_visum_notes", "User is a DC and can view approval notes"),
-            ("update_visum_notes", "User is a DC and can edit approval notes"),
+            ("view_campvisum_locations", "User can view all camp locations"),
+            ("view_campvisum_member_data",
+             "User is allowed to view gdpr-sensitive member data"),
+            ("view_campvisum_notes", "User is a DC and can view approval notes"),
+            ("change_campvisum_notes", "User is a DC and can edit approval notes"),
         ]
 
     def is_signable(self):

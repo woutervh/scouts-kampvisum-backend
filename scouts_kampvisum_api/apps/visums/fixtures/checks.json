@@ -1373,7 +1373,7 @@
                 "ParticipantMemberCheck"
             ],
             "is_multiple": true,
-            "requires_permission": "visums.read_member_data",
+            "requires_permission": "visums.view_campvisum_member_data",
             "label": "Lijst van leden"
         }
     },
@@ -2773,7 +2773,7 @@
                 "ParticipantMemberCheck"
             ],
             "is_multiple": true,
-            "requires_permission": "visums.read_member_data",
+            "requires_permission": "visums.view_campvisum_member_data",
             "label": "Lijst van leden"
         }
     },

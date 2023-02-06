@@ -12,6 +12,8 @@ from apps.visums.serializers import (
 )
 from apps.visums.services import CampVisumApprovalService
 
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
 
 # LOGGING
 import logging
@@ -23,6 +25,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class CampVisumApprovalViewSet(viewsets.GenericViewSet):
 
+    permission_classes = (ScoutsFunctionPermissions, )
     approval_service = CampVisumApprovalService()
 
     def partial_update_feedback(self, request, linked_sub_category_id):

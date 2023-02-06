@@ -14,6 +14,7 @@ from apps.camps.services import CampService
 from apps.camps.filters import CampFilter
 
 from scouts_auth.scouts.services import ScoutsPermissionService
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 
 # LOGGING
@@ -30,6 +31,7 @@ class CampViewSet(viewsets.GenericViewSet):
 
     serializer_class = CampSerializer
     queryset = Camp.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = CampFilter
 

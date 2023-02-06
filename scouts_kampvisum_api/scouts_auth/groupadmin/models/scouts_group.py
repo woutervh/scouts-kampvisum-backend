@@ -25,7 +25,7 @@ class ScoutsGroup():
     email = OptionalEmailField()
     website = OptionalCharField()
     parent_group = GroupAdminIdField()
-    _child_groups = []
+    _child_group_names = []
     type = OptionalCharField()
 
     def __init__(
@@ -60,14 +60,14 @@ class ScoutsGroup():
         return "{} {}".format(self.name, self.group_admin_id)
 
     def add_child_group(self, child_group: str):
-        if child_group not in self._child_groups:
-            self._child_groups.append(child_group)
+        if child_group not in self._child_group_names:
+            self._child_group_names.append(child_group)
 
     def has_child_groups(self) -> bool:
-        return self._child_groups and isinstance(self._child_groups, list) and len(self._child_groups) > 0
+        return self._child_group_names and isinstance(self._child_group_names, list) and len(self._child_group_names) > 0
 
     def get_child_groups(self) -> List[str]:
-        return self._child_groups
+        return self._child_group_names
 
     def __str__(self):
         return (
@@ -77,7 +77,7 @@ class ScoutsGroup():
             f"email ({self.email}), "
             f"website ({self.website}), "
             f"parent_group ({self.parent_group}), "
-            f"child_groups ({[str(child_group) for child_group in self._child_groups]}), "
+            f"child_groups ({[str(child_group) for child_group in self._child_group_names]}), "
             f"type ({self.type})"
         )
 

@@ -6,7 +6,7 @@ from apps.visums.models import LinkedCategory
 from apps.visums.serializers import LinkedCategorySerializer
 
 from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.scouts.services import ScoutsPermissionService
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 
 # LOGGING
@@ -23,8 +23,7 @@ class LinkedCategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = LinkedCategorySerializer
     queryset = LinkedCategory.objects.all()
-
-    authorization_service = ScoutsPermissionService()
+    permission_classes = (ScoutsFunctionPermissions, )
 
     # @swagger_auto_schema(
     #     request_body=CategorySerializer,

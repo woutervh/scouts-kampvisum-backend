@@ -3,7 +3,6 @@ from django.db.models import Q
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-from apps.utils.utils import AuthenticationHelper
 
 # LOGGING
 import logging
