@@ -5,6 +5,10 @@ role_section_leader:
   - groups.change_scoutssection
   - groups.delete_scoutssection
   - groups.view_scoutssection
+  - deadlines.add_linkeddeadline
+  - deadlines.change_linkeddeadline
+  - deadlines.delete_linkeddeadline
+  - deadlines.view_linkeddeadline
   - visums.add_campvisum
   - visums.change_campvisum
   - visums.delete_campvisum
@@ -19,6 +23,10 @@ role_group_leader:
   - groups.change_scoutssection
   - groups.delete_scoutssection
   - groups.view_scoutssection
+  - deadlines.add_linkeddeadline
+  - deadlines.change_linkeddeadline
+  - deadlines.delete_linkeddeadline
+  - deadlines.view_linkeddeadline
   - visums.add_campvisum
   - visums.change_campvisum
   - visums.delete_campvisum
@@ -33,6 +41,10 @@ role_district_commissioner:
   - groups.change_scoutssection
   - groups.delete_scoutssection
   - groups.view_scoutssection
+  - deadlines.add_linkeddeadline
+  - deadlines.change_linkeddeadline
+  - deadlines.delete_linkeddeadline
+  - deadlines.view_linkeddeadline
   - visums.add_campvisum
   - visums.change_campvisum
   - visums.delete_campvisum
@@ -48,11 +60,13 @@ role_shire_president:
   - camps.view_camptype
   - camps.view_campyear
   - groups.view_scoutssection
+  - deadlines.view_linkeddeadline
   - visums.view_campvisum
 role_administrator:
   - camps.view_camptype
   - camps.view_campyear
   - groups.view_scoutssection
+  - deadlines.view_linkeddeadline
   - visums.view_campvisum
   - visums.view_campvisum_locations
   - visums.view_campvisum_approval

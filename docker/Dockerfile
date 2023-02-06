@@ -10,10 +10,11 @@ RUN adduser --no-create-home --disabled-password --home /app --shell /bin/bash a
 WORKDIR /app
 
 COPY .env* ./
-COPY docker/entrypoint*.sh /
+COPY docker/entrypoint.sh /
 COPY scouts_kampvisum_api/manage.py ./
 COPY scouts_kampvisum_api/apps ./apps
 
+# RUN chmod +x entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 ### Preparation stage
@@ -60,6 +61,7 @@ RUN poetry install
 #         openssh-client \
 #         git
 # RUN apt-get autoremove -y
+
 
 CMD ["--no-migrate"]
 
