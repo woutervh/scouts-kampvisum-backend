@@ -72,6 +72,9 @@ class ScoutsGroup(AbstractNonModel):
     def get_child_groups(self) -> List[str]:
         return self._child_group_names
 
+    def is_admin_group(self) -> bool:
+        return self.group_admin_id in GroupAdminSettings.get_administrator_groups()
+
     def __str__(self):
         return (
             f"group_admin_id ({self.group_admin_id}), "
