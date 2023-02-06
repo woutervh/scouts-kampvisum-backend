@@ -46,7 +46,6 @@ class CampVisumEngagementService:
                 instance.group_leaders = user
         elif user.has_role_leader(group_admin_id=visum.group):
             instance.leaders = user
-            instance.l
         else:
             raise ValidationError(
                 "Only leaders, group leaders and DC's can sign a camp"

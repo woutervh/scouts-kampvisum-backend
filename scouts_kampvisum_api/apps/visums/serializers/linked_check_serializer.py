@@ -236,7 +236,7 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
 
             if permission_granted:
                 data["locations"] = LinkedLocationSerializer(
-                    obj.locations, many=(obj.parent.is_multiple)).data
+                    obj.locations, many=True).data
                 data["data_count"] = obj.locations.count()
             else:
                 data["locations"] = []
