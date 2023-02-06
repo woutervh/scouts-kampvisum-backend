@@ -408,11 +408,7 @@ class ScoutsUser(User):
         Determines if the user is has the specified function in the specified group
         """
 
-<<<<<<< HEAD
         # logger.debug(f"Determining if user has role {role}", user=self)
-=======
-        logger.debug(f"Determining if user has role {role}", user=self)
->>>>>>> 23c9ae0 (fix: add logging for invalid argument exception)
 
         if not scouts_group and not group_admin_id and not ignore_group:
             raise InvalidArgumentException(
