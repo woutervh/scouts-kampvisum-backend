@@ -143,10 +143,20 @@ class ScoutsUser(User):
         self._scouts_shire_president_groups = None
         self._scouts_shire_president_group_names = None
 
+    def has_scouts_function(self, scouts_function: ScoutsFunction):
+        for existing_function in self._scouts_functions:
+            if (
+                existing_function.group_admin_id == scouts_function.group_admin_id
+                and existing_function.scouts_group.group_admin_id == scouts_function.scouts_group.group_admin_id
+            ):
+                return True
+        return False
+
     def add_scouts_function(self, scouts_function: ScoutsFunction):
-        if scouts_function.group_admin_id not in self.get_scouts_function_names():
+        if not self.has_scouts_function(scouts_function=scouts_function):
             self._scouts_functions.append(scouts_function)
-            self._scouts_functions.sort(key=lambda x: x.group_admin_id)
+            self._scouts_functions.sort(
+                key=lambda x: x.scouts_group.group_admin_id)
 
     def get_scouts_functions(self) -> List[ScoutsFunction]:
         return self._scouts_functions
