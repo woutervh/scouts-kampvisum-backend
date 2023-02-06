@@ -29,7 +29,11 @@ class ScoutsGroup(AbstractNonModel):
     type = OptionalCharField()
 
     class Meta:
+<<<<<<< HEAD
         managed = False
+=======
+        abstract = True
+>>>>>>> 92a7fc8 (fix: find permissions and add them to roles)
 
     def __init__(
         self,
