@@ -205,7 +205,7 @@ class ScoutsUser(User):
                         child_groups = scouts_group.get_child_groups()
                         for child_group in child_groups:
                             child_scouts_group = self.get_scouts_group(
-                                group_admin_id=child_group, raise_exception=True)
+                                group_admin_id=child_group)
 
                             if child_scouts_group and child_scouts_group not in combined_groups:
                                 combined_groups.append(child_scouts_group)
