@@ -51,24 +51,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("CAMP VISUM CREATE VALIDATED DATA: %s", validated_data)
 
-        group = validated_data.get("group", None)
-        # scouts_group = ScoutsGroup.objects.safe_get(group_admin_id=group)
-        if (
-            not group
-            or group not in request.user.get_group_names()
-            # @TODO
-            # or not scouts_group
-            # or (not request.user.has_role_leader(group=scouts_group))
-            # and (not request.user.has_role_district_commissioner(group=scouts_group))
-        ):
-            raise PermissionDenied(
-                {
-                    "message": "You don't have permission to create camps for group {}".format(
-                        group
-                    )
-                }
-            )
-
         visum: CampVisum = self.camp_visum_service.visum_create(
             request, **validated_data
         )
