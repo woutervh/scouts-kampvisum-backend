@@ -153,12 +153,8 @@ class ScoutsSectionService:
 
             if group_count == 0:
                 # logger.debug(
-<<<<<<< HEAD
                 #     f"Linking sections to GROUP: {group.group_admin_id} ({group.name})", user=request.user)
 
-=======
-                #     f"Linking sections to GROUP: {group.group_admin_id} ({group.name})")
->>>>>>> 92a7fc8 (fix: find permissions and add them to roles)
                 default_scouts_section_names: List[
                     DefaultScoutsSectionName
                 ] = self.default_section_name_service.load_for_group(

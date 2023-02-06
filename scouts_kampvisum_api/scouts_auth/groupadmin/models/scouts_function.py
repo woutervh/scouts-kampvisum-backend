@@ -45,11 +45,7 @@ class ScoutsFunction(AbstractNonModel):
     _scouts_function_code: AbstractScoutsFunctionCode = None
 
     class Meta:
-<<<<<<< HEAD
         managed = False
-=======
-        abstract = True
->>>>>>> 92a7fc8 (fix: find permissions and add them to roles)
 
     @property
     def scouts_function_code(self):
