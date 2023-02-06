@@ -22,14 +22,12 @@ class CampVisumEngagementManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate CampVisumEngagement instance(s) with the provided params: (id: {})".format(
-                    pk,
-                )
+                f"Unable to locate CampVisumEngagement instance(s) with the provided params: (id: {pk})"
             )
 
         return None

@@ -24,12 +24,12 @@ class LinkedSubCategorySerializer(serializers.ModelSerializer):
     checks = LinkedCheckSerializer(many=True)
 
     feedback = PermissionRequiredSerializerField(
-        permission="visums.read_visum_feedback",
+        permission="visums.view_campvisum_feedback",
         field=OptionalCharSerializerField(),
         required=False,
     )
     approval = PermissionRequiredSerializerField(
-        permission="visums.read_visum_approval",
+        permission="visums.view_campvisum_approval",
         field=ChoiceSerializerField(
             choices=CampVisumApprovalState.choices,
             default=CampVisumApprovalState.UNDECIDED,

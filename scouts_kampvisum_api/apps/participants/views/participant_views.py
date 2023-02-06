@@ -147,7 +147,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False, all_members=False):
         check = self.request.GET.get("check", None)
         search_term = self.request.GET.get("term", None)
-        group_group_admin_id = self.request.GET.get("group", None)
+        group_group_admin_id = self.request.GET.get(
+            "group", self.request.GET.get("auth", None))
         min_age = self.request.GET.get("min_age", None)
         max_age = self.request.GET.get("max_age", None)
         gender = self.request.GET.get("gender", None)
@@ -212,6 +213,12 @@ class ParticipantViewSet(viewsets.GenericViewSet):
                 presets["leader"] = True
                 presets["include_inactive"] = True
                 presets["min_age"] = GroupAdminSettings.get_camp_responsible_min_age()
+
+            elif ParticipantType.is_participant(participant_type):
+                presets["leader"] = False
+                presets["active_leader"] = False
+                presets["include_inactive"] = True
+                presets["only_scouts_members"] = False
 
             if presets.get("active_leader", False) and not group_group_admin_id:
                 raise ValidationError(

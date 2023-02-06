@@ -30,7 +30,7 @@ class CampVisumEngagementService:
         user: ScoutsUser = request.user
         visum: CampVisum = instance.visum
 
-        if user.has_role_district_commissioner(scouts_group=visum.group):
+        if user.has_role_district_commissioner(group_admin_id=visum.group):
             if instance.leaders and instance.group_leaders:
                 instance.district_commissioner = user
                 instance.approved = True
@@ -39,13 +39,14 @@ class CampVisumEngagementService:
             else:
                 instance.group_leaders = user
 
-        elif user.has_role_group_leader(scouts_group=visum.group):
+        elif user.has_role_group_leader(group_admin_id=visum.group):
             if not instance.leaders:
                 instance.leaders = user
             else:
                 instance.group_leaders = user
-        elif user.has_role_leader(scouts_group=visum.group):
+        elif user.has_role_leader(group_admin_id=visum.group):
             instance.leaders = user
+            instance.l
         else:
             raise ValidationError(
                 "Only leaders, group leaders and DC's can sign a camp"

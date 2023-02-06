@@ -32,10 +32,14 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
 
         queryset = self._queryset(view)
         perms = self.get_required_permissions(request.method, queryset.model)
+        required_permission = [perm % {'app_label': queryset.model._meta.app_label,
+                                       'model_name': queryset.model._meta.model_name} for perm in self.perms_map[request.method]]
 
         permission = super().has_permission(request, view)
         # If the user doesn't have the required permission on any auth group, look no further
         if not permission:
+            logger.warn(
+                f"Permission {required_permission} not set on method {request.method} or for user", user=request.user)
             return False
 
         from scouts_auth.groupadmin.models import ScoutsUser
@@ -57,6 +61,9 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
                             permission.content_type.app_label + "." + permission.codename for permission in group.permissions.all()]
                         if any(perm in perms for perm in permissions):
                             return True
+
+        logger.warn(
+            f"Permission {required_permission} not granted for user", user=request.user)
 
         return False
 

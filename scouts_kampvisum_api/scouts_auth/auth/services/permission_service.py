@@ -32,8 +32,8 @@ class PermissionService:
     ) -> settings.AUTH_USER_MODEL:
         group: Group = self._get_group(group=group, group_name=group_name)
 
-        logger.debug(
-            f"Adding user to permission group {group.name}", user=user)
+        # logger.debug(
+        #     f"Adding user to permission group {group.name}", user=user)
 
         group.user_set.add(user)
 
@@ -52,8 +52,8 @@ class PermissionService:
     ) -> settings.AUTH_USER_MODEL:
         group: Group = self._get_group(group=group, group_name=group_name)
 
-        logger.debug(
-            f"Removing user from permission group {group.name}", user=user)
+        # logger.debug(
+        #     f"Removing user from permission group {group.name}", user=user)
 
         group.user_set.remove(user)
 
@@ -187,8 +187,8 @@ class PermissionService:
         group: Group, permission: Permission, codename: str, app_label: str
     ):
         try:
-            logger.debug(
-                f"Retrieving permission with codename {codename} for app {app_label}")
+            # logger.debug(
+            #     f"Retrieving permission with codename {codename} for app {app_label}")
             permission = Permission.objects.get(
                 codename=codename, content_type__app_label=app_label
             )
