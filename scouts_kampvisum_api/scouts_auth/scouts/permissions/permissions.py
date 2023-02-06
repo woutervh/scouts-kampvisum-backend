@@ -98,8 +98,8 @@ class CustomPermissionHelper:
     def has_required_permission(request, group_admin_id: ScoutsGroup, permission: str):
         permission_granted = request.user.has_role_leader(
             group_admin_id=group_admin_id)
-        logger.debug(
-            f"PERMISSION {permission} FOR OBJECT IN GROUP {group_admin_id} ? {permission_granted}", user=request.user)
+        # logger.debug(
+        #     f"PERMISSION {permission} FOR OBJECT IN GROUP {group_admin_id} ? {permission_granted}", user=request.user)
 
         if not permission_granted:
             return False
@@ -110,7 +110,7 @@ class CustomPermissionHelper:
                     permission_granted = True
                     break
 
-        logger.debug(
-            f"PERMISSION {permission} FOR OBJECT IN GROUP {group_admin_id} ? {permission_granted}", user=request.user)
+        # logger.debug(
+        #     f"PERMISSION {permission} FOR OBJECT IN GROUP {group_admin_id} ? {permission_granted}", user=request.user)
 
         return permission_granted

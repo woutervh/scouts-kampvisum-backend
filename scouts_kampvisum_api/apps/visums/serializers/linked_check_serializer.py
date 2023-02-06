@@ -61,8 +61,8 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
         check: LinkedCheck = obj.get_value_type()
 
         permission_granted = True if (
-            obj.parent.requires_permission
-            and CustomPermissionHelper.has_required_permission(
+            not obj.parent.requires_permission
+            or CustomPermissionHelper.has_required_permission(
                 request=self.context['request'],
                 group_admin_id=obj.sub_category.category.category_set.visum.group,
                 permission=obj.parent.requires_permission
@@ -157,7 +157,7 @@ class LinkedSimpleCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedSimpleCheck, permission_granted: bool) -> dict:
+    def get_value(obj: LinkedSimpleCheck, permission_granted: bool = True) -> dict:
         return obj.value
 
     @staticmethod
@@ -171,7 +171,7 @@ class LinkedDateCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedDateCheck, permission_granted: bool) -> dict:
+    def get_value(obj: LinkedDateCheck, permission_granted: bool = True) -> dict:
         return obj.value
 
     @staticmethod
@@ -189,7 +189,7 @@ class LinkedDurationCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedDurationCheck, permission_granted: bool) -> dict:
+    def get_value(obj: LinkedDurationCheck, permission_granted: bool = True) -> dict:
         data = dict()
 
         data["start_date"] = obj.start_date
@@ -226,7 +226,7 @@ class LinkedLocationCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedLocationCheck, permission_granted: bool) -> dict:
+    def get_value(obj: LinkedLocationCheck, permission_granted: bool = True) -> dict:
         data = dict()
 
         if obj.has_value():
@@ -258,7 +258,7 @@ class LinkedCampLocationCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedLocationCheck, permission_granted: bool) -> List[dict]:
+    def get_value(obj: LinkedLocationCheck, permission_granted: bool = True) -> List[dict]:
         data = LinkedLocationCheckSerializer.get_value(obj, permission_granted)
 
         data["is_camp_location"] = True
@@ -281,7 +281,7 @@ class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedParticipantCheck, permission_granted: bool) -> List[dict]:
+    def get_value(obj: LinkedParticipantCheck, permission_granted: bool = True) -> List[dict]:
         data = {}
 
         if obj.has_value():
@@ -313,7 +313,7 @@ class LinkedParticipantMemberCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedParticipantCheck, permission_granted: bool) -> List[dict]:
+    def get_value(obj: LinkedParticipantCheck, permission_granted: bool = True) -> List[dict]:
         data = LinkedParticipantCheckSerializer.get_value(
             obj, permission_granted)
 
@@ -335,7 +335,7 @@ class LinkedParticipantCookCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedParticipantCheck, permission_granted: bool) -> List[dict]:
+    def get_value(obj: LinkedParticipantCheck, permission_granted: bool = True) -> List[dict]:
         data = LinkedParticipantCheckSerializer.get_value(
             obj, permission_granted)
 
@@ -357,7 +357,7 @@ class LinkedParticipantLeaderCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedParticipantCheck, permission_granted: bool) -> List[dict]:
+    def get_value(obj: LinkedParticipantCheck, permission_granted: bool = True) -> List[dict]:
         data = LinkedParticipantCheckSerializer.get_value(
             obj, permission_granted)
 
@@ -379,7 +379,7 @@ class LinkedParticipantResponsibleCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedParticipantCheck, permission_granted: bool) -> List[dict]:
+    def get_value(obj: LinkedParticipantCheck, permission_granted: bool = True) -> List[dict]:
         data = LinkedParticipantCheckSerializer.get_value(
             obj, permission_granted)
 
@@ -401,7 +401,7 @@ class LinkedParticipantAdultCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedParticipantCheck, permission_granted: bool) -> List[dict]:
+    def get_value(obj: LinkedParticipantCheck, permission_granted: bool = True) -> List[dict]:
         data = LinkedParticipantCheckSerializer.get_value(
             obj, permission_granted)
 
@@ -422,7 +422,7 @@ class LinkedFileUploadCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedFileUploadCheck, permission_granted: bool) -> list:
+    def get_value(obj: LinkedFileUploadCheck, permission_granted: bool = True) -> list:
         return PersistedFileSerializer(obj.value.all(), many=True).data
 
     @staticmethod
@@ -438,7 +438,7 @@ class LinkedCommentCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedCommentCheck, permission_granted: bool) -> dict:
+    def get_value(obj: LinkedCommentCheck, permission_granted: bool = True) -> dict:
         # logger.debug("hm %s", str(obj))
         return obj.value
 
@@ -455,7 +455,7 @@ class LinkedNumberCheckSerializer(LinkedCheckSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_value(obj: LinkedNumberCheck, permission_granted: bool) -> dict:
+    def get_value(obj: LinkedNumberCheck, permission_granted: bool = True) -> dict:
         # logger.debug("hm %s", str(obj))
         return obj.value
 

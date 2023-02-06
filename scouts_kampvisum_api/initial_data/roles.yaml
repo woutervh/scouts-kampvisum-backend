@@ -95,7 +95,6 @@ role_administrator:
   - visums.view_campvisum_locations
   - visums.view_campvisum_approval
   - visums.view_campvisum_feedback
-  - visums.view_campvisum_locations
   - visums.view_campvisum_member_data
   - visums.view_campvisumengagement
   - deadlines.view_linkeddeadline
