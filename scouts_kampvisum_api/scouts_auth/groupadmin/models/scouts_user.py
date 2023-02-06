@@ -328,7 +328,8 @@ class ScoutsUser(User):
             group_admin_id=group_admin_id,
             role="district commissioner",
             scouts_function_name="is_district_commissioner_function",
-            include_inactive=include_inactive,)
+            include_inactive=include_inactive,
+            for_underlying_scouts_groups=True,)
 
     def get_scouts_district_commissioner_groups(self) -> List[ScoutsGroup]:
         if not self._scouts_district_commissioner_groups:
@@ -354,7 +355,8 @@ class ScoutsUser(User):
             group_admin_id=group_admin_id,
             role="shire president",
             scouts_function_name="is_shire_president_function",
-            include_inactive=include_inactive,)
+            include_inactive=include_inactive,
+            for_underlying_scouts_groups=True,)
 
     def get_scouts_shire_president_groups(self) -> List[ScoutsGroup]:
         if not self._scouts_shire_president_groups:
@@ -407,13 +409,17 @@ class ScoutsUser(User):
             return False
 
         for scouts_function in self._scouts_functions:
-            if (
-                scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id
-                and getattr(scouts_function, scouts_function_name)()
-            ):
-                if not include_inactive:
-                    return scouts_function.is_active_function()
-                return True
+            if not include_inactive and not scouts_function.is_active_function():
+                return False
+
+            if getattr(scouts_function, scouts_function_name)():
+                if not for_underlying_scouts_groups:
+                    if scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id:
+                        return True
+                else:
+                    if scouts_function.scouts_group.has_child_groups():
+                        if scouts_group.group_admin_id in scouts_function.scouts_group.get_child_groups():
+                            return True
 
         return False
 
