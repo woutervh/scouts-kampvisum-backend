@@ -51,7 +51,8 @@ class ScoutsUserService:
         #     active_user=active_user)
         #
         # -- Already done by the authentication backend
-        logger.debug(f"Constructing a ScoutsUser object", user=active_user)
+        logger.debug(
+            f"[AUTHENTICATION/AUTHORISATION] Constructing a ScoutsUser object", user=active_user)
 
         # #######
         # 2. FUNCTION DESCRIPTIONS (rest-ga/functie)
@@ -109,9 +110,14 @@ class ScoutsUserService:
         #
         #
 
+        logger.debug(f"Updating user authorisations", user=active_user)
         self.permission_service.update_user_authorizations(user=active_user)
+
+        logger.debug(f"Setting up default scouts sections", user=active_user)
         self.section_service.setup_default_sections(user=active_user)
 
+        logger.debug(
+            f"[AUTHENTICATION/AUTHORISATION] ScoutsUser object initialised", user=active_user)
         logger.debug(active_user.to_descriptive_string())
 
         return active_user
