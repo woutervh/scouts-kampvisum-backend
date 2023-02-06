@@ -53,8 +53,6 @@ class ScoutsUserService:
         # -- Already done by the authentication backend
         logger.debug(f"Constructing a ScoutsUser object", user=active_user)
 
-        logger.debug(active_user.to_descriptive_string())
-
         # #######
         # 2. FUNCTION DESCRIPTIONS (rest-ga/functie)
         #
@@ -118,6 +116,29 @@ class ScoutsUserService:
 
         return active_user
 
+    def process_groups(self, abstract_groups: List[AbstractScoutsGroup]) -> List[ScoutsGroup]:
+        user_groups: List[ScoutsGroup] = []
+
+        # First construct a list of ScoutsGroup instances
+        for abstract_group in abstract_groups:
+            user_groups.append(
+                ScoutsGroup.from_abstract_scouts_group(abstract_group=abstract_group))
+
+        return self.process_child_groups(user_groups=user_groups, abstract_groups=abstract_groups)
+
+    def process_child_groups(self, user_groups: List[ScoutsGroup], abstract_groups: List[AbstractScoutsGroup]) -> List[ScoutsGroup]:
+        # Now loop over the list and find child groups, filtering out groups that weren't in the group call
+        # (this is because groups may be listed as underlying groups, without them having any activity)
+        for parent_group in user_groups:
+            for abstract_group in abstract_groups:
+                if abstract_group.child_groups and len(abstract_group.child_groups) > 0:
+                    for child_group in abstract_group.child_groups:
+                        for scouts_group in user_groups:
+                            if scouts_group.group_admin_id == child_group:
+                                parent_group.add_child_group(child_group)
+
+        return user_groups
+
     # #######
     # LEADER:
     # To definitively find out if a user is a leader, the function description
@@ -176,16 +197,20 @@ class ScoutsUserService:
         leadership_status_identifier = GroupAdminSettings.get_leadership_status_identifier()
 
         for abstract_function in abstract_member.functions:
+            logger.debug(
+                f"USER FUNCTION: {abstract_function.scouts_group.group_admin_id} {abstract_function.description} {abstract_function.code}", user=active_user)
             # Ignore inactive functions ?
             if not include_inactive and abstract_function.end and abstract_function.end <= now:
+                logger.debug(
+                    f"- IGNORING: include_inactive is {include_inactive} and end date has passed ({abstract_function.end})")
                 continue
 
             user_functions = self.process_function(
                 active_user=active_user,
-                leadership_status_identifier=leadership_status_identifier,
                 user_functions=user_functions,
                 abstract_function=abstract_function,
                 abstract_function_descriptions=abstract_function_descriptions,
+                leadership_status_identifier=leadership_status_identifier,
                 include_only_leader_functions=include_only_leader_functions,
             )
 
@@ -194,10 +219,10 @@ class ScoutsUserService:
     def process_function(
         self,
         active_user: ScoutsUser,
-        leadership_status_identifier: str,
         user_functions: List[ScoutsFunction],
         abstract_function: AbstractScoutsFunction,
         abstract_function_descriptions: List[AbstractScoutsFunctionDescription],
+        leadership_status_identifier: str,
         include_only_leader_functions: bool = False,
     ) -> List[AbstractScoutsFunction]:
         is_leader_function = False
@@ -215,6 +240,11 @@ class ScoutsUserService:
                 abstract_function=abstract_function,
                 abstract_function_description=abstract_function_description,
                 is_leader=is_leader_function))
+            logger.debug(
+                f"- INCLUDING: {abstract_function.scouts_group.group_admin_id} {abstract_function.code} {abstract_function.description}")
+        else:
+            logger.debug(
+                f"- IGNORING: include_only_leader_functions is set to {include_only_leader_functions} or is_leader_function is {is_leader_function}")
 
         return user_functions
 
@@ -237,26 +267,3 @@ class ScoutsUserService:
         scouts_function.is_leader = is_leader
 
         return scouts_function
-
-    def process_groups(self, abstract_groups: List[AbstractScoutsGroup]) -> List[ScoutsGroup]:
-        user_groups: List[ScoutsGroup] = []
-
-        # First construct a list of ScoutsGroup instances
-        for abstract_group in abstract_groups:
-            user_groups.append(
-                ScoutsGroup.from_abstract_scouts_group(abstract_group=abstract_group))
-
-        return self.process_child_groups(user_groups=user_groups, abstract_groups=abstract_groups)
-
-    def process_child_groups(self, user_groups: List[ScoutsGroup], abstract_groups: List[AbstractScoutsGroup]) -> List[ScoutsGroup]:
-        # Now loop over the list and find child groups, filtering out groups that weren't in the group call
-        # (this is because groups may be listed as underlying groups, without them having any activity)
-        for parent_group in user_groups:
-            for abstract_group in abstract_groups:
-                if abstract_group.child_groups and len(abstract_group.child_groups) > 0:
-                    for child_group in abstract_group.child_groups:
-                        for scouts_group in user_groups:
-                            if scouts_group.group_admin_id == child_group:
-                                parent_group.add_child_group(child_group)
-
-        return user_groups
