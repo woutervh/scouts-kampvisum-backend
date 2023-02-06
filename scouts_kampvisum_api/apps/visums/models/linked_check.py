@@ -44,6 +44,8 @@ class LinkedCheck(AuditedArchiveableBaseModel):
 
     class Meta:
         ordering = ["parent__index"]
+        permissions = (("view_campvisum_member_data",
+                       "User is allowed to view gdpr-sensitive data of members"), )
 
     def is_required_for_validation(self) -> bool:
         return self.parent.is_required_for_validation
@@ -75,12 +77,13 @@ class LinkedCheck(AuditedArchiveableBaseModel):
         check = concrete_type.__class__.objects.get(linkedcheck_ptr=self.id)
 
         return check
-    
+
     def validate_value(self, value: any):
         if self.parent.validators:
             if not CheckValidator.validate(self.parent.validators, value):
-                raise ValidationError(f"LinkedCheck does not validate: {value}")
-        
+                raise ValidationError(
+                    f"LinkedCheck does not validate: {value}")
+
         return True
 
     @staticmethod

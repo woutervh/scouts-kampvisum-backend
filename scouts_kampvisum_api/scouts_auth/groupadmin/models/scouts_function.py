@@ -41,18 +41,12 @@ class ScoutsFunction(AbstractNonModel):
 
     is_leader: bool = False
 
-    # Runtime data
-    _scouts_function_code: AbstractScoutsFunctionCode = None
-
     class Meta:
         managed = False
 
     @property
-    def scouts_function_code(self):
-        if not self._scouts_function_code:
-            self._scouts_function_code = AbstractScoutsFunctionCode(
-                code=self.code)
-        return self._scouts_function_code
+    def scouts_function_code(self) -> AbstractScoutsFunctionCode:
+        return AbstractScoutsFunctionCode(code=self.code)
 
     def is_active_function(self) -> bool:
         return not self.end or self.end <= pytz.utc.localize(datetime.now())

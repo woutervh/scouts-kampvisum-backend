@@ -5,5 +5,6 @@ from .permissions import (
     IsActiveLeaderInGroup,
     IsDistrictCommissioner,
     IsShirePresident,
+    CustomPermissionHelper,
 )
 from .scouts_function_permissions import ScoutsFunctionPermissions

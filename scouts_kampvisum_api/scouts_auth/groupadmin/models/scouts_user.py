@@ -197,7 +197,7 @@ class ScoutsUser(User):
         for scouts_function in self._scouts_functions:
             if (
                 # Role in the specified group
-                scouts_function.scouts_group == scouts_group
+                scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id
                 # Role as an underlying group, e.g. DC defined on X9000D -> DC for X9002G
                 or (
                     (
