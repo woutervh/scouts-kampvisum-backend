@@ -44,6 +44,9 @@ class ScoutsFunction():
     # Runtime data
     _scouts_function_code: AbstractScoutsFunctionCode = None
 
+    class Meta:
+        abstract = True
+
     @property
     def scouts_function_code(self):
         if not self._scouts_function_code:

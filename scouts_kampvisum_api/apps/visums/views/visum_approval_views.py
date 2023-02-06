@@ -25,6 +25,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class CampVisumApprovalViewSet(viewsets.GenericViewSet):
 
+    queryset = LinkedSubCategory.objects.all()
     permission_classes = (ScoutsFunctionPermissions, )
     approval_service = CampVisumApprovalService()
 

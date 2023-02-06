@@ -152,8 +152,8 @@ class ScoutsSectionService:
             #     f"Found {group_count} scouts sections for group {group.group_admin_id}", user=request.user)
 
             if group_count == 0:
-                logger.debug(
-                    f"Linking sections to GROUP: {group.group_admin_id} ({group.name})")
+                # logger.debug(
+                #     f"Linking sections to GROUP: {group.group_admin_id} ({group.name})")
                 default_scouts_section_names: List[
                     DefaultScoutsSectionName
                 ] = self.default_section_name_service.load_for_group(
@@ -165,8 +165,8 @@ class ScoutsSectionService:
                         f"No DefaultScoutsSectionName instances found for group_type {group.type}")
 
                 for default_name in default_scouts_section_names:
-                    logger.debug(
-                        f"Linking DefaultSectionName {default_name.name} to group {group.group_admin_id}")
+                    # logger.debug(
+                    #     f"Linking DefaultSectionName {default_name.name} to group {group.group_admin_id}")
 
                     created_sections.append(
                         self.section_create_or_update(

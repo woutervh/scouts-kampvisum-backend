@@ -28,6 +28,9 @@ class ScoutsGroup():
     _child_group_names = []
     type = OptionalCharField()
 
+    class Meta:
+        abstract = True
+
     def __init__(
         self,
         group_admin_id: str = None,

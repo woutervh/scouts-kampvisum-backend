@@ -721,12 +721,10 @@ OIDC_MAX_STATES = env.int("OIDC_MAX_STATES", default=50)
 # this feature defaults to False and it’s use is discouraged.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_STORE_ACCESS_TOKEN
 # OIDC_STORE_ACCESS_TOKEN = env.bool('OIDC_STORE_ACCESS_TOKEN', default = False)
-OIDC_STORE_ACCESS_TOKEN = True
 # Controls whether the OpenID Connect client stores the OIDC id_token in the
 # user session. The session key used to store the data is oidc_id_token.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_STORE_ID_TOKEN
 # OIDC_STORE_ID_TOKEN = env.bool('OIDC_STORE_ID_TOKEN', default = False)
-OIDC_STORE_ID_TOKEN = True
 # Additional parameters to include in the initial authorization request.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_AUTH_REQUEST_EXTRA_PARAMS
 # OIDC_AUTH_REQUEST_EXTRA_PARAMS = env.list(

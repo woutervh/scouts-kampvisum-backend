@@ -197,12 +197,12 @@ class ScoutsUserService:
         leadership_status_identifier = GroupAdminSettings.get_leadership_status_identifier()
 
         for abstract_function in abstract_member.functions:
-            logger.debug(
-                f"USER FUNCTION: {abstract_function.scouts_group.group_admin_id} {abstract_function.description} {abstract_function.code}", user=active_user)
+            # logger.debug(
+            #     f"USER FUNCTION: {abstract_function.scouts_group.group_admin_id} {abstract_function.description} {abstract_function.code}", user=active_user)
             # Ignore inactive functions ?
             if not include_inactive and abstract_function.end and abstract_function.end <= now:
-                logger.debug(
-                    f"- IGNORING: include_inactive is {include_inactive} and end date has passed ({abstract_function.end})")
+                # logger.debug(
+                #     f"- IGNORING: include_inactive is {include_inactive} and end date has passed ({abstract_function.end})")
                 continue
 
             user_functions = self.process_function(
@@ -240,11 +240,11 @@ class ScoutsUserService:
                 abstract_function=abstract_function,
                 abstract_function_description=abstract_function_description,
                 is_leader=is_leader_function))
-            logger.debug(
-                f"- INCLUDING: {abstract_function.scouts_group.group_admin_id} {abstract_function.code} {abstract_function.description}")
-        else:
-            logger.debug(
-                f"- IGNORING: include_only_leader_functions is set to {include_only_leader_functions} or is_leader_function is {is_leader_function}")
+            # logger.debug(
+            #     f"- INCLUDING: {abstract_function.scouts_group.group_admin_id} {abstract_function.code} {abstract_function.description}")
+        # else:
+            # logger.debug(
+            #     f"- IGNORING: include_only_leader_functions is set to {include_only_leader_functions} or is_leader_function is {is_leader_function}")
 
         return user_functions
 

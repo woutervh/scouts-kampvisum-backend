@@ -31,7 +31,7 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
         logger.debug("DATA: %s", data)
 
         if pk:
-            data["id"] = id if CampVisumEngagement.objects.safe_get(
+            data["id"] = pk if CampVisumEngagement.objects.safe_get(
                 id=pk) else None
 
         leaders = data.get("leaders", None)
@@ -97,13 +97,13 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
         if isinstance(obj, dict):
             engagement: CampVisumEngagement = None
 
-            id = obj.get("id", None)
+            pk = obj.get("id", None)
             leaders = obj.get("leaders", None)
             group_leaders = obj.get("group_leaders", None)
             district_commissioner = obj.get("district_commissioner", None)
-            if id:
+            if pk:
                 engagement = CampVisumEngagement.objects.safe_get(
-                    id=id, raise_error=True
+                    id=pk, raise_error=True
                 )
 
                 leaders = engagement.leaders
