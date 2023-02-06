@@ -325,7 +325,7 @@ class ScoutsUser(User):
         Determines if the user is an administrative worker based on membership of an administrative group
         """
         if any(
-            name in self.get_scouts_group_names()
+            name in self.get_scouts_leader_group_names()
             for name in GroupAdminSettings.get_administrator_groups()
         ):
             return True

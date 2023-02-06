@@ -19,6 +19,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     groups = serializers.SerializerMethodField()
     user_permissions = serializers.SerializerMethodField()
+    new_user_permissions = serializers.SerializerMethodField()
     scouts_groups = serializers.SerializerMethodField()
     scouts_functions = serializers.SerializerMethodField()
 
@@ -32,6 +33,9 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     def get_user_permissions(self, obj: ScoutsUser) -> List:
         return obj.get_all_permissions()
+
+    def get_new_user_permissions(self, obj: ScoutsUser) -> List[dict]:
+        return []
 
     def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
         return [
