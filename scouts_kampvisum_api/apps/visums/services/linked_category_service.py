@@ -27,19 +27,19 @@ class LinkedCategoryService:
         linked_category_set: LinkedCategorySet,
     ) -> LinkedCategorySet:
         categories: List[Category] = Category.objects.safe_get(
-            camp_year=linked_category_set.visum.camp.year,
+            camp_year=linked_category_set.visum.year,
             camp_types=linked_category_set.visum.camp_types.all(),
             raise_error=True,
         )
         logger.debug(
             "Linking %d Category instances for camp_year %d and camp_types %s to visum %s",
             len(categories),
-            linked_category_set.visum.camp.year.year,
+            linked_category_set.visum.year.year,
             ",".join(
                 camp_type.camp_type
                 for camp_type in linked_category_set.visum.camp_types.all()
             ),
-            linked_category_set.visum.camp.name,
+            linked_category_set.visum.name,
         )
 
         for category in categories:
@@ -58,7 +58,7 @@ class LinkedCategoryService:
         logger.debug(
             "Creating LinkedCategory '%s' for visum '%s' (%s)",
             category.name,
-            linked_category_set.visum.camp.name,
+            linked_category_set.visum.name,
             linked_category_set.visum.id,
         )
 
@@ -86,17 +86,17 @@ class LinkedCategoryService:
     ) -> LinkedCategorySet:
         camp_types: List[CampType] = linked_category_set.visum.camp_types.all()
         categories: List[Category] = Category.objects.safe_get(
-            camp_year=linked_category_set.visum.camp.year,
+            camp_year=linked_category_set.visum.year,
             camp_types=camp_types,
             raise_error=True,
         )
         logger.debug(
             "Found %d Category instance(s) for camp_year %d and camp_types %s that should be linked to visum %s (%s)",
             len(categories),
-            linked_category_set.visum.camp.year.year,
+            linked_category_set.visum.year.year,
             ",".join(camp_type.camp_type for camp_type in camp_types),
-            linked_category_set.visum.camp.name,
-            linked_category_set.visum.camp.name,
+            linked_category_set.visum.name,
+            linked_category_set.visum.id,
         )
 
         current_linked_categories: List[
@@ -108,9 +108,9 @@ class LinkedCategoryService:
         logger.debug(
             "Found %d Category instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_categories),
-            linked_category_set.visum.camp.year.year,
+            linked_category_set.visum.year.year,
             ",".join(camp_type.camp_type for camp_type in camp_types),
-            linked_category_set.visum.camp.name,
+            linked_category_set.visum.name,
             linked_category_set.visum.id,
         )
 
@@ -159,11 +159,13 @@ class LinkedCategoryService:
         logger.debug(
             "REMAINING CURRENT CATEGORIES: %d (%s)",
             len(current_categories),
-            ", ".join(current_category.name for current_category in current_categories),
+            ", ".join(
+                current_category.name for current_category in current_categories),
         )
         for linked_category in current_linked_categories:
             if linked_category.parent in current_categories:
-                self.delete_linked_category(request=request, instance=linked_category)
+                self.delete_linked_category(
+                    request=request, instance=linked_category)
 
         return linked_category_set
 
@@ -178,7 +180,7 @@ class LinkedCategoryService:
         logger.debug(
             "Updating LinkedCategory '%s' for visum '%s' (%s)",
             instance.parent.name,
-            instance.category_set.visum.camp.name,
+            instance.category_set.visum.name,
             instance.category_set.visum.id,
         )
 

@@ -45,6 +45,9 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         from scouts_auth.groupadmin.models import ScoutsUser
         user: ScoutsUser = request.user
 
+        if user.has_role_administrator():
+            return True
+
         group_admin_id = request.GET.get("auth", None)
 
         for group in user.groups.all():

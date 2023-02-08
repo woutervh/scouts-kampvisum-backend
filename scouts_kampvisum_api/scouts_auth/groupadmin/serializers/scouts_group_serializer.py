@@ -16,13 +16,11 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
+        if isinstance(data, ScoutsGroup):
+            return data
+
         pk = data.get("id", None)
         group_admin_id = data.get("group_admin_id", None)
-
-        instance = ScoutsGroup.objects.safe_get(
-            id=pk, group_admin_id=group_admin_id)
-        if instance:
-            return instance
 
         data = super().to_internal_value(data)
 
