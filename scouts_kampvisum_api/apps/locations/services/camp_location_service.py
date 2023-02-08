@@ -3,6 +3,7 @@ from typing import List
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.utils import timezone
 
 from apps.locations.models import LinkedLocation, CampLocation
 
@@ -40,7 +41,8 @@ class CampLocationService:
         else:
             id = data.get("id", None)
             if id:
-                linked_location: LinkedLocation = LinkedLocation.objects.safe_get(id=id)
+                linked_location: LinkedLocation = LinkedLocation.objects.safe_get(
+                    id=id)
                 if not linked_location:
                     raise ValidationError(
                         "Unable to find LinkedLocation instance with id {}".format(
@@ -77,6 +79,9 @@ class CampLocationService:
             else check.center_longitude
         )
         check.zoom = linked_location.zoom if linked_location.zoom else check.zoom
+
+        check.updated_by = request.user
+        check.updated_on = timezone.now()
 
         check.full_clean()
         check.save()
@@ -120,9 +125,9 @@ class CampLocationService:
         instance.center_latitude = data.get("center_latitude", None)
         instance.center_longitude = data.get("center_longitude", None)
         instance.zoom = data.get("zoom", None)
-        instance.created_by = request.user
         instance.start_date = data.get("start_date", None)
         instance.end_date = data.get("end_date", None)
+        instance.created_by = request.user
 
         instance.full_clean()
         instance.save()
@@ -135,17 +140,21 @@ class CampLocationService:
     ) -> LinkedLocation:
         instance.name = data.get("name", instance.name)
         instance.contact_name = data.get("contact_name", instance.contact_name)
-        instance.contact_phone = data.get("contact_phone", instance.contact_phone)
-        instance.contact_email = data.get("contact_email", instance.contact_email)
+        instance.contact_phone = data.get(
+            "contact_phone", instance.contact_phone)
+        instance.contact_email = data.get(
+            "contact_email", instance.contact_email)
         instance.is_camp_location = is_camp_location
-        instance.center_latitude = data.get("center_latitude", instance.center_latitude)
+        instance.center_latitude = data.get(
+            "center_latitude", instance.center_latitude)
         instance.center_longitude = data.get(
             "center_longitude", instance.center_longitude
         )
         instance.zoom = data.get("zoom", None)
-        instance.updated_by = request.user
         instance.start_date = data.get("start_date", instance.start_date)
         instance.end_date = data.get("end_date", instance.end_date)
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()
@@ -202,13 +211,12 @@ class CampLocationService:
         instance.is_main_location = data.get("is_main_location", False)
         instance.latitude = data.get("latitude", None)
         instance.longitude = data.get("longitude", None)
-        instance.created_by = request.user
         instance.country = data.get("country", None)
         instance.postalcode = data.get("postalcode", None)
         instance.township = data.get("township", None)
         instance.street = data.get("street", None)
         instance.house_number = data.get("house_number", None)
-        
+        instance.created_by = request.user
 
         instance.full_clean()
         instance.save()
@@ -231,12 +239,13 @@ class CampLocationService:
         )
         instance.latitude = data.get("latitude", instance.latitude)
         instance.longitude = data.get("longitude", instance.longitude)
-        instance.updated_by = request.user
         instance.country = data.get("country", instance.longitude)
         instance.postalcode = data.get("postalcode", instance.longitude)
         instance.township = data.get("township", instance.longitude)
         instance.street = data.get("street", instance.longitude)
         instance.house_number = data.get("house_number", instance.longitude)
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()

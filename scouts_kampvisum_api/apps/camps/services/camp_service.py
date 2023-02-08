@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import transaction
+from django.utils import timezone
 
 from apps.camps.models import Camp
 from apps.camps.services import CampYearService
@@ -40,6 +41,9 @@ class CampService:
         if end_date:
             camp.end_date = end_date
 
+        camp.created_by = request.user
+        camp.updated_by = request.user
+
         camp.full_clean()
         camp.save()
 
@@ -73,6 +77,9 @@ class CampService:
         for section in instance.sections.all():
             if section not in sections:
                 instance.sections.remove(section)
+
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()

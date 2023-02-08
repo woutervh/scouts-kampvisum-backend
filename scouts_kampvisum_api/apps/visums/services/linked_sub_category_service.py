@@ -50,12 +50,14 @@ class LinkedSubCategoryService:
     def create_linked_sub_category(
         self, request, linked_category: LinkedCategory, sub_category: SubCategory
     ) -> LinkedSubCategory:
-        logger.debug("Creating LinkedSubCategory '%s' (year: %d)", sub_category.name, linked_category.category_set.visum.camp.year.year)
+        logger.debug("Creating LinkedSubCategory '%s' (year: %d)",
+                     sub_category.name, linked_category.category_set.visum.camp.year.year)
 
         linked_sub_category = LinkedSubCategory()
 
         linked_sub_category.parent = sub_category
         linked_sub_category.category = linked_category
+        linked_sub_category.created_by = request.user
 
         linked_sub_category.full_clean()
         linked_sub_category.save()
@@ -76,7 +78,8 @@ class LinkedSubCategoryService:
         category: Category,
         current_camp_types: List[CampType] = None,
     ) -> LinkedCategory:
-        camp_types: List[CampType] = linked_category.category_set.visum.camp_types.all()
+        camp_types: List[CampType] = linked_category.category_set.visum.camp_types.all(
+        )
         sub_categories: List[SubCategory] = SubCategory.objects.safe_get(
             category=category,
             camp_types=camp_types,

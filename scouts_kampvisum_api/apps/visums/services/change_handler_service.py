@@ -111,6 +111,8 @@ class ChangeHandlerService:
                 from apps.visums.models.enums import CampVisumState
 
                 visum.state = CampVisumState.SIGNABLE
+                visum.updated_by = request.user
+                visum.updated_on = timezone.now()
 
                 visum.full_clean()
                 visum.save()
@@ -155,6 +157,9 @@ class ChangeHandlerService:
             logger.debug("Setting CampVisum %s (%s) to state DATA_REQUIRED (category set state: %s)",
                          visum.camp.name, visum.id, state)
             visum.state = CampVisumState.DATA_REQUIRED
+
+        visum.updated_by = request.user
+        visum.updated_on = timezone.now()
 
         visum.full_clean()
         visum.save()

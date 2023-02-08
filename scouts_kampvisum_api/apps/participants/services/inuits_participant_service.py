@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from apps.participants.models import InuitsParticipant
 
@@ -39,7 +40,8 @@ class InuitsParticipantService:
         )
 
         if existing_participant:
-            logger.debug("Updating existing participant %s", existing_participant.id)
+            logger.debug("Updating existing participant %s",
+                         existing_participant.id)
             return self.update(
                 participant=existing_participant,
                 updated_participant=participant,
@@ -63,10 +65,12 @@ class InuitsParticipantService:
         skip_validation: bool = False,
         scouts_member: AbstractScoutsMember = None,
     ) -> InuitsParticipant:
-        logger.debug("Creating InuitsParticipant with email %s", participant.email)
+        logger.debug("Creating InuitsParticipant with email %s",
+                     participant.email)
         # Check if the instance already exists
         if participant.has_id():
-            logger.debug("Querying for InuitsParticipant with id %s", participant.id)
+            logger.debug(
+                "Querying for InuitsParticipant with id %s", participant.id)
             object = InuitsParticipant.objects.safe_get(pk=participant.id)
             if object:
                 logger.debug(
@@ -250,6 +254,7 @@ class InuitsParticipantService:
             else participant.comment
         )
         participant.updated_by = updated_by
+        participant.updated_on = timezone.now()
 
         participant.full_clean()
         participant.save()

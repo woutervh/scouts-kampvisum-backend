@@ -3,6 +3,7 @@ import importlib
 from typing import List
 
 from django.conf import settings
+from django.utils import timezone
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -38,6 +39,7 @@ class PermissionService:
         group.user_set.add(user)
 
         user.is_superuser = (group.name == self.SUPER_ADMIN)
+        user.updated_on = timezone.now()
 
         user.full_clean()
         user.save()
@@ -56,6 +58,7 @@ class PermissionService:
         #     f"Removing user from permission group {group.name}", user=user)
 
         group.user_set.remove(user)
+        user.updated_on = timezone.now()
 
         user.full_clean()
         user.save()

@@ -1,5 +1,6 @@
 from typing import List
 
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 
 from apps.camps.models import CampType
@@ -23,6 +24,8 @@ class CampTypeService:
             camp_type=camp_type,
         )
 
+        instance.created_by = request.user
+
         instance.full_clean()
         instance.save()
 
@@ -34,6 +37,9 @@ class CampTypeService:
         """
 
         instance.name = fields.get("camp_type", instance.camp_type)
+
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()

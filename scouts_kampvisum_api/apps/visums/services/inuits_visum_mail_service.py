@@ -177,7 +177,8 @@ class InuitsVisumMailService(EmailService):
                 hours = time_delta.days * 24 + time_delta.seconds / 3600
 
                 if hours < delta:
-                    logger.debug("Camp registration mail has already been sent today")
+                    logger.debug(
+                        "Camp registration mail has already been sent today")
                     return
 
         dictionary = self._prepare_dictionary_camp_registered(visum=visum)
@@ -257,6 +258,8 @@ class InuitsVisumMailService(EmailService):
                     visum.camp_registration_mail_sent_after_deadline = result
 
             visum.camp_registration_mail_last_sent = now
+            visum.updated_by = request.user
+            visum.updated_on = timezone.now()
 
             visum.full_clean()
             visum.save()

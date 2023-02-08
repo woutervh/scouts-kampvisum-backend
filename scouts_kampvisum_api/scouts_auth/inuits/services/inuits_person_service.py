@@ -31,6 +31,7 @@ class InuitsPersonService:
             birth_date=birth_date,
             gender=gender,
         )
+
         personal_details.full_clean()
         personal_details.save()
 
@@ -65,7 +66,8 @@ class InuitsPersonService:
         personal_details.first_name = fields.get(
             "first_name", personal_details.first_name
         )
-        personal_details.last_name = fields.get("last_name", personal_details.last_name)
+        personal_details.last_name = fields.get(
+            "last_name", personal_details.last_name)
         personal_details.phone_number = fields.get(
             "phone_number", personal_details.phone_number
         )
@@ -94,8 +96,10 @@ class InuitsPersonService:
             "postal_code", address_details.postal_code
         )
         address_details.city = fields.get("city", address_details.city)
-        address_details.country = fields.get("country", address_details.country)
-        address_details.comment = fields.get("comment", address_details.comment)
+        address_details.country = fields.get(
+            "country", address_details.country)
+        address_details.comment = fields.get(
+            "comment", address_details.comment)
 
         address_details.full_clean()
         address_details.save()

@@ -1,6 +1,7 @@
 from typing import List
 
 from django.db.models import Q
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 
 from apps.visums.models import LinkedSubCategory, CampVisum
@@ -26,6 +27,7 @@ class CampVisumApprovalService:
 
         instance.feedback = feedback
         instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()
@@ -52,6 +54,7 @@ class CampVisumApprovalService:
 
         instance.approval = approval
         instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()
@@ -78,6 +81,8 @@ class CampVisumApprovalService:
             if instance.approval == CampVisumApprovalState.APPROVED_FEEDBACK
             else CampVisumApprovalState.FEEDBACK_RESOLVED
         )
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()
@@ -98,6 +103,7 @@ class CampVisumApprovalService:
 
         instance.notes = notes
         instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()
@@ -117,15 +123,15 @@ class CampVisumApprovalService:
         )
 
         # if approval == CampVisumApprovalState.APPROVED:
-            # approvable_sub_categories: List[
-            #     LinkedSubCategory
-            # ] = LinkedSubCategory.objects.all().globally_approvable(visum=instance)
-            # for approvable_sub_category in approvable_sub_categories:
-            #     approvable_sub_category.approval = approval
-            #     instance.updated_by = request.user
+        # approvable_sub_categories: List[
+        #     LinkedSubCategory
+        # ] = LinkedSubCategory.objects.all().globally_approvable(visum=instance)
+        # for approvable_sub_category in approvable_sub_categories:
+        #     approvable_sub_category.approval = approval
+        #     instance.updated_by = request.user
 
-            #     approvable_sub_category.full_clean()
-            #     approvable_sub_category.save()
+        #     approvable_sub_category.full_clean()
+        #     approvable_sub_category.save()
 
         instance = self._set_visum_state(
             request=request,
@@ -143,20 +149,26 @@ class CampVisumApprovalService:
             instance.camp.name,
             instance.id,
         )
+        now = timezone.now()
 
         resolvable_sub_categories: List[
             LinkedSubCategory
         ] = LinkedSubCategory.objects.all().can_be_resolved(visum=instance)
         for resolvable_sub_category in resolvable_sub_categories:
             resolvable_sub_category.approval = CampVisumApprovalState.FEEDBACK_RESOLVED
+            resolvable_sub_category.updated_by = request.user
+            resolvable_sub_category.updated_on = now
 
             resolvable_sub_category.full_clean()
             resolvable_sub_category.save()
-        
-        acknowledgeable_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all().can_be_acknowledged(visum=instance)
+
+        acknowledgeable_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all(
+        ).can_be_acknowledged(visum=instance)
         for acknowledgeable_sub_category in acknowledgeable_sub_categories:
             acknowledgeable_sub_category.approval = CampVisumApprovalState.FEEDBACK_READ
-            
+            acknowledgeable_sub_category.updated_by = request.user
+            acknowledgeable_sub_category.updated_on = now
+
             acknowledgeable_sub_category.full_clean()
             acknowledgeable_sub_category.save()
 
@@ -225,9 +237,12 @@ class CampVisumApprovalService:
                     state = visum.state
 
         if not state:
-            raise ValidationError("CampVisum needs to have a state, none given")
+            raise ValidationError(
+                "CampVisum needs to have a state, none given")
 
         visum.state = state
+        visum.updated_by = request.user
+        visum.updated_on = timezone.now()
 
         visum.full_clean()
         visum.save()

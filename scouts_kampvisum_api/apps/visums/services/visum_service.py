@@ -2,6 +2,7 @@ from typing import List
 from datetime import datetime
 
 from django.db import transaction
+from django.utils import timezone
 
 from apps.camps.models import CampType, Camp
 from apps.camps.services import CampService, CampTypeService
@@ -72,7 +73,8 @@ class CampVisumService:
         visum.full_clean()
         visum.save()
 
-        logger.debug("Creating LinkedCategorySet for visum %s", visum.camp.name)
+        logger.debug("Creating LinkedCategorySet for visum %s",
+                     visum.camp.name)
         category_set: LinkedCategorySet = (
             self.category_set_service.create_linked_category_set(
                 request=request, visum=visum
@@ -80,7 +82,8 @@ class CampVisumService:
         )
 
         logger.debug("Linking deadline set to visum")
-        self.linked_deadline_service.link_to_visum(request=request, visum=visum)
+        self.linked_deadline_service.link_to_visum(
+            request=request, visum=visum)
 
         logger.info(
             "CampVisum created %s (%s)", visum.camp.name, visum.id, user=request.user
@@ -120,7 +123,7 @@ class CampVisumService:
             request, instance=camp, **camp_fields
         )
         instance.updated_by = request.user
-        instance.updated_on = datetime.now()
+        instance.updated_on = timezone.now()
         instance.full_clean()
         instance.save()
 

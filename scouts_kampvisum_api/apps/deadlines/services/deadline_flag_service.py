@@ -29,14 +29,16 @@ class DeadlineFlagService:
 
         name = fields.get("name", None)
         if not name:
-            raise ValidationError("A deadline flag requires a name, None given")
+            raise ValidationError(
+                "A deadline flag requires a name, None given")
 
         # Add change handlers
         fields["change_handlers"] = ChangeHandlerService.parse_change_handlers(
             data=fields
         )
 
-        instance = DeadlineFlag.objects.safe_get(deadline_item=deadline_item, name=name)
+        instance = DeadlineFlag.objects.safe_get(
+            deadline_item=deadline_item, name=name)
         if instance:
             return self.update_flag(instance=instance, **fields)
 

@@ -59,6 +59,8 @@ class DeadlineService:
             explanation if explanation else fields.get("explanation", "")
         )
 
+        instance.created_by = request.user
+
         instance.full_clean()
         instance.save()
 
@@ -123,6 +125,9 @@ class DeadlineService:
             if updated_instance
             else fields.get("explanation", instance.explanation)
         )
+
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()

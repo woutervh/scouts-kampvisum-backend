@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils import timezone
 
 from apps.deadlines.models import LinkedDeadline, DeadlineFlag, LinkedDeadlineFlag
 from apps.deadlines.services import DeadlineFlagService
@@ -54,6 +55,7 @@ class LinkedDeadlineFlagService:
 
         instance.parent = deadline_flag
         instance.flag = deadline_flag.flag
+        instance.created_by = request.user
 
         instance.full_clean()
         instance.save()
@@ -65,13 +67,15 @@ class LinkedDeadlineFlagService:
         self, request, instance: LinkedDeadlineFlag, **data
     ) -> LinkedDeadlineFlag:
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
 
         old_value = instance.flag
 
         instance.flag = data.get("flag", instance.flag)
         instance.updated_by = request.user
+        instance.updated_on = timezone.now()
 
         instance.full_clean()
         instance.save()

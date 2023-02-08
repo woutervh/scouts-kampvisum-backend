@@ -2,6 +2,7 @@ from typing import List
 from types import SimpleNamespace
 
 from django.conf import settings
+from django.utils import timezone
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
 
@@ -194,6 +195,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         user.access_token = user_info.get("access_token")
 
         user.is_staff = True
+        user.updated_on = timezone.now()
 
         user.full_clean()
         user.save()

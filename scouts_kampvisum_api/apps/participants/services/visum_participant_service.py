@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.conf import settings
+from django.utils import timezone
 
 from apps.participants.models import InuitsParticipant, VisumParticipant
 from apps.participants.models.enums import ParticipantType
@@ -74,7 +75,8 @@ class VisumParticipantService:
         if hasattr(visum_participant, "participant"):
             participant = visum_participant.participant
         else:
-            participant = InuitsParticipant(**visum_participant.get("participant"))
+            participant = InuitsParticipant(
+                **visum_participant.get("participant"))
 
         participant = self.participant_service.create_or_update_participant(
             participant=participant,
@@ -96,6 +98,7 @@ class VisumParticipantService:
         visum_participant.participant_type = participant_type
         visum_participant.payment_status = visum_participant.payment_status
         visum_participant.participant = participant
+        visum_participant.created_by = request.user
 
         visum_participant.full_clean()
         visum_participant.save()
@@ -141,16 +144,18 @@ class VisumParticipantService:
         visum_participant.payment_status = updated_visum_participant.payment_status
         visum_participant.participant = updated_visum_participant.participant
         visum_participant.updated_by = updated_by
+        visum_participant.updated_on = timezone.now()
 
         visum_participant.full_clean()
         visum_participant.save()
 
-        logger.debug("VisumParticipant instance updated (%s)", visum_participant.id)
+        logger.debug("VisumParticipant instance updated (%s)",
+                     visum_participant.id)
 
         return visum_participant
 
     @transaction.atomic
-    def toggle_payment_status(self, visum_participant_id):
+    def toggle_payment_status(self, request, visum_participant_id):
         participant: VisumParticipant = VisumParticipant.objects.safe_get(
             id=visum_participant_id, raise_error=True
         )
@@ -160,6 +165,9 @@ class VisumParticipantService:
             if participant.payment_status != PaymentStatus.PAYED
             else PaymentStatus.NOT_PAYED
         )
+
+        participant.updated_by = request.user
+        participant.updated_on = timezone.now()
 
         participant.full_clean()
         participant.save()
