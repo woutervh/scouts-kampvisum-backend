@@ -337,14 +337,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         logger.debug(
             "CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        for location in validated_data["locations"]:
-            if hasattr(location, 'checks'):
-                for check in location.checks.all():
-                    self.check_user_allowed(request, check)
-
-        logger.debug(
-            "CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
-
         instance = self.linked_check_service.update_camp_location_check(
             request=request, instance=instance, **validated_data
         )

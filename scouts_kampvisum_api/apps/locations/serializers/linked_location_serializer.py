@@ -24,7 +24,7 @@ class LinkedLocationSerializer(serializers.ModelSerializer):
 
         pk = data.get("id", None)
         if id and len(data.keys()) == 1:
-            instance = LinkedLocation.objects.safe_get(id=id, raise_error=True)
+            instance = LinkedLocation.objects.safe_get(id=pk, raise_error=True)
             if instance:
                 return instance
 
