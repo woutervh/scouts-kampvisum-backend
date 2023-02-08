@@ -65,7 +65,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug(f"Requesting visum {pk}", user=request.user)
         instance = self.get_object()
         logger.debug(f"Visum retrieved: {instance.camp.name}")
-        logger.debug("Reloaded user permissions")
         serializer = CampVisumSerializer(
             instance, context={"request": request})
 
@@ -149,10 +148,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug(f"Requesting visum {pk}", user=request.user)
         instance = self.get_object()
         logger.debug(f"Visum retrieved: {instance.camp.name}")
-        # HACKETY HACK
-        # This should probably be handled by a rest call when changing groups in the frontend,
-        # but adding it here avoids the need for changes to the frontend
-        logger.debug("Reloaded user permissions")
         serializer = CampVisumSerializer(
             instance, context={"request": request})
 
