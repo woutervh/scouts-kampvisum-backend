@@ -2061,24 +2061,6 @@
     {
         "model": "visums.Check",
         "fields": {
-            "name": "communication_agreements_parents_ombudsman_contact",
-            "sub_category": [
-                "communication_agreements_parents",
-                [
-                    "communication_agreements",
-                    2023
-                ]
-            ],
-            "check_type": [
-                "ParticipantCheck"
-            ],
-            "is_required_for_validation": false,
-            "label": "Naam aanspreekpunt"
-        }
-    },
-    {
-        "model": "visums.Check",
-        "fields": {
             "name": "communication_agreements_parents_brochure",
             "sub_category": [
                 "communication_agreements_parents",
