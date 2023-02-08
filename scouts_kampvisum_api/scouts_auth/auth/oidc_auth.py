@@ -37,7 +37,11 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
             if isinstance(result, tuple):
                 (user, token) = result
 
-                user.last_authenticated = timezone.now()
+                now = timezone.now()
+
+                user.last_authenticated = now
+                user.updated_on = now
+
                 user.full_clean()
                 user.save()
 

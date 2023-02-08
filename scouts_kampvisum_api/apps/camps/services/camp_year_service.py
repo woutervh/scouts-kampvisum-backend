@@ -41,7 +41,7 @@ class CampYearService:
         if camp_year is not None:
             return camp_year
         else:
-            return self._create_year(date=date)
+            return self._create_year(request=request, date=date)
 
     def get_current_camp_year(self) -> CampYear:
         return self._get_year(date=datetime.datetime.today())
@@ -63,7 +63,7 @@ class CampYearService:
 
         return None
 
-    def _create_year(self, date: datetime.date):
+    def _create_year(self, request, date: datetime.date):
         instance = CampYear()
 
         start_date = ScoutsTemporalDetails.get_start_of_camp_year(date)
@@ -83,6 +83,8 @@ class CampYearService:
             end_date.year, end_date.month, end_date.day
         )
         instance.year = instance.end_date.year
+
+        instance.created_by = request.user
 
         instance.full_clean()
         instance.save()

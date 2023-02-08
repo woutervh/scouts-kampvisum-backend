@@ -40,7 +40,8 @@ class Command(BaseCommand):
 
         linked_deadline_items: List[LinkedDeadlineItem] = list(
             LinkedDeadlineItem.objects.all().filter(
-                Q(linked_deadline_fix__isnull=True) | Q(linked_deadline_fix__exact="")
+                Q(linked_deadline_fix__isnull=True) | Q(
+                    linked_deadline_fix__exact="")
             )
         )
         logger.info(

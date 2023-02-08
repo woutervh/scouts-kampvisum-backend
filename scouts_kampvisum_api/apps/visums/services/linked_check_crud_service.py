@@ -61,6 +61,7 @@ class LinkedCheckCRUDService:
 
         linked_check.parent = check
         linked_check.sub_category = linked_sub_category
+        linked_check.created_by = request.user
 
         linked_check.full_clean()
         linked_check.save()
@@ -92,8 +93,10 @@ class LinkedCheckCRUDService:
             linked_sub_category.category.category_set.visum.camp.name,
         )
 
-        current_linked_checks: List[LinkedCheck] = linked_sub_category.checks.all()
-        current_checks: List[Check] = [check.parent for check in current_linked_checks]
+        current_linked_checks: List[LinkedCheck] = linked_sub_category.checks.all(
+        )
+        current_checks: List[Check] = [
+            check.parent for check in current_linked_checks]
         logger.debug(
             "Found %d Check instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_checks),
@@ -129,7 +132,8 @@ class LinkedCheckCRUDService:
                     )
                     > 0
                 ):
-                    self.undelete_linked_check(request=request, instance=linked_check)
+                    self.undelete_linked_check(
+                        request=request, instance=linked_check)
                 else:
                     self.update_linked_check(
                         request=request,
@@ -150,7 +154,8 @@ class LinkedCheckCRUDService:
         )
         for linked_check in current_linked_checks:
             if linked_check.parent in current_checks:
-                self.delete_linked_check(request=request, instance=linked_check)
+                self.delete_linked_check(
+                    request=request, instance=linked_check)
 
         return linked_sub_category
 

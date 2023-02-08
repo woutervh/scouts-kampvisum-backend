@@ -48,7 +48,8 @@ class Command(BaseCommand):
         parent_path = Path(settings.BASE_DIR)
         data_path = "{}/{}".format(self.BASE_PATH, self.DEFAULT_SECTION_NAMES)
         path = os.path.join(parent_path, data_path)
-        logger.debug("Reloading DefaultScoutsSectionName instances from %s", path)
+        logger.debug(
+            "Reloading DefaultScoutsSectionName instances from %s", path)
         call_command("loaddata", path)
 
         # Now fix existing groups: reset section names to their defaults
@@ -163,7 +164,8 @@ class Command(BaseCommand):
             return
 
         # Double check that the section is not linked to any camp
-        camps: List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
+        camps: List[Camp] = list(
+            Camp.objects.all().filter(sections__in=[section]))
         if camps and len(camps) != 0:
             logger.error(
                 "The section %s (%s) was linked to a camp, doing nothing",

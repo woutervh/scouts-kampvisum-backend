@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.utils import timezone
 
 from apps.participants.models import VisumParticipant
 from apps.participants.services import VisumParticipantService
@@ -47,7 +48,7 @@ class LinkedCheckService:
     change_handler_service = ChangeHandlerService()
 
     def _update(self, request, instance: LinkedCheck):
-        now = datetime.now()
+        now = timezone.now()
 
         instance.updated_by = request.user
         instance.updated_on = now
@@ -55,21 +56,28 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        instance.sub_category.category.category_set.visum.updated_by = request.user
-        instance.sub_category.category.category_set.visum.updated_on = now
+        visum: CampVisum = instance.sub_category.category.category_set.visum
 
-        instance.sub_category.category.category_set.visum.full_clean()
-        instance.sub_category.category.category_set.visum.save()
+        visum.updated_by = request.user
+        visum.updated_on = now
+
+        visum.full_clean()
+        visum.save()
 
     def notify_change(self, request, instance: LinkedCheck, data_changed: bool = False):
         data_changed = True
 
         visum: CampVisum = instance.sub_category.category.category_set.visum
+
         visum.updated_by = request.user
+        visum.updated_on = timezone.now()
+
         visum.full_clean()
         visum.save()
+
         if type(instance) is LinkedNumberCheck and visum.camp_registration_mail_sent_after_deadline:
-            logger.debug("Not notifying linked number check change after deadline")
+            logger.debug(
+                "Not notifying linked number check change after deadline")
         else:
             if data_changed and instance.parent.has_change_handlers():
                 self.change_handler_service.handle_changes(
@@ -92,7 +100,8 @@ class LinkedCheckService:
     @transaction.atomic
     def update_simple_check(self, request, instance: LinkedSimpleCheck, **data):
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
         instance.value = data.get("value", None)
 
@@ -111,7 +120,8 @@ class LinkedCheckService:
     @transaction.atomic
     def update_date_check(self, request, instance: LinkedDateCheck, **data):
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
         instance.value = data.get("value", None)
 
@@ -131,7 +141,8 @@ class LinkedCheckService:
     @transaction.atomic
     def update_duration_check(self, request, instance: LinkedDurationCheck, **data):
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
         start_date = data.get("start_date", None)
         end_date = data.get("end_date", None)
@@ -166,7 +177,8 @@ class LinkedCheckService:
         try:
             return LinkedLocationCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedLocationCheck.DoesNotExist:
-            logger.error("LinkedCampLocationCheck with id %s not found", check_id)
+            logger.error(
+                "LinkedCampLocationCheck with id %s not found", check_id)
             raise ValidationError(
                 "LinkedCampLocatonCheck with id {} not found".format(check_id)
             )
@@ -184,7 +196,8 @@ class LinkedCheckService:
         self, request, instance: LinkedLocationCheck, is_camp_location=False, **data
     ):
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
 
         instance.is_camp_location = is_camp_location
@@ -245,7 +258,8 @@ class LinkedCheckService:
         try:
             return LinkedParticipantCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedParticipantCheck.DoesNotExist:
-            logger.error("LinkedParticipantCheck with id %s not found", check_id)
+            logger.error(
+                "LinkedParticipantCheck with id %s not found", check_id)
             raise ValidationError(
                 "LinkedParticipantCheck with id {} not found".format(check_id)
             )
@@ -255,7 +269,8 @@ class LinkedCheckService:
         self, request, instance: LinkedParticipantCheck, **data
     ):
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
         data_changed = False
 
@@ -266,7 +281,8 @@ class LinkedCheckService:
 
         if not instance.parent.is_multiple:
             if len(visum_participants) != 1:
-                logger.error("This participant list can have only one participant")
+                logger.error(
+                    "This participant list can have only one participant")
                 raise ValidationError(
                     "This participant list is limited to 1 participant, {} given as data, {} present on object".format(
                         len(visum_participants), instance.participants.count()
@@ -303,12 +319,13 @@ class LinkedCheckService:
         self, request, instance: LinkedParticipantCheck, visum_participant_id
     ) -> LinkedParticipantCheck:
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
         logger.debug("visum participant: %s", visum_participant_id)
-        self.participant_service.toggle_payment_status(
-            visum_participant_id=visum_participant_id
-        )
+        self.participant_service.toggle_payment_status(request=request,
+                                                       visum_participant_id=visum_participant_id
+                                                       )
 
         return self.notify_change(request=request, instance=instance)
 
@@ -316,7 +333,8 @@ class LinkedCheckService:
     def unlink_participant(
         self, request, instance: LinkedParticipantCheck, visum_participant_id, **data
     ):
-        participant = VisumParticipant.objects.safe_get(id=visum_participant_id)
+        participant = VisumParticipant.objects.safe_get(
+            id=visum_participant_id)
         if not participant:
             participant = VisumParticipant.objects.safe_get(
                 check_id=instance.id,
@@ -342,7 +360,8 @@ class LinkedCheckService:
         instance.full_clean()
         instance.save()
 
-        logger.debug("Deleting VisumParticipant instance with id %s", participant.id)
+        logger.debug(
+            "Deleting VisumParticipant instance with id %s", participant.id)
         participant.delete()
 
         return self.notify_change(request=request, instance=instance)
@@ -351,7 +370,8 @@ class LinkedCheckService:
         try:
             return LinkedFileUploadCheck.objects.get(linkedcheck_ptr=check_id)
         except LinkedFileUploadCheck.DoesNotExist:
-            logger.error("LinkedFileUploadCheck with id %s not found", check_id)
+            logger.error(
+                "LinkedFileUploadCheck with id %s not found", check_id)
             raise ValidationError(
                 "LinkedFileUploadCheck with id {} not found".format(check_id)
             )
@@ -361,7 +381,8 @@ class LinkedCheckService:
         self, request, instance: LinkedFileUploadCheck, files: list
     ):
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
 
         if not files or len(files) == 0:
@@ -386,7 +407,8 @@ class LinkedCheckService:
 
         file = PersistedFile.objects.safe_get(id=persisted_file_id)
         if not file:
-            raise ValidationError("Unknown file with id {}".format(persisted_file_id))
+            raise ValidationError(
+                "Unknown file with id {}".format(persisted_file_id))
 
         instance.value.remove(file)
 
@@ -407,7 +429,8 @@ class LinkedCheckService:
     @transaction.atomic
     def update_comment_check(self, request, instance: LinkedCommentCheck, **data):
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
         instance.value = data.get("value", None)
 
@@ -427,7 +450,8 @@ class LinkedCheckService:
     @transaction.atomic
     def update_number_check(self, request, instance: LinkedNumberCheck, **data):
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
         instance.value = data.get("value", None)
 

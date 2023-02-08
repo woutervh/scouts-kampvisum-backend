@@ -69,7 +69,8 @@ class LinkedDeadlineService:
                 request=request, **fields.get("parent", {})
             )
 
-        instance = LinkedDeadline.objects.safe_get(parent=deadline, visum=visum)
+        instance = LinkedDeadline.objects.safe_get(
+            parent=deadline, visum=visum)
         if instance:
             return self.update_linked_deadline(
                 request=request, instance=instance, deadline=deadline, **fields
@@ -135,7 +136,8 @@ class LinkedDeadlineService:
     @transaction.atomic
     def update_linked_deadline(self, request, instance: LinkedDeadline, **fields):
         logger.debug(
-            "Updating %s instance with id %s", type(instance).__name__, instance.id
+            "Updating %s instance with id %s", type(
+                instance).__name__, instance.id
         )
 
         parent: Deadline = self.deadline_service.update_deadline(
