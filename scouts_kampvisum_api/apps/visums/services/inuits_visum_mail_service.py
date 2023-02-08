@@ -118,6 +118,7 @@ class InuitsVisumMailService(EmailService):
 
     def notify_camp_registered(
         self,
+        request,
         visum: CampVisum,
         before_camp_registration_deadline: bool = False,
         now: datetime.datetime = None,

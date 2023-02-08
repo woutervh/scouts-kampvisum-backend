@@ -26,6 +26,7 @@ class VisumParticipantService:
     @transaction.atomic
     def create_or_update_visum_participant(
         self,
+        request,
         user: settings.AUTH_USER_MODEL,
         participant_type: ParticipantType = ParticipantType.PARTICIPANT,
         check: LinkedParticipantCheck = None,
@@ -46,6 +47,7 @@ class VisumParticipantService:
                 "Updating existing visum participant %s", existing_visum_participant.id
             )
             return self.update_visum_participant(
+                request=request,
                 visum_participant=existing_visum_participant,
                 updated_visum_participant=visum_participant,
                 updated_by=user,
@@ -55,6 +57,7 @@ class VisumParticipantService:
         else:
             logger.debug("Creating visum participant")
             return self.create_visum_participant(
+                request=request,
                 visum_participant=visum_participant,
                 participant_type=participant_type,
                 created_by=user,
@@ -65,6 +68,7 @@ class VisumParticipantService:
     @transaction.atomic
     def create_visum_participant(
         self,
+        request,
         created_by: settings.AUTH_USER_MODEL,
         visum_participant: VisumParticipant,
         participant_type: ParticipantType = ParticipantType.PARTICIPANT,
@@ -109,6 +113,7 @@ class VisumParticipantService:
     def update_visum_participant(
         self,
         *,
+        request,
         visum_participant: VisumParticipant,
         updated_visum_participant: VisumParticipant,
         updated_by: settings.AUTH_USER_MODEL,
