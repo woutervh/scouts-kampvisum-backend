@@ -41,8 +41,17 @@ class ScoutsSectionService:
         """
         Creates or updates a ScoutsSection instance.
         """
+        if group and not isinstance(group, ScoutsGroup):
+            group = request.user.get_scouts_group(
+                group_admin_id=group, raise_exception=True)
+
         if section:
-            group = section.group
+            if section.group and not isinstance(section.group, ScoutsGroup):
+                group = request.user.get_scouts_group(
+                    group_admin_id=section.group, raise_exception=True)
+            else:
+                group = section.group
+
             name = section.name
             gender = section.gender
             age_group = section.age_group
@@ -50,7 +59,7 @@ class ScoutsSectionService:
 
         if instance is None:
             instance = ScoutsSection.objects.safe_get(
-                group=group.group_admin_id,
+                group=group,
                 name=name,
                 gender=gender,
                 age_group=age_group,

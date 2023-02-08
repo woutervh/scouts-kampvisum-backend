@@ -59,3 +59,8 @@ class ScoutsSection(AbstractBaseModel):
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED ScoutsSection")
         return (self.group, self.name, self.gender, self.age_group)
+
+    def __str__(self):
+        return (
+            f"group ({self.group}), section_name ({self.section_name}), name ({self.name}), gender ({self.gender}), age_group ({self.age_group}), hidden ({self.hidden})"
+        )

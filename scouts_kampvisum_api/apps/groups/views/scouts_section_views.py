@@ -48,7 +48,6 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         input_serializer = ScoutsSectionSerializer(
             data=request.data, context={"request": request}
         )
-
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data

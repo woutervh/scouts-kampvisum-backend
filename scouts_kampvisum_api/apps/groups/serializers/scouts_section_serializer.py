@@ -33,12 +33,15 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         if isinstance(data, str):
             return ScoutsSection.objects.safe_get(id=data, raise_error=True)
 
-        group = data.get("group", None)
-        group_group_admin_id = data.get("group_group_admin_id", None)
+        group_admin_id = data.get("group_group_admin_id", data.get(
+            "group", data.get("auth", None)))
+        if not group_admin_id:
+            raise ValidationError(
+                f"[{self.context['request'].user.username}] Invalid group admin id, not found as param or in payload: 'group', 'group_group_admin_id' or 'auth'")
+        group = self.context['request'].user.get_scouts_group(
+            group_admin_id=group_admin_id, raise_exception=True)
 
-        if not group and group_group_admin_id:
-            data["group"] = {"group_admin_id": group_group_admin_id}
-
+        data["group"] = group.group_admin_id
         name = data.get("name", {})
         data["name"] = name.get("name")
         data["gender"] = name.get("gender")
@@ -71,12 +74,15 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
             return data
 
         pk = data.get("id")
-        group = data.get("group", None)
-        group_admin_id = (
-            group if group else data.get("group_group_admin_id", None)
-        )
+        group_admin_id = data.get("group_group_admin_id", data.get(
+            "group", data.get("auth", None)))
 
-        if not pk and not group_admin_id and data.get("name"):
+        if group_admin_id:
+            self.context['request'].user.get_scouts_group(
+                group_admin_id=group_admin_id, raise_exception=True)
+            data["group"] = group_admin_id
+
+        if not pk and not (group_admin_id and data.get("name")):
             raise serializers.ValidationError(
                 "A ScoutsSection can only be identified by either a uuid or the combination of a name and the group's group admin id"
             )
