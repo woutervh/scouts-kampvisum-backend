@@ -300,6 +300,7 @@ class LinkedCheckService:
         for visum_participant in visum_participants:
             visum_participant = (
                 self.participant_service.create_or_update_visum_participant(
+                    request=request,
                     user=request.user,
                     participant_type=instance.participant_check_type,
                     check=instance,

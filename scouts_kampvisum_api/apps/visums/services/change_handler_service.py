@@ -130,6 +130,7 @@ class ChangeHandlerService:
                 "before" if before_camp_registration_deadline else "after",
             )
             return InuitsVisumMailService().notify_camp_registered(
+                request=request,
                 visum=visum,
                 before_camp_registration_deadline=before_camp_registration_deadline,
                 now=now,
