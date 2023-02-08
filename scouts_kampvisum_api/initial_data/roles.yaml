@@ -22,6 +22,8 @@ role_section_leader:
   - deadlines.change_linkeddeadline
   - deadlines.delete_linkeddeadline
   - deadlines.view_linkeddeadline
+  - participants.add_inuitsparticipant
+  - participants.change_inuitsparticipant
   - participants.view_inuitsparticipant
 role_group_leader:
   - camps.view_camptype
@@ -47,6 +49,8 @@ role_group_leader:
   - deadlines.change_linkeddeadline
   - deadlines.delete_linkeddeadline
   - deadlines.view_linkeddeadline
+  - participants.add_inuitsparticipant
+  - participants.change_inuitsparticipant
   - participants.view_inuitsparticipant
 role_district_commissioner:
   - camps.view_camptype
@@ -76,6 +80,9 @@ role_district_commissioner:
   - deadlines.change_linkeddeadline
   - deadlines.delete_linkeddeadline
   - deadlines.view_linkeddeadline
+  - participants.add_inuitsparticipant
+  - participants.change_inuitsparticipant
+  - participants.view_inuitsparticipant
 role_shire_president:
   - camps.view_camptype
   - camps.view_campyear
@@ -84,6 +91,7 @@ role_shire_president:
   - visums.view_linkedcheck
   - visums.view_campvisumengagement
   - deadlines.view_linkeddeadline
+  - participants.view_inuitsparticipant
 role_administrator:
   - camps.view_camptype
   - camps.view_campyear
