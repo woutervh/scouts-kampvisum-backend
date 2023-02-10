@@ -2129,7 +2129,9 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Algemene kampregels"
+            "label": "Algemene kampregels",
+            "explanation": "Goede afspraken, maken goede vrienden! <br>Door vooraf de afspraken te overlopen zodat iedereen ze kent, vermijd je dat er frustraties ontstaan op kamp door verkeerde verwachtingen. <br>Ook eerstejaars leiding kennen niet noodzakelijk alle afspraken!"
+
         }
     },
     {
@@ -2164,7 +2166,9 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Afspraken: sex en relaties"
+            "label": "Afspraken: sex en relaties",
+            "explanation": "Op kamp leven we voor meerdere dagen bij elkaar. Op het mooiste moment van het jaar kan verliefdheid altijd toeslaan. Dat kan en mag zeker, maar ken minstens de wet en regels in de <a href='https://www.scoutsengidsenvlaanderen.be/publicaties/speel-op-veili' target='_blank'>Speel op Veilig</a>."
+
         }
     },
     {
@@ -2182,7 +2186,7 @@
                 "SimpleCheck"
             ],
             "label": "Afspraken: alcohol- en BOB-regeling",
-            "explanation": "Kijk zeker de regels over alcohol op kamp na op de <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/alcohol-en-drugs/wetgeving-regels-en-richtlijnen' target='_blank'>website</a>. Ga je op kamp naar het buitenland? Vind dan <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/buitenlands-kamp/regels-over-alcohol-europa' target='_blank'>hier</a> de regels per land in de EU."
+            "explanation": "Hebben jullie eigen afspraken over gebruik van alcohol op kamp? En vallen deze binnen <a href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/leiding/alcohol-en-drugs/wetgeving-regels-en-richtlijnen' target='_blank'>het kader van Scouts en Gidsen Vlaanderen</a>? Deze gelden ook op voor- en nakamp, waar je ook scouts en gids bent!<br>Ga je op kamp naar het buitenland? Vind dan <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/buitenlands-kamp/regels-over-alcohol-europa' target='_blank'>hier</a> de regels per land in de EU."
         }
     },
     {
