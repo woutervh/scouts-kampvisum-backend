@@ -438,6 +438,38 @@
 			"label": "Verzekeringen"
 		}
 	},
+		{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "safety_emergency",
+			"category": [
+				"safety",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Noodgeval of crisis"
+		}
+	},
+		{
+		"model": "visums.SubCategory",
+		"fields": {
+			"name": "safety_rules",
+			"category": [
+				"safety",
+				2023
+			],
+			"camp_types": [
+				[
+					"basis"
+				]
+			],
+			"label": "Regelgeving"
+		}
+	},
 	{
 		"model": "visums.SubCategory",
 		"fields": {
