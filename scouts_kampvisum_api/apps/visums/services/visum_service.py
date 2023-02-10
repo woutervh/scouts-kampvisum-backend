@@ -83,11 +83,7 @@ class CampVisumService:
         visum.save()
 
         logger.debug("Creating LinkedCategorySet for visum %s",
-<<<<<<< HEAD
                      visum.name)
-=======
-                     visum.camp.name)
->>>>>>> 4ef722b (fix: #95798 set created by/on and updated by/on correctly)
         category_set: LinkedCategorySet = (
             self.category_set_service.create_linked_category_set(
                 request=request, visum=visum
@@ -153,17 +149,6 @@ class CampVisumService:
         if not instance.engagement:
             instance.engagement = self.visum_engagement_service.create_engagement()
 
-<<<<<<< HEAD
-=======
-        instance.camp = self.camp_service.camp_update(
-            request, instance=camp, **camp_fields
-        )
-        instance.updated_by = request.user
-        instance.updated_on = timezone.now()
-        instance.full_clean()
-        instance.save()
-
->>>>>>> 4ef722b (fix: #95798 set created by/on and updated by/on correctly)
         current_camp_types = instance.camp_types.all()
         instance.camp_types.clear()
         for camp_type in camp_types:
