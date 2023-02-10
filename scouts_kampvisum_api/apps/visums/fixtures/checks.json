@@ -2358,6 +2358,192 @@
     {
         "model": "visums.Check",
         "fields": {
+            "name": "safety_emergency_phonenumbers",
+            "sub_category": [
+                "safety_emergency",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Lijst van telefoonnummers",
+            "explanation": ""
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_emergency_emergencynumber",
+            "sub_category": [
+                "safety_emergency",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Noodnummer is gekend",
+            "explanation": ""
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_emergency_leader",
+            "sub_category": [
+                "safety_emergency",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Leiding kan handelen in crisis",
+            "explanation": "Een zwaar ongeval, overstroming of zelfs een brand... Uiteraard hoopt niemand dat dit je overkomt, maar een goede scout is altijd voorbereid. <br>Overloop al eens de <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/op-kamp-weekend/crisis' target='_blank'>stappen bij een crisis</a>, en sta al eens stil bij hoe jullie zouden handelen in geval van nood."
+        }
+    },
+        {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_rules_municipality",
+            "sub_category": [
+                "safety_rules",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Regels kampgemeente",
+            "explanation": "Gemeentes hebben vaak enkele regels over hoe kampen kunnen doorgaan in hun gemeente. Vraag deze vooraf zeker aan zodat je niet voor verrassingen komt te staan."
+        }
+    },
+        },
+        {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_rules_trash",
+            "sub_category": [
+                "safety_rules",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Regels afval",
+            "explanation": "Zorg dat je de afspraken kent om het afval te sorteren. Spreek af met de verhuurder hoe de ophaling wordt geregeld!"
+        }
+    },
+        },
+        {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_rules_water",
+            "sub_category": [
+                "safety_rules",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Regels water",
+            "explanation": "Je mag niet overal zomaar in het water gaan of je wassen. Je kan altijd de richtlijnen vinden via <a href='https://www.opkamp.be/' target='_blank'>opkamp.be</a>. <br>Vergeet niet dat wassen in de rivier met zeep, ook ecologisch afbreekbare zeep, niet toegestaan is. <br>Ecologisch afbreekbare zeep gebruik je naast de rivier. Deze wordt namelijk afgebroken door in de grond te sijpelen. Rechtstreeks in de rivier wassen met zeep heeft een negatief effect op de kwaliteit en biodiversiteit van het water."
+        }
+    },
+        },
+        {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_rules_wood",
+            "sub_category": [
+                "safety_rules",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Regels bossen en hout",
+            "explanation": "Niet overal mag je zomaar spelen of hout sprokkelen. De regels in Wallonië en Vlaanderen verschillen ook. Je kan ze nakijken via <a href='https://www.opkamp.be/' target='_blank'>opkamp.be</a>.<br>Je bosaanvraag in Wallonië wordt automatisch gedaan als je je kampregistratie op tijd afrondt. <br>Ongeacht waar je bent, mag je nooit levende bomen beschadigen! "
+        }
+    },
+        },
+        {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_rules_trip",
+            "sub_category": [
+                "safety_rules",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Regels op tocht",
+            "explanation": "Op tocht houd je je aan de afspraken die gelden. Check zeker de <a href='https://www.scoutsengidsenvlaanderen.be/publicaties/speel-op-veilig' target='_blank'>Speel op Veilig</a> alsook de lokale kampregels. Soms kunnen gemeentes extra regels uitvaardigen!"
+        }
+    },
+        },
+        {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_rules_fire",
+            "sub_category": [
+                "safety_rules",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Regels vuur",
+            "explanation": " Informeer bij je gemeente, verhuurder of lokale brandweer of je vuur mag maken, en waar dit mag. <br>Vraag ook onderscheid tussen een kampvuur, kookvuur en gasvuren. <br>Zorg voor een goed contact met de lokale gemeente, in geval van droogte kunnen regels namelijk veranderen."
+        }
+    },
+        },
+        {
+        "model": "visums.Check",
+        "fields": {
+            "name": "safety_rules_sound",
+            "sub_category": [
+                "safety_rules",
+                [
+                    "safety",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Regels kampgemeente",
+            "explanation": "Versterkt geluid kan snel als overlast ervaren worden, zeker als het de hele dag aan staat. <br>Er is een wezenlijk verschil tussen een scoutskamp en een festival, laten we dit ook zo houden. Na 22u respecteren we de nachtrust van de omwonenden!"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
             "name": "safety_healthcare_gp_pharmacy_hospital_location",
             "sub_category": [
                 "safety_healthcare",
