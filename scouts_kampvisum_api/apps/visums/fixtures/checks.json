@@ -1933,7 +1933,9 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Transportplanning voor leden"
+            "label": "Vervoer leden",
+            "explanation": "Kies voor de meest ecologisch verantwoorde keuze om naar het kampterrein te gaan. <br> • Ga je met de trein? Reserveer je wagon alvast op voorhand. <br> • Rijden ouders zelf? Voorzie een carpoollijst en zorg dat datum en uur van vertrek en terugkeer niet op een werkdag vallen.<br> • Ga je met de fiets? Check zeker de <a href='https://www.scoutsengidsenvlaanderen.be/publicaties/speel-op-veilig' target='_blank'>Speel op Veilig</a> app onder 'verkeer' bij 'fietsers'. Daar vind je de regels waarmee je rekening moet houden.<br> • Op kamp naar het buitenland? Kies voor ecologie, check <a href='https://www.scoutsengidsenvlaanderen.be/leiding/kamp-en-weekend/buitenlands-kamp/ecologisch-op-buitenlands-kamp' target='_blank'>de mogelijkheden</a>. "
+
         }
     },
     {
@@ -1950,7 +1952,7 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Transportplanning voor leiding"
+            "label": "Vervoer leiding"
         }
     },
     {
@@ -1967,7 +1969,7 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Transportplanning voor materialen"
+            "label": "Vervoer materiaal"
         }
     },
     {
@@ -2002,8 +2004,26 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Materiaal nagekeken ?",
+            "label": "Materiaallijst",
             "explanation": "Materiaal, dat gaat van spel- en knutselmateriaal tot keukenmateriaal en tenten. <br> Voor tenten kan je terecht op de website van de ULDK (Uitleendienst Kampeermateriaal van de Vlaamse Overheid). Vanaf 1 oktober kan je een aanvraagformulier invullen voor de komende zomer. In de loop van maart krijg je dan een antwoord. Lopen de tenten schade op? Neem dan contact op met de uitleendienst (tel. 02 251 69 43). <br> Geen tenten van de ULDK? Vraag na bij jeugdbewegingen in de buurt of zij materiaal uitlenen. <br> Wil je meer kans op voldoende tenten? De drukste kampperiode is van 11 juli tot 10 augustus, plan je kamp buiten deze periode."
+        }
+    },
+        {
+        "model": "visums.Check",
+        "fields": {
+            "name": "logistics_materials_safe",
+            "sub_category": [
+                "logistics_material",
+                [
+                    "logistics",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Materiaal is veilig",
+            "explanation": "Gasslangen, bijlen, zagen, … Op kamp is veel materiaal aanwezig, en als groep staan we in voor de veiligheid van iedereen.<br>Check daarom je materiaal op basis van de <a href='https://www.scoutsengidsenvlaanderen.be/publicaties/speel-op-veilig' target='_blank'>Speel op Veilig</a> onder sectie 'materiaal'."
         }
     },
     {
