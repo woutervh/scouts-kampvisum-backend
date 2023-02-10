@@ -122,10 +122,9 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
         ordered = sorted(
             serializer.data,
-            key=lambda k: k.get("camp", {})
-            .get("sections", [{"age_group": 0}])[0]
+            key=lambda k: k.get("sections", [{"age_group": 0}])[0]
             .get("age_group", 0)
-            if len(k.get("camp", {}).get("sections", [{"age_group": 0}])) > 0
+            if len(k.get("sections", [{"age_group": 0}])) > 0
             else 0,
         )
 

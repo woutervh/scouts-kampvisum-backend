@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         from scouts_auth.groupadmin.models import ScoutsUser
-        
+
         for command in self.COMMANDS:
             call_command(command)
 
@@ -40,8 +40,9 @@ class Command(BaseCommand):
             CampYearService().get_or_create_current_camp_year()
         )
         visums: List[CampVisum] = list(
-            CampVisum.objects.all().filter(camp__year=current_camp_year)
+            CampVisum.objects.all().filter(year=current_camp_year)
         )
 
         for visum in visums:
-            self.camp_visum_service.visum_update(request=SimpleNamespace(user=ScoutsUser.objects.safe_get(username="FIXTURES")), instance=visum, **{})
+            self.camp_visum_service.visum_update(request=SimpleNamespace(
+                user=ScoutsUser.objects.safe_get(username="FIXTURES")), instance=visum, **{})
