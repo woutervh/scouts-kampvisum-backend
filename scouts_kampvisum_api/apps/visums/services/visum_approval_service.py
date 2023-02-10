@@ -48,7 +48,7 @@ class CampVisumApprovalService:
             approval.label,
             instance.parent.name,
             instance.id,
-            visum.camp.name,
+            visum.name,
             visum.state,
         )
 
@@ -73,7 +73,7 @@ class CampVisumApprovalService:
             "Setting feedback as resolved on LinkedSubCategory %s (%s) for visum %s with state %s",
             instance.parent.name,
             instance.id,
-            visum.camp.name,
+            visum.name,
             visum.state,
         )
         instance.approval = (
@@ -96,7 +96,7 @@ class CampVisumApprovalService:
     def update_dc_notes(self, request, instance: CampVisum, notes: str) -> CampVisum:
         logger.debug(
             "Adding DC notes on CampVisum %s (%s) with state %s",
-            instance.camp.name,
+            instance.name,
             instance.id,
             instance.state,
         )
@@ -118,7 +118,7 @@ class CampVisumApprovalService:
         logger.debug(
             "Globally setting approval state %s for visum %s (%s)",
             approval,
-            instance.camp.name,
+            instance.name,
             instance.id,
         )
 
@@ -146,7 +146,7 @@ class CampVisumApprovalService:
     def global_handle_feedback(self, request, instance: CampVisum) -> CampVisum:
         logger.debug(
             "Setting feedback as resolved on all sub-categories of CampVisum %s (%s)",
-            instance.camp.name,
+            instance.name,
             instance.id,
         )
         now = timezone.now()
@@ -207,7 +207,7 @@ class CampVisumApprovalService:
             if resolvable_sub_categories.count() == 0:
                 logger.debug(
                     "All resolvable sub-categories were handled, setting state FEEDBACK_HANDLED on CampVisum %s (%s)",
-                    visum.camp.name,
+                    visum.name,
                     visum.id,
                 )
                 state = CampVisumState.FEEDBACK_HANDLED
@@ -218,7 +218,7 @@ class CampVisumApprovalService:
             if approval == CampVisumApprovalState.DISAPPROVED:
                 logger.debug(
                     "Setting CampVisum %s (%s) to state NOT_SIGNABLE",
-                    visum.camp.name,
+                    visum.name,
                     visum.id,
                 )
 

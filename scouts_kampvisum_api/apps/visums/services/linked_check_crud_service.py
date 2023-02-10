@@ -87,10 +87,10 @@ class LinkedCheckCRUDService:
         logger.debug(
             "Found %d Check instance(s) for camp_year %d and camp_types %s that should be linked to visum %s (%s)",
             len(checks),
-            linked_sub_category.category.category_set.visum.camp.year.year,
+            linked_sub_category.category.category_set.visum.year.year,
             ",".join(camp_type.camp_type for camp_type in camp_types),
-            linked_sub_category.category.category_set.visum.camp.name,
-            linked_sub_category.category.category_set.visum.camp.name,
+            linked_sub_category.category.category_set.visum.name,
+            linked_sub_category.category.category_set.visum.id,
         )
 
         current_linked_checks: List[LinkedCheck] = linked_sub_category.checks.all(
@@ -100,9 +100,9 @@ class LinkedCheckCRUDService:
         logger.debug(
             "Found %d Check instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_checks),
-            linked_sub_category.category.category_set.visum.camp.year.year,
+            linked_sub_category.category.category_set.visum.year.year,
             ",".join(camp_type.camp_type for camp_type in camp_types),
-            linked_sub_category.category.category_set.visum.camp.name,
+            linked_sub_category.category.category_set.visum.name,
             linked_sub_category.category.category_set.visum.id,
         )
 
@@ -170,7 +170,7 @@ class LinkedCheckCRUDService:
         logger.debug(
             "Updating LinkedCheck '%s' for visum '%s' (%s)",
             instance.parent.name,
-            instance.sub_category.category.category_set.visum.camp.name,
+            instance.sub_category.category.category_set.visum.name,
             instance.sub_category.category.category_set.visum.id,
         )
 

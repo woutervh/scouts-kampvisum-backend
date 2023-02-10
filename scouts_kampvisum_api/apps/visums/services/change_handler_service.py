@@ -107,7 +107,7 @@ class ChangeHandlerService:
             # Set the visum as signable if all required checks are completed
             if not visum.is_signable():
                 logger.debug(
-                    "Setting CampVisum %s (%s) to state SIGNABLE", visum.camp.name, visum.id)
+                    "Setting CampVisum %s (%s) to state SIGNABLE", visum.name, visum.id)
                 from apps.visums.models.enums import CampVisumState
 
                 visum.state = CampVisumState.SIGNABLE
@@ -152,11 +152,11 @@ class ChangeHandlerService:
 
         if CheckState.is_checked_or_irrelevant(state=state):
             logger.debug("Setting CampVisum %s (%s) to state SIGNABLE (category set state: %s)",
-                         visum.camp.name, visum.id, state)
+                         visum.name, visum.id, state)
             visum.state = CampVisumState.SIGNABLE
         else:
             logger.debug("Setting CampVisum %s (%s) to state DATA_REQUIRED (category set state: %s)",
-                         visum.camp.name, visum.id, state)
+                         visum.name, visum.id, state)
             visum.state = CampVisumState.DATA_REQUIRED
 
         visum.updated_by = request.user

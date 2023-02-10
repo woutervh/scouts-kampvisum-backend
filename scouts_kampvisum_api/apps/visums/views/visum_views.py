@@ -36,6 +36,9 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     camp_visum_service = CampVisumService()
 
+    def has_group_admin_id() -> bool:
+        return True
+
     @swagger_auto_schema(
         request_body=CampVisumSerializer,
         responses={status.HTTP_201_CREATED: CampVisumSerializer},
@@ -64,7 +67,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     def retrieve(self, request, pk=None):
         logger.debug(f"Requesting visum {pk}", user=request.user)
         instance = self.get_object()
-        logger.debug(f"Visum retrieved: {instance.camp.name}")
+        logger.debug(f"Visum retrieved: {instance.name}")
         serializer = CampVisumSerializer(
             instance, context={"request": request})
 
@@ -147,7 +150,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     def dates_leaders(self, request, pk=None):
         logger.debug(f"Requesting visum {pk}", user=request.user)
         instance = self.get_object()
-        logger.debug(f"Visum retrieved: {instance.camp.name}")
+        logger.debug(f"Visum retrieved: {instance.name}")
         serializer = CampVisumSerializer(
             instance, context={"request": request})
 

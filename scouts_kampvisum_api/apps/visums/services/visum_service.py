@@ -109,7 +109,6 @@ class CampVisumService:
         """
         Updates an existing CampVisum object in the DB.
         """
-        camp = instance.camp
         camp_fields = fields.pop("camp", None)
         if not camp_fields:
             camp_fields = {}
@@ -122,23 +121,33 @@ class CampVisumService:
                 camp_types=camp_types
             )
 
+        sections = fields.get("sections", instance.sections.all())
+        for section in sections:
+            instance.sections.add(section)
+        for section in instance.sections.all():
+            if section not in sections:
+                instance.sections.remove(section)
+
+        # Required arguments:
+        instance.name = fields.get("name", instance.name)
+        # Optional arguments:
+        instance.start_date = fields.get("start_date", instance.start_date)
+        instance.end_date = fields.get("end_date", instance.end_date)
+        instance.updated_by = request.user
+        instance.updated_on = timezone.now()
+
+        instance.full_clean()
+        instance.save()
+
         logger.debug(
             "Updating camp %s for visum with id %s and camp types (%s)",
-            camp.name,
+            instance.name,
             instance.id,
             ", ".join([camp_type.camp_type for camp_type in camp_types]),
         )
 
         if not instance.engagement:
             instance.engagement = self.visum_engagement_service.create_engagement()
-
-        instance.camp = self.camp_service.camp_update(
-            request, instance=camp, **camp_fields
-        )
-        instance.updated_by = request.user
-        instance.updated_on = timezone.now()
-        instance.full_clean()
-        instance.save()
 
         current_camp_types = instance.camp_types.all()
         instance.camp_types.clear()
@@ -148,7 +157,7 @@ class CampVisumService:
         logger.debug(
             "Updating LinkedCategorySet with id %s for visum %s (%s)",
             instance.category_set.id,
-            instance.camp.name,
+            instance.name,
             instance.id,
         )
         category_set: LinkedCategorySet = (
@@ -165,10 +174,9 @@ class CampVisumService:
     @transaction.atomic
     def delete_visum(self, request, instance: CampVisum):
         logger.debug(
-            "Deleting CampVisum with id %s for camp %s", instance.id, instance.camp.name
+            "Deleting CampVisum with id %s for camp %s", instance.id, instance.name
         )
 
-        camp: Camp = instance.camp
         engagement: CampVisumEngagement = instance.engagement
 
         self.linked_deadline_service.delete_linked_deadlines_for_visum(
@@ -177,7 +185,5 @@ class CampVisumService:
 
         instance.delete()
 
-        if camp:
-            camp.delete()
         if engagement:
             engagement.delete()

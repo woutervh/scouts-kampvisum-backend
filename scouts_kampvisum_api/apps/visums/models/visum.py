@@ -7,7 +7,7 @@ from apps.visums.models import CampVisumEngagement
 from apps.visums.models.enums import CampVisumState
 from apps.visums.managers import CampVisumManager
 
-from scouts_auth.groupadmin.models.fields import GroupAdminIdField
+from scouts_auth.groupadmin.models.mixins import GroupAdminIdMixin, GroupNameMixin
 
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import (
@@ -26,12 +26,10 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class CampVisum(AuditedBaseModel):
+class CampVisum(GroupAdminIdMixin, GroupNameMixin, AuditedBaseModel):
 
     objects = CampVisumManager()
 
-    group = GroupAdminIdField()
-    group_name = RequiredCharField()
     year = models.ForeignKey(CampYear, on_delete=models.CASCADE)
     name = RequiredCharField()
     start_date = OptionalDateField()
@@ -62,7 +60,7 @@ class CampVisum(AuditedBaseModel):
     notes = OptionalCharField(max_length=300)
 
     class Meta:
-        ordering = ["sections__age_group", "name"]
+        # ordering = ["sections__age_group", "name"]
         permissions = [
             ("view_campvisum_locations", "User can view all camp locations"),
             ("view_campvisum_member_data",
