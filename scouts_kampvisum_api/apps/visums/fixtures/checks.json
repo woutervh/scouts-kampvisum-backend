@@ -1606,8 +1606,26 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Voor- en nakamp geregeld ?",
-            "explanation": "Ook je voor- en nakamp moet voorbereid zijn. Welke voorbereidingen ga je treffen? Welke geplande tocht ga je verkennen? Wat moet er nog allemaal gebeuren op nakamp?"
+            "label": "Voor- en nakamp",
+            "explanation": "Ook je voor- en nakamp moet voorbereid zijn. Welke voorbereidingen ga je treffen? Welke geplande tocht ga je verkennen? Wat moet er nog allemaal gebeuren op nakamp? <br> <br> Aangezien je nog steeds als scouts en gidsen op stap bent tijdens voor- en nakamp, houd je je ook aan de regels en afspraken die tijdens het ledenkamp gelden. "
+        }
+    },
+        {
+        "model": "visums.Check",
+        "fields": {
+            "name": "planning_activities_responsibly",
+            "sub_category": [
+                "planning_activities",
+                [
+                    "planning",
+                    2023
+                ]
+            ],
+            "check_type": [
+                "SimpleCheck"
+            ],
+            "label": "Pedagogisch verantwoorde activiteiten",
+            "explanation": "Als scouts en gidsen dragen we samen bij tot de ontwikkeling en ontplooiing van kinderen en jongeren. We doen dat elk op onze eigen manier, door te spelen, binnen het kader van Scouts en Gidsen Vlaanderen. <br> <br>Onze <a href='https://www.scoutsengidsenvlaanderen.be/over-scouts-en-gidsen-vlaanderen/doel-en-methode/visie/basispijlers' target='_blank'>basispijlers</a> en <a href='https://www.scoutsengidsenvlaanderen.be/over-scouts-en-gidsen-vlaanderen/doel-en-methode/visie/speelvelden' target='_blank'>speelvelden</a> zijn de basis, de <a href='https://www.scoutsengidsenvlaanderen.be/publicaties/speel-op-veilig' target='_blank'>Speel op Veilig</a> de grenzen."
         }
     },
     {
@@ -1624,8 +1642,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Regenplanning opgesteld ?",
-            "explanation": "Door aanhoudende regen kan je dagprogramma letterlijk in het water vallen. Maar dat hoeft de pret niet te bederven. Zorg dat je activiteiten achter de hand hebt voor deze situatie. Neem gezelschapspelletjes mee en voorzie spelen die je binnen of in de tent kan doen. Inspiratie kan je vinden in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br> Vergeet niet dat iedereen goed beschermd moet zijn tegen de regen en droge kleren draagt."
+            "label": "Regenplanning",
+            "explanation": "Door aanhoudende regen kan je dagprogramma letterlijk in het water vallen. Maar dat hoeft de pret niet te bederven. <br> Zorg dat je activiteiten achter de hand hebt voor deze situatie. Neem gezelschapspelletjes mee en voorzie spelen die je binnen of in de tent kan doen. Inspiratie kan je vinden in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br><br>  Vergeet niet dat iedereen goed beschermd moet zijn tegen de regen en droge kleren draagt."
         }
     },
     {
@@ -1642,8 +1660,8 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Hitteplanning opgemaakt ?",
-            "explanation": "Hitte kan een boosdoener zijn op kamp. Vanaf ongeveer 30°C worden mensen traag en sloom. Zorg zeker dat iedereen genoeg water drinkt. Je activiteiten doe je beter in de schaduw of binnen. Of zoek wat verfrissing in een beek of een plonsbadje. Let ook hier op met directe zon. Je kan ook een siësta houden op het warmste van de dag. <br> Inspiratie voor (binnen-) spelen vind je in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br>Vergeet niet dat iedereen goed beschermd moet zijn tegen de zon. Iedereen smeert zich in met zonnecrème (spf 50) en draagt een hoedje of pet."
+            "label": "Hitteplanning",
+            "explanation": "Hitte kan een boosdoener zijn op kamp. Vanaf ongeveer 30°C worden mensen traag en sloom. Zorg zeker dat iedereen genoeg water drinkt. <br>Je activiteiten doe je beter in de schaduw of binnen. Of zoek wat verfrissing in een beek of een plonsbadje. Let ook hier op met directe zon. Raadpleeg en volg zeker de <a href='https://www.opkamp.be/nl/kennis/water' target='_blank'>lokale wetgeving</a>. <br> Inspiratie voor (binnen-) spelen vind je in de <a href='https://www.scoutsengidsenvlaanderen.be/zoek-een-spel' target='_blank'>spelendatabank</a>. <br>Vergeet niet dat iedereen goed beschermd moet zijn tegen de zon. Iedereen smeert zich in met zonnecrème (spf 50) en draagt een hoedje of pet."
         }
     },
     {
@@ -1660,7 +1678,7 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Totemisatie gepland ?",
+            "label": "Totemisatie",
             "explanation": "Bij het totemiseren spreek je uit wat je als groep in iemand waardeert. Je benoemt de eigenschappen van een lid die je als je groep nodig hebt. Een goede totemisatie daagt je leden uit om stil te staan bij zichzelf en om op een prikkelende manier grenzen af te tasten. <br> Een totemisatie mag niet ontsporen in een machtsspel, laat staan dat er plaats is voor vernedering. De totemisatie moet de sociale samenhang in de groep in de kijker zetten en gaat uit van respect voor elkaar. Een totem is iets om je leven lang fier op te zijn. <br> Alles over totemisatie vind je in <a href='https://www.hopper.be/nl/dr000160' target='_blank'>de totemmap</a>, die te koop is in de Hopper Winkel, en in de totemapp. In de <a href='https://www.scoutsengidsenvlaanderen.be/totemzoeker' target='_blank'>totemzoeker</a> vind je de betekenis van totemnamen, of kan je op eigenschappen een gepaste totem zoeken. "
         }
     },
@@ -1678,7 +1696,7 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Nachtspel planning ok ?",
+            "label": "Nachtspel",
             "explanation": "Kampavonden zijn unieke gelegenheden om kinderen en jongeren vertrouwd te maken met het duister. <br> Het is niet de bedoeling dat het duister gebruikt wordt om angstaanjagende nachtspelen en activiteiten te organiseren. Het donker is al spannend genoeg. Je hebt hiervoor geen ontvoeringen of schriktochten nodig. <br> Wandelen in een donker bos, buskestamp bij maanlicht, dicht bijeen of ver uit elkaar genieten van de sterrenhemel… dat is het soort spanning dat deugd doet. <br><br> Vergeet niet: <br> • Nachtlawaai is in België wettelijk verboden tussen 22 een 7 uur.<br> • Voldoende nachtrust is voor leden én leiding een must voor een geslaagd kamp.<br> • Droppings zijn enkel ’s avonds toegelaten (niet ’s nachts!) en leden moeten minstens per 2 samenlopen via onverharde wegen."
         }
     },
@@ -1732,8 +1750,9 @@
             "check_type": [
                 "SimpleCheck"
             ],
-            "label": "Vegetarisch menu"
-        }
+            "label": "Vegi/Vegan/Allergenen",
+            "explanation": "Houd rekening met de diëten van iedereen. Je kan dit opvragen bij de inschrijving of via de individuele steekkaart in de groepsadministratie."
+       }
     },
     {
         "model": "visums.Check",
