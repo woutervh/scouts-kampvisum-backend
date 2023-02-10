@@ -28,7 +28,7 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
     base_auth_roles = GroupAdminSettings.get_base_auth_roles()
 
     def has_permission(self, request, view) -> bool:
-        self._validate_request(request)
+        group_admin_id = self._validate_request(request, view)
 
         queryset = self._queryset(view)
         perms = self.get_required_permissions(request.method, queryset.model)
@@ -45,7 +45,8 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         from scouts_auth.groupadmin.models import ScoutsUser
         user: ScoutsUser = request.user
 
-        group_admin_id = request.GET.get("auth", None)
+        if user.has_role_administrator():
+            return True
 
         for group in user.groups.all():
             # If the user role is not included in the base authentication roles, then ignore
@@ -67,9 +68,20 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
 
         return False
 
-    def _validate_request(self, request) -> bool:
+    def _validate_request(self, request, view) -> str:
         if request and request.GET and request.GET.get("auth", None) and request.user:
-            return True
+            return request.GET.get("auth")
+
+        if hasattr(view, "has_group_admin_id"):
+            try:
+                model = view.queryset.get(pk=view.kwargs.get("pk"))
+                if model.group:
+                    request.GET._mutable = True
+                    request.GET['test'] = model.group
+                    request.GET._mutable = False
+                return model.group
+            except Exception:
+                pass
 
         raise ScoutsAuthException(
             "Permissions can only be set if the group is passed as a GET param and the user object is present")

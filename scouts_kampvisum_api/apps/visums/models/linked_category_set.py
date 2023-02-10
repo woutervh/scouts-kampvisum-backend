@@ -22,7 +22,7 @@ class LinkedCategorySet(AbstractBaseModel):
     @property
     def readable_name(self):
         return "{} {}".format(
-            self.visum.camp.year.year,
+            self.visum.year.year,
             ",".join(
                 camp_type.camp_type for camp_type in self.visum.camp_types.all()),
         )

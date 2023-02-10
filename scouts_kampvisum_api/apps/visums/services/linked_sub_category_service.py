@@ -51,7 +51,7 @@ class LinkedSubCategoryService:
         self, request, linked_category: LinkedCategory, sub_category: SubCategory
     ) -> LinkedSubCategory:
         logger.debug("Creating LinkedSubCategory '%s' (year: %d)",
-                     sub_category.name, linked_category.category_set.visum.camp.year.year)
+                     sub_category.name, linked_category.category_set.visum.year.year)
 
         linked_sub_category = LinkedSubCategory()
 
@@ -87,10 +87,10 @@ class LinkedSubCategoryService:
         logger.debug(
             "Found %d SubCategory instance(s) for camp_year %d and camp_types %s that should be linked to visum %s (%s)",
             len(sub_categories),
-            linked_category.category_set.visum.camp.year.year,
+            linked_category.category_set.visum.year.year,
             ",".join(camp_type.camp_type for camp_type in camp_types),
-            linked_category.category_set.visum.camp.name,
-            linked_category.category_set.visum.camp.name,
+            linked_category.category_set.visum.name,
+            linked_category.category_set.visum.id,
         )
 
         current_linked_sub_categories: List[
@@ -102,9 +102,9 @@ class LinkedSubCategoryService:
         logger.debug(
             "Found %d SubCategory instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_sub_categories),
-            linked_category.category_set.visum.camp.year.year,
+            linked_category.category_set.visum.year.year,
             ",".join(camp_type.camp_type for camp_type in camp_types),
-            linked_category.category_set.visum.camp.name,
+            linked_category.category_set.visum.name,
             linked_category.category_set.visum.id,
         )
 
@@ -179,7 +179,7 @@ class LinkedSubCategoryService:
         logger.debug(
             "Updating LinkedSubCategory '%s' for visum '%s' (%s)",
             instance.parent.name,
-            instance.category.category_set.visum.camp.name,
+            instance.category.category_set.visum.name,
             instance.category.category_set.visum.id,
         )
         self.linked_check_service.update_linked_checks(

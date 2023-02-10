@@ -95,7 +95,7 @@ class LinkedDeadlineService:
         logger.debug(
             "Creating a %s instance for visum %s (%s), with name %s",
             "LinkedDeadline",
-            visum.camp.name,
+            visum.name,
             visum.id,
             instance.parent.name,
         )
@@ -167,7 +167,7 @@ class LinkedDeadlineService:
 
     @transaction.atomic
     def link_to_visum(self, request, visum: CampVisum):
-        camp_year: CampYear = visum.camp.year
+        camp_year: CampYear = visum.year
         camp_types: List[CampType] = visum.camp_types.all()
 
         deadlines: List[Deadline] = Deadline.objects.safe_get(

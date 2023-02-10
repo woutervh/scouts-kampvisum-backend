@@ -126,9 +126,9 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
                     options={"verify_signature": False},
                 )
                 return decoded.get("preferred_username", None)
-            except Exception:
+            except Exception as exc:
                 raise ScoutsAuthException(
-                    "Unable to decode JWT token - Do you need a refresh ?")
+                    "Unable to decode JWT token - Do you need a refresh ?", cause=exc)
 
         raise ScoutsAuthException(
             "Unable to retrieve username from JWT access token")

@@ -196,7 +196,11 @@ class PermissionService:
                 codename=codename, content_type__app_label=app_label
             )
             group.permissions.add(permission)
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist as exc:
             raise ScoutsAuthException(
-                f"Permission {permission} with codename {codename} doesn't exist for app_label {app_label}"
+                f"Permission {permission} with codename {codename} doesn't exist for app_label {app_label}", cause=exc
+            )
+        except Exception as exc:
+            raise ScoutsAuthException(
+                f"Permission {codename} returned multiple objects", cause=exc
             )

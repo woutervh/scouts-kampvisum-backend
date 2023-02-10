@@ -1,6 +1,8 @@
-import os, json
+import os
+import json
 from pathlib import Path
 from typing import List
+from types import SimpleNamespace
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -15,6 +17,8 @@ from apps.deadlines.services import (
     DeadlineService,
     DeadlineItemService,
 )
+
+from scouts_auth.groupadmin.models import ScoutsUser
 
 
 # LOGGING
@@ -36,6 +40,8 @@ class Command(BaseCommand):
 
         existing_deadlines: List[Deadline] = list(Deadline.objects.all())
         loaded_deadlines: List[Deadline] = []
+
+        user = ScoutsUser.objects.safe_get(username='FIXTURES')
 
         for FIXTURE in self.FIXTURES:
             TMP_FIXTURE = "{}_{}".format("adjusted", FIXTURE)
@@ -70,7 +76,8 @@ class Command(BaseCommand):
                     # Allow creating deadlines for the current year without specifying the camp year
                     if not "camp_year" in model.get("fields"):
                         model.get("fields")["camp_year"] = list()
-                        model.get("fields")["camp_year"].append(current_camp_year.year)
+                        model.get("fields")["camp_year"].append(
+                            current_camp_year.year)
 
                     if not "camp_types" in model.get("fields"):
                         model.get("fields")["camp_types"] = list()
@@ -80,7 +87,8 @@ class Command(BaseCommand):
                         model.get("fields")["camp_types"] = list()
 
                         for camp_type in camp_types:
-                            model.get("fields")["camp_types"].append([camp_type])
+                            model.get("fields")[
+                                "camp_types"].append([camp_type])
 
                     camp_types = camp_type_service.get_camp_types(
                         camp_types=[
@@ -90,10 +98,11 @@ class Command(BaseCommand):
                         include_default=False,
                     )
 
-                    camp_year = CampYear.objects.safe_get(year=model.get("fields")["camp_year"][0])
+                    camp_year = CampYear.objects.safe_get(
+                        year=model.get("fields")["camp_year"][0])
 
                     deadline: Deadline = deadline_service.get_or_create_deadline(
-                        request=None,
+                        request=SimpleNamespace(user=user),
                         name=model.get("fields")["name"],
                         camp_year=camp_year,
                         camp_types=camp_types,

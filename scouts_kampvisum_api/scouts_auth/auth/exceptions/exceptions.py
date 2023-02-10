@@ -3,7 +3,10 @@ from requests.exceptions import HTTPError
 
 
 class ScoutsAuthException(APIException):
-    def __init__(self, message, http_exception: HTTPError = None):
+
+    cause: Exception = None
+
+    def __init__(self, message, http_exception: HTTPError = None, cause: Exception = None):
         if http_exception:
             if isinstance(http_exception, HTTPError):
                 super().__init__(message % (http_exception, http_exception.response.text))
@@ -11,6 +14,11 @@ class ScoutsAuthException(APIException):
                 super().__init__(message)
         else:
             super().__init__(message)
+
+        self.cause = cause if cause else None
+
+    def has_cause(self) -> bool:
+        return self.cause is not None
 
 
 class TokenRequestException(ScoutsAuthException):

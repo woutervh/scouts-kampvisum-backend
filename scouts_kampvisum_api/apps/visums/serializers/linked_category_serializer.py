@@ -44,7 +44,7 @@ class LinkedCategorySerializer(serializers.ModelSerializer):
 
         visum = obj.category_set.visum
 
-        data["camp"]["name"] = visum.camp.name
+        data["camp"]["name"] = visum.name
         data["visum"]["id"] = visum.id
 
         return data

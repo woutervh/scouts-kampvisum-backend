@@ -30,7 +30,7 @@ class CampVisumFilter(filters.FilterSet):
         if group_admin_id:
             query_filters["group"] = group_admin_id
         if year:
-            query_filters["camp__year__year"] = year
+            query_filters["year__year"] = year
 
         and_condition = Q()
         for key, value in query_filters.items():

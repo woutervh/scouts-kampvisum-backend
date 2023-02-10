@@ -96,7 +96,7 @@ class InuitsVisumMailService(EmailService):
         )
 
         subject = VisumSettings.get_email_responsible_changed_subject().format(
-            visum.camp.name
+            visum.name
         )
 
         logger.debug(
@@ -150,7 +150,7 @@ class InuitsVisumMailService(EmailService):
         delta = VisumSettings.get_email_registration_delta()
 
         template = self.template_camp_registration_before_deadline
-        subject = VisumSettings.get_email_registration_subject().format(visum.camp.name)
+        subject = VisumSettings.get_email_registration_subject().format(visum.name)
         if before_camp_registration_deadline:
             sending_camp_registration_mail = True
 
@@ -168,7 +168,7 @@ class InuitsVisumMailService(EmailService):
                 sending_camp_changed_mail = True
                 template = self.template_camp_changed_after_deadline
                 subject = VisumSettings.get_email_registration_changed_subject().format(
-                    visum.camp.name
+                    visum.name
                 )
 
         if not sending_camp_registration_mail and sending_camp_changed_mail:

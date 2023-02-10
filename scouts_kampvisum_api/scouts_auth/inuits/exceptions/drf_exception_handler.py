@@ -5,6 +5,7 @@ from rest_framework.exceptions import (
 )
 from rest_framework.views import exception_handler
 
+from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.inuits.mail import EmailServiceException
 
 # LOGGING
@@ -16,8 +17,10 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 def drf_exception_handler(exc, context):
     """Handle Django ValidationError as an accepted exception"""
-    logger.error("EXC: %s", exc)
-    if isinstance(exc, DRFAuthenticationFailed):
+    logger.error(f"{exc.__class__.__name__}: {exc}")
+    if isinstance(exc, ScoutsAuthException) and exc.has_cause():
+        logger.error(f"Caused by: {exc.cause.__class__.__name__}: {exc.cause}")
+    elif isinstance(exc, DRFAuthenticationFailed):
         logger.debug("AUTHENTICATION FAILED")
     elif isinstance(exc, DjangoValidationError):
         try:
