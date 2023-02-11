@@ -22,7 +22,6 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
     groupadmin = GroupAdmin()
     user_service = ScoutsUserService()
-    session_service = ScoutsUserSessionService()
 
     def has_perm(self, user_obj, perm, obj=None) -> bool:
         result = super().has_perm(user_obj, perm, obj)
@@ -39,7 +38,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         Returns a User instance if 1 user is found. Creates a user if not found
         and configured to do so. Returns nothing if multiple users are matched.
         """
-        user: settings.AUTH_USER_MODEL = self.session_service.get_user_from_session(
+        user: settings.AUTH_USER_MODEL = ScoutsUserSessionService.get_user_from_session(
             access_token=access_token)
         if user:
             return user
@@ -207,7 +206,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         user: settings.AUTH_USER_MODEL = self.user_service.get_scouts_user(
             active_user=user, abstract_member=member)
 
-        self.session_service.store_user_in_session(
+        ScoutsUserSessionService.store_user_in_session(
             access_token=access_token, scouts_user=user)
 
         return user

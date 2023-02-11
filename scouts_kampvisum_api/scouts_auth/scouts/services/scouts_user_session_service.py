@@ -15,7 +15,8 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class ScoutsUserSessionService:
 
-    def get_user_from_session(self, access_token: str) -> settings.AUTH_USER_MODEL:
+    @staticmethod
+    def get_user_from_session(access_token: str) -> settings.AUTH_USER_MODEL:
         token: ScoutsToken = ScoutsToken.from_access_token(
             access_token=access_token)
 
@@ -39,7 +40,8 @@ class ScoutsUserSessionService:
 
             return user
 
-    def store_user_in_session(self, access_token: str, scouts_user: settings.AUTH_USER_MODEL) -> ScoutsUserSession:
+    @staticmethod
+    def store_user_in_session(access_token: str, scouts_user: settings.AUTH_USER_MODEL) -> ScoutsUserSession:
         logger.debug(f"USER SESSION - Storing user in session",
                      user=scouts_user)
 
