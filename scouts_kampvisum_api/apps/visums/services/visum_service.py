@@ -40,7 +40,7 @@ class CampVisumService:
         group = data.get("group", None)
         group_name = data.get("group_name", None)
         year = data.get(
-            "year", self.year_service.get_current_camp_year().year)
+            "year", self.year_service.get_current_camp_year())
         name = data.get("name", None)
         start_date = data.get("start_date", None)
         end_date = data.get("end_date", None)
@@ -49,6 +49,10 @@ class CampVisumService:
         engagement: CampVisumEngagement = (
             self.visum_engagement_service.create_engagement()
         )
+
+        if isinstance(group, str):
+            group = request.user.get_scouts_group(
+                group_admin_id=group, raise_exception=True)
 
         logger.debug(
             f"Creating camp '{name}' for group {group.group_admin_id}")

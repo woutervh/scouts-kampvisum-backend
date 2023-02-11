@@ -108,11 +108,12 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def list(self, request):
         group_admin_id = self.request.query_params.get("group", None)
+        year = self.request.query_params.get("year", None)
         logger.debug("Listing visums for group %s",
                      group_admin_id, user=request.user)
 
         instances = CampVisum.objects.get_for_group_and_year(
-            group_admin_id=group_admin_id)
+            group_admin_id=group_admin_id, year_number=year)
         page = self.paginate_queryset(instances)
 
         serializer = (

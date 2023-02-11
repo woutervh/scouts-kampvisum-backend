@@ -61,6 +61,10 @@ class CampVisum(GroupAdminIdMixin, GroupNameMixin, AuditedBaseModel):
 
     class Meta:
         # ordering = ["sections__age_group", "name"]
+        # indexes = [
+        #     models.Index(fields=['group'], name='group_idx'),
+        #     models.Index(fields=['group', 'year'], name='group_year_idx')
+        # ]
         permissions = [
             ("view_campvisum_locations", "User can view all camp locations"),
             ("view_campvisum_member_data",

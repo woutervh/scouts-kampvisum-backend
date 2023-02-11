@@ -1,3 +1,5 @@
+import re
+from types import SimpleNamespace
 from typing import List
 
 from django.db import transaction
@@ -21,52 +23,72 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = "Fixes issue 91782 https://redmine.inuits.eu/issues/91782"
+    help = "Creates the specified amount of test visums for each of the user's scouts groups"
     exception = True
 
     visum_service = CampVisumService()
-    
-    def add_arguments(self, parser):
-        # Positional arguments
-        parser.add_argument('poll_id', nargs='+', type=int)
 
-        # Named (optional) arguments
+    default_count = 10
+    default_start = 0
+    re_bearer = re.compile(re.escape('bearer'), re.IGNORECASE)
+
+    def add_arguments(self, parser):
         parser.add_argument(
-            '--delete',
-            action='store_true',
-            dest='delete',
-            default=False,
-            help='Delete poll instead of closing it',
+            '-c',
+            '--count',
+            type=int,
+            dest='count',
+            default=self.default_count,
+            help='Number of visums to create for each group',
+        )
+        parser.add_argument(
+            '-s',
+            '--start',
+            type=int,
+            dest='start',
+            default=self.default_start,
+            help='Index to start counting from',
+        )
+        parser.add_argument(
+            '-t',
+            '--token',
+            type=str,
+            dest='access_token',
+            default='',
+            help='Valid and active access token to retrieve a scouts user',
         )
 
     # fix for https://redmine.inuits.eu/issues/91782 for functions that had too many groups
     @transaction.atomic
-    def handle(self, count: int = 10, access_token: str = None, *args, **kwargs):
+    def handle(self, *args, **options):
+        count: int = options.get('count', self.default_count)
+        start: int = options.get('start', self.default_start)
+        access_token: str = options.get('access_token', None)
 
-        logger.debug(f"CREATING {count} visums per group")
-        logger.debug(f"ACCESS_TOKEN: {access_token}")
+        if not count or not access_token:
+            return
 
-        user: ScoutsUser = ScoutsUserSessionService.get_user_from_session(access_token=access_token)
+        access_token = self.re_bearer.sub('', access_token)
+
+        user: ScoutsUser = ScoutsUserSessionService.get_user_from_session(
+            access_token=access_token)
         if not user:
-            raise ScoutsAuthException("Unable to find user with provided access token")
-        
+            raise ScoutsAuthException(
+                "Unable to find user with provided access token")
+
         for scouts_group in user.get_scouts_groups():
             section: ScoutsSection = ScoutsSection.objects.all().first()
 
-            for x in range(count):
+            for x in range(start, start + count):
                 data: dict = {
                     "group": scouts_group.group_admin_id,
                     "group_name": scouts_group.name,
-                    "year": 2023,
-                    "name": f"INUITS speed test {scouts_group.group_admin_id} {counter:03}",
-                    "start_date": "",
-                    "end_date": "",
+                    "name": f"INUITS speed test {scouts_group.group_admin_id} {x:03}",
                     "sections": [section.id],
-                    "camp_types": [],
                 }
 
-                visum: CampVisum = self.visum_service.visum_create(**data)
+                visum: CampVisum = self.visum_service.visum_create(
+                    request=SimpleNamespace(user=user), **data)
 
-                logger.debug(f"Created visum {visum.name} for group {visum.group}")
-
-
+                logger.debug(
+                    f"Created visum {visum.name} for group {visum.group}")
