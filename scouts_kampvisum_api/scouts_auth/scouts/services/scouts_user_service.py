@@ -6,7 +6,7 @@ from django.conf import settings
 
 from apps.groups.services import ScoutsSectionService
 
-from scouts_auth.scouts.services import ScoutsPermissionService
+from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMember,
     AbstractScoutsGroup,
@@ -18,8 +18,8 @@ from scouts_auth.groupadmin.models import (
 )
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-
 from scouts_auth.inuits.utils import ListUtils
+from scouts_auth.scouts.services import ScoutsPermissionService, ScoutsUserSessionService
 
 # LOGGING
 import logging
@@ -33,6 +33,7 @@ class ScoutsUserService:
     groupadmin = GroupAdminMemberService()
     permission_service = ScoutsPermissionService()
     section_service = ScoutsSectionService()
+    session_service = ScoutsUserSessionService()
 
     def get_scouts_user(self, active_user: settings.AUTH_USER_MODEL, abstract_member: AbstractScoutsMember) -> settings.AUTH_USER_MODEL:
         # Clear any lingering data
@@ -79,6 +80,8 @@ class ScoutsUserService:
         abstract_groups: List[AbstractScoutsGroup] = self.groupadmin.get_groups(
             active_user=active_user).scouts_groups
         user_groups = self.process_groups(abstract_groups=abstract_groups)
+
+        logger.debug(f"USER GROUPS: {user_groups}")
 
         # #######
         # 4. PROCESS FUNCTIONS
@@ -276,9 +279,9 @@ class ScoutsUserService:
 
         if not scouts_group:
             raise ScoutsAuthException(
-                f"Scouts group {abstract_function.scouts_group.group_admin_id} is not registered for user", user=active_user)
+                f"[{active_user.username}] Scouts group {abstract_function.scouts_group.group_admin_id} is not registered for user")
 
-        scouts_function.scouts_group = scouts_group
+        scouts_function.scouts_group = scouts_group.group_admin_id
         scouts_function.is_leader = is_leader
 
         return scouts_function

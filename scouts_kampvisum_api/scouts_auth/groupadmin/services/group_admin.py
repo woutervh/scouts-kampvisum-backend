@@ -80,8 +80,8 @@ class GroupAdmin:
 
     def post(self, endpoint: str, payload: dict, active_user: settings.AUTH_USER_MODEL = None) -> str:
         """Post the payload to the specified GA endpoint and returns the response as json_data."""
-        logger.debug(
-            f"GA: Posting data to endpoint {endpoint}", user=active_user)
+        # logger.debug(
+        #     f"GA: Posting data to endpoint {endpoint}", user=active_user)
         try:
             if active_user:
                 response = requests.post(
@@ -105,7 +105,7 @@ class GroupAdmin:
 
     def get(self, endpoint: str, active_user: settings.AUTH_USER_MODEL):
         """Makes a request to the GA with the given url and returns the response as json_data."""
-        logger.debug(f"GA: Fetching data from endpoint {endpoint}")
+        # logger.debug(f"GA: Fetching data from endpoint {endpoint}")
         try:
             response = requests.get(
                 endpoint,

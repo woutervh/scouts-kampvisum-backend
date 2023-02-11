@@ -8,7 +8,6 @@ from django.contrib.auth.models import UserManager
 
 from scouts_auth.auth.exceptions import InvalidArgumentException
 from scouts_auth.auth.models import User
-
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMember,
     AbstractScoutsAddress,
@@ -22,7 +21,6 @@ from scouts_auth.groupadmin.models import (
 )
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-
 from scouts_auth.inuits.models import Gender
 from scouts_auth.inuits.models.fields import (
     OptionalCharField,
@@ -30,7 +28,6 @@ from scouts_auth.inuits.models.fields import (
     DefaultCharField,
     TimezoneAwareDateTimeField,
 )
-
 from scouts_auth.inuits.utils import SettingsHelper
 
 
@@ -42,6 +39,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserManager(UserManager):
+
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         username = kwargs.get("username", None)
@@ -118,7 +116,7 @@ class ScoutsUser(User):
         for existing_function in self._scouts_functions:
             if (
                 existing_function.group_admin_id == scouts_function.group_admin_id
-                and existing_function.scouts_group.group_admin_id == scouts_function.scouts_group.group_admin_id
+                and existing_function.scouts_group == scouts_function.scouts_group
             ):
                 return True
         return False
@@ -127,7 +125,7 @@ class ScoutsUser(User):
         if not self.has_scouts_function(scouts_function=scouts_function):
             self._scouts_functions.append(scouts_function)
             self._scouts_functions.sort(
-                key=lambda x: x.scouts_group.group_admin_id)
+                key=lambda x: x.scouts_group)
 
     def get_scouts_functions(self) -> List[ScoutsFunction]:
         return self._scouts_functions
@@ -197,14 +195,14 @@ class ScoutsUser(User):
         for scouts_function in self._scouts_functions:
             if (
                 # Role in the specified group
-                scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id
+                scouts_function.scouts_group == scouts_group.group_admin_id
                 # Role as an underlying group, e.g. DC defined on X9000D -> DC for X9002G
                 or (
                     (
                         scouts_function.is_district_commissioner_function()
                         or scouts_function.is_shire_president_function()
                     )
-                    and scouts_group.group_admin_id in scouts_function.scouts_group.get_child_groups()
+                    and scouts_group.group_admin_id in self.get_scouts_group(group_admin_id=scouts_function.scouts_group).get_child_groups()
                 )
             ):
                 role = scouts_function.get_role_name()
@@ -363,11 +361,11 @@ class ScoutsUser(User):
 
             if getattr(scouts_function, scouts_function_name)():
                 if not for_underlying_scouts_groups:
-                    if scouts_function.scouts_group.group_admin_id == scouts_group.group_admin_id:
+                    if scouts_function.scouts_group == scouts_group.group_admin_id:
                         return True
                 else:
                     if scouts_function.scouts_group.has_child_groups():
-                        if scouts_group.group_admin_id in scouts_function.scouts_group.get_child_groups():
+                        if scouts_group.group_admin_id in self.get_scouts_group(group_admin_id=scouts_function.scouts_group).get_child_groups():
                             return True
 
         return False
@@ -401,7 +399,7 @@ class ScoutsUser(User):
         )
 
         descriptive_scouts_functions: List[List[str]] = [
-            scouts_function.code + "(" + scouts_function.scouts_group.group_admin_id + (": LEIDING" if scouts_function.is_leader_function() else "") + ")" for scouts_function in sorted(self._scouts_functions, key=lambda x: x.scouts_group.group_admin_id)]
+            scouts_function.code + "(" + scouts_function.scouts_group + (": LEIDING" if scouts_function.is_leader_function() else "") + ")" for scouts_function in sorted(self._scouts_functions, key=lambda x: x.scouts_group)]
 
         return (
             "\n------------------------------------------------------------------------------------------------------------------------\n"

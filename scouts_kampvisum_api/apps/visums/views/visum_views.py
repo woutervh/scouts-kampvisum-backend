@@ -36,7 +36,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     camp_visum_service = CampVisumService()
 
-    def has_group_admin_id() -> bool:
+    def has_group_admin_id(self) -> bool:
         return True
 
     @swagger_auto_schema(
@@ -111,7 +111,8 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug("Listing visums for group %s",
                      group_admin_id, user=request.user)
 
-        instances = self.filter_queryset(self.get_queryset())
+        instances = CampVisum.objects.get_for_group_and_year(
+            group_admin_id=group_admin_id)
         page = self.paginate_queryset(instances)
 
         serializer = (

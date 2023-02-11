@@ -29,8 +29,7 @@ class ScoutsFunction(AbstractNonModel):
     group_admin_id = GroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
-    scouts_group: ScoutsGroup
-
+    scouts_group = GroupAdminIdField()
     code = OptionalCharField()
     description = OptionalCharField()
 

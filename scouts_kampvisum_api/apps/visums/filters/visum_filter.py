@@ -19,21 +19,10 @@ class CampVisumFilter(filters.FilterSet):
 
     @property
     def qs(self):
-        parent = super().qs
         group_admin_id = self.request.query_params.get("group", None)
         year = self.request.query_params.get("year", None)
         if not year or year == "undefined":
             year = CampYearService().get_or_create_current_camp_year()
             year = year.year
 
-        query_filters = dict()
-        if group_admin_id:
-            query_filters["group"] = group_admin_id
-        if year:
-            query_filters["year__year"] = year
-
-        and_condition = Q()
-        for key, value in query_filters.items():
-            and_condition.add(Q(**{key: value}), Q.AND)
-
-        return parent.filter(and_condition).distinct()
+        return CampVisum.objects.get_for_group_and_year(group_admin_id=group_admin_id, year_number=year)

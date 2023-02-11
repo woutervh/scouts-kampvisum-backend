@@ -61,7 +61,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         return [
             {
                 "group_admin_id": scouts_function.group_admin_id,
-                "scouts_group": scouts_function.scouts_group.group_admin_id,
+                "scouts_group": scouts_function.scouts_group,
                 "code": scouts_function.code,
                 "description": scouts_function.description,
                 "is_leader": scouts_function.is_leader_function(),

@@ -99,7 +99,8 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 LOGGING_CONFIG = None
 LOGGING_LEVEL = env.str("LOGGING_LEVEL", "DEBUG")
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "INFO")
-LOGGING_LEVEL_DB = "INFO"
+# LOGGING_LEVEL_DB = "INFO"
+LOGGING_LEVEL_DB = "DEBUG"
 LOGGING_LEVEL_S3 = "INFO"
 LOGGING = {
     "version": 1,
@@ -166,6 +167,11 @@ LOGGING = {
             "level": LOGGING_LEVEL_S3,
             "propagate": False,
         },
+        "urllib3": {
+            "handlers": None,
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
         "django.db.backends": {
             "handlers": ["console"],
             "level": LOGGING_LEVEL_DB,
@@ -222,7 +228,6 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "scouts_auth.auth.oidc.InuitsOIDCSessionRefresh",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_cprofile_middleware.middleware.ProfilerMiddleware",
@@ -648,6 +653,10 @@ OIDC_RP_CLIENT_SECRET = env.str("OIDC_RP_CLIENT_SECRET")
 # of the JWT tokens
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_VERIFY_JWT
 OIDC_VERIFY_JWT = env.bool("OIDC_VERIFY_JWT", default=True)
+# The jwt module can be configured to verify both the JWT and the JWT's signature.
+# This setting is not part of mozilla_django_oidc
+OIDC_VERIFY_JWT_SIGNATURE = env.bool(
+    "OIDC_VERIFY_JWT_SIGNATURE", default=False)
 # Controls whether the OpenID Connect client verifies the KID field
 # of the JWT tokens
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_VERIFY_KID

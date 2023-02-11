@@ -45,6 +45,18 @@ class InuitsOIDCSettings(SettingsHelper):
         return SettingsHelper.get("OIDC_PROXY", default_value)
 
     @staticmethod
+    def get_oidc_verify_jwt(default_value=None):
+        return SettingsHelper.get("OIDC_VERIFY_JWT", default_value)
+
+    @staticmethod
+    def get_oidc_verify_jwt_signature(default_value=None):
+        return SettingsHelper.get("OIDC_VERIFY_JWT_SIGNATURE", default_value)
+
+    @staticmethod
+    def get_oidc_signing_algorithm(default_value=None):
+        return SettingsHelper.get("OIDC_RP_SIGN_ALGO", default_value)
+
+    @staticmethod
     def get_profile_refresh_time(default_value=15):
         return SettingsHelper.get_int("PROFILE_REFRESH", default_value)
 

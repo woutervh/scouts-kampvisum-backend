@@ -18,15 +18,13 @@ class InuitsOIDCSessionRefresh(SessionRefresh):
         :returns: boolean
 
         """
-        # This method call always returns False, because user.is_authenticated() always returns False.
-        # Seems to be a DRF problem, that should have been fixed, but clearly it's not
-        # Results in the annoying 'request is not refreshable' message and the subsequent authorisation calls (on per GET).
-        # See: https://github.com/mozilla/mozilla-django-oidc/issues/328
-        #
-        # The problem is that DRF instantiates an AnonymousUser that always returns false on
-        # is_authenticated().
-        logger.debug(
-            f"REQUEST.USER type: {type(request.user).__name__}", user=request.user)
-        logger.debug(f"REQUEST.USER: {request.user}", user=request.user)
+        # Do not attempt to refresh the session if the OIDC backend is not used
+        is_oidc_enabled = True
 
-        return super().is_refreshable_url(request)
+        return (
+            request.method == 'GET' and
+            is_oidc_enabled and
+            request.path not in self.exempt_urls and
+            not any(pat.match(request.path)
+                    for pat in self.exempt_url_patterns)
+        )
