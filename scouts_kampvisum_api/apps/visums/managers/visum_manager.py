@@ -1,7 +1,7 @@
 from typing import List
 
 from django.conf import settings
-from django.db import models
+from django.db import models, connections
 from django.db.models import Q
 from django.core.exceptions import ValidationError
 
@@ -26,19 +26,24 @@ class CampVisumQuerySet(models.QuerySet):
     def all(self, *args, **kwargs):
         return super().all(*args, **kwargs)
 
-    def get_for_group(self, group_admin_id: str):
+    def get_all_for_group(self, group_admin_id: str):
         return super().filter(group=group_admin_id)
 
-    def get_for_year(self, year: int):
+    def get_all_for_year(self, year: int):
         return super().filter(year__year=year)
 
-    def get_for_group_and_year(self, group_admin_id: str, year: int):
+    def get_all_for_group_and_year(self, group_admin_id: str, year: int):
+        with connections['default'].cursor() as cursor:
+            cursor.execute(
+                f"select * from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group={group_admin_id} and cc.year={year}"
+            )
+            return cursor.fetchall()
         return super().filter(group=group_admin_id, year__year=year)
 
 
 class CampVisumManager(models.Manager):
     def get_queryset(self):
-        return CampVisumQuerySet(self.model, using=self._db)
+        return CampVisumQuerySet(self.model, using=self._db).prefetch_related('category_set', 'year', 'sections', 'camp_types', 'engagement')
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
@@ -59,17 +64,17 @@ class CampVisumManager(models.Manager):
 
         return None
 
-    def get_for_group_and_year(self, group: ScoutsGroup = None, group_admin_id: str = None, year: CampYear = None, year_number: int = None):
+    def get_all_for_group_and_year(self, group: ScoutsGroup = None, group_admin_id: str = None, year: CampYear = None, year_number: int = None):
         if group:
             group_admin_id = group.group_admin_id
         if year:
             year = year.year
 
         if group_admin_id and year:
-            return self.get_queryset().get_for_group_and_year(group_admin_id=group_admin_id, year=year)
+            return self.get_queryset().get_all_for_group_and_year(group_admin_id=group_admin_id, year=year)
 
         if group_admin_id:
-            return self.get_queryset().get_for_group(group_admin_id=group_admin_id)
+            return self.get_queryset().get_all_for_group(group_admin_id=group_admin_id)
 
         if year:
-            return self.get_queryset().get_for_year(year=year)
+            return self.get_queryset().get_all_for_year(year=year)

@@ -50,7 +50,7 @@ class LinkedSubCategoryManager(models.Manager):
     """
 
     def get_queryset(self):
-        return LinkedSubCategoryQuerySet(self.model, using=self._db)
+        return LinkedSubCategoryQuerySet(self.model, using=self._db).prefetch_related('parent', 'checks')
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))

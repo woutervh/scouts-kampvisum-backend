@@ -38,13 +38,13 @@ class Check(
     is_member = models.BooleanField(default=False)
     is_required_for_validation = models.BooleanField(default=True)
     requires_permission = OptionalCharField()
+    linked_to = OptionalCharField()
+    change_handlers = OptionalCharField()
+    validators = OptionalCharField()
     sub_category = models.ForeignKey(
         SubCategory, related_name="checks", on_delete=models.CASCADE
     )
     check_type = models.ForeignKey(CheckType, on_delete=models.CASCADE)
-    linked_to = OptionalCharField()
-    change_handlers = OptionalCharField()
-    validators = OptionalCharField()
     camp_types = models.ManyToManyField(CampType)
 
     class Meta:

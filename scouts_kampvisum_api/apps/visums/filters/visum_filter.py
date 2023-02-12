@@ -25,4 +25,4 @@ class CampVisumFilter(filters.FilterSet):
             year = CampYearService().get_or_create_current_camp_year()
             year = year.year
 
-        return CampVisum.objects.get_for_group_and_year(group_admin_id=group_admin_id, year_number=year)
+        return CampVisum.objects.get_all_for_group_and_year(group_admin_id=group_admin_id, year_number=year)

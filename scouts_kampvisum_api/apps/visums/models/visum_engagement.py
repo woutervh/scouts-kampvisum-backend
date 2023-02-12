@@ -13,7 +13,7 @@ class CampVisumEngagementQuerySet(models.QuerySet):
 
 class CampVisumEngagementManager(models.Manager):
     def get_queryset(self):
-        return CampVisumEngagementQuerySet(self.model, using=self._db)
+        return CampVisumEngagementQuerySet(self.model, using=self._db).prefetch_related('leaders', 'group_leaders', 'district_commissioner')
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))

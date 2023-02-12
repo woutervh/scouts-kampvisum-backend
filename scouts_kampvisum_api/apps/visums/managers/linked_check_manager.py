@@ -20,7 +20,7 @@ class LinkedCheckManager(models.Manager):
     """
 
     def get_queryset(self):
-        return LinkedCheckQuerySet(self.model, using=self._db)
+        return LinkedCheckQuerySet(self.model, using=self._db).prefetch_related('parent')
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
@@ -31,35 +31,22 @@ class LinkedCheckManager(models.Manager):
         is_archived = kwargs.get("is_archived", False)
         raise_error = kwargs.get("raise_error", False)
 
+        filters = {}
         if pk:
-            try:
-                return self.get_queryset().get(pk=pk)
-            except:
-                pass
+            filters = {"pk": pk}
+        elif (sub_category and parent):
+            filters = {"sub_category": sub_category, "parent": parent}
+        elif (parent and visum):
+            filters = {"parent": parent, "sub_category__category__category_set__visum": visum,
+                       "is_archived": is_archived}
+        elif (visum and linked_to):
+            filters = {"sub_category__category__category_set__visum": visum,
+                       "parent__name": linked_to}
 
-        if sub_category and parent:
-            try:
-                return self.get_queryset().get(sub_category=sub_category, parent=parent)
-            except:
-                pass
-
-        if parent and visum:
-            try:
-                return self.get_queryset().get(
-                    parent=parent,
-                    sub_category__category__category_set__visum=visum,
-                    is_archived=is_archived,
-                )
-            except:
-                pass
-        
-        if visum and linked_to:
-            try:
-                return self.get_queryset().get(
-                    sub_category__category__category_set__visum=visum,
-                    parent__name=linked_to)
-            except:
-                pass
+        try:
+            return self.get_queryset().get(**filters)
+        except Exception:
+            pass
 
         if raise_error:
             raise ValidationError(

@@ -39,6 +39,9 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     def has_group_admin_id(self) -> bool:
         return True
 
+    def get_object(self, pk) -> CampVisum:
+        return CampVisum.objects.safe_get(pk=pk, raise_exception=True)
+
     @swagger_auto_schema(
         request_body=CampVisumSerializer,
         responses={status.HTTP_201_CREATED: CampVisumSerializer},
@@ -66,7 +69,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def retrieve(self, request, pk=None):
         logger.debug(f"Requesting visum {pk}", user=request.user)
-        instance = self.get_object()
+        instance = self.get_object(pk=pk)
         logger.debug(f"Visum retrieved: {instance.name}")
         serializer = CampVisumSerializer(
             instance, context={"request": request})
@@ -78,7 +81,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: CampVisumSerializer},
     )
     def partial_update(self, request, pk=None):
-        instance = self.get_object()
+        instance = self.get_object(pk=pk)
 
         logger.debug("CAMP VISUM UPDATE REQUEST DATA: %s", request.data)
 
@@ -112,7 +115,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug("Listing visums for group %s",
                      group_admin_id, user=request.user)
 
-        instances = CampVisum.objects.get_for_group_and_year(
+        instances = CampVisum.objects.get_all_for_group_and_year(
             group_admin_id=group_admin_id, year_number=year)
         page = self.paginate_queryset(instances)
 
@@ -150,7 +153,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def dates_leaders(self, request, pk=None):
         logger.debug(f"Requesting visum {pk}", user=request.user)
-        instance = self.get_object()
+        instance = self.get_object(pk=pk)
         logger.debug(f"Visum retrieved: {instance.name}")
         serializer = CampVisumSerializer(
             instance, context={"request": request})

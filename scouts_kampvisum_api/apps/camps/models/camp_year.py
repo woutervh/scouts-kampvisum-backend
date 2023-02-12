@@ -29,8 +29,12 @@ class CampYear(AuditedBaseModel):
     end_date = models.DateField()
 
     class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=["year"], name="unique_year")]
+        indexes = [
+            models.Index(fields=['year'], name='year_idx')
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=["year"], name="unique_year")
+        ]
 
     def natural_key(self):
         # logger.trace("NATURAL KEY CALLED CampYear")

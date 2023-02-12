@@ -1,4 +1,6 @@
-from django.db import models
+from typing import List
+
+from django.db import models, connections
 from django.core.exceptions import ValidationError
 
 
