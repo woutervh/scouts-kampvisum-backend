@@ -76,7 +76,13 @@ class Command(BaseCommand):
             raise ScoutsAuthException(
                 "Unable to find user with provided access token")
 
+        group_count = -1
         for scouts_group in user.get_scouts_groups():
+            group_count += 1
+
+            if group_count == 0:
+                continue
+
             section: ScoutsSection = ScoutsSection.objects.all().first()
 
             for x in range(start, start + count):
