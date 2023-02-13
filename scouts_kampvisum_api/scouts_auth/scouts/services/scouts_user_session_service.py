@@ -32,11 +32,11 @@ class ScoutsUserSessionService:
                 username=token.preferred_username, raise_exception=True)
 
             for scouts_group in deserialized["scouts_groups"]:
-                logger.debug(f"GROUP: {scouts_group.__class__.__name__}")
                 user.add_scouts_group(scouts_group)
             for scouts_function in deserialized["scouts_functions"]:
-                logger.debug(f"FUNC: {scouts_function.__class__.__name__}")
                 user.add_scouts_function(scouts_function)
+
+            user.access_token = access_token
 
             return user
 
