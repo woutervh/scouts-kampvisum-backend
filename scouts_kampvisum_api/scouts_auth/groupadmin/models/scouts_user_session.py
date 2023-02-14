@@ -28,18 +28,26 @@ class ScoutsUserSessionManager(models.Manager):
 
     def purge_expired(self):
         with connections['default'].cursor() as cursor:
-            cursor.execute(
-                f"delete from scouts_auth_scoutsusersession sasus where sasus.expiration <= '{now()}'")
+            try:
+                cursor.execute(
+                    f"delete from scouts_auth_scoutsusersession sasus where sasus.expiration <= '{now()}'")
+            except Exception as exc:
+                raise ScoutsAuthException(
+                    f"Unable to purge expired sessions", exc)
 
     def get_session_data(self, username: str, expiration: datetime) -> dict:
         self.purge_expired()
         with connections['default'].cursor() as cursor:
-            cursor.execute(
-                f"select sasus.data as data from scouts_auth_scoutsusersession sasus where sasus.username = '{username}' and sasus.expiration > '{now()}' and sasus.data is not null"
-            )
-            result = cursor.fetchone()
-            if result:
-                return result[0]
+            try:
+                cursor.execute(
+                    f"select sasus.data as data from scouts_auth_scoutsusersession sasus where sasus.username = '{username}' and sasus.expiration > '{now()}' and sasus.data is not null"
+                )
+                result = cursor.fetchone()
+                if result:
+                    return result[0]
+            except Exception as exc:
+                raise ScoutsAuthException(
+                    f"Unable to retrieve user from session: {username}", exc)
         return {}
 
 

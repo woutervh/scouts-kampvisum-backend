@@ -56,7 +56,6 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
-        group = validated_data.visum.group
 
         logger.debug("LINKED DEADLINE CREATE VALIDATED DATA: %s",
                      validated_data)
@@ -139,9 +138,6 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
         instances = self.filter_queryset(
             self.linked_deadline_service.list_for_visum(visum=visum_id)
         )
-        visum = CampVisum.objects.safe_get(id=visum_id)
-        group = visum.group
-
         page = self.paginate_queryset(instances)
 
         if page is not None:
@@ -166,9 +162,6 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
             "LINKED DEADLINE FLAG UPDATE REQUEST DATA: %s", request.data)
         instance: LinkedDeadlineFlag = LinkedDeadlineFlag.objects.safe_get(
             id=linked_deadline_flag_id, raise_error=True
-        )
-        instance_linked_deadline: LinkedDeadline = self.linked_deadline_service.get_visum_deadline(
-            linked_deadline=linked_deadline_id
         )
 
         serializer = LinkedDeadlineFlagSerializer(
