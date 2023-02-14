@@ -47,7 +47,7 @@ class ScoutsUserSessionManager(models.Manager):
                     return result[0]
             except Exception as exc:
                 raise ScoutsAuthException(
-                    f"Unable to retrieve user from session: {username}", exc)
+                    f"[{username}] Unable to retrieve user from session: {username}", exc)
         return {}
 
 
@@ -117,7 +117,7 @@ class ScoutsToken:
 
     @ exp.setter
     def exp(self, exp: int):
-        self._exp = make_aware(datetime.fromtimestamp(exp))
+        self._exp = make_aware(datetime.fromtimestamp(exp)) if exp else None
 
     @ property
     def iat(self) -> datetime:
@@ -125,7 +125,7 @@ class ScoutsToken:
 
     @ iat.setter
     def iat(self, iat: int):
-        self._iat = make_aware(datetime.fromtimestamp(iat))
+        self._iat = make_aware(datetime.fromtimestamp(iat)) if iat else None
 
     @ property
     def auth_time(self) -> datetime:
@@ -133,7 +133,8 @@ class ScoutsToken:
 
     @ auth_time.setter
     def auth_time(self, auth_time: int):
-        self._auth_time = make_aware(datetime.fromtimestamp(auth_time))
+        self._auth_time = make_aware(
+            datetime.fromtimestamp(auth_time)) if auth_time else None
 
     @ property
     def allowed_origins(self) -> List[str]:
