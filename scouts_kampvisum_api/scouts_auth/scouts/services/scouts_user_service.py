@@ -81,8 +81,6 @@ class ScoutsUserService:
             active_user=active_user).scouts_groups
         user_groups = self.process_groups(abstract_groups=abstract_groups)
 
-        logger.debug(f"USER GROUPS: {user_groups}")
-
         # #######
         # 4. PROCESS FUNCTIONS
         #

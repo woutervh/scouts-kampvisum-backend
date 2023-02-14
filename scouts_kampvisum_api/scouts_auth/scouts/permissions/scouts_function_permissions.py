@@ -77,7 +77,7 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
                 model = view.queryset.get(pk=view.kwargs.get("pk"))
                 if model.group:
                     request.GET._mutable = True
-                    request.GET['test'] = model.group
+                    request.GET['auth'] = model.group
                     request.GET._mutable = False
                 return model.group
             except Exception:

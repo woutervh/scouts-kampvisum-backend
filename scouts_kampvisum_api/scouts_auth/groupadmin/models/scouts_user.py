@@ -364,8 +364,10 @@ class ScoutsUser(User):
                     if scouts_function.scouts_group == scouts_group.group_admin_id:
                         return True
                 else:
-                    if scouts_function.scouts_group.has_child_groups():
-                        if scouts_group.group_admin_id in self.get_scouts_group(group_admin_id=scouts_function.scouts_group).get_child_groups():
+                    scouts_function_group = self.get_scouts_group(
+                        group_admin_id=scouts_function.scouts_group)
+                    if scouts_function_group.has_child_groups():
+                        if scouts_group.group_admin_id in scouts_function_group.get_child_groups():
                             return True
 
         return False
