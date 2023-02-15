@@ -25,7 +25,7 @@ class ScoutsGroup(AbstractNonModel):
     email = OptionalEmailField()
     website = OptionalCharField()
     parent_group = GroupAdminIdField()
-    _child_group_names = []
+    _child_group_names = None
     type = OptionalCharField()
 
     class Meta:
@@ -39,7 +39,8 @@ class ScoutsGroup(AbstractNonModel):
         email: str = None,
         website: str = None,
         parent_group: str = None,
-        type: str = None
+        type: str = None,
+        _child_group_names: List[str] = None,
     ):
         self.group_admin_id = group_admin_id
         self.number = number
@@ -48,6 +49,7 @@ class ScoutsGroup(AbstractNonModel):
         self.website = website
         self.parent_group = parent_group
         self.type = type
+        self._child_group_names = _child_group_names if _child_group_names else []
 
     @property
     def gender(self) -> Gender:
@@ -63,6 +65,8 @@ class ScoutsGroup(AbstractNonModel):
         return "{} {}".format(self.name, self.group_admin_id)
 
     def add_child_group(self, child_group: str):
+        if not self._child_group_names:
+            self._child_group_names = []
         if child_group not in self._child_group_names:
             self._child_group_names.append(child_group)
 

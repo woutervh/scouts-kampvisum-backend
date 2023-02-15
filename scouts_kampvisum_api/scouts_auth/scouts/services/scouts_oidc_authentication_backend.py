@@ -38,10 +38,13 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         Returns a User instance if 1 user is found. Creates a user if not found
         and configured to do so. Returns nothing if multiple users are matched.
         """
-        user: settings.AUTH_USER_MODEL = ScoutsUserSessionService.get_user_from_session(
-            access_token=access_token)
-        if user:
-            return user
+        if access_token:
+            # self.groupadmin.ping(access_token=access_token)
+
+            user: settings.AUTH_USER_MODEL = ScoutsUserSessionService.get_user_from_session(
+                access_token=access_token)
+            if user:
+                return user
 
         claims = self.get_userinfo(access_token, id_token, payload)
 

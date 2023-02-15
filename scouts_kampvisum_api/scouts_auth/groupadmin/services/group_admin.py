@@ -126,6 +126,30 @@ class GroupAdmin:
 
         return response.json()
 
+    def ping(self, access_token: str) -> bool:
+        """Makes a request to the GA with the given url and returns the response as json_data."""
+        # logger.debug(f"GA: Fetching data from endpoint {endpoint}")
+        logger.debug(f"PINGING GROUP ADMIN")
+        try:
+            response = requests.get(
+                GroupAdminSettings.get_group_admin_base_url(),
+                headers={
+                    "Authorization": f"Bearer {access_token}"
+                },
+            )
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as error:
+            if error.response.status_code == 404:
+                raise Http404(
+                    f"404 GET - Unable to get data from endpoint {endpoint}"
+                )
+            # elif error.response.status_code == 401:
+            #     raise Http404(
+            #         "401 GET - Not authorized to get data from endpoint {}".format(endpoint))
+            raise error
+        logger.debug(f"RESPONSE: {response}")
+        return True
+
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/
     def get_allowed_calls_raw(self, active_user: settings.AUTH_USER_MODEL) -> str:
         """

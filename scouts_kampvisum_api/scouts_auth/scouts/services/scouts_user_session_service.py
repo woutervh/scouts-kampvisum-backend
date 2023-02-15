@@ -16,6 +16,10 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class ScoutsUserSessionService:
 
     @staticmethod
+    def remove_user_from_session(username: str):
+        ScoutsUserSession.objects.remove_session_data(username=username)
+
+    @staticmethod
     def get_user_from_session(access_token: str) -> settings.AUTH_USER_MODEL:
         token: ScoutsToken = ScoutsToken.from_access_token(
             access_token=access_token)
@@ -25,6 +29,10 @@ class ScoutsUserSessionService:
         if session:
             logger.debug(
                 f"[{token.preferred_username}] USER SESSION - Retrieving user from session")
+
+            # logger.debug(
+            #     f"[{token.preferred_username}] SESSION DATA: {session}")
+
             deserialized = ScoutsUserSessionSerializer.to_scouts_user(
                 session=session)
 
@@ -52,9 +60,13 @@ class ScoutsUserSessionService:
             raise ScoutsAuthException(
                 f"Username in token ({token.preferred_username}) does not equal user's username ({scouts_user.username})")
 
-        session = ScoutsUserSession()
+        session = ScoutsUserSession.objects.safe_get(
+            username=token.preferred_username)
 
-        session.username = scouts_user.username
+        if not session:
+            session = ScoutsUserSession()
+
+        session.username = token.preferred_username
         session.expiration = token.exp
         session.data = ScoutsUserSessionSerializer.to_user_session(
             scouts_user=scouts_user)
