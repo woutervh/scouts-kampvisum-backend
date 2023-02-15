@@ -85,7 +85,7 @@ class GroupAdminSettings(SettingsHelper):
         )
 
     @staticmethod
-    def get_base_auth_roles(default_value=[]):
+    def get_base_auth_roles(default_value=None):
         return GroupAdminSettings.get_list("BASE_AUTH_ROLES", default_value)
 
     @staticmethod
