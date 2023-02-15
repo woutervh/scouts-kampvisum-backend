@@ -61,8 +61,8 @@ class ScoutsToken:
     email: str = OptionalCharField()
 
     def validate(self) -> bool:
-        logger.debug(
-            f"[{self.preferred_username}] Username found on access token")
+        # logger.debug(
+        #     f"[{self.preferred_username}] Username found on access token")
         if self.preferred_username and self.exp:
             return True
         raise ScoutsAuthException(

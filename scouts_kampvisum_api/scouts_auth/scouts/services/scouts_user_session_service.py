@@ -33,13 +33,15 @@ class ScoutsUserSessionService:
             # logger.debug(
             #     f"[{token.preferred_username}] SESSION DATA: {session}")
 
-            deserialized = ScoutsUserSessionSerializer.to_scouts_user(
-                session=session)
-
             user = ScoutsUser.objects.safe_get(
                 username=token.preferred_username, raise_exception=True)
 
+            deserialized = ScoutsUserSessionSerializer.to_scouts_user(
+                session=session)
+
             for scouts_group in deserialized["scouts_groups"]:
+                logger.debug(
+                    f"ADDING GROUP {scouts_group.group_admin_id} to user obj", user=user)
                 user.add_scouts_group(scouts_group)
             for scouts_function in deserialized["scouts_functions"]:
                 user.add_scouts_function(scouts_function)
@@ -47,6 +49,7 @@ class ScoutsUserSessionService:
             user.access_token = access_token
 
             return user
+        return None
 
     @staticmethod
     def store_user_in_session(access_token: str, scouts_user: settings.AUTH_USER_MODEL) -> ScoutsUserSession:
