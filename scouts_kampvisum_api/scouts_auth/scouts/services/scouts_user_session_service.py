@@ -30,9 +30,6 @@ class ScoutsUserSessionService:
             logger.debug(
                 f"[{token.preferred_username}] USER SESSION - Retrieving user from session")
 
-            # logger.debug(
-            #     f"[{token.preferred_username}] SESSION DATA: {session}")
-
             user = ScoutsUser.objects.safe_get(
                 username=token.preferred_username, raise_exception=True)
 
@@ -41,8 +38,6 @@ class ScoutsUserSessionService:
 
             user.clear_scouts_groups()
             for scouts_group in deserialized["scouts_groups"]:
-                logger.debug(
-                    f"ADDING GROUP {scouts_group.group_admin_id} to user obj", user=user)
                 user.add_scouts_group(scouts_group)
             user.clear_scouts_functions()
             for scouts_function in deserialized["scouts_functions"]:

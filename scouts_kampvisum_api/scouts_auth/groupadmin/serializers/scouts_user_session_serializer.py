@@ -74,8 +74,6 @@ class ScoutsUserSessionSerializer:
                 ",") if group["_child_group_names"] else []
             scouts_group.type = group["type"]
 
-            logger.debug(
-                f"[{session.username}] ADDING GROUP {scouts_group.group_admin_id}")
             deserialized["scouts_groups"].append(scouts_group)
 
         deserialized["scouts_functions"] = []
