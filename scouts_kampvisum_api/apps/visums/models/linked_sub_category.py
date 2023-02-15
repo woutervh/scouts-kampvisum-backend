@@ -1,7 +1,7 @@
 from django.db import models
 
 from apps.visums.models import LinkedCategory, SubCategory
-from apps.visums.models.enums import CampVisumApprovalState
+from apps.visums.models.enums import CampVisumApprovalState, CheckState
 from apps.visums.managers import LinkedSubCategoryManager
 
 from scouts_auth.inuits.models import AuditedArchiveableBaseModel
@@ -22,6 +22,11 @@ class LinkedSubCategory(AuditedArchiveableBaseModel):
         choices=CampVisumApprovalState.choices,
         default=CampVisumApprovalState.UNDECIDED,
         max_length=1,
+    )
+    check_state = DefaultCharField(
+        choices=CheckState.choices,
+        default=CheckState.UNCHECKED,
+        max_length=32
     )
 
     class Meta:

@@ -4,7 +4,7 @@ from apps.camps.models import CampYear, CampType
 from apps.groups.models import ScoutsSection
 
 from apps.visums.models import CampVisumEngagement
-from apps.visums.models.enums import CampVisumState
+from apps.visums.models.enums import CampVisumState, CheckState
 from apps.visums.managers import CampVisumManager
 
 from scouts_auth.groupadmin.models.mixins import GroupAdminIdMixin, GroupNameMixin
@@ -55,6 +55,11 @@ class CampVisum(GroupAdminIdMixin, GroupNameMixin, AuditedBaseModel):
         choices=CampVisumState.choices,
         default=CampVisumState.DATA_REQUIRED,
         max_length=32,
+    )
+    check_state = DefaultCharField(
+        choices=CheckState.choices,
+        default=CheckState.UNCHECKED,
+        max_length=32
     )
     # DC's can add notes to a linked category that are only viewable and editable by other DC's
     notes = OptionalCharField(max_length=300)

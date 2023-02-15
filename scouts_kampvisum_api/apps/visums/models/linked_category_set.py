@@ -4,6 +4,7 @@ from apps.visums.models import CampVisum
 from apps.visums.models.enums import CheckState
 
 from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.fields import DefaultCharField
 
 
 class LinkedCategorySetQuerySet(models.QuerySet):
@@ -49,6 +50,11 @@ class LinkedCategorySet(AbstractBaseModel):
 
     visum = models.OneToOneField(
         CampVisum, on_delete=models.CASCADE, related_name="category_set"
+    )
+    check_state = DefaultCharField(
+        choices=CheckState.choices,
+        default=CheckState.UNCHECKED,
+        max_length=32
     )
 
     class Meta:

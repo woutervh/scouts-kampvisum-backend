@@ -106,6 +106,12 @@ class ScoutsUser(User):
     #
     access_token: str = ""
 
+    def __init__(self, *args, **kwargs):
+        self._scouts_groups = []
+        self._scouts_functions = []
+
+        super().__init__(*args, **kwargs)
+
     def clear_scouts_functions(self):
         self._scouts_functions = []
 

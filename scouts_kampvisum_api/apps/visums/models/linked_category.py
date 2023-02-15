@@ -5,6 +5,7 @@ from apps.visums.models.enums import CheckState
 from apps.visums.managers import LinkedCategoryManager
 
 from scouts_auth.inuits.models import AuditedArchiveableBaseModel
+from scouts_auth.inuits.models.fields import DefaultCharField
 
 
 class LinkedCategory(AuditedArchiveableBaseModel):
@@ -14,6 +15,11 @@ class LinkedCategory(AuditedArchiveableBaseModel):
     parent = models.ForeignKey(Category, on_delete=models.CASCADE)
     category_set = models.ForeignKey(
         LinkedCategorySet, on_delete=models.CASCADE, related_name="categories"
+    )
+    check_state = DefaultCharField(
+        choices=CheckState.choices,
+        default=CheckState.UNCHECKED,
+        max_length=32
     )
 
     class Meta:

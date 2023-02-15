@@ -41,6 +41,11 @@ class LinkedCheck(AuditedArchiveableBaseModel):
     sub_category = models.ForeignKey(
         LinkedSubCategory, on_delete=models.CASCADE, related_name="checks"
     )
+    check_state = DefaultCharField(
+        choices=CheckState.choices,
+        default=CheckState.UNCHECKED,
+        max_length=32
+    )
 
     class Meta:
         ordering = ["parent__index"]
