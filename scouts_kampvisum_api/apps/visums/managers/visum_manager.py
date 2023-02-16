@@ -40,6 +40,13 @@ class CampVisumQuerySet(models.QuerySet):
             return cursor.fetchall()
         return super().filter(group=group_admin_id, year__year=year)
 
+    def get_linked_groups(self):
+        with connections['default'].cursor() as cursor:
+            cursor.execute(
+                f"select distinct(vc.group) as group, vc.group_name from visums_campvisum vc"
+            )
+            return cursor.fetchall()
+
 
 class CampVisumManager(models.Manager):
     def get_queryset(self):
@@ -78,3 +85,8 @@ class CampVisumManager(models.Manager):
 
         if year:
             return self.get_queryset().get_all_for_year(year=year)
+
+    def get_linked_groups(self) -> List[ScoutsGroup]:
+        result = self.get_queryset().get_linked_groups()
+
+        logger.debug(f"KNOWN GROUPS: {result}")
