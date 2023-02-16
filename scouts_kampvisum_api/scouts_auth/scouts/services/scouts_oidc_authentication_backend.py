@@ -5,7 +5,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
-from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser
+from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser, ScoutsToken
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
 from scouts_auth.scouts.services import ScoutsUserService, ScoutsUserSessionService
@@ -39,31 +39,33 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         and configured to do so. Returns nothing if multiple users are matched.
         """
         if access_token:
-            # self.groupadmin.ping(access_token=access_token)
+            token: ScoutsToken = ScoutsToken.from_access_token(
+                access_token=access_token)
+            # self.groupadmin.ping(active_user=SimpleNamespace(username=token.preferred_username, access_token=token.access_token)
 
             user: settings.AUTH_USER_MODEL = ScoutsUserSessionService.get_user_from_session(
-                access_token=access_token)
+                access_token=token)
             if user:
                 return user
 
-        claims = self.get_userinfo(access_token, id_token, payload)
+        claims = self.get_userinfo(token, id_token, payload)
 
         users: List[settings.AUTH_USER_MODEL] = self.filter_users_by_claims(
-            claims=claims, access_token=access_token)
+            claims=claims, access_token=token)
 
         user_count = len(users)
         if user_count == 1:
-            return self.update_user(user=users[0], claims=claims, access_token=access_token)
+            return self.update_user(user=users[0], claims=claims, access_token=token)
         elif user_count > 1:
             raise ValidationError(f"Multiple users returned: {user_count}")
         elif self.get_settings("OIDC_CREATE_USER", True):
-            return self.create_user(claims=claims, access_token=access_token)
+            return self.create_user(claims=claims, access_token=token)
         else:
             raise ScoutsAuthException(
                 f"Login failed: No user with {self.describe_user_by_claims(claims)} found, and OIDC_CREATE_USER is False",
             )
 
-    def get_userinfo(self, access_token, id_token, payload) -> dict:
+    def get_userinfo(self, access_token: ScoutsToken, id_token, payload) -> dict:
         """
         Return user details dictionary. The id_token and payload are not used
         in the default implementation, but may be used when overriding
@@ -71,7 +73,8 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         # Don't deserialise yet
         result = self.groupadmin.get_member_profile_raw(
-            active_user=SimpleNamespace(access_token=access_token)
+            active_user=SimpleNamespace(
+                username=access_token.preferred_username, access_token=access_token.access_token)
         )
 
         # Add token to user response so we can access it later
@@ -79,7 +82,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         return result
 
-    def filter_users_by_claims(self, claims: dict, access_token: str) -> List[settings.AUTH_USER_MODEL]:
+    def filter_users_by_claims(self, claims: dict, access_token: ScoutsToken) -> List[settings.AUTH_USER_MODEL]:
         """
         Returns all users matching the group admin id or username (from claims or jwt).
         """
@@ -97,12 +100,12 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         return []
 
-    def get_username(self, claims: dict, access_token: str) -> str:
+    def get_username(self, claims: dict, access_token: ScoutsToken) -> str:
         """
         Gets the username from any of the provided or configured data
         """
         if GroupAdminSettings.get_username_from_access_token():
-            return self.get_username_from_access_token(access_token)
+            return access_token.preferred_username
 
         if "username" in claims:
             return claims["username"]
@@ -116,30 +119,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         raise ScoutsAuthException(
             "Unable to get a username from jwt access token or claims (tried keys: 'username', 'preferred_username', 'gebruikersnaam'")
 
-    def get_username_from_access_token(self, access_token) -> str:
-        """
-        Parses the username from the JWT access token if configured to
-        do so (through the env variable USERNAME_FROM_ACCESS_TOKEN).
-        """
-        import jwt
-
-        if access_token:
-            try:
-                decoded = jwt.decode(
-                    access_token,
-                    algorithms=["RS256"],
-                    verify=False,
-                    options={"verify_signature": False},
-                )
-                return decoded.get("preferred_username", None)
-            except Exception as exc:
-                raise ScoutsAuthException(
-                    "Unable to decode JWT token - Do you need a refresh ?", cause=exc)
-
-        raise ScoutsAuthException(
-            "Unable to retrieve username from JWT access token")
-
-    def create_user(self, claims: dict, access_token: str = None) -> settings.AUTH_USER_MODEL:
+    def create_user(self, claims: dict, access_token: ScoutsToken = None) -> settings.AUTH_USER_MODEL:
         """
         Create and return a new user object.
         """
@@ -160,7 +140,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         return user
 
     def update_user(
-        self, user: settings.AUTH_USER_MODEL, claims: dict, access_token: str = None
+        self, user: settings.AUTH_USER_MODEL, claims: dict, access_token: ScoutsToken = None
     ) -> settings.AUTH_USER_MODEL:
         """
         Update existing user with new claims if necessary, save, and return the updated user object.
@@ -189,7 +169,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         return serializer.save()
 
     def _merge_member_data(
-        self, user: settings.AUTH_USER_MODEL, member: AbstractScoutsMember, claims: dict, access_token: str = None
+        self, user: settings.AUTH_USER_MODEL, member: AbstractScoutsMember, claims: dict, access_token: ScoutsToken = None
     ) -> settings.AUTH_USER_MODEL:
         """
         Persists the AbstractScoutsMember into a ScoutsUser object.
@@ -198,7 +178,8 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         user = ScoutsUser.from_abstract_member(
             user=user, abstract_member=member)
 
-        user.access_token = claims.get("access_token")
+        user.access_token = access_token if access_token else claims.get(
+            "access_token")
 
         user.is_staff = True
         user.updated_on = timezone.now()

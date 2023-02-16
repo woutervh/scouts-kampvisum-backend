@@ -72,9 +72,8 @@ class ScoutsUserSessionManager(models.Manager):
                     f"select sasus.id, sasus.username, sasus.expiration, sasus.data as data from scouts_auth_scoutsusersession sasus where sasus.username = '{username}' and sasus.expiration > '{now()}' and sasus.data is not null"
                 )
                 result = cursor.fetchone()
-                logger.debug("FETCHONE")
+
                 if result:
-                    logger.debug(f"FETCHONE RESULT: id {result[0]}")
                     token = ScoutsToken()
 
                     token.username = result[1]
@@ -83,8 +82,6 @@ class ScoutsUserSessionManager(models.Manager):
 
                     return token
             except Exception as exc:
-                logger.error(f"EXCEPTION: {exc}")
-                logger.debug("FETCHONE EXCEPTION")
                 return None
         return None
 

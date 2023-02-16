@@ -2,6 +2,7 @@ import requests
 
 from django.conf import settings
 from django.http import Http404
+from django.utils import timezone
 
 # from drf_yasg2.utils import swagger_auto_schema
 
@@ -84,6 +85,7 @@ class GroupAdmin:
         #     f"GA: Posting data to endpoint {endpoint}", user=active_user)
         try:
             if active_user:
+                now = timezone.now()
                 response = requests.post(
                     endpoint,
                     headers={
@@ -91,6 +93,8 @@ class GroupAdmin:
                     },
                     json=payload
                 )
+                logger.debug(
+                    f"[TIMING] POST {endpoint.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: {(timezone.now() - now).total_seconds()}", user=active_user)
             else:
                 response = requests.post(endpoint, data=payload)
             response.raise_for_status()
@@ -107,12 +111,15 @@ class GroupAdmin:
         """Makes a request to the GA with the given url and returns the response as json_data."""
         # logger.debug(f"GA: Fetching data from endpoint {endpoint}")
         try:
+            now = timezone.now()
             response = requests.get(
                 endpoint,
                 headers={
                     "Authorization": f"Bearer {active_user.access_token}"
                 },
             )
+            logger.debug(
+                f"[TIMING] GET {endpoint.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: {(timezone.now() - now).total_seconds()}", user=active_user)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
@@ -126,17 +133,20 @@ class GroupAdmin:
 
         return response.json()
 
-    def ping(self, access_token: str) -> bool:
+    def ping(self, active_user: settings.AUTH_USER_MODEL) -> bool:
         """Makes a request to the GA with the given url and returns the response as json_data."""
         # logger.debug(f"GA: Fetching data from endpoint {endpoint}")
         logger.debug(f"PINGING GROUP ADMIN")
         try:
+            now = timezone.now()
             response = requests.get(
                 GroupAdminSettings.get_group_admin_base_url(),
                 headers={
-                    "Authorization": f"Bearer {access_token}"
+                    "Authorization": f"Bearer {active_user.access_token}"
                 },
             )
+            logger.debug(
+                f"[TIMING] PING {endpoint.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: {(timezone.now() - now).total_seconds()}")
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
@@ -147,7 +157,7 @@ class GroupAdmin:
             #     raise Http404(
             #         "401 GET - Not authorized to get data from endpoint {}".format(endpoint))
             raise error
-        logger.debug(f"RESPONSE: {response}")
+
         return True
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/
@@ -159,7 +169,8 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_allowed_calls, active_user)
 
-        logger.info(f"GA CALL: get_allowed_calls ({self.url_allowed_calls})")
+        logger.info(
+            f"GA CALL {self.url_allowed_calls.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: get_allowed_calls", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -172,10 +183,13 @@ class GroupAdmin:
     ) -> ScoutsAllowedCalls:
         json_data = self.get_allowed_calls_raw(active_user)
 
+        now = timezone.now()
         serializer = ScoutsAllowedCallsSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
         allowed_calls: ScoutsAllowedCalls = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_allowed_calls()", user=active_user)
 
         return allowed_calls
 
@@ -188,7 +202,8 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_groups, active_user)
 
-        logger.info(f"GA CALL: get_groups ({self.url_groups})")
+        logger.info(
+            f"GA CALL {self.url_groups.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: get_groups", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -198,10 +213,13 @@ class GroupAdmin:
     ) -> AbstractScoutsGroupListResponse:
         json_data = self.get_groups_raw(active_user)
 
+        now = timezone.now()
         serializer = AbstractScoutsGroupListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
         groups_response: AbstractScoutsGroupListResponse = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_groups()", user=active_user)
 
         return groups_response
 
@@ -214,7 +232,8 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_groups_vga, active_user)
 
-        logger.info(f"GA CALL: get_accountable_groups ({self.url_groups_vga})")
+        logger.info(
+            f"GA CALL: get_accountable_groups ({self.url_groups_vga})", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -224,10 +243,13 @@ class GroupAdmin:
     ) -> AbstractScoutsGroupListResponse:
         json_data = self.get_accountable_groups_raw(active_user)
 
+        now = timezone.now()
         serializer = AbstractScoutsGroupListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
         groups_response: AbstractScoutsGroupListResponse = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_accountable_groups()", user=active_user)
 
         return groups_response
 
@@ -243,7 +265,7 @@ class GroupAdmin:
         url = self.url_group.format(group_group_admin_id)
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: get_group ({url})")
+        logger.info(f"GA CALL: get_group ({url})", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -252,19 +274,23 @@ class GroupAdmin:
         self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str
     ) -> AbstractScoutsGroup:
         if group_group_admin_id is None:
-            logger.warn("GA: can't fetch a group without a group admin id")
+            logger.warn(
+                "GA: can't fetch a group without a group admin id", user=active_user)
             return None
 
         json_data = self.get_group_raw(active_user, group_group_admin_id)
 
+        now = timezone.now()
         serializer = AbstractScoutsGroupSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
         group: AbstractScoutsGroup = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_group()", user=active_user)
 
         if group.group_admin_id != group_group_admin_id:
             logger.warn(
-                f"GA: unknown group with group admin id {group_group_admin_id}")
+                f"GA: unknown group with group admin id {group_group_admin_id}", user=active_user)
             return None
 
         return group
@@ -282,7 +308,12 @@ class GroupAdmin:
         if not group:
             return None
 
-        return AbstractScoutsGroupSerializer(group).data
+        now = timezone.now()
+        data = AbstractScoutsGroupSerializer(group).data
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_group_serialized()", user=active_user)
+
+        return data
 
     def validate_group(
         self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str
@@ -319,7 +350,8 @@ class GroupAdmin:
 
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: get_function_descriptions ({url})")
+        logger.info(
+            f"GA CALL: get_function_descriptions ({url})", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -333,6 +365,7 @@ class GroupAdmin:
             active_user, group_group_admin_id_fragment
         )
 
+        now = timezone.now()
         serializer = AbstractScoutsFunctionDescriptionListResponseSerializer(
             data=json_data
         )
@@ -341,6 +374,8 @@ class GroupAdmin:
         function_response: AbstractScoutsFunctionDescriptionListResponse = (
             serializer.save()
         )
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_function_descriptions()", user=active_user)
 
         return function_response
 
@@ -356,7 +391,8 @@ class GroupAdmin:
         url = self.url_function.format(function_id)
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: get_function ({url}) for id {function_id}")
+        logger.info(
+            f"GA CALL: get_function ({url}) for id {function_id}", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -366,10 +402,13 @@ class GroupAdmin:
     ) -> AbstractScoutsFunction:
         json_data = self.get_function_raw(active_user, function_id)
 
+        now = timezone.now()
         serializer = AbstractScoutsFunctionSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
         scouts_function: AbstractScoutsFunction = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_function()", user=active_user)
 
         return scouts_function
 
@@ -383,7 +422,7 @@ class GroupAdmin:
         url = self.url_member_profile
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: get_member_profile ({url})")
+        logger.info(f"GA CALL: get_member_profile ({url})", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -393,10 +432,13 @@ class GroupAdmin:
     ) -> AbstractScoutsMember:
         json_data = self.get_member_profile_raw(active_user)
 
+        now = timezone.now()
         serializer = AbstractScoutsMemberSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
         member: AbstractScoutsMember = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_profile()", user=active_user)
 
         return member
 
@@ -412,7 +454,7 @@ class GroupAdmin:
         url = self.url_member_info.format(group_admin_id)
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: get_member_info ({url})")
+        logger.info(f"GA CALL: get_member_info ({url})", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -422,14 +464,17 @@ class GroupAdmin:
     ) -> AbstractScoutsMember:
         json_data = self.get_member_info_raw(active_user, group_admin_id)
 
+        now = timezone.now()
         serializer = AbstractScoutsMemberSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
         member: AbstractScoutsMember = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_info()", user=active_user)
 
         if member.group_admin_id != group_admin_id:
             logger.warn(
-                f"GA: Unknown member with group admin id {group_admin_id}")
+                f"GA: Unknown member with group admin id {group_admin_id}", user=active_user)
             return None
 
         return member
@@ -438,7 +483,8 @@ class GroupAdmin:
         self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
     ) -> AbstractScoutsMember:
         if group_admin_id is None:
-            logger.warn("GA: Can't fetch member info without a group admin id")
+            logger.warn(
+                "GA: Can't fetch member info without a group admin id", user=active_user)
             return None
 
         member = self.get_member_info(
@@ -448,7 +494,12 @@ class GroupAdmin:
         if not member:
             return None
 
-        return AbstractScoutsMemberFrontendSerializer(member).data
+        now = timezone.now()
+        data = AbstractScoutsMemberFrontendSerializer(member).data
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_info_serialized()", user=active_user)
+
+        return data
 
     def validate_member(
         self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
@@ -496,7 +547,8 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_member_list, active_user)
 
-        logger.info(f"GA CALL: get_member_list ({self.url_member_list})")
+        logger.info(
+            f"GA CALL: get_member_list ({self.url_member_list})", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -506,10 +558,13 @@ class GroupAdmin:
     ) -> AbstractScoutsMemberListResponse:
         json_data = self.get_member_list_raw(active_user, offset)
 
+        now = timezone.now()
         serializer = AbstractScoutsMemberListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberListResponse = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_list()", user=active_user)
 
         return member_list
 
@@ -523,7 +578,7 @@ class GroupAdmin:
         json_data = self.post(url, payload, active_user)
 
         logger.info(
-            f"GA CALL: get_member_list_filtered ({self.url_member_list_filtered})")
+            f"GA CALL: get_member_list_filtered ({self.url_member_list_filtered})", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -563,11 +618,14 @@ class GroupAdmin:
         json_data = self.get_member_list_filtered_raw(
             active_user, payload, offset)
 
+        now = timezone.now()
         serializer = AbstractScoutsMemberSearchResponseSerializer(
             data=json_data)
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberSearchResponse = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_list_filtered()", user=active_user)
 
         return member_list
 
@@ -583,7 +641,7 @@ class GroupAdmin:
         url = self.url_member_search.format(term)
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: search_member ({url})")
+        logger.info(f"GA CALL: search_member ({url})", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -593,11 +651,14 @@ class GroupAdmin:
     ) -> AbstractScoutsMemberSearchResponse:
         json_data = self.search_member_raw(active_user, term)
 
+        now = timezone.now()
         serializer = AbstractScoutsMemberSearchResponseSerializer(
             data=json_data)
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberSearchResponse = serializer.save()
+        logger.debug(
+            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, search_member()", user=active_user)
 
         return member_list
 
@@ -613,7 +674,8 @@ class GroupAdmin:
         url = self.url_member_search_similar.format(first_name, last_name)
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: search_similar_member ({url})")
+        logger.info(
+            f"GA CALL: search_similar_member ({url})", user=active_user)
         #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data

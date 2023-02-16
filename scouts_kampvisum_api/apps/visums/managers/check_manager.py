@@ -35,7 +35,7 @@ class CheckManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if sub_category and len(camp_types) > 0:
@@ -45,7 +45,7 @@ class CheckManager(models.Manager):
                         sub_category=sub_category, camp_types__in=camp_types
                     )
                 )
-            except:
+            except Exception:
                 pass
 
         if raise_error:

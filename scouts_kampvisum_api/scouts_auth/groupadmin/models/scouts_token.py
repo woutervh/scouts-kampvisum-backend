@@ -23,6 +23,8 @@ class ScoutsToken:
     @see https://www.rfc-editor.org/rfc/rfc7519#section-4.1.1
     """
 
+    access_token: str = None
+
     # rfc7519: expiration time of the jwt
     _exp: datetime = TimezoneAwareDateTimeField()
     # rfc7519: time of issuance
@@ -103,8 +105,8 @@ class ScoutsToken:
             allowed_origin for allowed_origin in allowed_origins) if allowed_origins else ''
 
     @ staticmethod
-    def from_access_token(access_token: str):
-        if access_token:
+    def from_access_token(access_token: str = None):
+        if access_token and len(access_token) > 0:
             decoded = {}
             try:
                 decoded = jwt.decode(
@@ -123,6 +125,7 @@ class ScoutsToken:
             if decoded:
                 token = ScoutsToken()
 
+                token.access_token = access_token
                 token.exp = decoded.get("exp", None)
                 token.iat = decoded.get("iat", None)
                 token.auth_time = decoded.get("auth_time", None)

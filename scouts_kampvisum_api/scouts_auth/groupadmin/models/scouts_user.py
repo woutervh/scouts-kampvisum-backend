@@ -6,7 +6,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import UserManager
 
-from scouts_auth.auth.exceptions import InvalidArgumentException
+from scouts_auth.auth.exceptions import InvalidArgumentException, ScoutsAuthException
 from scouts_auth.auth.models import User
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMember,
@@ -18,6 +18,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsGroup,
     ScoutsGroup,
     ScoutsFunction,
+    ScoutsToken,
 )
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
@@ -104,13 +105,26 @@ class ScoutsUser(User):
     #
     # The active access token, provided by group admin oidc
     #
-    access_token: str = ""
+    _access_token: ScoutsToken = None
 
     def __init__(self, *args, **kwargs):
         self._scouts_groups = []
         self._scouts_functions = []
+        self._access_token = None
 
         super().__init__(*args, **kwargs)
+
+    @property
+    def access_token(self) -> ScoutsToken:
+        return self._access_token.access_token
+
+    @access_token.setter
+    def access_token(self, access_token: ScoutsToken):
+        if not isinstance(access_token, ScoutsToken):
+            raise ScoutsAuthException(
+                f"[{self.username}] ScoutsUser only accepts a ScoutsToken instance for access token, not {access_token.__class__.__name__}")
+
+        self._access_token = access_token
 
     def clear_scouts_functions(self):
         self._scouts_functions = []

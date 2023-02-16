@@ -20,18 +20,15 @@ class ScoutsUserSessionService:
         ScoutsUserSession.objects.remove_session_data(username=username)
 
     @staticmethod
-    def get_user_from_session(access_token: str) -> settings.AUTH_USER_MODEL:
-        token: ScoutsToken = ScoutsToken.from_access_token(
-            access_token=access_token)
-
+    def get_user_from_session(access_token: ScoutsToken) -> settings.AUTH_USER_MODEL:
         session: ScoutsUserSession = ScoutsUserSession.objects.get_session_data(
-            username=token.preferred_username, expiration=token.exp)
+            username=access_token.preferred_username, expiration=access_token.exp)
         if session:
             logger.debug(
-                f"[{token.preferred_username}] USER SESSION - Retrieving user from session")
+                f"[{access_token.preferred_username}] USER SESSION - Retrieving user from session")
 
             user = ScoutsUser.objects.safe_get(
-                username=token.preferred_username, raise_exception=True)
+                username=access_token.preferred_username, raise_exception=True)
 
             deserialized = ScoutsUserSessionSerializer.to_scouts_user(
                 session=session)
@@ -49,25 +46,22 @@ class ScoutsUserSessionService:
         return None
 
     @staticmethod
-    def store_user_in_session(access_token: str, scouts_user: settings.AUTH_USER_MODEL) -> ScoutsUserSession:
+    def store_user_in_session(access_token: ScoutsToken, scouts_user: settings.AUTH_USER_MODEL) -> ScoutsUserSession:
         logger.debug(f"USER SESSION - Storing user in session",
                      user=scouts_user)
 
-        token: ScoutsToken = ScoutsToken.from_access_token(
-            access_token=access_token)
-
-        if token.preferred_username != scouts_user.username:
+        if access_token.preferred_username != scouts_user.username:
             raise ScoutsAuthException(
-                f"Username in token ({token.preferred_username}) does not equal user's username ({scouts_user.username})")
+                f"Username in token ({access_token.preferred_username}) does not equal user's username ({scouts_user.username})")
 
         session = ScoutsUserSession.objects.safe_get(
-            username=token.preferred_username)
+            username=access_token.preferred_username)
 
         if not session:
             session = ScoutsUserSession()
 
-        session.username = token.preferred_username
-        session.expiration = token.exp
+        session.username = access_token.preferred_username
+        session.expiration = access_token.exp
         session.data = ScoutsUserSessionSerializer.to_user_session(
             scouts_user=scouts_user)
 
