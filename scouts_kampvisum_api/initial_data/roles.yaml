@@ -25,6 +25,10 @@ role_section_leader:
   - participants.add_inuitsparticipant
   - participants.change_inuitsparticipant
   - participants.view_inuitsparticipant
+  - scouts_auth.add_persistedfile
+  - scouts_auth.change_persistedfile
+  - scouts_auth.delete_persistedfile
+  - scouts_auth.view_persistedfile
 role_group_leader:
   - camps.view_camptype
   - camps.view_campyear
@@ -52,6 +56,10 @@ role_group_leader:
   - participants.add_inuitsparticipant
   - participants.change_inuitsparticipant
   - participants.view_inuitsparticipant
+  - scouts_auth.add_persistedfile
+  - scouts_auth.change_persistedfile
+  - scouts_auth.delete_persistedfile
+  - scouts_auth.view_persistedfile
 role_district_commissioner:
   - camps.view_camptype
   - camps.view_campyear
@@ -83,6 +91,10 @@ role_district_commissioner:
   - participants.add_inuitsparticipant
   - participants.change_inuitsparticipant
   - participants.view_inuitsparticipant
+  - scouts_auth.add_persistedfile
+  - scouts_auth.change_persistedfile
+  - scouts_auth.delete_persistedfile
+  - scouts_auth.view_persistedfile
 role_shire_president:
   - camps.view_camptype
   - camps.view_campyear

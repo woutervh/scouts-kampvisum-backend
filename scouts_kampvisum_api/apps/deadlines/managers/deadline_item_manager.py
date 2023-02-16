@@ -25,11 +25,11 @@ class DeadlineItemManager(models.Manager):
         item_sub_category = kwargs.get("item_sub_category", None)
         item_check = kwargs.get("item_check", None)
         raise_error = kwargs.get("raise_error", False)
-        
+
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if deadline:
@@ -47,7 +47,7 @@ class DeadlineItemManager(models.Manager):
                     return self.get_queryset().get(
                         deadline=deadline, item_flag__id=item_flag
                     )
-                except:
+                except Exception:
                     pass
 
             if item_sub_category:
@@ -66,7 +66,7 @@ class DeadlineItemManager(models.Manager):
                     return self.get_queryset().get(
                         deadline=deadline, item_sub_category__id=item_sub_category
                     )
-                except:
+                except Exception:
                     pass
 
             if item_check:
@@ -85,7 +85,7 @@ class DeadlineItemManager(models.Manager):
                     return self.get_queryset().get(
                         deadline=deadline, item_check__id=item_check
                     )
-                except:
+                except Exception:
                     pass
 
         if raise_error:

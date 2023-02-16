@@ -52,8 +52,6 @@ class ScoutsPermissionService(PermissionService):
             "SCOUTS AUTHORIZATION SERVICE: updating user authorizations", user=user
         )
 
-        super().setup_permission_groups()
-
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
             user = self.add_user_as_admin(user)

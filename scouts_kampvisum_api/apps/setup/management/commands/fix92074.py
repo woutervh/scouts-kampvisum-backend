@@ -139,7 +139,7 @@ class Command(BaseCommand):
         try:
             section.full_clean()
             section.save()
-        except:
+        except Exception:
             raise ValidationError(
                 "Unable to update ScoutsSection {} (group: {}, name: {}, gender: {}, age_group: {}) with values (group: {}, name: {}, gender: {}, age_group: {})".format(
                     section.id,

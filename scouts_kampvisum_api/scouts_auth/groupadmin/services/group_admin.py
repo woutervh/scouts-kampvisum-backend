@@ -93,8 +93,8 @@ class GroupAdmin:
                     },
                     json=payload
                 )
-                logger.debug(
-                    f"[TIMING] POST {endpoint.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: {(timezone.now() - now).total_seconds()}", user=active_user)
+                logger.timing(start=now, method='POST', endpoint=endpoint.replace(
+                    GroupAdminSettings.get_group_admin_base_url(), ''), user=active_user)
             else:
                 response = requests.post(endpoint, data=payload)
             response.raise_for_status()
@@ -118,8 +118,8 @@ class GroupAdmin:
                     "Authorization": f"Bearer {active_user.access_token}"
                 },
             )
-            logger.debug(
-                f"[TIMING] GET {endpoint.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: {(timezone.now() - now).total_seconds()}", user=active_user)
+            logger.timing(start=now, endpoint=endpoint.replace(
+                GroupAdminSettings.get_group_admin_base_url(), ''), user=active_user)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
@@ -145,8 +145,8 @@ class GroupAdmin:
                     "Authorization": f"Bearer {active_user.access_token}"
                 },
             )
-            logger.debug(
-                f"[TIMING] PING {endpoint.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: {(timezone.now() - now).total_seconds()}")
+            logger.timing(start=now, endpoint=endpoint.replace(
+                GroupAdminSettings.get_group_admin_base_url(), ''), user=active_user)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
@@ -188,8 +188,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         allowed_calls: ScoutsAllowedCalls = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_allowed_calls()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_allowed_calls()", user=active_user)
 
         return allowed_calls
 
@@ -218,8 +218,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         groups_response: AbstractScoutsGroupListResponse = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_groups()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_groups()", user=active_user)
 
         return groups_response
 
@@ -248,8 +248,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         groups_response: AbstractScoutsGroupListResponse = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_accountable_groups()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_accountable_groups()", user=active_user)
 
         return groups_response
 
@@ -285,8 +285,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         group: AbstractScoutsGroup = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_group()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_group()", user=active_user)
 
         if group.group_admin_id != group_group_admin_id:
             logger.warn(
@@ -310,8 +310,8 @@ class GroupAdmin:
 
         now = timezone.now()
         data = AbstractScoutsGroupSerializer(group).data
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_group_serialized()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_group_serialized()", user=active_user)
 
         return data
 
@@ -374,8 +374,8 @@ class GroupAdmin:
         function_response: AbstractScoutsFunctionDescriptionListResponse = (
             serializer.save()
         )
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_function_descriptions()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_function_descriptions()", user=active_user)
 
         return function_response
 
@@ -407,8 +407,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         scouts_function: AbstractScoutsFunction = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_function()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_function()", user=active_user)
 
         return scouts_function
 
@@ -437,8 +437,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         member: AbstractScoutsMember = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_profile()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_profile()", user=active_user)
 
         return member
 
@@ -469,8 +469,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         member: AbstractScoutsMember = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_info()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_info()", user=active_user)
 
         if member.group_admin_id != group_admin_id:
             logger.warn(
@@ -496,8 +496,8 @@ class GroupAdmin:
 
         now = timezone.now()
         data = AbstractScoutsMemberFrontendSerializer(member).data
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_info_serialized()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_info_serialized()", user=active_user)
 
         return data
 
@@ -563,8 +563,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberListResponse = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_list()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_list()", user=active_user)
 
         return member_list
 
@@ -624,8 +624,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberSearchResponse = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, get_member_list_filtered()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_list_filtered()", user=active_user)
 
         return member_list
 
@@ -657,8 +657,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberSearchResponse = serializer.save()
-        logger.debug(
-            f"[TIMING] Serialization: {(timezone.now() - now).total_seconds()}, search_member()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="search_member()", user=active_user)
 
         return member_list
 

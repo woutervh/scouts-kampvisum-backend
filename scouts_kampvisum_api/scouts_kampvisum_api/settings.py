@@ -33,45 +33,6 @@ from scouts_auth.inuits.logging import InuitsLogger
 env = Env()
 env.read_env()
 
-# Load the appropriate environment file
-# In .env, define as only variable ENVIRONMENT
-# Set it to 'development' or 'production' and define the appropriate variables
-# in .env.development and .env.production
-# Default: development
-environments = [".env.development.local",
-                ".env.development", ".env.production"]
-
-environment_conf = env.str("ENVIRONMENT", default="development")
-environment_loaded = False
-
-if environment_conf:
-    try:
-        env = Env()
-        env.read_env(".env." + environment_conf)
-
-        environment_loaded = True
-        # logger.debug("Environment file loaded: .env." + environment_conf)
-    except Exception:
-        # logger.warn(
-        #     "WARN: Environment file .env." + environment_conf,
-        #     " not found ! " + "Defaulting to next configured default environment.",
-        # )
-        pass
-
-    if not environment_loaded:
-        for environment in environments:
-            if environment == ".env." + environment_conf:
-                pass
-
-            try:
-                env = Env()
-                env.read_env(".env." + environment)
-
-                # logger.debug("Environment file loaded: .env." + environment)
-                environment_loaded = True
-            except Exception:
-                pass
-
 # ############################################################################ #
 #                                                                              #
 # DJANGO                                                                       #
@@ -181,7 +142,7 @@ LOGGING = {
 }
 
 
-InuitsLogger.setup_logging(config=LOGGING)
+InuitsLogger.setup_logging(level=LOGGING_LEVEL, config=LOGGING)
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
@@ -199,7 +160,6 @@ def correct_url(issuer, url):
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
-    "scouts_auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -207,6 +167,7 @@ INSTALLED_APPS = [
     "safedelete",
     "storages",
     "sqlmiddleware",
+    "scouts_auth",
     "apps.utils",
     "apps.setup",
     "apps.participants",

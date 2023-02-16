@@ -15,6 +15,8 @@ class Command(BaseCommand):
 
     COMMANDS = [
         # "empty_functions_groups",
+        "createcontenttypes",
+        "setuppermissions",
         "runfixtures",
         "setupcampyears",
         "loadcategories",

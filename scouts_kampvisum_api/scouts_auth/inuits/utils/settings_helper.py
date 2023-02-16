@@ -10,6 +10,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
+
 class SettingsHelper:
     @staticmethod
     def get_attribute(
@@ -27,7 +28,8 @@ class SettingsHelper:
         module_default_value: str = None,
     ) -> str:
         return str(
-            SettingsHelper.get_attribute(attribute_name, attribute_default_value)
+            SettingsHelper.get_attribute(
+                attribute_name, attribute_default_value)
         )
 
     @staticmethod
@@ -37,7 +39,8 @@ class SettingsHelper:
         module_default_value: bool = None,
     ) -> bool:
         return bool(
-            SettingsHelper.get_attribute(attribute_name, attribute_default_value)
+            SettingsHelper.get_attribute(
+                attribute_name, attribute_default_value)
         )
 
     @staticmethod
@@ -47,7 +50,8 @@ class SettingsHelper:
         module_default_value: int = None,
     ) -> int:
         return int(
-            SettingsHelper.get_attribute(attribute_name, attribute_default_value)
+            SettingsHelper.get_attribute(
+                attribute_name, attribute_default_value)
         )
 
     @staticmethod
@@ -60,12 +64,12 @@ class SettingsHelper:
             value = SettingsHelper.get_attribute(
                 attribute_name, attribute_default_value
             )
-        except:
+        except Exception:
             try:
                 value = SettingsHelper.get_attribute(
                     attribute_name, module_default_value
                 )
-            except:
+            except Exception:
                 value = []
 
         if isinstance(value, str):
@@ -74,7 +78,8 @@ class SettingsHelper:
             return value
 
         raise ValidationError(
-            "Expected a list, but got a {}".format(type(value).__class__.__name__)
+            "Expected a list, but got a {}".format(
+                type(value).__class__.__name__)
         )
 
     @staticmethod

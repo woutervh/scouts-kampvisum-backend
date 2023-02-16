@@ -35,13 +35,13 @@ class CampTypeManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if camp_type:
             try:
                 return self.get_queryset().get(camp_type=camp_type)
-            except:
+            except Exception:
                 pass
 
         if raise_error:

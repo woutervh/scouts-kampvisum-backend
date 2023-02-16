@@ -26,13 +26,13 @@ class DeadlineFlagManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if name:
             try:
                 return self.get_queryset().get(name=name)
-            except:
+            except Exception:
                 pass
 
         if raise_error:

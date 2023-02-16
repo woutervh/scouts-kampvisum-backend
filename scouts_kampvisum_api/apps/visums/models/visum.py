@@ -65,7 +65,7 @@ class CampVisum(GroupAdminIdMixin, GroupNameMixin, AuditedBaseModel):
     notes = OptionalCharField(max_length=300)
 
     class Meta:
-        # ordering = ["sections__age_group", "name"]
+        ordering = ["sections__age_group", "name"]
         indexes = [
             models.Index(fields=['group'], name='group_idx'),
             models.Index(fields=['group', 'year'], name='group_year_idx')

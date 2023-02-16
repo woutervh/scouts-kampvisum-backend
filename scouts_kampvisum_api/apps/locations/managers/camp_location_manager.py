@@ -25,7 +25,7 @@ class CampLocationManager(models.Manager):
             try:
                 logger.debug("here")
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
         logger.debug("hmmmm")
         return None

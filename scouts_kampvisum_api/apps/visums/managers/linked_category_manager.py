@@ -32,7 +32,7 @@ class LinkedCategoryManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if category_set and parent:
@@ -42,7 +42,7 @@ class LinkedCategoryManager(models.Manager):
                     parent=parent,
                     is_archived=is_archived,
                 )
-            except:
+            except Exception:
                 pass
 
         if raise_error:

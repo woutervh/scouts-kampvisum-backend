@@ -21,7 +21,8 @@ class PersistedFileService:
         uploaded_file = data.get("file", None)
 
         if uploaded_file is None:
-            raise Http404("Can't store a non-existent file")
+            raise Http404(
+                f"[{request.user.username}] Can't store a non-existent file")
 
         return self.save_file(
             name=uploaded_file.name,
@@ -51,15 +52,15 @@ class PersistedFileService:
 
     def save_local_file(self, path):
         with open(path, "rb") as f:
-            file = File(f)
+            upload = File(f)
             mime, encoding = mimetypes.guess_type(path)
 
             logger.debug("PATH: %s - MIME: %s", path, mime)
             print("PATH: {} - MIME: {}".format(path, mime))
-            return self.save_file(name=file.name, content=file, content_type=mime)
+            return self.save_file(name=upload.name, content=upload, content_type=mime)
 
-    def rename(self, file: PersistedFile, newName: str):
-        if not newName.strip():
+    def rename(self, file: PersistedFile, new_name: str):
+        if not new_name.strip():
             raise ValidationError("New name not set !")
 
         file.file.copy()

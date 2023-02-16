@@ -332,5 +332,5 @@ class InuitsVisumMailService(EmailService):
             self.send(mail)
 
             return True
-        except:
+        except Exception:
             return False

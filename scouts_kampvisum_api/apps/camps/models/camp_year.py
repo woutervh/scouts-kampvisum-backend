@@ -29,6 +29,7 @@ class CampYear(AuditedBaseModel):
     end_date = models.DateField()
 
     class Meta:
+        ordering = ["year"]
         indexes = [
             models.Index(fields=['year'], name='year_idx')
         ]

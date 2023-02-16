@@ -28,19 +28,19 @@ class LinkedDeadlineManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if parent and visum:
             try:
                 return self.get_queryset().get(parent=parent, visum=visum)
-            except:
+            except Exception:
                 pass
-        
+
         if parent_name and visum:
             try:
                 return self.get_queryset().get(parent__name=parent_name, visum=visum)
-            except:
+            except Exception:
                 pass
 
         if raise_error:

@@ -27,6 +27,7 @@ class LinkedDeadline(AuditedBaseModel):
     )
 
     class Meta:
+        ordering = ["parent"]
         unique_together = ("parent", "visum")
 
     def __str__(self):

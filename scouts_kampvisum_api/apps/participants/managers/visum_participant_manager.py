@@ -36,7 +36,7 @@ class VisumParticipantManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if check and inuits_participant:
@@ -44,7 +44,7 @@ class VisumParticipantManager(models.Manager):
                 return self.get_queryset().get(
                     checks=check, participant__id=inuits_participant
                 )
-            except:
+            except Exception:
                 pass
 
         if check and group_admin_id:
@@ -52,7 +52,7 @@ class VisumParticipantManager(models.Manager):
                 return self.get_queryset().get(
                     checks=check, participant__group_admin_id=group_admin_id
                 )
-            except:
+            except Exception:
                 pass
 
         if raise_error:

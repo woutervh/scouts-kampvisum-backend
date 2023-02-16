@@ -133,7 +133,7 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: VisumDeadlineSerializer})
     def list_for_visum(self, request, visum_id):
-        logger.debug("Loading linked deadlines for visum %s", visum_id)
+        logger.debug(f"Loading linked deadlines for visum ({visum_id})")
 
         instances = self.filter_queryset(
             self.linked_deadline_service.list_for_visum(visum=visum_id)

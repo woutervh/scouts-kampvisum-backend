@@ -35,7 +35,7 @@ class CategoryManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if camp_year and len(camp_types) > 0:
@@ -45,7 +45,7 @@ class CategoryManager(models.Manager):
                     .filter(camp_year=camp_year, camp_types__in=camp_types)
                     .distinct()
                 )
-            except:
+            except Exception:
                 pass
 
         if raise_error:

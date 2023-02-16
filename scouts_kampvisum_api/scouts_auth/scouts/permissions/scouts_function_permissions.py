@@ -84,4 +84,4 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
                 pass
 
         raise ScoutsAuthException(
-            "Permissions can only be set if the group is passed as a GET param and the user object is present")
+            f"[{request.user.username}] {request.path}: Permissions can only be set if the group is passed as a GET param and the user object is present")

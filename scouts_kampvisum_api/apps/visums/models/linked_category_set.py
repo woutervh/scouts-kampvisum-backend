@@ -25,13 +25,13 @@ class LinkedCategorySetManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if visum:
             try:
                 return self.get_queryset().get(visum=visum)
-            except:
+            except Exception:
                 pass
 
         if raise_error:

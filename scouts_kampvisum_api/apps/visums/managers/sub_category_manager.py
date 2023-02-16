@@ -34,13 +34,13 @@ class SubCategoryManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if name:
             try:
                 return self.get_queryset().get(name=name)
-            except:
+            except Exception:
                 pass
 
         if category and len(camp_types) > 0:
@@ -50,7 +50,7 @@ class SubCategoryManager(models.Manager):
                     .filter(category=category, camp_types__in=camp_types)
                     .distinct()
                 )
-            except:
+            except Exception:
                 pass
 
         if raise_error:

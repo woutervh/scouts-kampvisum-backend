@@ -28,13 +28,13 @@ class DeadlineManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if name and camp_year:
             try:
                 return self.get_queryset().get(name=name, camp_year=camp_year)
-            except:
+            except Exception:
                 pass
 
         if camp_year and len(camp_types) > 0:
@@ -42,7 +42,7 @@ class DeadlineManager(models.Manager):
                 return self.get_queryset().filter(
                     camp_year=camp_year, camp_types__in=camp_types
                 )
-            except:
+            except Exception:
                 pass
 
         if raise_error:
@@ -51,7 +51,8 @@ class DeadlineManager(models.Manager):
                     pk,
                     name,
                     camp_year,
-                    ",".join(camp_type.to_readable_str() for camp_type in camp_types),
+                    ",".join(camp_type.to_readable_str()
+                             for camp_type in camp_types),
                 )
             )
 

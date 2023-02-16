@@ -34,19 +34,19 @@ class CampYearManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if year:
             try:
                 return self.get_queryset().get(year=year)
-            except:
+            except Exception:
                 pass
 
         if start_date and end_date:
             try:
                 return self.get_queryset().get(start_date=start_date, end_date=end_date)
-            except:
+            except Exception:
                 pass
 
         if raise_error:

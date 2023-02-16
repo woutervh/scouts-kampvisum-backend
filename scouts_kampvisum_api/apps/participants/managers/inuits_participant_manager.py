@@ -36,13 +36,13 @@ class InuitsParticipantManager(models.Manager):
         if pk:
             try:
                 return self.get_queryset().get(pk=pk)
-            except:
+            except Exception:
                 pass
 
         if group_admin_id:
             try:
                 return self.get_queryset().get(group_admin_id=str(group_admin_id))
-            except:
+            except Exception:
                 pass
 
         if group_group_admin_id and email:
@@ -50,7 +50,7 @@ class InuitsParticipantManager(models.Manager):
                 return self.get_queryset().get(
                     group_group_admin_id=group_group_admin_id, email=email
                 )
-            except:
+            except Exception:
                 pass
 
         if raise_error:

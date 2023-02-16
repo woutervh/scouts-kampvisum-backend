@@ -36,12 +36,11 @@ with the builtin module. Since this module is a helper, it is expected
 to be imported alongside the builtin module.
 """
 
+
 import abc
 import logging
 import sys
 import warnings
-
-
 __all__ = [
     "KEEP",
     "KEEP_WARN",
@@ -195,7 +194,7 @@ def add_logging_level(
     >>> logging.getLogger(__name__).setLevel(logging.XTRACE)
     >>> try:
     >>>     1 / 0
-    >>> except:
+    >>> except Exception:
     >>>     # This line will log the exception
     >>>     logging.getLogger(__name__).xtrace('that failed')
     >>>     # This one will not
@@ -206,6 +205,7 @@ def add_logging_level(
     # This method was inspired by the answers to Stack Overflow post
     # http://stackoverflow.com/q/2183233/2988730, especially
     # http://stackoverflow.com/a/13638084/2988730
+
     def for_logger_class(self, message, *args, **kwargs):
         if self.isEnabledFor(level_num):
             kwargs.setdefault("exc_info", exc_info)
