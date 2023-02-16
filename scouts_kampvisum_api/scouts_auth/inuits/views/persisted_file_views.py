@@ -7,6 +7,7 @@ from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from scouts_auth.scouts.services import ScoutsPermissionService
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.filters import PersistedFileFilter
 from scouts_auth.inuits.services import PersistedFileService
@@ -28,6 +29,7 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
 
     serializer_class = PersistedFileSerializer
     queryset = PersistedFile.objects.all()
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = PersistedFileFilter
 
