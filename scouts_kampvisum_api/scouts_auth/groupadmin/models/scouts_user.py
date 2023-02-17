@@ -161,12 +161,12 @@ class ScoutsUser(User):
             self._scouts_groups.append(scouts_group)
             self._scouts_groups.sort(key=lambda x: x.group_admin_id)
 
-    def get_scouts_group(self, group_admin_id: str, raise_exception: bool = False) -> ScoutsGroup:
+    def get_scouts_group(self, group_admin_id: str, raise_error: bool = False) -> ScoutsGroup:
         for scouts_group in self._scouts_groups:
             if scouts_group.group_admin_id == group_admin_id:
                 return scouts_group
 
-        if raise_exception:
+        if raise_error:
             raise InvalidArgumentException(
                 f"[{self.username}] This user doesn't have access to group {group_admin_id}")
 
@@ -370,7 +370,7 @@ class ScoutsUser(User):
 
         if not scouts_group:
             scouts_group = self.get_scouts_group(
-                group_admin_id=group_admin_id, raise_exception=True)
+                group_admin_id=group_admin_id, raise_error=True)
 
         if not scouts_group:
             return False

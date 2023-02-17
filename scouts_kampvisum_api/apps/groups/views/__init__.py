@@ -1,2 +1,1 @@
-from .scouts_section_name_views import ScoutsSectionNameViewSet
 from .scouts_section_views import ScoutsSectionViewSet

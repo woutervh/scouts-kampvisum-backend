@@ -43,12 +43,12 @@ class ScoutsSectionService:
         """
         if group and not isinstance(group, ScoutsGroup):
             group = request.user.get_scouts_group(
-                group_admin_id=group, raise_exception=True)
+                group_admin_id=group, raise_error=True)
 
         if section:
             if section.group and not isinstance(section.group, ScoutsGroup):
                 group = request.user.get_scouts_group(
-                    group_admin_id=section.group, raise_exception=True)
+                    group_admin_id=section.group, raise_error=True)
             else:
                 group = section.group
 

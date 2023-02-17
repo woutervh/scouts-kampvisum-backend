@@ -29,7 +29,7 @@ class ScoutsSectionQuerySet(models.QuerySet):
 
 class ScoutsSectionManager(models.Manager):
     def get_queryset(self):
-        return ScoutsSectionQuerySet(self.model, using=self._db).prefetch_related('section_name')
+        return ScoutsSectionQuerySet(self.model, using=self._db)
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))

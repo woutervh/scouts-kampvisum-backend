@@ -52,7 +52,7 @@ class CampVisumService:
 
         if isinstance(group, str):
             group = request.user.get_scouts_group(
-                group_admin_id=group, raise_exception=True)
+                group_admin_id=group, raise_error=True)
 
         logger.debug(
             f"Creating camp '{name}' for group {group.group_admin_id}")

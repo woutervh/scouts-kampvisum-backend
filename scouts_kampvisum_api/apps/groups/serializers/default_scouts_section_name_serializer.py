@@ -1,10 +1,7 @@
 from rest_framework import serializers
 
 from apps.groups.models import DefaultScoutsSectionName
-from apps.groups.serializers import (
-    ScoutsGroupTypeSerializer,
-    ScoutsSectionNameSerializer,
-)
+from apps.groups.serializers import ScoutsGroupTypeSerializer
 
 
 # LOGGING
@@ -20,7 +17,6 @@ class DefaultScoutsSectionNameSerializer(serializers.ModelSerializer):
     """
 
     group_type = ScoutsGroupTypeSerializer()
-    name = ScoutsSectionNameSerializer()
 
     class Meta:
         model = DefaultScoutsSectionName

@@ -28,7 +28,7 @@ class ScoutsUserSessionService:
                 f"[{access_token.preferred_username}] USER SESSION - Retrieving user from session")
 
             user = ScoutsUser.objects.safe_get(
-                username=access_token.preferred_username, raise_exception=True)
+                username=access_token.preferred_username, raise_error=True)
 
             deserialized = ScoutsUserSessionSerializer.to_scouts_user(
                 session=session)

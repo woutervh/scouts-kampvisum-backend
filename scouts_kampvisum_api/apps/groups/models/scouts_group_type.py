@@ -21,13 +21,15 @@ class ScoutsGroupType(AbstractBaseModel):
     objects = ScoutsGroupTypeManager()
 
     group_type = RequiredCharField(max_length=64)
-    parent = models.ForeignKey("ScoutsGroupType", null=True, on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        "ScoutsGroupType", null=True, on_delete=models.CASCADE)
     is_default = UniqueBooleanField(default=False)
 
     class Meta:
         ordering = ["group_type"]
         constraints = [
-            models.UniqueConstraint(fields=["group_type"], name="unique_group_type")
+            models.UniqueConstraint(
+                fields=["group_type"], name="unique_group_type")
         ]
 
     def natural_key(self):

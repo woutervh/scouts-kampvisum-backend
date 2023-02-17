@@ -1,10 +1,8 @@
 from django.db import models
 
-from apps.groups.models import ScoutsSectionName
 from apps.groups.managers import ScoutsSectionManager
 
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
-
 from scouts_auth.inuits.models import AbstractBaseModel, Gender
 from scouts_auth.inuits.models.fields import (
     DefaultCharField,
@@ -28,9 +26,6 @@ class ScoutsSection(AbstractBaseModel):
     objects = ScoutsSectionManager()
 
     group = GroupAdminIdField()
-    section_name = models.ForeignKey(
-        ScoutsSectionName, on_delete=models.DO_NOTHING, null=True, blank=True
-    )
     name = RequiredCharField(max_length=128)
     gender = DefaultCharField(
         choices=Gender.choices,
@@ -48,13 +43,6 @@ class ScoutsSection(AbstractBaseModel):
                 name="unique_group_name_gender_age_group_for_section",
             )
         ]
-        permissions = [
-            ("create_section", "User can create a group section"),
-            ("read_section", "User can view a group section"),
-            ("update_section", "User can edit a group section"),
-            ("delete_section", "User can delete a group section"),
-            ("list_section", "User can list sections for his/her group"),
-        ]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED ScoutsSection")
@@ -62,5 +50,5 @@ class ScoutsSection(AbstractBaseModel):
 
     def __str__(self):
         return (
-            f"group ({self.group}), section_name ({self.section_name}), name ({self.name}), gender ({self.gender}), age_group ({self.age_group}), hidden ({self.hidden})"
+            f"group ({self.group}), name ({self.name}), gender ({self.gender}), age_group ({self.age_group}), hidden ({self.hidden})"
         )

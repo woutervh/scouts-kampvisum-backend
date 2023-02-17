@@ -21,7 +21,6 @@ class Command(BaseCommand):
 
     FIXTURES = [
         "groups/fixtures/scouts_group_types.json",
-        "groups/fixtures/scouts_section_names.json",
         "groups/fixtures/default_scouts_section_names.json",
         "camps/fixtures/camp_types.json",
         "visums/fixtures/category_priorities.json",

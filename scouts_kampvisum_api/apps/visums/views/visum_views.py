@@ -40,7 +40,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         return True
 
     def get_object(self, pk) -> CampVisum:
-        return CampVisum.objects.safe_get(pk=pk, raise_exception=True)
+        return CampVisum.objects.safe_get(pk=pk, raise_error=True)
 
     @swagger_auto_schema(
         request_body=CampVisumSerializer,

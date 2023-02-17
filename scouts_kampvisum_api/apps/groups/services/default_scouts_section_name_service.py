@@ -2,7 +2,6 @@ from typing import List
 
 from apps.groups.models import (
     DefaultScoutsSectionName,
-    ScoutsSectionName,
     ScoutsGroupType,
 )
 
