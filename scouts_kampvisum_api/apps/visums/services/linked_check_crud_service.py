@@ -54,11 +54,11 @@ class LinkedCheckCRUDService:
     ) -> LinkedCheck:
         linked_check: LinkedCheck = LinkedCheck.get_concrete_check_type(check)
 
-        logger.debug(
-            "Creating LinkedCheck: %s (type: %s)",
-            check.name,
-            type(linked_check).__name__,
-        )
+        # logger.debug(
+        #     "Creating LinkedCheck: %s (type: %s)",
+        #     check.name,
+        #     type(linked_check).__name__,
+        # )
 
         linked_check.parent = check
         linked_check.sub_category = linked_sub_category

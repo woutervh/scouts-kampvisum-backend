@@ -55,12 +55,12 @@ class LinkedCategoryService:
     def create_linked_category(
         self, request, linked_category_set: LinkedCategorySet, category: Category
     ) -> LinkedCategory:
-        logger.debug(
-            "Creating LinkedCategory '%s' for visum '%s' (%s)",
-            category.name,
-            linked_category_set.visum.name,
-            linked_category_set.visum.id,
-        )
+        # logger.debug(
+        #     "Creating LinkedCategory '%s' for visum '%s' (%s)",
+        #     category.name,
+        #     linked_category_set.visum.name,
+        #     linked_category_set.visum.id,
+        # )
 
         linked_category = LinkedCategory()
 

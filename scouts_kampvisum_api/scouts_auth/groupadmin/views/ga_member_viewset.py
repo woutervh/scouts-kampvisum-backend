@@ -108,13 +108,15 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
         )
 
         if not term:
-            raise ValidationError("Url param 'term' is a required filter")
+            #raise ValidationError("Url param 'term' is a required filter")
+            logger.warn("Url param 'test' is a required filter")
 
         results: List[AbstractScoutsMember] = self.service.search_member_filtered(
             request.user, term=term, group_group_admin_id=group_group_admin_id
         )
 
-        serializer = AbstractScoutsMemberSearchFrontendSerializer(results, many=True)
+        serializer = AbstractScoutsMemberSearchFrontendSerializer(
+            results, many=True)
 
         return Response(serializer.data)
 
@@ -127,7 +129,8 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
     def view_member_profile_internal(self, request) -> Response:
         logger.debug("GA: Received request for current user GA member profile")
 
-        member: AbstractScoutsMember = self.service.get_member_profile(request.user)
+        member: AbstractScoutsMember = self.service.get_member_profile(
+            request.user)
 
         serializer = AbstractScoutsMemberSerializer(member)
 
@@ -144,7 +147,8 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
     def view_member_profile(self, request) -> Response:
         logger.debug("GA: Received request for current user GA member profile")
 
-        member: AbstractScoutsMember = self.service.get_member_profile(request.user)
+        member: AbstractScoutsMember = self.service.get_member_profile(
+            request.user)
         groups_response: AbstractScoutsGroupListResponse = self.service.get_groups(
             request.user
         )

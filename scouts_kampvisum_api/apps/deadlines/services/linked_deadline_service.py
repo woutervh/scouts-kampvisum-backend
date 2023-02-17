@@ -92,13 +92,13 @@ class LinkedDeadlineService:
                 id=fields.get("visum", {}).get("id", None), raise_error=True
             )
 
-        logger.debug(
-            "Creating a %s instance for visum %s (%s), with name %s",
-            "LinkedDeadline",
-            visum.name,
-            visum.id,
-            instance.parent.name,
-        )
+        # logger.debug(
+        #     "Creating a %s instance for visum %s (%s), with name %s",
+        #     "LinkedDeadline",
+        #     visum.name,
+        #     visum.id,
+        #     instance.parent.name,
+        # )
 
         instance.visum = visum
         instance.created_by = request.user
@@ -106,7 +106,7 @@ class LinkedDeadlineService:
         instance.full_clean()
         instance.save()
 
-        logger.debug(f"LINKED DEADLINE: {instance}")
+        # logger.debug(f"LINKED DEADLINE: {instance}")
 
         items: List[
             LinkedDeadlineItem
