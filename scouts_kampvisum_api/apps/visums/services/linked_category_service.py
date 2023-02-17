@@ -31,16 +31,16 @@ class LinkedCategoryService:
             camp_types=linked_category_set.visum.camp_types.all(),
             raise_error=True,
         )
-        logger.debug(
-            "Linking %d Category instances for camp_year %d and camp_types %s to visum %s",
-            len(categories),
-            linked_category_set.visum.year.year,
-            ",".join(
-                camp_type.camp_type
-                for camp_type in linked_category_set.visum.camp_types.all()
-            ),
-            linked_category_set.visum.name,
-        )
+        # logger.debug(
+        #     "Linking %d Category instances for camp_year %d and camp_types %s to visum %s",
+        #     len(categories),
+        #     linked_category_set.visum.year.year,
+        #     ",".join(
+        #         camp_type.camp_type
+        #         for camp_type in linked_category_set.visum.camp_types.all()
+        #     ),
+        #     linked_category_set.visum.name,
+        # )
 
         for category in categories:
             self.create_linked_category(

@@ -177,19 +177,19 @@ class LinkedDeadlineService:
         if len(deadlines) == 0:
             raise ValidationError("No deadlines found to link to visum")
 
-        logger.debug(
-            "Found %d Deadline instances with camp year %s and camp types %s",
-            len(deadlines),
-            camp_year.year,
-            ",".join(camp_type.camp_type for camp_type in camp_types),
-        )
+        # logger.debug(
+        #     "Found %d Deadline instances with camp year %s and camp types %s",
+        #     len(deadlines),
+        #     camp_year.year,
+        #     ",".join(camp_type.camp_type for camp_type in camp_types),
+        # )
         for deadline in deadlines:
-            logger.debug(
-                "Setting up LinkedDeadline %s (%s) for visum %s",
-                deadline.name,
-                deadline.id,
-                visum.id,
-            )
+            # logger.debug(
+            #     "Setting up LinkedDeadline %s (%s) for visum %s",
+            #     deadline.name,
+            #     deadline.id,
+            #     visum.id,
+            # )
             linked_deadline: LinkedDeadline = self.create_or_update_linked_deadline(
                 request=request, deadline=deadline, visum=visum
             )

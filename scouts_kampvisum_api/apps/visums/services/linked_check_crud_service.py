@@ -32,12 +32,12 @@ class LinkedCheckCRUDService:
             raise_error=True,
         )
 
-        logger.debug(
-            "Linking %d checks to linked sub-category %s (%s)",
-            len(checks),
-            linked_sub_category.parent.name,
-            linked_sub_category.id,
-        )
+        # logger.debug(
+        #     "Linking %d checks to linked sub-category %s (%s)",
+        #     len(checks),
+        #     linked_sub_category.parent.name,
+        #     linked_sub_category.id,
+        # )
 
         for check in checks:
             self.create_linked_check(

@@ -30,12 +30,12 @@ class LinkedSubCategoryService:
             raise_error=True,
         )
 
-        logger.debug(
-            "Linking %d sub-categories to category %s (%s)",
-            len(sub_categories),
-            linked_category.id,
-            linked_category.parent.name,
-        )
+        # logger.debug(
+        #     "Linking %d sub-categories to category %s (%s)",
+        #     len(sub_categories),
+        #     linked_category.id,
+        #     linked_category.parent.name,
+        # )
 
         for sub_category in sub_categories:
             self.create_linked_sub_category(

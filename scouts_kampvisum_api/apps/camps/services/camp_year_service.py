@@ -58,7 +58,7 @@ class CampYearService:
         qs = CampYear.objects.filter(
             start_date__lte=start_date, end_date__gte=end_date)
         if qs.count() == 1:
-            logger.debug("Found a year: %s", qs[0])
+            # logger.debug("Found a year: %s", qs[0])
             return qs[0]
 
         return None

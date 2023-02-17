@@ -33,8 +33,8 @@ class LinkedDeadlineItemService:
                     linked_deadline.parent.name,
                 )
             )
-        else:
-            logger.debug(f"Found {len(items)} deadline items to link")
+        # else:
+        #     logger.debug(f"Found {len(items)} deadline items to link")
 
         results = []
         for item in items:
