@@ -23,6 +23,7 @@ class Command(BaseCommand):
         "loadsubcategories",
         "loadchecks",
         "loaddefaultdeadlines",
+        "createvisums",
         # "fix92074",
         # "fix92074bis",
         # "sprint7fix91022",
