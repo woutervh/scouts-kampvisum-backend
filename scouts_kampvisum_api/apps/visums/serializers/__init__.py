@@ -26,5 +26,5 @@ from .linked_sub_category_approval_serializer import LinkedSubCategoryApprovalSe
 from .linked_category_serializer import LinkedCategorySerializer
 from .linked_category_set_serializer import LinkedCategorySetSerializer
 from .visum_engagement_serializer import CampVisumEngagementSerializer
-from .visum_serializer import CampVisumSerializer
+from .visum_serializer import CampVisumSerializer, CampVisumOverviewSerializer
 from .visum_notes_serializer import CampVisumNotesSerializer

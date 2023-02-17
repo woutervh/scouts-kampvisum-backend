@@ -5,7 +5,8 @@ from django.db import models, connections
 from django.db.models import Q
 from django.core.exceptions import ValidationError
 
-from apps.camps.models import CampYear
+from apps.camps.models import CampYear, CampType
+from apps.groups.models import ScoutsSection
 
 from scouts_auth.groupadmin.models import AbstractScoutsFunction, ScoutsGroup
 from scouts_auth.groupadmin.settings import GroupAdminSettings
@@ -26,19 +27,13 @@ class CampVisumQuerySet(models.QuerySet):
     def all(self, *args, **kwargs):
         return super().all(*args, **kwargs)
 
-    def get_all_for_group(self, group_admin_id: str):
-        return super().filter(group=group_admin_id)
-
-    def get_all_for_year(self, year: int):
-        return super().filter(year__year=year)
-
     def get_all_for_group_and_year(self, group_admin_id: str, year: int):
         with connections['default'].cursor() as cursor:
             cursor.execute(
-                f"select * from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group={group_admin_id} and cc.year={year}"
+                f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name, cc.year as year from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group='{group_admin_id}'{' and cc.year={year}' if year else ''}"
             )
             return cursor.fetchall()
-        return super().filter(group=group_admin_id, year__year=year)
+        return None
 
     def get_linked_groups(self):
         with connections['default'].cursor() as cursor:
@@ -46,6 +41,15 @@ class CampVisumQuerySet(models.QuerySet):
                 f"select distinct(vc.group) as group, vc.group_name from visums_campvisum vc"
             )
             return cursor.fetchall()
+
+    def count_unchecked_checks(self, pk):
+        with connections['default'].cursor() as cursor:
+            cursor.execute(
+                f"select count(1) from visums_linkedcategoryset vl where vl.visum_id = '{pk}' and vl.check_state = 'UNCHECKED'"
+            )
+            return cursor.fetchone()[0]
+
+        return 1
 
 
 class CampVisumManager(models.Manager):
@@ -73,20 +77,38 @@ class CampVisumManager(models.Manager):
 
     def get_all_for_group_and_year(self, group: ScoutsGroup = None, group_admin_id: str = None, year: CampYear = None, year_number: int = None):
         if group:
-            group_admin_id = group.group_admin_id
+            if isinstance(group, ScoutsGroup):
+                group_admin_id = group.group_admin_id
+            else:
+                group_admin_id = group
         if year:
             year = year.year
 
-        if group_admin_id and year:
-            return self.get_queryset().get_all_for_group_and_year(group_admin_id=group_admin_id, year=year)
+        if not group_admin_id:
+            raise ValidationError(f"Can't query CampVisum without a group")
 
-        if group_admin_id:
-            return self.get_queryset().get_all_for_group(group_admin_id=group_admin_id)
+        from apps.visums.models import LinkedCategory
 
-        if year:
-            return self.get_queryset().get_all_for_year(year=year)
+        results = self.get_queryset().get_all_for_group_and_year(
+            group_admin_id=group_admin_id, year=year)
 
-    def get_linked_groups(self) -> List[ScoutsGroup]:
-        result = self.get_queryset().get_linked_groups()
+        visums = []
+        for result in results:
+            visums.append({
+                "id": result[0],
+                "group": result[1],
+                "group_name": result[2],
+                "name": result[3],
+                "year": result[4] if year else None,
+                "sections": ScoutsSection.objects.get_for_visum(
+                    visum_id=result[0]),
+                "camp_types": CampType.objects.get_for_visum(
+                    visum_id=result[0]),
+                "category_set": {
+                    "categories": LinkedCategory.objects.get_for_visum(visum_id=result[0])
+                }
+            })
+        return visums
 
-        logger.debug(f"KNOWN GROUPS: {result}")
+    def has_unchecked_checks(self, pk):
+        return True if self.get_queryset().count_unchecked_checks(pk=pk) == 0 else False

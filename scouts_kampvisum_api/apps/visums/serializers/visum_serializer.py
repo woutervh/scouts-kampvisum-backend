@@ -85,3 +85,14 @@ class CampVisumSerializer(serializers.ModelSerializer):
             "group", {}).get("group_admin_id", None)
 
         return data
+
+
+class CampVisumOverviewSerializer(serializers.Serializer):
+
+    def to_representation(self, data: dict) -> dict:
+
+        # data["group"] = self.context['request'].user.get_scouts_group(
+        #     data["group"])
+        data["group_group_admin_id"] = data["group"]
+
+        return data

@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connections
 
 from apps.visums.models import CampVisum
 from apps.visums.models.enums import CheckState
@@ -11,6 +11,15 @@ class LinkedCategorySetQuerySet(models.QuerySet):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def count_unchecked_checks(self, pk):
+        with connections['default'].cursor() as cursor:
+            cursor.execute(
+                f"select count(1) from visums_linkedcategory vl where vl.category_set_id = '{pk}' and vl.check_state = 'UNCHECKED'"
+            )
+            return cursor.fetchone()[0]
+
+        return 1
 
 
 class LinkedCategorySetManager(models.Manager):
@@ -42,6 +51,9 @@ class LinkedCategorySetManager(models.Manager):
             )
 
         return None
+
+    def has_unchecked_checks(self, pk):
+        return True if self.get_queryset().count_unchecked_checks(pk=pk) == 0 else False
 
 
 class LinkedCategorySet(AbstractBaseModel):

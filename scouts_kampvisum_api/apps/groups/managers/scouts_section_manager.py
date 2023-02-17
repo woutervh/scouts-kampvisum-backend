@@ -1,7 +1,7 @@
 from typing import List
 
 from django.conf import settings
-from django.db import models
+from django.db import models, connections
 from django.core.exceptions import ValidationError
 
 from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
@@ -17,6 +17,14 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class ScoutsSectionQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def get_for_visum(self, visum_id):
+        with connections['default'].cursor() as cursor:
+            cursor.execute(
+                f"select ss.id, ss.name, ss.gender, ss.age_group from groups_scoutssection ss left join visums_campvisum_sections vcs on ss.id = vcs.scoutssection_id where campvisum_id='{visum_id}'"
+            )
+            return cursor.fetchall()
+        return None
 
 
 class ScoutsSectionManager(models.Manager):
@@ -92,3 +100,18 @@ class ScoutsSectionManager(models.Manager):
         return self.get(
             group=group, name=name, gender=gender, age_group=age_group
         )
+
+    def get_for_visum(self, visum_id):
+        results = self.get_queryset().get_for_visum(visum_id=visum_id)
+
+        sections = []
+        for result in results:
+            sections.append({
+                "id": result[0],
+                "name": {
+                    "name": result[1],
+                    "gender": result[2],
+                    "age_group": result[2]
+                }
+            })
+        return sections

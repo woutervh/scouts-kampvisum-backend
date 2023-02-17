@@ -27,11 +27,12 @@ class LinkedCategorySetSerializer(serializers.ModelSerializer):
     def to_representation(self, obj: LinkedCategorySet) -> dict:
         data = super().to_representation(obj)
 
-        data["state"] = CheckState.CHECKED
-        for category in data.get("categories", []):
-            if CheckState.is_unchecked(category.get("state", CheckState.UNCHECKED)):
-                data["state"] = CheckState.UNCHECKED
-                break
+        # data["state"] = CheckState.CHECKED
+        # for category in data.get("categories", []):
+        #     if CheckState.is_unchecked(category.get("state", CheckState.UNCHECKED)):
+        #         data["state"] = CheckState.UNCHECKED
+        #         break
+        data["state"] = obj.check_state
 
         data["readable_name"] = obj.readable_name
 

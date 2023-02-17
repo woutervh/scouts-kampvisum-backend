@@ -11,6 +11,7 @@ from apps.visums.models import (
     Check,
     LinkedCheck,
 )
+from apps.visums.models.enums import CheckState
 
 
 # LOGGING
@@ -51,7 +52,7 @@ class LinkedCheckCRUDService:
     def create_linked_check(
         self, request, linked_sub_category: LinkedSubCategory, check: Check
     ) -> LinkedCheck:
-        linked_check = LinkedCheck.get_concrete_check_type(check)
+        linked_check: LinkedCheck = LinkedCheck.get_concrete_check_type(check)
 
         logger.debug(
             "Creating LinkedCheck: %s (type: %s)",
@@ -63,12 +64,19 @@ class LinkedCheckCRUDService:
         linked_check.sub_category = linked_sub_category
         linked_check.created_by = request.user
 
+        if not check.check_type.should_be_checked():
+            linked_check.check_state = CheckState.NOT_APPLICABLE
+        elif check.is_required_for_validation:
+            linked_check.check_state = CheckState.UNCHECKED
+        else:
+            linked_check.check_state = CheckState.NOT_APPLICABLE
+
         linked_check.full_clean()
         linked_check.save()
 
         return linked_check
 
-    @transaction.atomic
+    @ transaction.atomic
     def update_linked_checks(
         self,
         request,
@@ -159,7 +167,7 @@ class LinkedCheckCRUDService:
 
         return linked_sub_category
 
-    @transaction.atomic
+    @ transaction.atomic
     def update_linked_check(
         self,
         request,
@@ -174,16 +182,26 @@ class LinkedCheckCRUDService:
             instance.sub_category.category.category_set.visum.id,
         )
 
+        if not check.check_type.should_be_checked():
+            instance.check_state = CheckState.NOT_APPLICABLE
+        elif check.is_required_for_validation:
+            instance.check_state = CheckState.UNCHECKED
+        else:
+            instance.check_state = CheckState.NOT_APPLICABLE
+
+        instance.full_clean()
+        instance.save()
+
         return instance
 
-    @transaction.atomic
+    @ transaction.atomic
     def delete_linked_checks(
         self, request, linked_sub_category: LinkedSubCategory
     ) -> LinkedCheck:
         for linked_check in linked_sub_category.checks.all():
             self.delete_linked_check(request=request, instance=linked_check)
 
-    @transaction.atomic
+    @ transaction.atomic
     def delete_linked_check(self, request, instance: LinkedCheck) -> LinkedCheck:
         instance.is_archived = True
         instance.archived_by = request.user
@@ -194,14 +212,14 @@ class LinkedCheckCRUDService:
 
         return instance
 
-    @transaction.atomic
+    @ transaction.atomic
     def undelete_linked_checks(
         self, request, linked_sub_category: LinkedSubCategory
     ) -> LinkedCheck:
         for linked_check in linked_sub_category.checks.all():
             self.undelete_linked_check(request=request, instance=linked_check)
 
-    @transaction.atomic
+    @ transaction.atomic
     def undelete_linked_check(self, request, instance: LinkedCheck) -> LinkedCheck:
         instance.is_archived = False
         instance.updated_by = request.user

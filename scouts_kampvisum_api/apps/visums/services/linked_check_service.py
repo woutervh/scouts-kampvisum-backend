@@ -22,9 +22,11 @@ from apps.visums.models import (
     LinkedCommentCheck,
     LinkedNumberCheck,
     CampVisum,
+    LinkedSubCategory,
+    LinkedCategory
 )
-
-from apps.visums.services import ChangeHandlerService
+from apps.visums.models.enums import CheckState
+from apps.visums.services import ChangeHandlerService, CampVisumUpdateService
 
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.models import PersistedFile
@@ -46,23 +48,30 @@ class LinkedCheckService:
     participant_service = VisumParticipantService()
     groupadmin = GroupAdminMemberService()
     change_handler_service = ChangeHandlerService()
+    update_service = CampVisumUpdateService()
 
     def _update(self, request, instance: LinkedCheck):
         now = timezone.now()
 
+        if not instance.has_value():
+            if not instance.parent.check_type.should_be_checked():
+                instance.check_state = CheckState.NOT_APPLICABLE
+            elif instance.parent.is_required_for_validation:
+                instance.check_state = CheckState.UNCHECKED
+            else:
+                instance.check_state = CheckState.NOT_APPLICABLE
+        else:
+            instance.check_state = CheckState.CHECKED
+
         instance.updated_by = request.user
         instance.updated_on = now
-
         instance.full_clean()
         instance.save()
 
-        visum: CampVisum = instance.sub_category.category.category_set.visum
+        self.update_service.update_sub_category(
+            request=request, instance=instance.sub_category, now=now)
 
-        visum.updated_by = request.user
-        visum.updated_on = now
-
-        visum.full_clean()
-        visum.save()
+        return instance
 
     def notify_change(self, request, instance: LinkedCheck, data_changed: bool = False):
         data_changed = True
@@ -202,8 +211,6 @@ class LinkedCheckService:
 
         instance.is_camp_location = is_camp_location
 
-        self._update(request=request, instance=instance)
-
         locations = data.get("locations", [])
         # All locations removed
         if len(locations) == 0:
@@ -251,6 +258,8 @@ class LinkedCheckService:
                 is_camp_location=is_camp_location,
                 **location_data,
             )
+
+        self._update(request=request, instance=instance)
 
         return self.notify_change(request=request, instance=instance)
 

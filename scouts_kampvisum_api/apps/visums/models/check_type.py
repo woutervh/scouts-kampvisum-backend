@@ -23,7 +23,8 @@ class CheckType(Describable, AbstractBaseModel):
     class Meta:
         ordering = ["check_type"]
         constraints = [
-            models.UniqueConstraint(fields=["check_type"], name="unique_check_type")
+            models.UniqueConstraint(
+                fields=["check_type"], name="unique_check_type")
         ]
 
     def natural_key(self):
@@ -37,6 +38,20 @@ class CheckType(Describable, AbstractBaseModel):
         # logger.debug("ENDPOINT: %s", endpoint)
 
         return endpoint
+
+    def should_be_checked(self) -> bool:
+        if (
+            self.is_simple_check()
+            or self.is_date_check()
+            or self.is_duration_check()
+            or self.is_location_check()
+            or self.is_camp_location_check()
+            or self.is_participant_check()
+            or self.is_number_check()
+        ):
+            return True
+        if self.is_file_upload_check() or self.is_comment_check():
+            return False
 
     def is_simple_check(self):
         return self.check_type == CheckTypeEnum.SIMPLE_CHECK

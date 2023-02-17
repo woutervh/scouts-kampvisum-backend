@@ -7,7 +7,7 @@ from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from apps.visums.models import CampVisum
-from apps.visums.serializers import CampVisumSerializer
+from apps.visums.serializers import CampVisumSerializer, CampVisumOverviewSerializer
 from apps.visums.filters import CampVisumFilter
 from apps.visums.services import CampVisumService
 
@@ -120,9 +120,10 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         page = self.paginate_queryset(instances)
 
         serializer = (
-            CampVisumSerializer(page, many=True, context={"request": request})
+            CampVisumOverviewSerializer(
+                page, many=True, context={"request": request})
             if page is not None
-            else CampVisumSerializer(instances, many=True, context={"request": request})
+            else CampVisumOverviewSerializer(instances, many=True, context={"request": request})
         )
 
         ordered = sorted(

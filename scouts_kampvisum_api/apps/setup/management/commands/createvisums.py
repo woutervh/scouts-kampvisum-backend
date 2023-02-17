@@ -11,7 +11,7 @@ from apps.visums.models import CampVisum
 from apps.visums.services import CampVisumService
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsFunction, ScoutsToken
 from scouts_auth.scouts.services import ScoutsUserSessionService
 
 
@@ -71,7 +71,7 @@ class Command(BaseCommand):
         access_token = self.re_bearer.sub('', access_token)
 
         user: ScoutsUser = ScoutsUserSessionService.get_user_from_session(
-            access_token=access_token)
+            access_token=ScoutsToken.from_access_token(access_token))
         if not user:
             raise ScoutsAuthException(
                 "Unable to find user with provided access token")

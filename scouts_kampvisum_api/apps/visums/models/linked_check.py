@@ -54,20 +54,7 @@ class LinkedCheck(AuditedArchiveableBaseModel):
         return self.parent.is_required_for_validation
 
     def should_be_checked(self) -> bool:
-        check_type: CheckType = self.parent.check_type
-
-        if (
-            check_type.is_simple_check()
-            or check_type.is_date_check()
-            or check_type.is_duration_check()
-            or check_type.is_location_check()
-            or check_type.is_camp_location_check()
-            or check_type.is_participant_check()
-            or check_type.is_number_check()
-        ):
-            return True
-        if check_type.is_file_upload_check() or check_type.is_comment_check():
-            return False
+        return self.parent.check_type.should_be_checked()
 
     def is_checked(self) -> bool:
         if self.should_be_checked():

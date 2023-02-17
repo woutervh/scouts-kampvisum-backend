@@ -1,6 +1,7 @@
 from .change_handler_service import ChangeHandlerService
 from .sub_category_service import SubCategoryService
 from .category_service import CategoryService
+from .visum_update_service import CampVisumUpdateService
 from .linked_check_service import LinkedCheckService
 from .linked_check_crud_service import LinkedCheckCRUDService
 from .linked_sub_category_service import LinkedSubCategoryService

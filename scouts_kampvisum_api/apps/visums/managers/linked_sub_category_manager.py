@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connections
 from django.db.models import Q
 from django.core.exceptions import ValidationError
 
@@ -43,6 +43,15 @@ class LinkedSubCategoryQuerySet(models.QuerySet):
     def can_be_acknowledged(self, visum):
         return self.filter(Q(category__category_set__visum=visum) & (Q(approval=CampVisumApprovalState.APPROVED_FEEDBACK)))
 
+    def count_unchecked_checks(self, pk):
+        with connections['default'].cursor() as cursor:
+            cursor.execute(
+                f"select count(1) from visums_linkedcheck vl where vl.sub_category_id = '{pk}' and vl.check_state = 'UNCHECKED'"
+            )
+            return cursor.fetchone()[0]
+
+        return 1
+
 
 class LinkedSubCategoryManager(models.Manager):
     """
@@ -73,8 +82,6 @@ class LinkedSubCategoryManager(models.Manager):
                 pass
 
         if parent and visum:
-            logger.debug(f"PARENT: {parent.id}")
-            logger.debug(f"VISUM: {visum}")
             try:
                 return self.get_queryset().get(
                     parent__id=parent.id,
@@ -95,3 +102,6 @@ class LinkedSubCategoryManager(models.Manager):
                 )
             )
         return None
+
+    def has_unchecked_checks(self, pk):
+        return True if self.get_queryset().count_unchecked_checks(pk=pk) == 0 else False

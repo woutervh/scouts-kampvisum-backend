@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connections
 from django.core.exceptions import ValidationError
 
 
@@ -15,6 +15,14 @@ class CampTypeQuerySet(models.QuerySet):
 
     def selectable(self, *args, **kwargs):
         return self.filter(is_default=False)
+
+    def get_for_visum(self, visum_id):
+        with connections["default"].cursor() as cursor:
+            cursor.execute(
+                f"select ct.id as id, ct.camp_type as camp_type, ct.is_base as is_base, ct.is_default as is_default from camps_camptype ct left join visums_campvisum_camp_types vct on ct.id = vct.camptype_id where vct.campvisum_id='{visum_id}'"
+            )
+            return cursor.fetchall()
+        return None
 
 
 class CampTypeManager(models.Manager):
@@ -67,3 +75,16 @@ class CampTypeManager(models.Manager):
             logger.trace("GET BY NATURAL KEY WITH expander (*)")
 
         return self.get(camp_type=camp_type)
+
+    def get_for_visum(self, visum_id):
+        results = self.get_queryset().get_for_visum(visum_id=visum_id)
+
+        camp_types = []
+        for result in results:
+            camp_types.append({
+                "id": result[0],
+                "camp_type": result[1],
+                "is_base": result[2],
+                "is_default": result[3],
+            })
+        return camp_types

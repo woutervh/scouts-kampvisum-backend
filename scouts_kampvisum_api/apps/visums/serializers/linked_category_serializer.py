@@ -31,12 +31,12 @@ class LinkedCategorySerializer(serializers.ModelSerializer):
 
         # logger.debug("LINKED CATEGORY TO_REPRESENTATION: %s", obj)
 
-        data["state"] = CheckState.CHECKED
-        for sub_category in data.get("sub_categories", []):
-            if CheckState.is_unchecked(sub_category.get("state", CheckState.UNCHECKED)):
-                data["state"] = CheckState.UNCHECKED
-                break
-
+        # data["state"] = CheckState.CHECKED
+        # for sub_category in data.get("sub_categories", []):
+        #     if CheckState.is_unchecked(sub_category.get("state", CheckState.UNCHECKED)):
+        #         data["state"] = CheckState.UNCHECKED
+        #         break
+        data["state"] = obj.check_state
         data["readable_name"] = obj.readable_name
 
         data["camp"] = {}

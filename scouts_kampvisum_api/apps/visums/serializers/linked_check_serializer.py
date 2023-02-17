@@ -29,6 +29,7 @@ from scouts_auth.inuits.serializers import PersistedFileSerializer
 from scouts_auth.inuits.serializers.fields import (
     DatetypeAwareDateSerializerField,
     RequiredCharSerializerField,
+    OptionalCharSerializerField,
     OptionalIntegerSerializerField,
 )
 
@@ -116,7 +117,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
 
         self._state = (
             CheckState.CHECKED
-            if check.is_checked() or not check.is_required_for_validation()
+            if (obj.check_state == CheckState.CHECKED or not check.is_required_for_validation())
             else CheckState.UNCHECKED
         )
 
@@ -431,7 +432,7 @@ class LinkedFileUploadCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedCommentCheckSerializer(LinkedCheckSerializer):
-    value = RequiredCharSerializerField()
+    value = OptionalCharSerializerField()
 
     class Meta:
         model = LinkedCommentCheck
