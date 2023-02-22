@@ -2549,7 +2549,8 @@
             "check_type": [
                 "LocationCheck"
             ],
-            "label": "Locatie huisarts, apotheek, ziekenhuis"
+            "label": "Locatie huisarts, apotheek, ziekenhuis",
+            "is_required_for_validation": false
         }
     },
     {
