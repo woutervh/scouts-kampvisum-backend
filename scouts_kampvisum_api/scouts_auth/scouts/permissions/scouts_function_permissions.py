@@ -69,15 +69,15 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         return False
 
     def _validate_request(self, request, view) -> str:
-        if request and request.GET and request.GET.get("auth", None) and request.user:
-            return request.GET.get("auth")
+        if request and request.GET and request.GET.get("group", None) and request.user:
+            return request.GET.get("group")
 
         if hasattr(view, "has_group_admin_id"):
             try:
                 model = view.queryset.get(pk=view.kwargs.get("pk"))
                 if model.group:
                     request.GET._mutable = True
-                    request.GET['auth'] = model.group
+                    request.GET['group'] = model.group
                     request.GET._mutable = False
                 return model.group
             except Exception:
