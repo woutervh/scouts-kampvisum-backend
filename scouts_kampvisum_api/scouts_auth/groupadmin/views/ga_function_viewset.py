@@ -26,7 +26,8 @@ class AbstractScoutsFunctionView(viewsets.ViewSet):
     service = GroupAdmin()
 
     @swagger_auto_schema(
-        responses={status.HTTP_200_OK: AbstractScoutsFunctionListResponseSerializer}
+        responses={
+            status.HTTP_200_OK: AbstractScoutsFunctionListResponseSerializer}
     )
     @action(
         methods=["GET"],
@@ -39,31 +40,36 @@ class AbstractScoutsFunctionView(viewsets.ViewSet):
         functions_response: AbstractScoutsFunctionListResponse = (
             self.service.get_functions(request.user)
         )
-        serializer = AbstractScoutsFunctionListResponseSerializer(functions_response)
+        serializer = AbstractScoutsFunctionListResponseSerializer(
+            functions_response)
 
         return Response(serializer.data)
 
     @swagger_auto_schema(
-        responses={status.HTTP_200_OK: AbstractScoutsFunctionListResponseSerializer}
+        responses={
+            status.HTTP_200_OK: AbstractScoutsFunctionListResponseSerializer}
     )
     @action(
         methods=["GET"],
-        url_path=r"group/(?P<group_group_admin_id_fragment>\w+)",
+        url_path=r"group\w+)",
         detail=False,
     )
     def view_function_list(
-        self, request, group_group_admin_id_fragment: str
+        self, request
     ) -> Response:
+        group_group_admin_id_fragment = request.GET.get("group")
         logger.debug(
             "GA: Received request for list of functions (group_group_admin_id_fragment: %s)",
             group_group_admin_id_fragment,
         )
 
         functions_response: AbstractScoutsFunctionListResponse = (
-            self.service.get_functions(request.user, group_group_admin_id_fragment)
+            self.service.get_functions(
+                request.user, group_group_admin_id_fragment)
         )
 
-        serializer = AbstractScoutsFunctionListResponseSerializer(functions_response)
+        serializer = AbstractScoutsFunctionListResponseSerializer(
+            functions_response)
 
         return Response(serializer.data)
 

@@ -114,7 +114,7 @@ class CampViewSet(viewsets.GenericViewSet):
         detail=False,
         methods=["get"],
         permission_classes=[IsAuthenticated],
-        url_path=r"(?P<group_admin_id>\w+)/years",
+        url_path=r"/years",
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
     def get_available_years(self, request, group_admin_id=None):

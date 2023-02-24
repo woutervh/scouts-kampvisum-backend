@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models, connections
 from django.core.exceptions import ValidationError
 
+from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
 
 
@@ -18,7 +19,10 @@ class ScoutsSectionQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def get_for_visum(self, visum_id):
+    def all(self, user: settings.AUTH_USER_MODEL):
+        return self.filter(group__in=user.get_scouts_group_names())
+
+    def get_for_visum(self, visum_id, user: settings.AUTH_USER_MODEL):
         with connections['default'].cursor() as cursor:
             cursor.execute(
                 f"select ss.id, ss.name, ss.gender, ss.age_group from groups_scoutssection ss left join visums_campvisum_sections vcs on ss.id = vcs.scoutssection_id where campvisum_id='{visum_id}'"
@@ -28,10 +32,14 @@ class ScoutsSectionQuerySet(models.QuerySet):
 
 
 class ScoutsSectionManager(models.Manager):
-    def get_queryset(self):
-        return ScoutsSectionQuerySet(self.model, using=self._db)
+    def get_queryset(self, user: settings.AUTH_USER_MODEL):
+        return ScoutsSectionQuerySet(self.model, using=self._db).all(user=user)
+
+    def all(self, user: settings.AUTH_USER_MODEL):
+        return self.get_queryset(user=user)
 
     def safe_get(self, *args, **kwargs):
+        user = kwargs.get("user", None)
         pk = kwargs.get("id", kwargs.get("pk", None))
         name = kwargs.get("name", None)
         gender = kwargs.get("gender", None)
@@ -41,24 +49,26 @@ class ScoutsSectionManager(models.Manager):
         group_group_admin_id = kwargs.get("group_group_admin_id", None)
         raise_error = kwargs.get("raise_error", False)
 
+        if not user:
+            raise ScoutsAuthException(
+                "ScoutSection instances can only be access when the authenticated user is provided")
+
         if pk:
             try:
-                return self.get_queryset().get(pk=pk)
+                return self.get_queryset(user=user).get(pk=pk)
             except Exception:
                 pass
 
         if name and gender and age_group:
             if group:
                 try:
-                    return self.get_queryset().get(
-                        group=group, name=name, gender=gender, age_group=age_group
-                    )
+                    return self.get_queryset(user=user).get(group=group, name=name, gender=gender, age_group=age_group)
                 except Exception:
                     pass
 
             if group_group_admin_id:
                 try:
-                    return self.get_queryset().get(
+                    return self.get_queryset(user=user).get(
                         group=group_group_admin_id,
                         name=name,
                         gender=gender,
@@ -101,8 +111,9 @@ class ScoutsSectionManager(models.Manager):
             group=group, name=name, gender=gender, age_group=age_group
         )
 
-    def get_for_visum(self, visum_id):
-        results = self.get_queryset().get_for_visum(visum_id=visum_id)
+    def get_for_visum(self, visum_id, user: settings.AUTH_USER_MODEL):
+        results = self.get_queryset(user=user).get_for_visum(
+            visum_id=visum_id, user=user)
 
         sections = []
         for result in results:

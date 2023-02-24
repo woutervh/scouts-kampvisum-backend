@@ -31,13 +31,3 @@ class PermissionsViewSet(viewsets.GenericViewSet):
         except Exception as exc:
             logger.error(
                 "SCOUTS_AUTH: Error while getting user permissions", exc)
-
-    @swagger_auto_schema(responses={status.HTTP_200_OK: serializers.Serializer})
-    def get_for_group(self, request, group_admin_id: str):
-        try:
-            user: settings.AUTH_USER_MODEL = request.user
-
-            return Response(user.permissions)
-        except Exception as exc:
-            logger.error(
-                "SCOUTS_AUTH: Error while getting user permissions", exc)

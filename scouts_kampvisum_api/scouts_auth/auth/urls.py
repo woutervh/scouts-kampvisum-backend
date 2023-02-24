@@ -9,18 +9,12 @@ from scouts_auth.auth.views import (
 )
 
 permissions = PermissionsViewSet.as_view({"get": "get"})
-permissions_for_group = PermissionsViewSet.as_view({"get": "get_for_group"})
 
 urlpatterns = [
     # The infamous 'me' call
     path("auth/me/", CurrentUserView.as_view(), name="me"),
     path("auth/logout/", LogoutView.as_view(), name="logout"),
     path("auth/permissions/", permissions, name="permissions"),
-    path(
-        "auth/permissions/<str:group_admin_id>",
-        permissions_for_group,
-        name="permissions_for_group",
-    ),
     # Authenticate with OIDC
     path("oidc/token/", OIDCAuthCodeView.as_view(), name="token"),
     # Refresh the OIDC authentication

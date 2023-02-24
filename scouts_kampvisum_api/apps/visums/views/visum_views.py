@@ -115,8 +115,8 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug("Listing visums for group %s",
                      group_admin_id, user=request.user)
 
-        instances = CampVisum.objects.get_all_for_group_and_year(
-            group_admin_id=group_admin_id, year_number=year)
+        instances = CampVisum.objects.get_all_for_group_and_year(request=request,
+                                                                 group_admin_id=group_admin_id, year_number=year)
         page = self.paginate_queryset(instances)
 
         serializer = (

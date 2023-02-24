@@ -7,13 +7,17 @@ from scouts_auth.groupadmin.views import (
     AbstractScoutsMemberView,
 )
 
-view_allowed_calls = ScoutsAllowedCallsView.as_view({"get": "view_allowed_calls"})
+view_allowed_calls = ScoutsAllowedCallsView.as_view(
+    {"get": "view_allowed_calls"})
 view_member_profile_internal = AbstractScoutsMemberView.as_view(
     {"get": "view_member_profile_internal"}
 )
-view_member_profile = AbstractScoutsMemberView.as_view({"get": "view_member_profile"})
-view_member_list = AbstractScoutsMemberView.as_view({"get": "view_member_list"})
-view_search_members = AbstractScoutsMemberView.as_view({"get": "search_members"})
+view_member_profile = AbstractScoutsMemberView.as_view(
+    {"get": "view_member_profile"})
+view_member_list = AbstractScoutsMemberView.as_view(
+    {"get": "view_member_list"})
+view_search_members = AbstractScoutsMemberView.as_view(
+    {"get": "search_members"})
 view_member_internal = AbstractScoutsMemberView.as_view(
     {"get": "view_member_info_internal"}
 )
@@ -25,7 +29,8 @@ view_accountable_group_list = AbstractScoutsGroupView.as_view(
 )
 view_group = AbstractScoutsGroupView.as_view({"get": "view_group"})
 view_functions = AbstractScoutsFunctionView.as_view({"get": "view_functions"})
-view_function_list = AbstractScoutsFunctionView.as_view({"get": "view_function_list"})
+view_function_list = AbstractScoutsFunctionView.as_view(
+    {"get": "view_function_list"})
 view_function = AbstractScoutsFunctionView.as_view({"get": "view_function"})
 
 urlpatterns = [
@@ -35,7 +40,7 @@ urlpatterns = [
         "ga/members/search/<str:term>/", view_search_members, name="ga_search_members"
     ),
     path(
-        "ga/members/search/<str:term>/<str:group_group_admin_id>/",
+        "ga/members/search/<str:term>/",
         view_search_members,
         name="ga_search_members_with_group",
     ),
@@ -57,7 +62,7 @@ urlpatterns = [
     path("ga/groups/<str:group_group_admin_id>", view_group, name="ga_group"),
     path("ga/functions", view_functions, name="ga_functions"),
     path(
-        "ga/functions/group/<str:group_group_admin_id_fragment>",
+        "ga/functions/group",
         view_function_list,
         name="ga_functions_for_group",
     ),

@@ -63,6 +63,7 @@ class ScoutsSectionService:
                 name=name,
                 gender=gender,
                 age_group=age_group,
+                user=request.user,
             )
 
         if instance is None:
@@ -155,8 +156,8 @@ class ScoutsSectionService:
         # logger.debug(
         #     f"Setting up default scouts sections for {len(user.get_scouts_groups())} group(s)", user=request.user)
         for group in user.get_scouts_groups():
-            group_count = ScoutsSection.objects.filter(
-                group=group.group_admin_id).count()
+            group_count = ScoutsSection.objects.all(
+                user=request.user).filter(group=group.group_admin_id).count()
             # logger.debug(
             #     f"Found {group_count} scouts sections for group {group.group_admin_id}", user=request.user)
 

@@ -63,7 +63,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
             sections = data.get("sections", [])
             if sections and len(sections) > 0:
                 section = ScoutsSection.objects.safe_get(
-                    id=sections[0], raise_error=True)
+                    id=sections[0], user=self.context['request'].user, raise_error=True)
                 group = section.group
         if not group:
             raise ValidationError(

@@ -52,7 +52,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         # HACKETY HACK
         # This should probably be handled by a rest call when changing groups in the frontend,
         # but adding it here avoids the need for changes to the frontend
-        group_admin_id = self.request.query_params.get("group", None)
+        group_admin_id = self.request.GET.get("group", None)
         # if no group filter then check if user is in X1027G to show all locations
         if group_admin_id is None and not request.user.has_role_administrator():
             raise PermissionDenied("You have to be an admin to make this call")

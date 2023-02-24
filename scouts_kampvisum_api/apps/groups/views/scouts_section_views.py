@@ -28,12 +28,14 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class ScoutsSectionViewSet(viewsets.GenericViewSet):
 
     serializer_class = ScoutsSectionSerializer
-    queryset = ScoutsSection.objects.all().filter(hidden=False)
     permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = ScoutsSectionFilter
 
     section_service = ScoutsSectionService()
+
+    def get_queryset(self):
+        return ScoutsSection.objects.all(user=self.request.user).filter(hidden=False)
 
     @swagger_auto_schema(
         request_body=ScoutsSectionSerializer,
@@ -82,7 +84,8 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         Updates an existing ScoutsSection object.
         """
-        instance = ScoutsSection.objects.safe_get(pk=pk, raise_error=True)
+        instance = ScoutsSection.objects.safe_get(
+            pk=pk, user=request.user, raise_error=True)
 
         serializer = ScoutsSectionSerializer(
             data=request.data,
@@ -109,7 +112,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         Deletes a ScoutsSection instance by uuid
         """
-        instance = ScoutsSection.objects.get(pk=pk)
+        instance = ScoutsSection.objects.get(pk=pk, user=request.user)
 
         if not instance:
             logger.error("No Section found with id '%s'", pk)
@@ -124,32 +127,8 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         Retrieves a list of all existing Section instances.
         """
-        instances: List[ScoutsSection] = self.filter_queryset(
-            self.get_queryset())
+        group_admin_id = request.GET.get("group")
 
-        page = self.paginate_queryset(instances)
-
-        if page is not None:
-            serializer = ScoutsSectionSerializer(
-                page, many=True, context={"request": request}
-            )
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = ScoutsSectionSerializer(
-                instances, many=True, context={"request": request}
-            )
-            return Response(serializer.data)
-
-    # @TODO in filter
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"(?P<group_admin_id>\w+)",
-    )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsSectionSerializer})
-    def list_by_group(self, request, group_admin_id):
-        if not group_admin_id:
-            group_admin_id = request.GET.get("group")
         logger.debug(
             f"Listing scouts sections for {group_admin_id}", user=request.user)
         instances: List[ScoutsSection] = self.filter_queryset(

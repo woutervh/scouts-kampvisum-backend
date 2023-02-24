@@ -94,13 +94,14 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
     )
     @action(
         methods=["GET"],
-        url_path=r"(?:/(?P<term>\w+))?(?:/(?P<group_group_admin_id>\w+))?",
+        url_path=r"(?:/(?P<term>\w+))?",
         detail=True,
     )
     def search_members(
-        self, request, term: str, group_group_admin_id: str = None
+        self, request, term: str
     ) -> Response:
         logger.debug("GA: Received request to search for members")
+        group_group_admin_id = request.GET.get("group")
         logger.debug(
             "GA: Member search parameters: term(%s) - group_group_admin_id(%s)",
             term if term else "",

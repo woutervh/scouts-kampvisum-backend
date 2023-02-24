@@ -75,7 +75,7 @@ class CampVisumManager(models.Manager):
 
         return None
 
-    def get_all_for_group_and_year(self, group: ScoutsGroup = None, group_admin_id: str = None, year: CampYear = None, year_number: int = None):
+    def get_all_for_group_and_year(self, request, group: ScoutsGroup = None, group_admin_id: str = None, year: CampYear = None, year_number: int = None):
         if group:
             if isinstance(group, ScoutsGroup):
                 group_admin_id = group.group_admin_id
@@ -101,7 +101,7 @@ class CampVisumManager(models.Manager):
                 "name": result[3],
                 "year": result[4] if year else None,
                 "sections": ScoutsSection.objects.get_for_visum(
-                    visum_id=result[0]),
+                    visum_id=result[0], user=request.user),
                 "camp_types": CampType.objects.get_for_visum(
                     visum_id=result[0]),
                 "category_set": {
