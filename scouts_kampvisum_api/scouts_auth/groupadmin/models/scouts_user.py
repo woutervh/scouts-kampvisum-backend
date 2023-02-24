@@ -400,8 +400,8 @@ class ScoutsUser(User):
             f"membership_number ({self.membership_number}), "
             f"customer_number ({self.customer_number}), "
             f"birth_date ({self.birth_date}), "
-            f"scouts_groups ({', '.join(self.get_group_names() if self.scouts_groups else [])}), "
-            f"functions ({', '.join(function.to_descriptive_string() for function in self.functions) if self.functions else '[]'})"
+            f"scouts_groups ({', '.join(self.get_scouts_group_names() if self._scouts_groups else [])}), "
+            f"functions ({', '.join(function.to_descriptive_string() for function in self._scouts_functions) if self._scouts_functions else '[]'})"
         )
 
     def to_descriptive_string(self):

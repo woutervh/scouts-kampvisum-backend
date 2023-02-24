@@ -19,10 +19,7 @@ class ScoutsSectionQuerySet(models.QuerySet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def all(self, user: settings.AUTH_USER_MODEL):
-        return self.filter(group__in=user.get_scouts_group_names())
-
-    def get_for_visum(self, visum_id, user: settings.AUTH_USER_MODEL):
+    def get_for_visum(self, visum_id):
         with connections['default'].cursor() as cursor:
             cursor.execute(
                 f"select ss.id, ss.name, ss.gender, ss.age_group from groups_scoutssection ss left join visums_campvisum_sections vcs on ss.id = vcs.scoutssection_id where campvisum_id='{visum_id}'"
@@ -32,11 +29,8 @@ class ScoutsSectionQuerySet(models.QuerySet):
 
 
 class ScoutsSectionManager(models.Manager):
-    def get_queryset(self, user: settings.AUTH_USER_MODEL):
-        return ScoutsSectionQuerySet(self.model, using=self._db).all(user=user)
-
-    def all(self, user: settings.AUTH_USER_MODEL):
-        return self.get_queryset(user=user)
+    def get_queryset(self):
+        return ScoutsSectionQuerySet(self.model, using=self._db)
 
     def safe_get(self, *args, **kwargs):
         user = kwargs.get("user", None)
@@ -55,20 +49,20 @@ class ScoutsSectionManager(models.Manager):
 
         if pk:
             try:
-                return self.get_queryset(user=user).get(pk=pk)
+                return self.get_queryset().get(pk=pk)
             except Exception:
                 pass
 
         if name and gender and age_group:
             if group:
                 try:
-                    return self.get_queryset(user=user).get(group=group, name=name, gender=gender, age_group=age_group)
+                    return self.get_queryset().get(group=group, name=name, gender=gender, age_group=age_group)
                 except Exception:
                     pass
 
             if group_group_admin_id:
                 try:
-                    return self.get_queryset(user=user).get(
+                    return self.get_queryset().get(
                         group=group_group_admin_id,
                         name=name,
                         gender=gender,
@@ -112,8 +106,8 @@ class ScoutsSectionManager(models.Manager):
         )
 
     def get_for_visum(self, visum_id, user: settings.AUTH_USER_MODEL):
-        results = self.get_queryset(user=user).get_for_visum(
-            visum_id=visum_id, user=user)
+        results = self.get_queryset().get_for_visum(
+            visum_id=visum_id)
 
         sections = []
         for result in results:

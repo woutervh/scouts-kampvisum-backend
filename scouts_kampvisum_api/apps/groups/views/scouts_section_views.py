@@ -35,7 +35,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
     section_service = ScoutsSectionService()
 
     def get_queryset(self):
-        return ScoutsSection.objects.all(user=self.request.user).filter(hidden=False)
+        return ScoutsSection.objects.filter(hidden=False)
 
     @swagger_auto_schema(
         request_body=ScoutsSectionSerializer,
@@ -112,7 +112,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         Deletes a ScoutsSection instance by uuid
         """
-        instance = ScoutsSection.objects.get(pk=pk, user=request.user)
+        instance = ScoutsSection.objects.safe_get(pk=pk, user=request.user)
 
         if not instance:
             logger.error("No Section found with id '%s'", pk)

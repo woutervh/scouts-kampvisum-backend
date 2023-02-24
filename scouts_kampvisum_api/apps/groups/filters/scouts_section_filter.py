@@ -10,4 +10,4 @@ class ScoutsSectionFilter(filters.FilterSet):
 
     @property
     def qs(self):
-        return ScoutsSection.objects.all(user=self.request.user).filter(hidden=False)
+        return ScoutsSection.objects.filter(hidden=False)

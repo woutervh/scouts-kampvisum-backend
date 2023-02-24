@@ -26,7 +26,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
 
         if isinstance(data, str):
-            return ScoutsSection.objects.safe_get(id=data, group=self.context['request'].user, raise_error=True)
+            return ScoutsSection.objects.safe_get(id=data, user=self.context['request'].user, raise_error=True)
 
         group_admin_id = data.get(
             "group_group_admin_id", data.get("group", None))
