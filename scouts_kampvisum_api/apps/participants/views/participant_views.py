@@ -147,7 +147,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False, all_members=False):
         check = self.request.GET.get("check", None)
         search_term = self.request.GET.get("term", None)
-        group_group_admin_id = self.request.GET.get("group", None)
+        group_group_admin_id = self.request.GET.get("group")
         min_age = self.request.GET.get("min_age", None)
         max_age = self.request.GET.get("max_age", None)
         gender = self.request.GET.get("gender", None)

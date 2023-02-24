@@ -70,23 +70,17 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
             return data
 
         pk = data.get("id")
+        group_admin_id = data.get(
+            "group_group_admin_id", data.get("group", None))
 
+        if group_admin_id:
+            self.context['request'].user.get_scouts_group(
+                group_admin_id=group_admin_id, raise_error=True)
+            data["group"] = group_admin_id
 
-<< << << < HEAD
-   group_admin_id = data.get("group_group_admin_id", data.get("group", None))
-== == == =
-   group_admin_id = data.get(
-        "group_group_admin_id", data.get("group", None))
->>>>>> > 6db18d2(fix: replace auth with group)
+        if not pk and not (group_admin_id and data.get("name")):
+            raise serializers.ValidationError(
+                "A ScoutsSection can only be identified by either a uuid or the combination of a name and the group's group admin id"
+            )
 
-   if group_admin_id:
-        self.context['request'].user.get_scouts_group(
-            group_admin_id=group_admin_id, raise_error=True)
-        data["group"] = group_admin_id
-
-    if not pk and not (group_admin_id and data.get("name")):
-        raise serializers.ValidationError(
-            "A ScoutsSection can only be identified by either a uuid or the combination of a name and the group's group admin id"
-        )
-
-    return ScoutsSection(**data)
+        return ScoutsSection(**data)
