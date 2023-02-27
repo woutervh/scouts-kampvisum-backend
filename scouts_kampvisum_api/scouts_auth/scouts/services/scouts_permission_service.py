@@ -52,11 +52,17 @@ class ScoutsPermissionService(PermissionService):
         #     "SCOUTS AUTHORIZATION SERVICE: updating user authorizations", user=user
         # )
 
+        is_admin = False
+        allowed = False
+
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
-            user = self.add_user_as_admin(user)
+            is_admin = True
+            user = self.add_user_to_group(
+                user=user,
+                group_name=ScoutsPermissionService.ADMINISTRATOR
+            )
 
-        allowed = False
         # if scouts_group:
         for scouts_group in user.get_scouts_groups():
             is_shire_president = False
@@ -80,7 +86,7 @@ class ScoutsPermissionService(PermissionService):
                 is_section_leader = True
                 allowed = True
 
-            if not allowed:
+            if not allowed and not is_admin:
                 logger.warn("Not allowed to retrieve data for group %s",
                             scouts_group.group_admin_id, user=user)
                 raise PermissionDenied()
@@ -90,23 +96,11 @@ class ScoutsPermissionService(PermissionService):
                     user=user,
                     group_name=ScoutsPermissionService.SHIRE_PRESIDENT)
 
-            # else:
-            #     user = self.remove_user_from_group(
-            #         user=user,
-            #         group_name=ScoutsPermissionService.SHIRE_PRESIDENT
-            #     )
-
             if is_district_commissioner:
                 user = self.add_user_to_group(
                     user=user,
                     group_name=ScoutsPermissionService.DISTRICT_COMMISSIONER
                 )
-
-            # else:
-            #     user = self.remove_user_from_group(
-            #         user=user,
-            #         group_name=ScoutsPermissionService.DISTRICT_COMMISSIONER
-            #     )
 
             if is_group_leader:
                 user = self.add_user_to_group(
@@ -114,23 +108,11 @@ class ScoutsPermissionService(PermissionService):
                     group_name=ScoutsPermissionService.GROUP_LEADER
                 )
 
-            # else:
-            #     user = self.remove_user_from_group(
-            #         user=user,
-            #         group_name=ScoutsPermissionService.GROUP_LEADER
-            #     )
-
             if is_section_leader:
                 user = self.add_user_to_group(
                     user=user,
                     group_name=ScoutsPermissionService.SECTION_LEADER
                 )
-
-            # else:
-            #     user = self.remove_user_from_group(
-            #         user=user,
-            #         group_name=ScoutsPermissionService.SECTION_LEADER
-            #     )
 
         if GroupAdminSettings.is_debug():
             test_groups = GroupAdminSettings.get_test_groups()
@@ -140,11 +122,9 @@ class ScoutsPermissionService(PermissionService):
                     user.username,
                 )
                 GlobalSettingsUtil.is_test = True
-                user = self.add_user_as_admin(user)
+                user = self.add_user_to_group(
+                    user=user,
+                    group_name=ScoutsPermissionService.ADMINISTRATOR
+                )
 
         return user
-
-    def add_user_as_admin(
-        self, user: settings.AUTH_USER_MODEL
-    ) -> settings.AUTH_USER_MODEL:
-        return self.add_user_to_group(user=user, group_name=ScoutsPermissionService.ADMINISTRATOR)
