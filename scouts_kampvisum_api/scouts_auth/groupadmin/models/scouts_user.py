@@ -99,8 +99,8 @@ class ScoutsUser(User):
     customer_number: str = OptionalCharField(max_length=48)
     birth_date: date = models.DateField(blank=True, null=True)
 
-    _scouts_functions: List[ScoutsFunction] = []
-    _scouts_groups: List[ScoutsGroup] = []
+    _scouts_functions: List[ScoutsFunction] = None
+    _scouts_groups: List[ScoutsGroup] = None
 
     #
     # The active access token, provided by group admin oidc
