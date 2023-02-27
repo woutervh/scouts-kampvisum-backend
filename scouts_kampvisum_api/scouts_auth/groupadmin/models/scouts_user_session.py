@@ -55,7 +55,7 @@ class ScoutsUserSessionManager(models.Manager):
                     f"Unable to purge expired sessions", exc)
 
     def remove_session_data(self, username: str):
-        with connection['default'].cursor() as cursor:
+        with connections['default'].cursor() as cursor:
             try:
                 cursor.execute(
                     f"delete from scouts_auth_scoutsusersession sasus where sasus.username = '{username}'"

@@ -25,7 +25,6 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         "PATCH": ["%(app_label)s.change_%(model_name)s"],
         "DELETE": ["%(app_label)s.delete_%(model_name)s"],
     }
-    base_auth_roles = GroupAdminSettings.get_base_auth_roles()
 
     def has_permission(self, request, view) -> bool:
         group_admin_id = self._validate_request(request, view)
@@ -34,6 +33,8 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         perms = self.get_required_permissions(request.method, queryset.model)
         required_permission = [perm % {'app_label': queryset.model._meta.app_label,
                                        'model_name': queryset.model._meta.model_name} for perm in self.perms_map[request.method]]
+
+        logger.info(f"REQUIRED PERMISSION: {required_permission}")
 
         permission = super().has_permission(request, view)
         # If the user doesn't have the required permission on any auth group, look no further
@@ -48,20 +49,17 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         if user.has_role_administrator():
             return True
 
-        for group in user.groups.all():
-            # If the user role is not included in the base authentication roles, then ignore
-            if group.name in self.base_auth_roles:
-                for role in user.get_roles_for_group(group_admin_id=group_admin_id):
-                    logger.debug(
-                        f"ROLE FOR GROUP {group_admin_id}: {role}", user=user)
-                    if (
-                        # If the user role for the specified groups is not included in the base authentication roles, then ignore
-                        role in self.base_auth_roles and role == group.name
-                    ):
-                        permissions: List[str] = [
-                            permission.content_type.app_label + "." + permission.codename for permission in group.permissions.all()]
-                        if any(perm in perms for perm in permissions):
-                            return True
+        groups = user.groups.all()
+        logger.debug(f"PERMISSION GROUPS: {groups}")
+        for group in groups:
+            for role in user.get_roles_for_group(group_admin_id=group_admin_id):
+                logger.debug(
+                    f"ROLE FOR GROUP {group_admin_id}: {role}", user=user)
+                permissions: List[str] = [
+                    permission.content_type.app_label + "." + permission.codename for permission in group.permissions.all()]
+
+                if any(perm in perms for perm in permissions):
+                    return True
 
         logger.warn(
             f"Permission {required_permission} not granted for user", user=request.user)

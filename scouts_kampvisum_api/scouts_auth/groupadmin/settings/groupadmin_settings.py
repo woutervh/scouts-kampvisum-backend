@@ -85,10 +85,6 @@ class GroupAdminSettings(SettingsHelper):
         )
 
     @staticmethod
-    def get_base_auth_roles(default_value=None):
-        return GroupAdminSettings.get_list("BASE_AUTH_ROLES", default_value)
-
-    @staticmethod
     def get_activity_epoch(default_value=None):
         # The "activity epoch" after which a member is deemed a past active member
         return GroupAdminSettings.get_int("ACTIVITY_EPOCH", 3)

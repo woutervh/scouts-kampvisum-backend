@@ -12,6 +12,13 @@ from scouts_auth.auth.serializers import (
 from scouts_auth.auth.exceptions import TokenRequestException
 
 
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+
+logger: InuitsLogger = logging.getLogger(__name__)
+
+
 class OIDCRefreshView(views.APIView):
     permission_classes = [permissions.AllowAny]
     service = OIDCService()

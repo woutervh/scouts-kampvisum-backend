@@ -113,9 +113,9 @@ role_administrator:
   - visums.view_campvisum_approval
   - visums.view_campvisum_feedback
   - visums.view_campvisum_member_data
+  - visums.view_linkedcheck
   - visums.view_campvisumengagement
   - deadlines.view_linkeddeadline
-  - visums.change_linkedcheck
-  - visums.view_linkedcheck
   - participants.view_inuitsparticipant
+  - scouts_auth.view_persistedfile
 role_super_admin: [] # Doesn't need permissions because is made super user in django

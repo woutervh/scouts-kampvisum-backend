@@ -43,10 +43,10 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
                 access_token=access_token)
             # self.groupadmin.ping(active_user=SimpleNamespace(username=token.preferred_username, access_token=token.access_token)
 
-            user: settings.AUTH_USER_MODEL = ScoutsUserSessionService.get_user_from_session(
-                access_token=token)
-            if user:
-                return user
+        user: settings.AUTH_USER_MODEL = ScoutsUserSessionService.get_user_from_session(
+            access_token=token)
+        if user:
+            return user
 
         claims = self.get_userinfo(token, id_token, payload)
 
@@ -145,7 +145,6 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Update existing user with new claims if necessary, save, and return the updated user object.
         """
-
         member: AbstractScoutsMember = self._deserialize_member_data(
             claims=claims)
         user: settings.AUTH_USER_MODEL = self._merge_member_data(

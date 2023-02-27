@@ -342,12 +342,16 @@ class ScoutsUser(User):
         """
         Determines if the user is an administrative worker based on membership of an administrative group
         """
-        if any(
-            name in self.get_scouts_leader_group_names()
-            for name in GroupAdminSettings.get_administrator_groups()
-        ):
+        if ScoutsUser.has_administrator_groups(user_groups=self.get_scouts_groups()):
             return True
         return False
+
+    @staticmethod
+    def has_administrator_groups(user_groups: List[ScoutsGroup]):
+        return any(
+            name in [user_group.group_admin_id for user_group in user_groups]
+            for name in GroupAdminSettings.get_administrator_groups()
+        )
 
     def _has_role(
             self,

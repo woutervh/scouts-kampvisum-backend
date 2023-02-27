@@ -81,6 +81,19 @@ class ScoutsUserService:
             active_user=active_user).scouts_groups
         user_groups = self.process_groups(abstract_groups=abstract_groups)
 
+        if ScoutsUser.has_administrator_groups(user_groups=user_groups):
+            from apps.visums.models import CampVisum
+
+            groups = CampVisum.objects.get_queryset().get_linked_groups()
+            for group in groups:
+                if group[0] not in [user_group.group_admin_id for user_group in user_groups]:
+                    admin_group = ScoutsGroup()
+
+                    admin_group.group_admin_id = group[0]
+                    admin_group.name = group[1]
+
+                    user_groups.append(admin_group)
+
         # #######
         # 4. PROCESS FUNCTIONS
         #
