@@ -57,6 +57,6 @@ class CheckValidator:
         linked_participant_check = LinkedParticipantCheck.objects.safe_get(visum=value.sub_category.category.category_set.visum, linked_to=value.parent.linked_to, raise_error=True)
 
         if linked_participant_check.participants.count() > 0 and linked_participant_check.first().participant.group_admin_id == kwargs.get("group_admin_id"):
-            raise ValidationError("Duplicate camp responsibles !")
+            raise ValidationError("Je mag niet twee keer dezelfde kampverantwoordelijke opgeven.")
 
         return True
