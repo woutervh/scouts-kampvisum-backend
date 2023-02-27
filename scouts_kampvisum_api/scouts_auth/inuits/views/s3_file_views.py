@@ -22,7 +22,6 @@ class S3FileViewSet(viewsets.ViewSet):
     """
     A viewset for viewing and editing PersistedFile instances.
     """
-    
     s3_file_service = S3StorageService()
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: S3PresignedUrlFileSerializer})
@@ -36,14 +35,16 @@ class S3FileViewSet(viewsets.ViewSet):
         Returns an S3 presigned url
         """
 
-        input_serializer = S3FileSerializer(data=request.data, context={"request": request})
-        input_serializer.is_valid(raise_exception = True)
+        input_serializer = S3FileSerializer(
+            data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
         logger.debug("PERSISTED FILE CREATE VALIDATED DATA: %s",
                      validated_data)
 
-        presigned_url = self.s3_file_service.generate_presigned_url(validated_data.get("name"))
+        presigned_url = self.s3_file_service.generate_presigned_url(
+            validated_data.get("name"))
         serializer = S3PresignedUrlFileSerializer(
             SimpleNamespace(presigned_url=presigned_url), context={"request": request})
 

@@ -28,13 +28,15 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
     """
 
     serializer_class = PersistedFileSerializer
-    queryset = PersistedFile.objects.all()
     permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = PersistedFileFilter
 
     persisted_file_service = PersistedFileService()
     authorization_service = ScoutsPermissionService()
+
+    def get_queryset(self):
+        return PersistedFile.objects.all(group=self.request.GET.get("group"))
 
     @swagger_auto_schema(
         request_body=PersistedFileSerializer,
