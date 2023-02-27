@@ -46,11 +46,11 @@ class ScoutsPermissionService(PermissionService):
     ]
 
     def update_user_authorizations(
-        self, user: settings.AUTH_USER_MODEL, scouts_group: ScoutsGroup = None
+        self, user: settings.AUTH_USER_MODEL
     ) -> settings.AUTH_USER_MODEL:
-        logger.debug(
-            "SCOUTS AUTHORIZATION SERVICE: updating user authorizations", user=user
-        )
+        # logger.debug(
+        #     "SCOUTS AUTHORIZATION SERVICE: updating user authorizations", user=user
+        # )
 
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
