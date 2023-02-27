@@ -21,8 +21,8 @@ class ScoutsUserSessionService:
 
     @staticmethod
     def get_user_from_session(access_token: ScoutsToken) -> settings.AUTH_USER_MODEL:
-        session: ScoutsUserSession = ScoutsUserSession.objects.get_session_data(
-            username=access_token.preferred_username, expiration=access_token.exp)
+        session: ScoutsUserSession = ScoutsUserSession.from_session(
+            username=access_token.preferred_username)
         if session:
             logger.debug(
                 f"[{access_token.preferred_username}] USER SESSION - Retrieving user from session")
@@ -36,6 +36,7 @@ class ScoutsUserSessionService:
             user.clear_scouts_groups()
             for scouts_group in deserialized["scouts_groups"]:
                 user.add_scouts_group(scouts_group)
+
             user.clear_scouts_functions()
             for scouts_function in deserialized["scouts_functions"]:
                 user.add_scouts_function(scouts_function)
@@ -54,7 +55,7 @@ class ScoutsUserSessionService:
             raise ScoutsAuthException(
                 f"Username in token ({access_token.preferred_username}) does not equal user's username ({scouts_user.username})")
 
-        session = ScoutsUserSession.objects.safe_get(
+        session = ScoutsUserSession.from_session(
             username=access_token.preferred_username)
 
         if not session:

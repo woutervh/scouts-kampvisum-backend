@@ -25,26 +25,6 @@ class ScoutsUserSessionManager(models.Manager):
     def get_queryset(self):
         return ScoutsUserSessionQuerySet(self.model, using=self._db)
 
-    def safe_get(self, username: str):
-        with connections['default'].cursor() as cursor:
-            try:
-                cursor.execute(
-                    f"select sasus.id, sasus.username, sasus.expiration, sasus.data as data from scouts_auth_scoutsusersession sasus where sasus.username = '{username}'"
-                )
-                result = cursor.fetchone()
-                if result:
-                    token = ScoutsToken()
-
-                    token.username = result[1]
-                    token.expiration = result[2]
-                    token.data = result[3]
-
-                    return token
-                return None
-            except Exception:
-                return None
-        return None
-
     def purge_expired(self):
         with connections['default'].cursor() as cursor:
             try:
@@ -64,23 +44,14 @@ class ScoutsUserSessionManager(models.Manager):
                 raise ScoutsAuthException(
                     f"[{username}] Could not remove session data for user")
 
-    def get_session_data(self, username: str, expiration: datetime):
+    def get_session_data(self, username: str):
         self.purge_expired()
         with connections['default'].cursor() as cursor:
             try:
                 cursor.execute(
                     f"select sasus.id, sasus.username, sasus.expiration, sasus.data as data from scouts_auth_scoutsusersession sasus where sasus.username = '{username}' and sasus.expiration > '{now()}' and sasus.data is not null"
                 )
-                result = cursor.fetchone()
-
-                if result:
-                    token = ScoutsToken()
-
-                    token.username = result[1]
-                    token.expiration = result[2]
-                    token.data = result[3]
-
-                    return token
+                return cursor.fetchone()
             except Exception as exc:
                 return None
         return None
@@ -93,3 +64,21 @@ class ScoutsUserSession(models.Model):
     username = RequiredCharField()
     expiration = TimezoneAwareDateTimeField()
     data = JSONField(null=True)
+
+    @staticmethod
+    def from_session(username: str):
+        result = ScoutsUserSession.objects.get_session_data(username=username)
+
+        if result:
+            session = ScoutsUserSession()
+
+            session.username = result[1]
+            session.expiration = result[2]
+            session.data = result[3]
+
+            return session
+
+        return None
+
+    def __str__(self):
+        return f"[{self.username}] SESSION expires {self.expiration}"
