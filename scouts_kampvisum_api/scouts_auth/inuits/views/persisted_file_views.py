@@ -36,7 +36,7 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
     authorization_service = ScoutsPermissionService()
 
     def get_queryset(self):
-        return PersistedFile.objects.all(group=self.request.GET.get("group"))
+        return PersistedFile.objects.allowed(group=self.request.GET.get("group"))
 
     @swagger_auto_schema(
         request_body=PersistedFileSerializer,

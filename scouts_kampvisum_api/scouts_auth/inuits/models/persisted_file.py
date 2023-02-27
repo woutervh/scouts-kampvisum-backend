@@ -21,7 +21,7 @@ class PersistedFileManager(models.Manager):
     def get_queryset(self):
         return PersistedFileQuerySet(self.model, using=self._db)
 
-    def all(self, group: str):
+    def allowed(self, group: str):
         return self.filter(checks__sub_category__category__category_set__visum__group=group)
 
     def safe_get(self, *args, **kwargs):
