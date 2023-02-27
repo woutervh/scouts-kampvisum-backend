@@ -33,11 +33,11 @@ class ScoutsUserSessionService:
             deserialized = ScoutsUserSessionSerializer.to_scouts_user(
                 session=session)
 
-            user.clear_scouts_groups()
+            # Clear any lingering data
+            user.clear_data()
+
             for scouts_group in deserialized["scouts_groups"]:
                 user.add_scouts_group(scouts_group)
-
-            user.clear_scouts_functions()
             for scouts_function in deserialized["scouts_functions"]:
                 user.add_scouts_function(scouts_function)
 

@@ -99,8 +99,8 @@ class ScoutsUser(User):
     customer_number: str = OptionalCharField(max_length=48)
     birth_date: date = models.DateField(blank=True, null=True)
 
-    _scouts_functions: List[ScoutsFunction] = None
-    _scouts_groups: List[ScoutsGroup] = None
+    _scouts_functions: List[ScoutsFunction] = []
+    _scouts_groups: List[ScoutsGroup] = []
 
     #
     # The active access token, provided by group admin oidc
@@ -108,15 +108,15 @@ class ScoutsUser(User):
     _access_token: ScoutsToken = None
 
     def __init__(self, *args, **kwargs):
-        self._scouts_groups = []
-        self._scouts_functions = []
+        self._scouts_groups.clear()
+        self._scouts_functions.clear()
         self._access_token = None
 
         super().__init__(*args, **kwargs)
 
     @property
     def access_token(self) -> ScoutsToken:
-        return self._access_token.access_token
+        return self._access_token.access_token if self._access_token else None
 
     @access_token.setter
     def access_token(self, access_token: ScoutsToken):
@@ -126,13 +126,14 @@ class ScoutsUser(User):
 
         self._access_token = access_token
 
-    def clear_scouts_functions(self):
-        self._scouts_functions = []
-
-    def clear_scouts_groups(self):
-        self._scouts_groups = []
+    def clear_data(self):
+        self._scouts_functions.clear()
+        self._scouts_groups.clear()
 
     def has_scouts_function(self, scouts_function: ScoutsFunction):
+        if not isinstance(self._scouts_functions, List):
+            return False
+
         for existing_function in self._scouts_functions:
             if (
                 existing_function.group_admin_id == scouts_function.group_admin_id
@@ -142,6 +143,9 @@ class ScoutsUser(User):
         return False
 
     def add_scouts_function(self, scouts_function: ScoutsFunction):
+        if not isinstance(self._scouts_functions, List):
+            self._scouts_functions = []
+
         if not self.has_scouts_function(scouts_function=scouts_function):
             self._scouts_functions.append(scouts_function)
             self._scouts_functions.sort(
@@ -157,6 +161,9 @@ class ScoutsUser(User):
         return [scouts_function.description for scouts_function in self._scouts_functions]
 
     def add_scouts_group(self, scouts_group: ScoutsGroup):
+        if not isinstance(self._scouts_groups, List):
+            self._scouts_groups = []
+
         if scouts_group.group_admin_id not in self.get_scouts_group_names():
             self._scouts_groups.append(scouts_group)
             self._scouts_groups.sort(key=lambda x: x.group_admin_id)
@@ -178,7 +185,7 @@ class ScoutsUser(User):
         return self.get_scouts_groups_with_underlying_groups()
 
     def get_scouts_groups_with_underlying_groups(self) -> List[ScoutsGroup]:
-        combined_groups: List[ScoutsGroup] = list()
+        combined_groups: List[ScoutsGroup] = []
         for scouts_group in self._scouts_groups:
             if scouts_group.group_admin_id not in combined_groups:
                 combined_groups.append(scouts_group)

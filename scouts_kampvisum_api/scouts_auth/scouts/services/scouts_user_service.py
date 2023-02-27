@@ -37,8 +37,7 @@ class ScoutsUserService:
 
     def get_scouts_user(self, active_user: settings.AUTH_USER_MODEL, abstract_member: AbstractScoutsMember) -> settings.AUTH_USER_MODEL:
         # Clear any lingering data
-        active_user.clear_scouts_functions()
-        active_user.clear_scouts_groups()
+        active_user.clear_data()
 
         # #######
         # 1. MEMBER PROFILE (rest-ga/lid/profiel)
