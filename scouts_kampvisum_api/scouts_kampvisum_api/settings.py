@@ -434,10 +434,10 @@ GROUP_ADMIN_FUNCTIONS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/functie"
 # PAGINATION                                                                   #
 #                                                                              #
 # ############################################################################ #
-DEFAULT_PAGINATION_RESULTS = env.int("DEFAULT_PAGINATION_RESULTS", 10)
+DEFAULT_PAGINATION_RESULTS = env.int("DEFAULT_PAGINATION_RESULTS", 1000)
 DEFAULT_PAGINATION_MAX_RESULTS = env.int(
     "DEFAULT_PAGINATION_MAX_RESULTS", 1000)
-PARTICIPANT_PAGINATION_RESULTS = env.int("PARTICIPANT_PAGINATION_RESULTS", 20)
+PARTICIPANT_PAGINATION_RESULTS = env.int("PARTICIPANT_PAGINATION_RESULTS", 1000)
 PARTICIPANT_PAGINATION_MAX_RESULTS = env.int(
     "PARTICIPANT_PAGINATION_MAX_RESULTS", 1000)
 

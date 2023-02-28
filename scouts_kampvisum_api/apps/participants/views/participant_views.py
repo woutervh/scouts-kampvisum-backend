@@ -133,15 +133,11 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
         output_serializer = InuitsParticipantSerializer(
             participants, many=True)
-
+        
         return Response(output_serializer.data)
 
     @action(methods=["get"], detail=False)
     def list_scouts_members(self, request):
-        return self._list(request=request, only_scouts_members=True)
-
-    @action(methods=["get"], detail=False)
-    def list_scouts_members_all(self, request):
         return self._list(request=request, only_scouts_members=True, all_members=True)
 
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False, all_members=False):
@@ -152,7 +148,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         max_age = self.request.GET.get("max_age", None)
         gender = self.request.GET.get("gender", None)
         participant_type = self.request.GET.get("type", None)
-
+        search_term = search_term.strip() if search_term else ""
         if not (
             check
             or search_term
@@ -196,7 +192,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             presets["leader"] = True
             presets["active_leader"] = False
             presets["only_scouts_members"] = True
-
+            
             if ParticipantType.is_member(participant_type):
                 presets["leader"] = False
             elif ParticipantType.is_cook(participant_type):
@@ -248,26 +244,17 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         #     if search_term.strip()[-1] != "|"
         #     else search_term
         # )
-        if all_members:
-            members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered_all(
-                active_user=request.user,
-                term=search_term,
-                group_group_admin_id=group_group_admin_id,
-                min_age=min_age,
-                max_age=max_age,
-                gender=gender,
-            )
-        else:
-            members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
-                active_user=request.user,
-                term=search_term,
-                group_group_admin_id=group_group_admin_id,
-                min_age=min_age,
-                max_age=max_age,
-                gender=gender,
-                include_inactive=include_inactive,
-                presets=presets,
-            )
+        members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
+            active_user=request.user,
+            term=search_term,
+            group_group_admin_id=group_group_admin_id,
+            min_age=min_age,
+            max_age=max_age,
+            gender=gender,
+            include_inactive=include_inactive,
+            presets=presets,
+        )
+            
         members = sorted(members, key=lambda x: (x.first_name, x.last_name))
 
         if only_scouts_members:

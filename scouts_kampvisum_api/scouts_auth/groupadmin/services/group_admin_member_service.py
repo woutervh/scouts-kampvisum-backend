@@ -45,46 +45,32 @@ class GroupAdminMemberService(GroupAdmin):
         - if include_inactive is False, then members who were last active since the ACTIVITY_EPOCH setting are excluded
         - if min_age, max_age or gender are set, members will be filtered based on the the year of their birth and gender.
         """
-        response: AbstractScoutsMemberSearchResponse = self.search_member(
-            active_user, term
+        response: AbstractScoutsMemberSearchResponse = self.get_member_list_filtered(
+            active_user, term, group_group_admin_id, min_age, max_age, gender
         )
         if len(response.members) == 0:
             return []
+        
+        all_members = []
+        all_members.extend(response.members)
+        if len(response.members) == 50:
+            offset = 50
+            while len(response.members) == 50:
+                response: AbstractScoutsMemberListResponse = self.get_member_list_filtered(
+                    active_user, term, group_group_admin_id, min_age, max_age, gender, offset
+                )
+                all_members.extend(response.members)
+                offset += 50
         logger.debug(
-            "GA returned a list of %d member(s) for search term %s (count: %d, total: %d -> %d more on GA)",
-            len(response.members),
+            "GA returned a list of %d member(s) for search term %s",
+            len(all_members),
             term,
-            response.count,
-            response.total,
-            (response.total - response.count),
         )
 
         current_datetime: datetime = datetime.now()
         activity_epoch: date = self._calculate_activity_epoch_date(
             current_datetime, GroupAdminSettings.get_activity_epoch()
         )
-        preset_min_age = presets.get("min_age", None)
-        if not preset_min_age:
-            min_age = (
-                min_age
-                if isinstance(min_age, int)
-                else int(min_age)
-                if min_age and int(min_age) >= 0
-                else -1
-            )
-        else:
-            min_age = preset_min_age
-        preset_max_age = presets.get("max_age", None)
-        if not preset_max_age:
-            max_age = (
-                max_age
-                if isinstance(max_age, int)
-                else int(max_age)
-                if max_age and int(max_age) >= 0
-                else -1
-            )
-        else:
-            max_age = preset_max_age
 
         preset_leader = presets.get("leader", False)
         if preset_leader:
@@ -105,19 +91,6 @@ class GroupAdminMemberService(GroupAdmin):
             member: AbstractScoutsMember = self.get_member_info(
                 active_user=active_user, group_admin_id=response_member.group_admin_id
             )
-
-            if group_group_admin_id:
-                logger.debug(
-                    "Examining if member %s %s (%s) is in group %s",
-                    member.first_name,
-                    member.last_name,
-                    member.email,
-                    group_group_admin_id,
-                )
-                if not self._filter_by_group(
-                    member=member, group_group_admin_id=group_group_admin_id
-                ):
-                    continue
 
             if leader or active_leader:
                 logger.debug(
@@ -159,31 +132,6 @@ class GroupAdminMemberService(GroupAdmin):
                     ):
                         continue
 
-            if min_age >= 0 or max_age >= 0:
-                logger.debug(
-                    "Examining if member %s %s (%s) applies to the age (%s - %s) limit",
-                    member.first_name,
-                    member.last_name,
-                    member.email,
-                    min_age,
-                    max_age,
-                )
-                if not self._filter_by_age(
-                    member=member, min_age=min_age, max_age=max_age
-                ):
-                    continue
-
-            if gender:
-                logger.debug(
-                    "Examing if member %s %s (%s) has the requested gender (%s)",
-                    member.first_name,
-                    member.last_name,
-                    member.email,
-                    gender,
-                )
-                if not self._filter_by_gender(member=member, gender=gender):
-                    continue
-
             members.append(member)
 
         logger.debug(
@@ -192,55 +140,6 @@ class GroupAdminMemberService(GroupAdmin):
             term,
             group_group_admin_id,
             include_inactive,
-            min_age,
-            max_age,
-            gender,
-        )
-
-        return members
-
-    def search_member_filtered_all(
-            self,
-            active_user: settings.AUTH_USER_MODEL,
-            term: str,
-            group_group_admin_id: str = None,
-            min_age: int = None,
-            max_age: int = None,
-            gender: str = None,
-    ) -> List[AbstractScoutsMember]:
-        response: AbstractScoutsMemberListResponse = self.get_member_list_filtered(
-            active_user, term, group_group_admin_id, min_age, max_age, gender
-        )
-        if len(response.members) == 0:
-            return []
-        all_members = []
-        all_members.extend(response.members)
-        if len(response.members) == 50:
-            offset = 50
-            while len(response.members) == 50:
-                response: AbstractScoutsMemberListResponse = self.get_member_list_filtered(
-                    active_user, term, group_group_admin_id, min_age, max_age, gender, offset
-                )
-                all_members.extend(response.members)
-                offset += 50
-        logger.debug(
-            "GA returned a list of %d member(s) for search term %s",
-            len(all_members),
-            term,
-        )
-
-        members: List[AbstractScoutsMember] = []
-        for response_member in all_members:
-            member: AbstractScoutsMember = self.get_member_info(
-                active_user=active_user, group_admin_id=response_member.group_admin_id
-            )
-            members.append(member)
-
-        logger.debug(
-            "Found %d member(s) for search term %s, group_admin_id %s, min_age %s, max_age %s and gender %s",
-            len(members),
-            term,
-            group_group_admin_id,
             min_age,
             max_age,
             gender,

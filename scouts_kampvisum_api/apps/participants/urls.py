@@ -11,10 +11,6 @@ urlpatterns = [
         ParticipantViewSet.as_view({"get": "list_scouts_members"}),
     ),
     path(
-        "participants/members/all/",
-        ParticipantViewSet.as_view({"get": "list_scouts_members_all"}),
-    ),
-    path(
         "participants/ga/<str:group_admin_id>",
         ParticipantViewSet.as_view({"get": "retrieve_scouts_member"}),
     ),
