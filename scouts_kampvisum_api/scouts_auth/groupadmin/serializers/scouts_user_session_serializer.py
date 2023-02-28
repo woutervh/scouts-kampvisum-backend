@@ -56,7 +56,6 @@ class ScoutsUserSessionSerializer:
     def to_scouts_user(session: ScoutsUserSession) -> dict:
         if not session:
             return {}
-        logger.debug(f"SESSION: {session}")
 
         data: dict = json.loads(json.loads(session.data))
         deserialized = {}

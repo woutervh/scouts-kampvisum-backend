@@ -53,7 +53,7 @@ class ScoutsGroup(AbstractNonModel):
 
     @property
     def gender(self) -> Gender:
-        identifier = self.number.upper().strip()[-1]
+        identifier = self.group_admin_id.upper().strip()[-1]
         if identifier == GroupAdminSettings().get_group_gender_identifier_male():
             return Gender.MALE
         if identifier == GroupAdminSettings.get_group_gender_identifier_female():
