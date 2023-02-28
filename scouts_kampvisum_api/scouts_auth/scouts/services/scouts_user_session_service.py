@@ -23,12 +23,10 @@ class ScoutsUserSessionService:
     def get_user_from_session(access_token: ScoutsToken) -> settings.AUTH_USER_MODEL:
         logger.debug(
             f"[{access_token.preferred_username}] USER SESSION - Retrieving user from session")
+
         session: ScoutsUserSession = ScoutsUserSession.from_session(
             username=access_token.preferred_username)
         if session:
-            logger.debug(
-                f"[{access_token.preferred_username}] USER SESSION - Retrieving user from session")
-
             user = ScoutsUser.objects.safe_get(
                 username=access_token.preferred_username, raise_error=True)
 

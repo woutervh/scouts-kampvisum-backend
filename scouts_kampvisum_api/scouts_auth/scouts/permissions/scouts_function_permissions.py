@@ -50,9 +50,10 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
             return True
 
         groups = user.groups.all()
+        group_roles = user.get_roles_for_group(group_admin_id=group_admin_id)
         # logger.debug(f"PERMISSION GROUPS: {groups}")
         for group in groups:
-            for role in user.get_roles_for_group(group_admin_id=group_admin_id):
+            for role in group_roles:
                 logger.debug(
                     f"ROLE FOR GROUP {group_admin_id}: {role}", user=user)
                 permissions: List[str] = [

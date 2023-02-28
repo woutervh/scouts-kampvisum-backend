@@ -28,7 +28,7 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
         pk = data.get("id", None)
 
         data = super().to_internal_value(data)
-        logger.debug("DATA: %s", data)
+        # logger.debug("DATA: %s", data)
 
         if pk:
             data["id"] = pk if CampVisumEngagement.objects.safe_get(
