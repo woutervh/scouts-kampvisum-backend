@@ -50,7 +50,7 @@ class GroupAdminMemberService(GroupAdmin):
         )
         if len(response.members) == 0:
             return []
-        
+
         all_members = []
         all_members.extend(response.members)
         if len(response.members) == 50:
@@ -289,6 +289,11 @@ class GroupAdminMemberService(GroupAdmin):
 
             end_of_activity_period: datetime = function.end
 
+            # If only active members are to be included and there is at least 1 active function, then stop searching
+            if not include_inactive and not end_of_activity_period:
+                end_of_activity_period_counter = 0
+                break
+
             # Member has ended an activity for at least one function, examine
             if end_of_activity_period:
                 # An end date of a function was registered in the member record
@@ -320,7 +325,7 @@ class GroupAdminMemberService(GroupAdmin):
         # The member is still active
         if end_of_activity_period_counter == 0:
             logger.debug(
-                "INCLUDE: Member %s %s (%s) is active",
+                "INCLUDE: Member %s %s (%s) has at least 1 active function",
                 member.first_name,
                 member.last_name,
                 member.email,
