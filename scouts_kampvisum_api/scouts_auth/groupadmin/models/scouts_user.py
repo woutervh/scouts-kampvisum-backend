@@ -182,11 +182,11 @@ class ScoutsUser(User):
     def get_scouts_groups(self, include_underlying_groups=False) -> List[ScoutsGroup]:
         if not include_underlying_groups:
             return self._scouts_groups
-        return self.get_scouts_groups_with_underlying_groups()
+        return self._get_scouts_groups_with_underlying_groups(scouts_groups=self._scouts_groups)
 
-    def get_scouts_groups_with_underlying_groups(self) -> List[ScoutsGroup]:
+    def _get_scouts_groups_with_underlying_groups(self, scouts_groups: List[ScoutsGroup]) -> List[ScoutsGroup]:
         combined_groups: List[ScoutsGroup] = []
-        for scouts_group in self._scouts_groups:
+        for scouts_group in scouts_groups:
             if scouts_group.group_admin_id not in combined_groups:
                 combined_groups.append(scouts_group)
 
@@ -249,12 +249,17 @@ class ScoutsUser(User):
             scouts_function_name="is_leader_function",
             include_inactive=include_inactive,)
 
-    def get_scouts_leader_groups(self) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self._scouts_groups
-            if self.has_role_leader(scouts_group=scouts_group)
-        ]
+    def get_scouts_leader_groups(self, include_underlying_groups: bool = False) -> List[ScoutsGroup]:
+        leader_groups: List[ScoutsGroup] = (
+            self._scouts_groups if self.has_role_administrator() else
+            [
+                scouts_group
+                for scouts_group in self._scouts_groups
+                if self.has_role_leader(scouts_group=scouts_group)
+            ]
+        )
+
+        return leader_groups if not include_underlying_groups else self._get_scouts_groups_with_underlying_groups(scouts_groups=leader_groups)
 
     def get_scouts_leader_group_names(self) -> List[str]:
         return [scouts_group.group_admin_id for scouts_group in self.get_scouts_leader_groups()]
@@ -427,7 +432,7 @@ class ScoutsUser(User):
         )
 
         scouts_group_names: List[str] = [
-            scouts_group.group_admin_id for scouts_group in self.get_scouts_groups_with_underlying_groups()]
+            scouts_group.group_admin_id for scouts_group in self._get_scouts_groups_with_underlying_groups(scouts_groups=self._scouts_groups)]
         scouts_leader_group_names: List[str] = self.get_scouts_leader_group_names(
         )
 

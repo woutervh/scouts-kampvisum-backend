@@ -22,8 +22,6 @@ class ScoutsUserSessionQueryset(models.QuerySet):
 
 
 class ScoutsUserSessionManager(models.Manager):
-    def get_queryset(self):
-        return ScoutsUserSessionQuerySet(self.model, using=self._db)
 
     def purge_expired(self):
         with connections['default'].cursor() as cursor:
@@ -49,7 +47,7 @@ class ScoutsUserSessionManager(models.Manager):
         with connections['default'].cursor() as cursor:
             try:
                 cursor.execute(
-                    f"select sasus.id, sasus.username, sasus.expiration, sasus.data as data from scouts_auth_scoutsusersession sasus where sasus.username = '{username}' and sasus.expiration > '{now()}' and sasus.data is not null"
+                    f"select sasus.id, sasus.username, sasus.expiration, sasus.data as data from scouts_auth_scoutsusersession sasus where sasus.username = '{username}'"
                 )
                 return cursor.fetchone()
             except Exception as exc:
@@ -61,7 +59,7 @@ class ScoutsUserSession(models.Model):
 
     objects = ScoutsUserSessionManager()
 
-    username = RequiredCharField()
+    username = RequiredCharField(unique=True)
     expiration = TimezoneAwareDateTimeField()
     data = JSONField(null=True)
 

@@ -54,7 +54,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 ),
                 "is_admin": obj.has_role_administrator(),
             }
-            for scouts_group in obj.get_scouts_groups(include_underlying_groups=True)
+            for scouts_group in obj.get_scouts_leader_groups(include_underlying_groups=True)
         ]
 
     def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:

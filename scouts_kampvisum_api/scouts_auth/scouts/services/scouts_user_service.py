@@ -122,7 +122,7 @@ class ScoutsUserService:
         for scouts_group in user_groups:
             active_user.add_scouts_group(scouts_group=scouts_group)
 
-        logger.debug(active_user.to_descriptive_string())
+        logger.info(active_user.to_descriptive_string())
 
         logger.debug(
             f"[AUTHENTICATION/AUTHORISATION] Updating user authorisations", user=active_user)
