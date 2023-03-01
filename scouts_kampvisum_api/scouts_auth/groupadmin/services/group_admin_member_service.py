@@ -279,64 +279,33 @@ class GroupAdminMemberService(GroupAdmin):
         current_datetime: date,
         activity_epoch: date,
     ) -> bool:
-        was_active = False
-
-        end_of_activity_period_counter = 0
         for function in member.functions:
-            end_of_activity_period: datetime = function.end
+            active = not function.end
+            if active:
+                logger.debug(
+                    "INCLUDE: Member %s %s (%s) has at least 1 active function",
+                    member.first_name,
+                    member.last_name,
+                    member.email,
+                )
+                return True
+            elif include_inactive and activity_epoch < end_of_activity_period.date():
+                logger.debug(
+                    "INCLUDE: Member %s %s (%s) is inactive, but include_inactive is set to True, including",
+                    member.first_name,
+                    member.last_name,
+                    member.email,
+                )
+                member.inactive_member = True
+                return True
 
-            # Member was active in at least one function since the activity epoch or
-            # if only active members are to be included and there is at least 1 active function, then stop searching
-            if was_active or (not include_inactive and not end_of_activity_period):
-                end_of_activity_period_counter = 0
-                break
-
-            # Member has ended an activity for at least one function, examine
-            if end_of_activity_period:
-                # An end date of a function was registered in the member record
-                end_of_activity_period_counter = end_of_activity_period_counter + 1
-
-                # logger.debug("DATE: %s", isinstance(end_of_activity_period, date))
-                # logger.debug(
-                #     "DATETIME: %s", isinstance(end_of_activity_period, datetime)
-                # )
-
-                end_of_activity_period = end_of_activity_period.date()
-
-                # Was the end date of the activity after the activity epoch ?
-                if activity_epoch < end_of_activity_period:
-                    # Not all insurance types require recently active members to be included in the search results
-                    # (currently only temporary insurance for non-members)
-                    was_active = True
-
-                    if include_inactive:
-                        logger.debug(
-                            "INCLUDE: Member %s %s (%s) is inactive, but include_inactive is set to True, including",
-                            member.first_name,
-                            member.last_name,
-                            member.email,
-                        )
-                        member.inactive_member = True
-                        return True
-
-        # The member is still active
-        if end_of_activity_period_counter == 0:
-            logger.debug(
-                "INCLUDE: Member %s %s (%s) has at least 1 active function",
-                member.first_name,
-                member.last_name,
-                member.email,
-            )
-            return True
-        else:
-            logger.debug(
-                "EXCLUDE: Member %s %s (%s) has been inactive for more than %d years",
-                member.first_name,
-                member.last_name,
-                member.email,
-                current_datetime.date().year - activity_epoch.year,
-            )
-
+        logger.debug(
+            "EXCLUDE: Member %s %s (%s) has been inactive for more than %d years",
+            member.first_name,
+            member.last_name,
+            member.email,
+            current_datetime.date().year - activity_epoch.year,
+        )
         return False
 
     def _filter_by_age(
