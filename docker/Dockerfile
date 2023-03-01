@@ -50,7 +50,6 @@ COPY pyproject.toml ./
 ### Development stage
 FROM preparation-stage AS development-stage
 
-RUN poetry lock
 RUN poetry config virtualenvs.create false
 RUN poetry install
 
