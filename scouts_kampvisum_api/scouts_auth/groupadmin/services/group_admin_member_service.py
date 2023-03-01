@@ -289,15 +289,18 @@ class GroupAdminMemberService(GroupAdmin):
                     member.email,
                 )
                 return True
-            elif include_inactive and activity_epoch < function.end.date():
-                logger.debug(
-                    "INCLUDE: Member %s %s (%s) is inactive, but include_inactive is set to True, including",
-                    member.first_name,
-                    member.last_name,
-                    member.email,
-                )
-                member.inactive_member = True
-                return True
+
+        if include_inactive:
+            for function in member.functions:
+                if function.end and activity_epoch < function.end.date():
+                    logger.debug(
+                        "INCLUDE: Member %s %s (%s) is inactive, but include_inactive is set to True, including",
+                        member.first_name,
+                        member.last_name,
+                        member.email,
+                    )
+                    member.inactive_member = True # This can only be set after all functions have been checked for their activity.
+                    return True
 
         logger.debug(
             "EXCLUDE: Member %s %s (%s) has been inactive for more than %d years",
