@@ -74,4 +74,4 @@ class S3FileViewSet(viewsets.ViewSet):
         serializer = S3PresignedUrlFileSerializer(
             SimpleNamespace(presigned_url=presigned_url), context={"request": request})
 
-        return Response(serializer.data)
+        return Response(presigned_url)
