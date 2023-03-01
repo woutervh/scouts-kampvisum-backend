@@ -35,11 +35,11 @@ class StorageSettings(SettingsHelper):
         return StorageSettings.get("AWS_S3_FILE_OVERWRITE")
 
     @staticmethod
-    def get_s3_access_id():
+    def get_s3_access_key():
         return StorageSettings.get("AWS_ACCESS_KEY_ID")
 
     @staticmethod
-    def get_s3_access_key():
+    def get_s3_access_secret():
         return StorageSettings.get("AWS_SECRET_ACCESS_KEY")
 
     @staticmethod

@@ -49,3 +49,29 @@ class S3FileViewSet(viewsets.ViewSet):
             SimpleNamespace(presigned_url=presigned_url), context={"request": request})
 
         return Response(serializer.data)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: S3PresignedUrlFileSerializer})
+    @action(
+        methods=["GET"],
+        url_path="",
+        detail=False,
+    )
+    def get_presigned_url_post(self, request):
+        """
+        Returns an S3 presigned url
+        """
+
+        input_serializer = S3FileSerializer(
+            data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        validated_data = input_serializer.validated_data
+        logger.debug("PERSISTED FILE CREATE VALIDATED DATA: %s",
+                     validated_data)
+
+        presigned_url = self.s3_file_service.generate_presigned_url_post(
+            validated_data.get("name"))
+        serializer = S3PresignedUrlFileSerializer(
+            SimpleNamespace(presigned_url=presigned_url), context={"request": request})
+
+        return Response(serializer.data)

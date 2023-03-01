@@ -3,6 +3,7 @@ import ntpath
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from storages.backends.s3boto3 import boto3, S3Boto3Storage
+from botocore.config import Config
 from botocore.exceptions import ClientError
 from scouts_auth.inuits.files import CustomStorage, StorageSettings
 
@@ -15,14 +16,23 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class S3StorageService(CustomStorage, S3Boto3Storage):
 
-    #access_id = StorageSettings.get_s3_access_id()
-    #access_key = StorageSettings.get_s3_access_key()
+    access_key = StorageSettings.get_s3_access_key()
+    access_secret = StorageSettings.get_s3_access_secret()
 
     bucket_name = StorageSettings.get_s3_bucket_name()
     # default_acl = StorageSettings.get_s3_default_acl()
     file_overwrite = StorageSettings.get_s3_file_overwrite()
 
     local_storage = FileSystemStorage()
+
+    def _get_client(self):
+        return boto3.client(
+            's3',
+            aws_access_key_id=self.access_key,
+            aws_secret_access_key=self.access_secret,
+            endpoint_url='http://localhost:9000',
+            config=Config(signature_version="v4")
+        )
 
     def generate_presigned_url(self, object_name, expiration=3600):
         """Generate a presigned URL to share an S3 object
@@ -35,12 +45,38 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         logger.debug(f"OBJECT NAME: {object_name}")
 
         # Generate a presigned URL for the S3 object
-        s3_client = boto3.client('s3', aws_access_key_id = self.access_id, aws_secret_access_key = self.access_key)
+        s3_client = self._get_client()
+
         try:
             response = s3_client.generate_presigned_url('get_object',
                                                         Params={'Bucket': self.bucket_name,
                                                                 'Key': object_name},
                                                         ExpiresIn=expiration)
+        except ClientError as e:
+            logging.error(e)
+            return None
+
+        # The response contains the presigned URL
+        return response
+
+    def generate_presigned_url_post(self, object_name, expiration=3600):
+        """Generate a presigned URL to upload a file
+
+        :param object_name: string
+        :param expiration: Time in seconds for the presigned URL to remain valid
+        :return: Presigned URL as string. If error, returns None.
+        """
+
+        logger.debug(f"OBJECT NAME: {object_name}")
+
+        # Generate a presigned URL for the S3 object
+        s3_client = self._get_client()
+        try:
+            response = s3_client.generate_presigned_post(
+                Bucket=self.bucket_name,
+                Key=object_name,
+                ExpiresIn=expiration
+            )
         except ClientError as e:
             logging.error(e)
             return None
@@ -80,13 +116,15 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
     def copy_file(self, file_src_path: str, file_dest_path: str = None):
         """Copies a file on S3 to local storage."""
 
-        logger.debug("Copying file from S3 to local storage: %s", file_src_path)
+        logger.debug(
+            "Copying file from S3 to local storage: %s", file_src_path)
 
         if file_dest_path is None:
             file_dest_path = file_src_path
 
         remote_file_contents = self.get_file_contents(file_src_path)
-        self.local_storage.save(file_dest_path, ContentFile(remote_file_contents))
+        self.local_storage.save(
+            file_dest_path, ContentFile(remote_file_contents))
 
         return self.local_storage.path(file_dest_path)
 

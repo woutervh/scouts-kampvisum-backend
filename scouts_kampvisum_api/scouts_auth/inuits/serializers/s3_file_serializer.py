@@ -18,9 +18,19 @@ class S3FileSerializer(serializers.Serializer):
     class Meta:
         abstract = True
 
+
 class S3PresignedUrlFileSerializer(serializers.Serializer):
 
     presigned_url = serializers.CharField(required=True)
+
+    class Meta:
+        abstract = True
+
+
+class S3PresignedUrlPostFileSerializer(serializers.Serializer):
+
+    url = serializers.CharField(required=True)
+    fields = serializers.JSONField(required=True)
 
     class Meta:
         abstract = True
