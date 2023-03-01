@@ -87,7 +87,7 @@ class GroupAdminMemberService(GroupAdmin):
         ).function_descriptions
 
         members: List[AbstractScoutsMember] = []
-        for response_member in response.members:
+        for response_member in all_members:
             member: AbstractScoutsMember = self.get_member_info(
                 active_user=active_user, group_admin_id=response_member.group_admin_id
             )
