@@ -283,14 +283,11 @@ class GroupAdminMemberService(GroupAdmin):
 
         end_of_activity_period_counter = 0
         for function in member.functions:
-            # Member was active in at least one function since the activity epoch, don't look further
-            if was_active:
-                break
-
             end_of_activity_period: datetime = function.end
 
-            # If only active members are to be included and there is at least 1 active function, then stop searching
-            if not include_inactive and not end_of_activity_period:
+            # Member was active in at least one function since the activity epoch or
+            # if only active members are to be included and there is at least 1 active function, then stop searching
+            if was_active or (not include_inactive and not end_of_activity_period):
                 end_of_activity_period_counter = 0
                 break
 
