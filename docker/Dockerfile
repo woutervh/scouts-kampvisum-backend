@@ -35,7 +35,7 @@ RUN apt-get update; \
         libffi-dev \
         python3-dev
 RUN python -m pip install "poetry==${POETRY_VERSION}"
-COPY pyproject.toml poetry.lock* ./
+COPY pyproject.toml ./
 
 # # SSH
 # ADD ./scripts/ssh/id_rsa /
@@ -50,6 +50,7 @@ COPY pyproject.toml poetry.lock* ./
 ### Development stage
 FROM preparation-stage AS development-stage
 
+RUN poetry lock
 RUN poetry config virtualenvs.create false
 RUN poetry install
 
