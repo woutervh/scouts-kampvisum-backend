@@ -35,23 +35,20 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
             config=Config(signature_version="v4"),
         )
 
-    def generate_presigned_url(self, object_name, expiration=3600):
+    def generate_presigned_url(self, file_path, expiration=3600):
         """Generate a presigned URL to share an S3 object
 
         :param object_name: string
         :param expiration: Time in seconds for the presigned URL to remain valid
         :return: Presigned URL as string. If error, returns None.
         """
-
-        logger.debug(f"OBJECT NAME: {object_name}")
-
         # Generate a presigned URL for the S3 object
         s3_client = self._get_client()
 
         try:
             response = s3_client.generate_presigned_url('get_object',
                                                         Params={'Bucket': self.bucket_name,
-                                                                'Key': 'UUID/' + object_name},
+                                                                'Key': file_path},
                                                         ExpiresIn=expiration)
         except ClientError as e:
             logging.error(e)

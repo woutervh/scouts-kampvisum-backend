@@ -40,7 +40,7 @@ class PersistedFileManager(models.Manager):
 class PersistedFile(AuditedBaseModel):
 
     objects = PersistedFileManager()
-
+    directory_path = RequiredCharField(default='',)
     original_name = RequiredCharField()
     file = models.FileField(
         validators=[validate_uploaded_file],

@@ -48,6 +48,7 @@ class PersistedFileSerializer(serializers.ModelSerializer):
             "id": value.id,
             "name": self.get_name(value),
             "original_name": value.original_name,
+            "directory_path": value.directory_path,
             "content_type": value.content_type,
             "created_by": value.created_by,
             "created_on": value.created_on,
