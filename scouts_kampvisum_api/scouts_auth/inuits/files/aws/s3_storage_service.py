@@ -74,17 +74,22 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         s3_client = self._get_client()
         try:
             directory_path = str(uuid.uuid4())
+            file_path = directory_path + '/' + object_name
             response = s3_client.generate_presigned_post(
                 Bucket=self.bucket_name,
-                Key= directory_path + '/' + object_name,
+                Key=file_path,
                 ExpiresIn=expiration
             )
+
+            response['file_path'] = file_path
+
+            # The response contains the presigned URL
+            return response
         except ClientError as e:
             logging.error(e)
             return None
 
-        # The response contains the presigned URL
-        return response
+        return None
 
     # @TODO remove s3 specific code from this model
     def get_path(self):

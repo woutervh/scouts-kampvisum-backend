@@ -7,7 +7,7 @@ from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_STRING
 
 from scouts_auth.inuits.files.aws import S3StorageService
-from scouts_auth.inuits.serializers import S3FileSerializer, S3PresignedUrlFileSerializer
+from scouts_auth.inuits.serializers import S3FileSerializer, S3PresignedUrlFileSerializer, S3PresignedUrlPostFileSerializer
 
 # LOGGING
 import logging
@@ -50,7 +50,7 @@ class S3FileViewSet(viewsets.ViewSet):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: S3PresignedUrlFileSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: S3PresignedUrlPostFileSerializer})
     @action(
         methods=["POST"],
         url_path="",
@@ -60,18 +60,20 @@ class S3FileViewSet(viewsets.ViewSet):
         """
         Returns an S3 presigned url
         """
+        # logger.debug("PERSISTED FILE CREATE INPUT DATA: %s",
+        #              request.data)
 
         input_serializer = S3FileSerializer(
             data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
-        logger.debug("PERSISTED FILE CREATE VALIDATED DATA: %s",
-                     validated_data)
+        # logger.debug("PERSISTED FILE CREATE VALIDATED DATA: %s",
+        #              validated_data)
 
         presigned_url = self.s3_file_service.generate_presigned_url_post(
             validated_data.get("name"))
-        serializer = S3PresignedUrlFileSerializer(
-            SimpleNamespace(presigned_url=presigned_url), context={"request": request})
+        serializer = S3PresignedUrlPostFileSerializer(
+            presigned_url, context={"request": request})
 
-        return Response(presigned_url)
+        return Response(serializer.data)
