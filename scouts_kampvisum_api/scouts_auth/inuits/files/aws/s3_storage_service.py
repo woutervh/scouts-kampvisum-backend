@@ -1,3 +1,4 @@
+import uuid
 import ntpath
 
 from django.core.files.base import ContentFile
@@ -31,7 +32,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
             aws_access_key_id=self.access_key,
             aws_secret_access_key=self.access_secret,
             endpoint_url='http://localhost:9000',
-            config=Config(signature_version="v4")
+            config=Config(signature_version="v4"),
         )
 
     def generate_presigned_url(self, object_name, expiration=3600):
@@ -50,7 +51,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         try:
             response = s3_client.generate_presigned_url('get_object',
                                                         Params={'Bucket': self.bucket_name,
-                                                                'Key': object_name},
+                                                                'Key': 'UUID/' + object_name},
                                                         ExpiresIn=expiration)
         except ClientError as e:
             logging.error(e)
@@ -72,9 +73,10 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         # Generate a presigned URL for the S3 object
         s3_client = self._get_client()
         try:
+            directory_path = str(uuid.uuid4())
             response = s3_client.generate_presigned_post(
                 Bucket=self.bucket_name,
-                Key=object_name,
+                Key= directory_path + '/' + object_name,
                 ExpiresIn=expiration
             )
         except ClientError as e:

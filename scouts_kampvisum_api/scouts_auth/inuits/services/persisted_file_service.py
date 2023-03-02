@@ -19,6 +19,8 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class PersistedFileService:
     def save(self, request, data):
         uploaded_file = data.get("file", None)
+        uuid_location = data.get("uuid_location", None)
+        
 
         if uploaded_file is None:
             raise Http404(
@@ -28,25 +30,31 @@ class PersistedFileService:
             name=uploaded_file.name,
             content=uploaded_file,
             content_type=uploaded_file.content_type,
+            uuid_location=uuid_location
         )
 
     def save_file(
-        self, name, content, content_type, instance: PersistedFile = None
+        self, name, content, content_type, uuid_location, instance: PersistedFile = None
     ) -> PersistedFile:
+        
         if not instance:
             instance = PersistedFile()
 
         name, extension = os.path.splitext(name)
 
         instance.original_name = "{}{}".format(name, extension)
-        instance.file.save(
-            name="{}/{}{}".format(uuid.uuid4(), name, extension),
-            content=content,
-        )
+        # instance.file.save(
+        #     name="{}/{}{}".format(uuid.uuid4(), name, extension),
+        #     content=content,
+        # )
+        logger.debug('INSTANCE FILE UUID: %s', uuid_location)
+        instance.id = uuid_location
         instance.content_type = content_type
 
         instance.full_clean()
         instance.save()
+        
+        logger.debug('INSTANCE FILE: %s', instance)
 
         return instance
 

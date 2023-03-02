@@ -8,7 +8,7 @@ from scouts_auth.inuits.views import (
 
 get_presigned_url = S3FileViewSet.as_view({"get": "get_presigned_url"})
 get_presigned_url_post = S3FileViewSet.as_view(
-    {"get": "get_presigned_url_post"})
+    {"post": "get_presigned_url_post"})
 
 urlpatterns = [
     path("files/s3/presigned_url", get_presigned_url, name="get_presigned_url"),

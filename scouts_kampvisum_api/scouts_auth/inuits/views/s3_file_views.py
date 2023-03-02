@@ -52,7 +52,7 @@ class S3FileViewSet(viewsets.ViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: S3PresignedUrlFileSerializer})
     @action(
-        methods=["GET"],
+        methods=["POST"],
         url_path="",
         detail=False,
     )
