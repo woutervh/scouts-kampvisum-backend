@@ -68,7 +68,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         :return: Presigned URL as string. If error, returns None.
         """
 
-        logger.debug(f"OBJECT NAME: {object_name}")
+        # logger.debug(f"OBJECT NAME: {object_name}")
 
         # Generate a presigned URL for the S3 object
         s3_client = self._get_client()
@@ -80,7 +80,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
                 ExpiresIn=expiration
             )
 
-            response['object_name'] = object_name
+            response['original_name'] = object_name
             response['directory_path'] = directory_path
 
             # The response contains the presigned URL
