@@ -33,7 +33,8 @@ class S3PresignedUrlFileSerializer(serializers.Serializer):
 
 class S3PresignedUrlPostFileSerializer(serializers.Serializer):
 
-    file_path = RequiredCharField()
+    original_name = RequiredCharField()
+    directory_path = RequiredCharField()
     url = RequiredCharField()
     fields = serializers.JSONField()
 

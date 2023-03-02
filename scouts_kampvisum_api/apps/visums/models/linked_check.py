@@ -25,6 +25,7 @@ from scouts_auth.inuits.models.fields import (
     DefaultIntegerField,
     DatetypeAwareDateField,
 )
+from scouts_auth.inuits.files.aws import S3File
 
 # LOGGING
 import logging
@@ -230,7 +231,7 @@ class LinkedParticipantCheck(LinkedCheck):
 # A check that contains a file
 # ##############################################################################
 class LinkedFileUploadCheck(LinkedCheck):
-    value = models.ManyToManyField(PersistedFile, related_name="checks")
+    value = models.ManyToManyField(S3File, related_name="checks")
 
     def has_value(self) -> bool:
         if self.value:

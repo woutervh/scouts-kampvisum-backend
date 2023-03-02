@@ -74,14 +74,14 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
         s3_client = self._get_client()
         try:
             directory_path = str(uuid.uuid4())
-            file_path = directory_path + '/' + object_name
             response = s3_client.generate_presigned_post(
                 Bucket=self.bucket_name,
-                Key=file_path,
+                Key=directory_path + '/' + object_name,
                 ExpiresIn=expiration
             )
 
-            response['file_path'] = file_path
+            response['object_name'] = object_name
+            response['directory_path'] = directory_path
 
             # The response contains the presigned URL
             return response

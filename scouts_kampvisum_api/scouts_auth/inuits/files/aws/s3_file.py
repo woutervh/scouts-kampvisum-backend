@@ -6,4 +6,4 @@ from scouts_auth.inuits.models.fields import RequiredCharField
 class S3File(AuditedBaseModel):
 
     original_name = RequiredCharField()
-    path = RequiredCharField()
+    directory_path = RequiredCharField()
