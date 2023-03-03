@@ -306,7 +306,14 @@ class ScoutsUser(User):
     def get_scouts_group_leader_group_names(self) -> List[str]:
         return [scouts_group.group_admin_id for scouts_group in self.get_scouts_group_leader_groups()]
 
-    def has_role_district_commissioner(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None, include_inactive: bool = False) -> bool:
+    def has_role_district_commissioner(
+        self,
+        scouts_group: ScoutsGroup = None,
+        group_admin_id: str = None,
+        include_inactive: bool = False,
+        for_underlying_scouts_groups: bool = True,
+        ignore_group: bool = False
+    ) -> bool:
         """
         Determines if the user is a district commissioner based on a function code
         """
@@ -316,19 +323,28 @@ class ScoutsUser(User):
             role="district commissioner",
             scouts_function_name="is_district_commissioner_function",
             include_inactive=include_inactive,
-            for_underlying_scouts_groups=True,)
+            for_underlying_scouts_groups=for_underlying_scouts_groups,
+            ignore_group=ignore_group,
+        )
 
-    def get_scouts_district_commissioner_groups(self) -> List[ScoutsGroup]:
+    def get_scouts_district_commissioner_groups(self, for_underlying_scouts_groups: bool = False) -> List[ScoutsGroup]:
         return [
             scouts_group
             for scouts_group in self._scouts_groups
-            if self.has_role_district_commissioner(scouts_group=scouts_group)
+            if self.has_role_district_commissioner(scouts_group=scouts_group, for_underlying_scouts_groups=for_underlying_scouts_groups)
         ]
 
     def get_scouts_district_commissioner_group_names(self) -> List[str]:
         return [scouts_group.group_admin_id for scouts_group in self.get_scouts_district_commissioner_groups()]
 
-    def has_role_shire_president(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None, include_inactive: bool = False) -> bool:
+    def has_role_shire_president(
+        self,
+        scouts_group: ScoutsGroup = None,
+        group_admin_id: str = None,
+        include_inactive: bool = False,
+        for_underlying_scouts_groups: bool = True,
+        ignore_group: bool = False,
+    ) -> bool:
         """
         Determines if the user is a shire president (gouwvoorzitter) based on a function code
         """
@@ -338,13 +354,15 @@ class ScoutsUser(User):
             role="shire president",
             scouts_function_name="is_shire_president_function",
             include_inactive=include_inactive,
-            for_underlying_scouts_groups=True,)
+            for_underlying_scouts_groups=for_underlying_scouts_groups,
+            ignore_group=ignore_group,
+        )
 
-    def get_scouts_shire_president_groups(self) -> List[ScoutsGroup]:
+    def get_scouts_shire_president_groups(self, for_underlying_scouts_groups: bool = True) -> List[ScoutsGroup]:
         return [
             scouts_group
             for scouts_group in self._scouts_groups
-            if self.has_role_shire_president(scouts_group=scouts_group)
+            if self.has_role_shire_president(scouts_group=scouts_group, for_underlying_scouts_groups=for_underlying_scouts_groups)
         ]
 
     def get_scouts_shire_president_group_names(self) -> List[str]:
@@ -382,6 +400,15 @@ class ScoutsUser(User):
             raise InvalidArgumentException(
                 f"Can't determine {role} role without a group or group admin id")
 
+        if ignore_group:
+            for scouts_function in self._scouts_functions:
+                if not include_inactive and not scouts_function.is_active_function():
+                    continue
+
+                if getattr(scouts_function, scouts_function_name)():
+                    return True
+            return False
+
         if not scouts_group:
             scouts_group = self.get_scouts_group(
                 group_admin_id=group_admin_id, raise_error=True)
@@ -391,7 +418,7 @@ class ScoutsUser(User):
 
         for scouts_function in self._scouts_functions:
             if not include_inactive and not scouts_function.is_active_function():
-                return False
+                continue
 
             if getattr(scouts_function, scouts_function_name)():
                 if not for_underlying_scouts_groups:

@@ -140,6 +140,25 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             else Response(ordered)
         )
 
+    def list_all(self, request):
+        if not (
+            request.user.has_role_administrator()
+            or request.user.has_role_district_commissioner(ignore_group=True)
+            or request.user.has_role_shire_president(ignore_group=True)
+        ):
+            raise PermissionDenied(
+                f"[{request.user.username}] You are not allowed to list all visums")
+
+        if request.user.has_role_administrator()
+        scouts_groups = []
+        elif request.user.has_role_shire_president(ignore_group=True):
+            scouts_groups = request.user.get_scouts_shire_president_groups()
+        elif request.user.has_role_district_commissioner(ignore_group=True):
+            scouts_groups = request.user.get_scouts_district_commissioner_groups()
+
+        instances = CampVisum.objects.get_all_for_groups_and_year(
+            request=request, scouts_groups=request.user.get_scouts_lead)
+
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
     )
