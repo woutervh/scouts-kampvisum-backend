@@ -115,8 +115,12 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug("Listing visums for group %s",
                      group_admin_id, user=request.user)
 
-        return self._list_response(request=request, instances=CampVisum.objects.get_all_for_group_and_year(request=request,
-                                                                 group_admin_id=group_admin_id, year_number=year))
+        return self._list_response(
+            request=request,
+            instances=CampVisum.objects.get_all_for_group_and_year(
+                request=request, group_admin_id=group_admin_id, year_number=year
+            )
+        )
 
     def list_all(self, request):
         if not (
@@ -137,7 +141,8 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         return self._list_response(
             request=request,
             instances=CampVisum.objects.get_all_for_groups_and_year(
-                request=request, group_admin_ids=scouts_group_admin_ids, year=request.GET.get("year", None)),
+                request=request, group_admin_ids=scouts_group_admin_ids, year=request.GET.get("year", None)
+            ),
             order_by_group=True,
         )
         
@@ -145,13 +150,13 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         page = self.paginate_queryset(instances)
 
         serializer = (
-            CampVisumOverviewSerializer(
-                page, many=True, context={"request": request})
+            CampVisumOverviewSerializer(page, many=True, context={"request": request})
             if page is not None
             else CampVisumOverviewSerializer(instances, many=True, context={"request": request})
         )
+        response = serializer.data
 
-        response = serializer.data.sort(
+        response.sort(
             key=lambda k: (k.get("group"), (
                     k.get("sections", [{"age_group": 0}])[0]
                     .get("age_group", 0)
