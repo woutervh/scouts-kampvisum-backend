@@ -21,7 +21,6 @@ from apps.visums.models import (
 )
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CheckSerializer
-from apps.visums.urls import LinkedCheckEndpointFactory
 
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.scouts.permissions import CustomPermissionHelper

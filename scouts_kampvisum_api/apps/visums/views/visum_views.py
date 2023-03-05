@@ -115,30 +115,8 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug("Listing visums for group %s",
                      group_admin_id, user=request.user)
 
-        instances = CampVisum.objects.get_all_for_group_and_year(request=request,
-                                                                 group_admin_id=group_admin_id, year_number=year)
-        page = self.paginate_queryset(instances)
-
-        serializer = (
-            CampVisumOverviewSerializer(
-                page, many=True, context={"request": request})
-            if page is not None
-            else CampVisumOverviewSerializer(instances, many=True, context={"request": request})
-        )
-
-        ordered = sorted(
-            serializer.data,
-            key=lambda k: k.get("sections", [{"age_group": 0}])[0]
-            .get("age_group", 0)
-            if len(k.get("sections", [{"age_group": 0}])) > 0
-            else 0,
-        )
-
-        return (
-            self.get_paginated_response(ordered)
-            if page is not None
-            else Response(ordered)
-        )
+        return self._list_response(request=request, instances=CampVisum.objects.get_all_for_group_and_year(request=request,
+                                                                 group_admin_id=group_admin_id, year_number=year))
 
     def list_all(self, request):
         if not (
@@ -149,15 +127,53 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             raise PermissionDenied(
                 f"[{request.user.username}] You are not allowed to list all visums")
 
-        if request.user.has_role_administrator()
-        scouts_groups = []
+        if request.user.has_role_administrator():
+            scouts_group_admin_ids = CampVisum.objects.get_queryset().get_linked_groups()
         elif request.user.has_role_shire_president(ignore_group=True):
-            scouts_groups = request.user.get_scouts_shire_president_groups()
+            scouts_group_admin_ids = request.user.get_scouts_shire_president_groups()
         elif request.user.has_role_district_commissioner(ignore_group=True):
-            scouts_groups = request.user.get_scouts_district_commissioner_groups()
+            scouts_group_admin_ids = request.user.get_scouts_district_commissioner_groups()
 
-        instances = CampVisum.objects.get_all_for_groups_and_year(
-            request=request, scouts_groups=request.user.get_scouts_lead)
+        return self._list_response(
+            request=request,
+            instances=CampVisum.objects.get_all_for_groups_and_year(
+                request=request, group_admin_ids=scouts_group_admin_ids, year=request.GET.get("year", None)),
+            order_by_group=True,
+        )
+        
+    def _list_response(self, request, instances, order_by_group: bool = False):
+        page = self.paginate_queryset(instances)
+
+        serializer = (
+            CampVisumOverviewSerializer(
+                page, many=True, context={"request": request})
+            if page is not None
+            else CampVisumOverviewSerializer(instances, many=True, context={"request": request})
+        )
+
+        response = serializer.data.sort(
+            key=lambda k: (k.get("group"), (
+                    k.get("sections", [{"age_group": 0}])[0]
+                    .get("age_group", 0)
+                    if len(k.get("sections", [{"age_group": 0}])) > 0
+                    else 0,
+                )
+            )
+        )
+
+        if order_by_group:
+            visums = {}
+            for visum in serializer.data:
+                if visum.get("group") not in visums:
+                    visums[visum.get("group")] = []
+                visums[visum.get("group")].append(visum)
+            response = visums
+
+        return (
+            self.get_paginated_response(response)
+            if page is not None
+            else Response(response)
+        )
 
     @swagger_auto_schema(
         responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}

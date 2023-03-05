@@ -34,6 +34,15 @@ class CampVisumQuerySet(models.QuerySet):
             )
             return cursor.fetchall()
         return None
+    
+    def get_all_for_groups_and_year(self, group_admin_ids: List[str], year: int):
+        with connections['default'].cursor() as cursor:
+            groups = [("'" + group_admin_id[0] + "'") for group_admin_id in group_admin_ids]
+            cursor.execute(
+                f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name, cc.year as year from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group IN ({','.join(group_admin_id for group_admin_id in groups)}){' and cc.year={year}' if year else ''}"
+            )
+            return cursor.fetchall()
+        return None
 
     def get_linked_groups(self):
         with connections['default'].cursor() as cursor:
@@ -41,6 +50,7 @@ class CampVisumQuerySet(models.QuerySet):
                 f"select distinct(vc.group) as group, vc.group_name from visums_campvisum vc"
             )
             return cursor.fetchall()
+        return None
 
     def count_unchecked_checks(self, pk):
         with connections['default'].cursor() as cursor:
@@ -87,10 +97,24 @@ class CampVisumManager(models.Manager):
         if not group_admin_id:
             raise ValidationError(f"Can't query CampVisum without a group")
 
-        from apps.visums.models import LinkedCategory
+        return self._parse_to_visum(
+            request=request,
+            results=self.get_queryset().get_all_for_group_and_year(
+                    group_admin_id=group_admin_id, year=year))
+    
+    def get_all_for_groups_and_year(self, request, group_admin_ids: List[str], year: CampYear = None, year_number: int = None):
+        if year and isinstance(year, CampYear):
+            year = year.year
+        else:
+            year = year_number
 
-        results = self.get_queryset().get_all_for_group_and_year(
-            group_admin_id=group_admin_id, year=year)
+        return self._parse_to_visum(
+            request=request,
+            results=self.get_queryset().get_all_for_groups_and_year(group_admin_ids=group_admin_ids, year=year))
+    
+    def _parse_to_visum(self, request, results: List, year: int = None):
+
+        from apps.visums.models import LinkedCategory
 
         visums = []
         for result in results:
