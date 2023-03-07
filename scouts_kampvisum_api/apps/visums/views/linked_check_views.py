@@ -602,11 +602,6 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        # logger.debug("FILE UPLOAD CHECK UPDATE VALIDATED DATA: %s", validated_data)
-
-        for file in validated_data:
-            for check in file.checks.all():
-                self.check_user_allowed(request, check)
 
         instance = self.linked_check_service.update_file_upload_check(
             request=request, instance=instance, files=validated_data
@@ -706,50 +701,41 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             )
 
         if term:
-            leader_functions: List[ScoutsFunction] = list(
-                ScoutsFunction.objects.get_leader_functions(user=request.user)
-            )
+            # leader_functions: List[ScoutsFunction] = list(
+            #     ScoutsFunction.objects.get_leader_functions(user=request.user)
+            # )
 
-            group_admin_ids = []
-            for leader_function in leader_functions:
-                for group in leader_function.scouts_groups.all():
-                    group_admin_ids.append(group.group_admin_id)
+            # group_admin_ids = []
+            # for leader_function in leader_functions:
+            #     for group in leader_function.scouts_groups.all():
+            #         group_admin_ids.append(group.group_admin_id)
 
-                    # @TODO
-                    # if request.user.has_role_district_commissioner():
-                    #     underlyingGroups: List[ScoutsGroup] = list(
-                    #         ScoutsGroup.objects.get_groups_with_parent(
-                    #             parent_group_admin_id=group.group_admin_id
-                    #         )
-                    #     )
+            #         # @TODO
+            #         # if request.user.has_role_district_commissioner():
+            #         #     underlyingGroups: List[ScoutsGroup] = list(
+            #         #         ScoutsGroup.objects.get_groups_with_parent(
+            #         #             parent_group_admin_id=group.group_admin_id
+            #         #         )
+            #         #     )
 
-                    #     for underlyingGroup in underlyingGroups:
-                    #         if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
-                    #             group_admin_ids.append(
-                    #                 underlyingGroup.group_admin_id)
+            #         #     for underlyingGroup in underlyingGroups:
+            #         #         if leader_functions.is_district_commissioner_for_group(scouts_group=underlyingGroup):
+            #         #             group_admin_ids.append(
+            #         #                 underlyingGroup.group_admin_id)
 
-            if not group_admin_id in group_admin_ids:
-                raise PermissionDenied(
-                    {
-                        "message": "You don't have permission to request files for group {}".format(
-                            group_admin_id
-                        )
-                    }
-                )
-
+            # if not group_admin_id in group_admin_ids:
+            #     raise PermissionDenied(
+            #         {
+            #             "message": "You don't have permission to request files for group {}".format(
+            #                 group_admin_id
+            #             )
+            #         }
+            #     )
+            
             instances = (
-                PersistedFile.objects.filter(
-                    Q(
-                        checks__parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK
-                    )
-                    & Q(
-                        checks__sub_category__category__category_set__visum__group__group_admin_id=group_admin_id
-                    )
-                )
-                .distinct()
-                .filter(Q(original_name__icontains=term))
+                PersistedFile.objects.allowed(group_admin_id)
             )
-
+            
             page = self.paginate_queryset(instances)
             if page is not None:
                 serializer = PersistedFileSerializer(page, many=True)
