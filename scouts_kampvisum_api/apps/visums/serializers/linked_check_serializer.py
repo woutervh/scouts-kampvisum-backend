@@ -38,6 +38,11 @@ from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
+class LinkedCheckEndpointFactory:
+    @staticmethod
+    def get_endpoint(endpoint: str):
+        return "checks/{}".format(endpoint)
+
 
 class LinkedCheckSerializer(serializers.ModelSerializer):
 
