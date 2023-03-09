@@ -396,6 +396,7 @@ ENFORCE_MEMBER_CHECKS = env.list(
     ["ParticipantMemberCheck", "ParticipantLeaderCheck",
         "ParticipantResponsibleCheck"],
 )
+CAMP_DATE_CHECK_NAME = env.str("CAMP_DATE_CHECK_NAME", "planning_date_leaders")
 PROFILE_REFRESH = env.int("PROFILE_REFRESH", 15)
 PROFILE_REFRESH_GROUPS = env.int("PROFILE_REFRESH_GROUPS", 15)
 PROFILE_REFRESH_FUNCTIONS = env.int("PROFILE_REFRESH_FUNCTIONS", 15)

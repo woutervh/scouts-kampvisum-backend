@@ -193,16 +193,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def dates_leaders(self, request, pk=None):
-        logger.debug(f"Requesting visum {pk}", user=request.user)
-        instance = self.get_object(pk=pk)
-        logger.debug(f"Visum retrieved: {instance.name}")
-        serializer = CampVisumSerializer(
-            instance, context={"request": request})
+        logger.debug(f"Requesting camp dates for visum {pk}", user=request.user)
 
-        for category in serializer.data['category_set']['categories']:
-            if category['parent']['name'] == 'planning':
-                for sub_category in category['sub_categories']:
-                    if sub_category['parent']['name'] == 'planning_date':
-                        for check in sub_category['checks']:
-                            if check['parent']['name'] == 'planning_date_leaders':
-                                return Response(check['value'])
+        return Response(CampVisum.objects.get_camp_dates(pk=pk))
