@@ -165,7 +165,9 @@ class CampVisumManager(models.Manager):
     def get_camp_dates(self, pk) -> dict:
         result = self.get_queryset().get_camp_dates(pk=pk)
 
-        return {
-            "start_date": result[0],
-            "end_date": result[1],
-        }
+        if result:
+            return {
+                "start_date": result[0],
+                "end_date": result[1],
+            }
+        return {}
