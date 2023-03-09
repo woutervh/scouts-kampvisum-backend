@@ -31,6 +31,7 @@ class Command(BaseCommand):
         # "fix92544tris",
         # "updatevisums",
         # "fix91782",
+        "fix107896",
     ]
 
     def handle(self, *args, **kwargs):

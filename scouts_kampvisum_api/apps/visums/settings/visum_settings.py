@@ -158,3 +158,7 @@ class VisumSettings(SettingsHelper):
                 )
             )
         return recipients
+    
+    @staticmethod
+    def get_camp_date_check_name() -> str:
+        return SettingsHelper.get("CAMP_DATE_CHECK_NAME")
