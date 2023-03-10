@@ -1,9 +1,3 @@
-class LinkedCheckEndpointFactory:
-    @staticmethod
-    def get_endpoint(endpoint: str):
-        return "checks/{}".format(endpoint)
-
-
 from django.urls import path
 from rest_framework import routers
 

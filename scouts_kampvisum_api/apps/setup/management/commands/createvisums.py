@@ -27,6 +27,7 @@ class Command(BaseCommand):
     exception = True
 
     visum_service = CampVisumService()
+    sections: dict = {}
 
     default_count = 10
     default_start = 0
@@ -76,21 +77,15 @@ class Command(BaseCommand):
             raise ScoutsAuthException(
                 "Unable to find user with provided access token")
 
-        group_count = -1
-        for scouts_group in user.get_scouts_groups():
-            group_count += 1
-
-            if group_count == 0:
-                continue
-
-            section: ScoutsSection = ScoutsSection.objects.all().first()
-
+        scouts_groups = user.get_scouts_groups()
+        for group_count in range(1, len(scouts_groups)):
+            scouts_group = scouts_groups[group_count]
             for x in range(start, start + count):
                 data: dict = {
                     "group": scouts_group.group_admin_id,
                     "group_name": scouts_group.name,
                     "name": f"INUITS speed test {scouts_group.group_admin_id} {x:03}",
-                    "sections": [section.id],
+                    "sections": [self.get_next_section(group_admin_id=scouts_group.group_admin_id, index=x - start)],
                 }
 
                 visum: CampVisum = self.visum_service.visum_create(
@@ -98,3 +93,13 @@ class Command(BaseCommand):
 
                 logger.debug(
                     f"Created visum {visum.name} for group {visum.group}")
+
+    def get_next_section(self, group_admin_id: str, index: int) -> ScoutsSection:
+        if group_admin_id not in self.sections:
+            self.sections[group_admin_id] = ScoutsSection.objects.get_for_group(
+                group_admin_id=group_admin_id)
+
+        if index > len(self.sections[group_admin_id]):
+            index = index - len(self.sections[group_admin_id])
+
+        return self.sections[group_admin_id][index]

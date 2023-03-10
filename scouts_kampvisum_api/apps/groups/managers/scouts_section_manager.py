@@ -120,3 +120,6 @@ class ScoutsSectionManager(models.Manager):
                 }
             })
         return sections
+
+    def get_for_group(self, group_admin_id: str) -> List:
+        return self.get_queryset().filter(group=group_admin_id)
