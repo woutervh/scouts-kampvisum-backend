@@ -12,12 +12,6 @@ from rest_framework import routers
 from django.urls import path
 
 
-class LinkedCheckEndpointFactory:
-    @staticmethod
-    def get_endpoint(endpoint: str):
-        return "checks/{}".format(endpoint)
-
-
 urlpatterns = []
 
 urlpatterns.append(path(
