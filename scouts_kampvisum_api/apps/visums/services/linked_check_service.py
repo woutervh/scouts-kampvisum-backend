@@ -27,6 +27,7 @@ from apps.visums.models import (
 )
 from apps.visums.models.enums import CheckState
 from apps.visums.services import ChangeHandlerService, CampVisumUpdateService
+from apps.visums.settings import VisumSettings
 
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.models import PersistedFile
@@ -70,6 +71,13 @@ class LinkedCheckService:
 
         self.update_service.update_sub_category(
             request=request, instance=instance.sub_category, now=now)
+
+        if instance.parent.name == VisumSettings.get_camp_date_check_name():
+            instance.sub_category.category.category_set.visum.start_date = instance.start_date
+            instance.sub_category.category.category_set.visum.end_date = instance.end_date
+
+            instance.sub_category.category.category_set.visum.full_clean()
+            instance.sub_category.category.category_set.visum.save()
 
         return instance
 
