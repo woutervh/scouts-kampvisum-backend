@@ -35,10 +35,11 @@ class CampVisumQuerySet(models.QuerySet):
             )
             return cursor.fetchall()
         return None
-    
+
     def get_all_for_groups_and_year(self, group_admin_ids: List[str], year: int):
         with connections['default'].cursor() as cursor:
-            groups = [("'" + group_admin_id[0] + "'") for group_admin_id in group_admin_ids]
+            groups = [("'" + group_admin_id[0] + "'")
+                      for group_admin_id in group_admin_ids]
             cursor.execute(
                 f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name, vc.start_date as start_date, vc.end_date as end_date, vc.state as state, vc.check_state as check_state from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group IN ({','.join(group_admin_id for group_admin_id in groups)}){' and cc.year={year}' if year else ''}"
             )
@@ -61,7 +62,7 @@ class CampVisumQuerySet(models.QuerySet):
             return cursor.fetchone()[0]
 
         return 1
-    
+
     def get_camp_dates(self, pk):
         with connections['default'].cursor() as cursor:
             cursor.execute(
@@ -109,15 +110,15 @@ class CampVisumManager(models.Manager):
         return self._parse_to_visum(
             request=request,
             results=self.get_queryset().get_all_for_group_and_year(
-                    group_admin_id=group_admin_id, year=year))
-    
+                group_admin_id=group_admin_id, year=year))
+
     def _parse_to_visum(self, request, results: List, year: int = None):
         from apps.visums.models import LinkedCategory
 
         visums = []
         for result in results:
             visums.append({
-                "id": result[0], #
+                "id": result[0],
                 "group": result[1],
                 "group_name": result[2],
                 "name": result[3],
@@ -131,7 +132,7 @@ class CampVisumManager(models.Manager):
                 }
             })
         return visums
-    
+
     def get_all_for_groups_and_year(self, request, group_admin_ids: List[str], year: CampYear = None, year_number: int = None):
         if year and isinstance(year, CampYear):
             year = year.year
@@ -141,7 +142,7 @@ class CampVisumManager(models.Manager):
         return self._parse_to_simple_visum(
             request=request,
             results=self.get_queryset().get_all_for_groups_and_year(group_admin_ids=group_admin_ids, year=year))
-    
+
     def _parse_to_simple_visum(self, request, results: List, year: int = None):
         visums = []
         for result in results:
@@ -154,14 +155,14 @@ class CampVisumManager(models.Manager):
                     visum_id=result[0], user=request.user),
                 "date_start": result[4],
                 "date_end": result[5],
-                "state": result[4],
-                "camp_deadline": result[6],
+                "state": result[6],
+                "check_state": result[7],
             })
         return visums
 
     def has_unchecked_checks(self, pk):
         return True if self.get_queryset().count_unchecked_checks(pk=pk) == 0 else False
-    
+
     def get_camp_dates(self, pk) -> dict:
         result = self.get_queryset().get_camp_dates(pk=pk)
 
