@@ -7,10 +7,12 @@ from django.core.exceptions import ValidationError
 
 from apps.camps.models import CampYear, CampType
 from apps.groups.models import ScoutsSection
+
 from apps.visums.settings import VisumSettings
 
 from scouts_auth.groupadmin.models import AbstractScoutsFunction, ScoutsGroup
 from scouts_auth.groupadmin.settings import GroupAdminSettings
+
 
 
 # LOGGING
@@ -31,7 +33,7 @@ class CampVisumQuerySet(models.QuerySet):
     def get_all_for_group_and_year(self, group_admin_id: str, year: int):
         with connections['default'].cursor() as cursor:
             cursor.execute(
-                f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name, cc.year as year from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group='{group_admin_id}'{' and cc.year={year}' if year else ''}"
+                f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name,vc.state as state, ve.approved, ve.district_commissioner_id, ve.group_leaders_id, ve.leaders_id, cc.year as year from visums_campvisum vc left join visums_campvisumengagement ve on ve.id = vc.engagement_id left join camps_campyear cc on cc.id=vc.year_id where vc.group='{group_admin_id}'{' and cc.year={year}' if year else ''}"
             )
             return cursor.fetchall()
         return None
@@ -114,6 +116,7 @@ class CampVisumManager(models.Manager):
 
     def _parse_to_visum(self, request, results: List, year: int = None):
         from apps.visums.models import LinkedCategory
+        from apps.visums.models import CampVisumEngagement
 
         visums = []
         for result in results:
@@ -122,7 +125,14 @@ class CampVisumManager(models.Manager):
                 "group": result[1],
                 "group_name": result[2],
                 "name": result[3],
-                "year": result[4] if year else None,
+                "state": result[4],
+                "engagement": {
+                    "approved": result[5],
+                    "district_commissioner": result[6],
+                    "group_leaders": result[7],
+                    "leaders": result[8]
+                },
+                "year": result[9] if year else None,
                 "sections": ScoutsSection.objects.get_for_visum(
                     visum_id=result[0], user=request.user),
                 "camp_types": CampType.objects.get_for_visum(
