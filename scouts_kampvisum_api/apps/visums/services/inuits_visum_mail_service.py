@@ -183,7 +183,7 @@ class InuitsVisumMailService(EmailService):
                     return
 
         dictionary = self._prepare_dictionary_camp_registered(visum=visum)
-        recipient = visum.created_by.email
+        recipient = visum.updated_by.email if visum.updated_by else visum.created_by.email
         recipient = VisumSettings.get_camp_registration_notification_to(
             address=recipient, send_to=recipient, label="CAMP REGISTRATION: recipient"
         )
