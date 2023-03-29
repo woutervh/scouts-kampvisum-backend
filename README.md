@@ -1,5 +1,4 @@
 
-
 # **Welcome to the kampvisum app**  
 
 
@@ -130,7 +129,7 @@ In frontend repo: `/src/locales/nl.json`
        A remainder from a previous implementation iteration, but kept on the model to ease the integration of possible future changes. This determines a hierarchy of authority in the category definition. A category with a priority of "Verbond" will always have precedence over a category with the priority "Groep"  
  
 4. Examples: SubCategory  
-   - Fixture: `apps/visums/fixtures/checks.json`  
+   - Fixture: `apps/visums/fixtures/sub_categories.json`  
    - Fields:  
      - **`name`** (**REQUIRED**):  
        The sub-category name  
