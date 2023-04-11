@@ -226,6 +226,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             only_scouts_members = presets.get(
                 "only_scouts_members", only_scouts_members
             )
+            min_age = presets.get("min_age", min_age)
 
         logger.debug(
             "Searching for %s with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s), include_inactive (%s), only_scouts_members(%s) and presets (%s)",
