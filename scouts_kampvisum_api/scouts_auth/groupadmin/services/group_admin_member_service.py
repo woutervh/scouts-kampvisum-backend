@@ -111,7 +111,7 @@ class GroupAdminMemberService(GroupAdmin):
                 ):
                     continue
 
-            if not active_leader and not include_inactive:
+            if not active_leader:
                 if not group_group_admin_id:
                     logger.debug(
                         "Wanted to check for activity status, but no group admin id given for the group"

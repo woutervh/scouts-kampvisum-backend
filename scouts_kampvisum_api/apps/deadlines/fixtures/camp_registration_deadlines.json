@@ -87,7 +87,7 @@
             "camp_year": [ 2023 ],
             "due_date": {
                 "date_year": 2023,
-                "date_day": 31,
+                "date_day": 30,
                 "date_month": 3
             },
             "camp_types": [
