@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from rest_framework import serializers
 
@@ -6,6 +6,8 @@ from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup, ScoutsFunctio
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.utils import ListUtils
+
+from django.contrib.auth.models import Group, Permission
 
 
 # LOGGING
@@ -19,6 +21,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     groups = serializers.SerializerMethodField()
     user_permissions = serializers.SerializerMethodField()
+    scouts_groups_permissions = serializers.SerializerMethodField()
     new_user_permissions = serializers.SerializerMethodField()
     scouts_groups = serializers.SerializerMethodField()
     scouts_functions = serializers.SerializerMethodField()
@@ -34,6 +37,28 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
     def get_user_permissions(self, obj: ScoutsUser) -> List:
         return obj.get_all_permissions()
 
+    def get_scouts_groups_permissions(self, obj: ScoutsUser) -> Dict:
+        permissions = {}
+        user_scouts_groups = [scouts_group for scouts_group in obj.get_scouts_groups()]
+        for scouts_group in user_scouts_groups:
+            permissions[scouts_group.group_admin_id] = set()
+            user_roles = [
+                role
+                for role in obj.get_roles_for_group(
+                    group_admin_id=scouts_group.group_admin_id
+                )
+            ]
+            if obj.has_role_administrator():
+                user_roles.append("role_administrator")
+            for role in user_roles:
+                for perm in Permission.objects.all().filter(
+                    group=Group.objects.get(name=role)
+                ):
+                    permissions[scouts_group.group_admin_id].add(
+                        f"{perm.content_type.app_label}.{perm.codename}"
+                    )
+        return permissions
+
     def get_new_user_permissions(self, obj: ScoutsUser) -> List[dict]:
         return []
 
@@ -44,7 +69,9 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "name": scouts_group.name,
                 "full_name": scouts_group.full_name,
                 "type": scouts_group.type,
-                "is_section_leader": obj.has_role_section_leader(scouts_group=scouts_group),
+                "is_section_leader": obj.has_role_section_leader(
+                    scouts_group=scouts_group
+                ),
                 "is_group_leader": obj.has_role_group_leader(scouts_group=scouts_group),
                 "is_district_commissioner": obj.has_role_district_commissioner(
                     scouts_group=scouts_group
@@ -54,7 +81,9 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 ),
                 "is_admin": obj.has_role_administrator(),
             }
-            for scouts_group in obj.get_scouts_leader_groups(include_underlying_groups=True)
+            for scouts_group in obj.get_scouts_leader_groups(
+                include_underlying_groups=True
+            )
         ]
 
     def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
