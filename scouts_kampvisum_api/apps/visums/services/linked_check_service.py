@@ -92,9 +92,9 @@ class LinkedCheckService:
         visum.full_clean()
         visum.save()
 
-        if type(instance) is LinkedNumberCheck and visum.camp_registration_mail_sent_after_deadline:
+        if type(instance) is LinkedNumberCheck and (visum.camp_registration_mail_sent_after_deadline or visum.camp_registration_mail_sent_before_deadline):
             logger.debug(
-                "Not notifying linked number check change after deadline")
+                "Not notifying linked number check change")
         else:
             if data_changed and instance.parent.has_change_handlers():
                 self.change_handler_service.handle_changes(
