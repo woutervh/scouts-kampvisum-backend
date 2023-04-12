@@ -36,7 +36,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
     category_set = LinkedCategorySetSerializer()
     engagement = CampVisumEngagementSerializer(required=False)
     notes = PermissionRequiredSerializerField(
-        permission="visums.read_visum_notes",
+        permission="visums.view_campvisum_notes",
         field=OptionalCharSerializerField(),
         required=False,
     )

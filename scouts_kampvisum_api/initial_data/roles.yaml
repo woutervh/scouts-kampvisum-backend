@@ -115,6 +115,7 @@ role_administrator:
   - visums.view_campvisum_member_data
   - visums.view_linkedcheck
   - visums.view_campvisumengagement
+  - visums.view_campvisum_notes
   - deadlines.view_linkeddeadline
   - participants.view_inuitsparticipant
   - scouts_auth.view_persistedfile
