@@ -14,6 +14,11 @@ from apps.locations.serializers import CampLocationMinimalSerializer
 from apps.camps.serializers import CampMinimalSerializer
 
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+from scouts_auth.groupadmin.serializers.scouts_group_serializer import (
+    ScoutsGroupSerializer,
+)
+from scouts_auth.groupadmin.models.scouts_group import ScoutsGroup
+from scouts_auth.groupadmin.models.scouts_user import ScoutsUser
 
 # LOGGING
 import logging
@@ -22,6 +27,7 @@ from apps.visums.models import LinkedCategory
 from apps.visums.models import LinkedSubCategory
 from apps.visums.models import LinkedLocationCheck
 from apps.visums.models import LinkedDurationCheck
+
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -45,7 +51,9 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         # This should probably be handled by a rest call when changing groups in the frontend,
         # but adding it here avoids the need for changes to the frontend
 
+        user: ScoutsUser = request.user
         group_admin_id = self.request.GET.get("group", None)
+        group: ScoutsGroup = user.get_scouts_group(group_admin_id)
         campvisums = set(CampVisum.objects.all().filter(group=group_admin_id))
         locations = list()
         in_range = True
@@ -125,6 +133,8 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
                                     location["camp"] = CampMinimalSerializer(
                                         campvisum, many=False
                                     ).data
-                                    location["camp"]["group"] = campvisum.group
+                                    location["camp"]["group"] = ScoutsGroupSerializer(
+                                        group, many=False
+                                    ).data
                                     locations.append(location)
         return Response(locations)
