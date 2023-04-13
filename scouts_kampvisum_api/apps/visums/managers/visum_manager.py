@@ -100,7 +100,6 @@ class CampVisumManager(models.Manager):
 
     def get_all_for_group_and_year(
         self,
-        request,
         group: ScoutsGroup = None,
         group_admin_id: str = None,
         year: CampYear = None,
@@ -120,13 +119,13 @@ class CampVisumManager(models.Manager):
             raise ValidationError(f"Can't query CampVisum without a group")
 
         return self._parse_to_visum(
-            request=request,
             results=self.get_queryset().get_all_for_group_and_year(
                 group_admin_id=group_admin_id, year=year
             ),
+            year=year
         )
 
-    def _parse_to_visum(self, request, results: List, year: int = None):
+    def _parse_to_visum(self, results: List, year: int = None):
         from apps.visums.models import LinkedCategory
         from apps.visums.models import CampVisumEngagement
 
@@ -147,7 +146,7 @@ class CampVisumManager(models.Manager):
                     },
                     "year": result[9] if year else None,
                     "sections": ScoutsSection.objects.get_for_visum(
-                        visum_id=result[0], user=request.user
+                        visum_id=result[0]
                     ),
                     "camp_types": CampType.objects.get_for_visum(visum_id=result[0]),
                     "category_set": {

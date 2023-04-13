@@ -114,11 +114,12 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         year = self.request.query_params.get("year", None)
         logger.debug("Listing visums for group %s",
                      group_admin_id, user=request.user)
+        #           user = je to group ne uživatel = X9002G
 
         return self._list_response(
             request=request,
             instances=CampVisum.objects.get_all_for_group_and_year(
-                request=request, group_admin_id=group_admin_id, year_number=year
+                group_admin_id=group_admin_id, year_number=year
             )
         )
 

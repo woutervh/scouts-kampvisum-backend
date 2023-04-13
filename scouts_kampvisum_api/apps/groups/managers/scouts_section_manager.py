@@ -105,7 +105,7 @@ class ScoutsSectionManager(models.Manager):
             group=group, name=name, gender=gender, age_group=age_group
         )
 
-    def get_for_visum(self, visum_id, user: settings.AUTH_USER_MODEL):
+    def get_for_visum(self, visum_id):
         results = self.get_queryset().get_for_visum(
             visum_id=visum_id)
 
