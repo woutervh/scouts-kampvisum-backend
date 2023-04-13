@@ -57,10 +57,21 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         if group_admin_id is None and not request.user.has_role_administrator():
             raise PermissionDenied("You have to be an admin to make this call")
 
-        campvisums = self.filter_queryset(self.get_queryset())
+        #campvisums = self.filter_queryset(self.get_queryset())
+        campvisums = self.get_queryset()
+        #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        # print(self.get_queryset())
+        # print()
+        # cvs = self.get_queryset()
+        # for cv in cvs:
+        #     print(cv.category_set.group)
+        # #print(type(campvisums)) #>>> list
+        # print(campvisums)
         locations = list()
         in_range = True
         for campvisum in campvisums:
+            #print(dir(campvisum.camp_types))
+            #print(campvisum.group)
             if request.query_params.get("start_date") and request.query_params.get("end_date"):
                 in_range = False
                 plannings = LinkedCategory.objects.filter(category_set__id=campvisum.category_set.id,
@@ -101,9 +112,8 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
                                     location["start_date"] = linked_location.start_date
                                     location["end_date"] = linked_location.end_date
                                     location["camp"] = CampMinimalSerializer(
-                                        campvisum.camp, many=False).data
-                                    location["camp"]["group"] = ScoutsGroupSerializer(
-                                        campvisum.group, many=False).data
+                                        campvisum, many=False).data
+                                    location["camp"]["group"] = campvisum.group
                                     locations.append(location)
 
         return Response(locations)
