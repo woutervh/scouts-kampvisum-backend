@@ -52,27 +52,22 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         # HACKETY HACK
         # This should probably be handled by a rest call when changing groups in the frontend,
         # but adding it here avoids the need for changes to the frontend
+        
         group_admin_id = self.request.GET.get("group", None)
-        # if no group filter then check if user is in X1027G to show all locations
-        if group_admin_id is None and not request.user.has_role_administrator():
-            raise PermissionDenied("You have to be an admin to make this call")
-
         #campvisums = self.filter_queryset(self.get_queryset())
-        campvisums = self.get_queryset()
-        #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        # print(self.get_queryset())
-        # print()
-        # cvs = self.get_queryset()
-        # for cv in cvs:
-        #     print(cv.category_set.group)
-        # #print(type(campvisums)) #>>> list
-        # print(campvisums)
+        campvisums = set(CampVisum.objects.all().filter(group=group_admin_id))
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        # print(set(CampVisum.objects.all().filter(group=group_admin_id)))
+        # print(len(set(CampVisum.objects.all().filter(group=group_admin_id))))
+        # print(set(self.get_queryset()))
+        # print(len(set(self.get_queryset())))
+        print(group_admin_id)
         locations = list()
         in_range = True
         for campvisum in campvisums:
             #print(dir(campvisum.camp_types))
             #print(campvisum.group)
-            if request.query_params.get("start_date") and request.query_params.get("end_date"):
+            if request.query_params.get("start_date") and request.query_params.get("end_date"): # if there is FROM(van) and UNTIL(tot) in request
                 in_range = False
                 plannings = LinkedCategory.objects.filter(category_set__id=campvisum.category_set.id,
                                                           parent__name="planning")
@@ -93,6 +88,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
             if in_range:
                 logistics = LinkedCategory.objects.filter(category_set__id=campvisum.category_set.id,
                                                           parent__name="logistics")
+                print(f"Logisticssssssssssss: {logistics}")
                 for linked_category in logistics:
 
                     linked_sub_categories_logistics_locations = LinkedSubCategory.objects.filter(
@@ -115,5 +111,5 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
                                         campvisum, many=False).data
                                     location["camp"]["group"] = campvisum.group
                                     locations.append(location)
-
+        print(locations)
         return Response(locations)
