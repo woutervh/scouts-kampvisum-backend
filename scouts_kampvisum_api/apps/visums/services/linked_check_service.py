@@ -37,6 +37,8 @@ from scouts_auth.inuits.files import StorageService
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from apps.deadlines.models.linked_deadline import LinkedDeadline
+from apps.deadlines.models.deadline_date import DeadlineDate
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -92,7 +94,24 @@ class LinkedCheckService:
         visum.full_clean()
         visum.save()
 
-        if type(instance) is LinkedNumberCheck and (visum.camp_registration_mail_sent_after_deadline or visum.camp_registration_mail_sent_before_deadline):
+        a = LinkedDeadline.objects.get(visum=visum)
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print(a.parent)
+        deadline = LinkedDeadline.objects.get(visum=visum).parent
+        c = DeadlineDate.objects.get(deadline=deadline)
+        print(c.to_date())
+        print(c.calculated_date)
+        dd = c.calculated_date
+        print(timezone.now().date())
+        ee = timezone.now().date()
+        if dd > ee:
+            print("YES!")
+        else:
+            print("NOOOOOOOOOOO!")
+        if (type(instance) is LinkedNumberCheck 
+            and (visum.camp_registration_mail_sent_after_deadline or visum.camp_registration_mail_sent_before_deadline)
+            #and 
+            ):
             logger.debug(
                 "Not notifying linked number check change")
         else:
