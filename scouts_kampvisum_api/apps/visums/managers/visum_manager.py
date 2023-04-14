@@ -187,7 +187,7 @@ class CampVisumManager(models.Manager):
                     "group_name": result[2],
                     "name": result[3],
                     "sections": ScoutsSection.objects.get_for_visum(
-                        visum_id=result[0], user=request.user
+                        visum_id=result[0]
                     ),
                     "date_start": result[4],
                     "date_end": result[5],

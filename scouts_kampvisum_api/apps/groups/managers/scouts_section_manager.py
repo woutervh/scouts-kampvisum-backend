@@ -116,7 +116,7 @@ class ScoutsSectionManager(models.Manager):
                 "name": {
                     "name": result[1],
                     "gender": result[2],
-                    "age_group": result[2]
+                    "age_group": result[3]
                 }
             })
         return sections
