@@ -42,8 +42,8 @@ class DeadlineDate(AbstractBaseModel):
         return (self.deadline,)
 
     def to_date(self) -> datetime.date:
-        day = self.day if self.day else 1
-        month = self.month if self.month else 1
-        year = self.year if self.year else timezone.now().date().year
+        day = self.date_day if self.date_day else 1
+        month = self.date_month if self.date_month else 1
+        year = self.date_year if self.date_year else timezone.now().date().year
 
         return datetime.date(year, month, day)
