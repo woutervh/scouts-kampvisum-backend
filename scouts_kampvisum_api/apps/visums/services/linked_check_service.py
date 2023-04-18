@@ -100,15 +100,11 @@ class LinkedCheckService:
         visum.full_clean()
         visum.save()
 
-        deadline = LinkedDeadline.objects.get(visum=visum).parent
-        deadline_date = DeadlineDate.objects.get(deadline=deadline).calculated_date
-        now_date = timezone.now().date()
         if type(instance) is LinkedNumberCheck and (
             visum.camp_registration_mail_sent_after_deadline
             or visum.camp_registration_mail_sent_before_deadline
-            or deadline_date < now_date
         ):
-            logger.debug("Not notifying linked number check change")
+            logger.debug("Not notifying linked number check change after registration")
         else:
             if data_changed and instance.parent.has_change_handlers():
                 self.change_handler_service.handle_changes(
