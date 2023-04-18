@@ -46,46 +46,28 @@ class ChangeHandlerService:
         now: datetime.datetime = None,
         trigger: bool = False,
     ):
-        print("START OF FUNCTIONNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN")
         from apps.visums.models import LinkedCheck
         from apps.deadlines.models import LinkedDeadlineFlag
 
         visum = None
         is_flag = False
         if isinstance(instance, LinkedCheck):
-            print("ISINSTACE1")
             visum = instance.sub_category.category.category_set.visum
         elif isinstance(instance, LinkedDeadlineFlag):
-            print("ISINSTACE2")
             is_flag = True
             visum = instance.deadline_item.linked_deadline.visum
 
         all_deadlines = visum.deadlines.all()
-        all_deadline_items = deadline.items.all()
         for deadline in all_deadlines:
-            print(f"DEADLINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE: {deadline}")
+            all_deadline_items = deadline.items.all()
             if deadline.parent.is_camp_registration:
                 for item in all_deadline_items:
-                    print(f"ITEM: {item}")
-                    print(f"ITEM_PARENT: {item.parent}")
-                    try:
-                        print(f"AAAAAAAAAAAAAA: {item.linked_check.id == instance.id}")
-                        print(f"INSTACE: {instance.id}")
-                        print(f"ITEM.Linked_Check: {item.linked_check.id}")
-                    except:
-                        pass
-                    print(f"BBBBBBBBBBBBBB: {item.linked_sub_category == instance.sub_category}")
-                    print(f"ITEM.LINKED_SUBCAT: {item.linked_sub_category}")
-                    print(f"INSTACE.SUBCAT: {instance.sub_category}")
-                    print(f"CCCCCCCCCCCCCC: {item.flag == instance}")
                     try:
                         item_linked_check_id = item.linked_check.id
                         instance_id = instance.id
                     except:
                         item_linked_check_id = item.linked_check
                         instance_id = instance
-                    print(f"NEW_CONDITION: {item_linked_check_id == instance_id}")
-
                     if (
                         not is_flag
                         and (
@@ -95,7 +77,6 @@ class ChangeHandlerService:
                         )
                     ) or (is_flag and item.flag == instance):
                         trigger = True
-        print(f"TRIGGER: {trigger}")
         self._check_deadline_complete(
             request=request,
             visum=visum,
@@ -103,7 +84,7 @@ class ChangeHandlerService:
             now=now,
             trigger=trigger,
         )
-        # self._check_camp_visum_complete(request=request, visum=visum)
+        # self._check_camp_visum_complete(request=request, visum=visum)  # this should not triggered
 
     # def default_deadline_flag_changed(self, instance: LinkedDeadlineFlag):
     def default_deadline_flag_changed(self, request, instance):
@@ -119,7 +100,6 @@ class ChangeHandlerService:
         now: datetime.datetime = None,
         trigger: bool = False,
     ):
-        print("Start _check_deadline_complete")
         if not trigger:
             logger.debug(
                 "Changed instance is not part of a deadline, don't check if a mail needs to be sent"
@@ -131,13 +111,11 @@ class ChangeHandlerService:
         if LinkedDeadlineService().are_camp_registration_deadline_items_checked(
             visum=visum
         ):
-            print("LOG1: LinkedDeadlineService().are_camp_registration_deadline_items_checked()")
             # Set the visum as signable if all required checks are completed
             if not visum.is_signable():
                 logger.debug(
                     "Setting CampVisum %s (%s) to state SIGNABLE", visum.name, visum.id)
                 from apps.visums.models.enums import CampVisumState
-                print("VISUM STATE SIGNABLE")
                 visum.state = CampVisumState.SIGNABLE
                 visum.updated_by = request.user
                 visum.updated_on = timezone.now()
@@ -169,24 +147,19 @@ class ChangeHandlerService:
 
         return False
 
-    def _check_camp_visum_complete(self, request, visum):
+    def _check_camp_visum_complete(self, request, visum): # this function is not working as it should
         from apps.visums.serializers import CampVisumSerializer
         from apps.visums.models.enums import CheckState, CampVisumState
 
-        print("START _check_camp_visum_complete")
         serializer_data = CampVisumSerializer(
             instance=visum, context={"request": request}
         ).data
-        # print(f"SER_DATA: {serializer_data}") # Hrůza obrovská - moc velká
         state = serializer_data.get("category_set").get("state")
-        print(f"STATEEEE: {state}")
         if CheckState.is_checked_or_irrelevant(state=state):
-            print("YESSSSSSSSSSSSSSSSS1")
             logger.debug("Setting CampVisum %s (%s) to state SIGNABLE (category set state: %s)",
                          visum.name, visum.id, state)
             visum.state = CampVisumState.SIGNABLE
         else:
-            print("NOOOOOOOOOOOOOOOOOO1")
             logger.debug("Setting CampVisum %s (%s) to state DATA_REQUIRED (category set state: %s)",
                          visum.name, visum.id, state)
             visum.state = CampVisumState.DATA_REQUIRED
@@ -201,7 +174,6 @@ class ChangeHandlerService:
     def change_camp_responsible(self, request, instance):
         from apps.visums.services import InuitsVisumMailService
         from apps.deadlines.services import LinkedDeadlineService
-        print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
         epoch = GroupAdminSettings.get_responsibility_epoch_date()
         now = timezone.now()
         visum = instance.sub_category.category.category_set.visum
@@ -209,27 +181,24 @@ class ChangeHandlerService:
                 before_camp_registration_deadline,
                 now,
             ) = self.calculate_camp_registration_deadline(now=now)
-        print(f"EPOCH1: {epoch}")
-        print(f"NOW_DATE: {now.date()}")
-        print(epoch < now.date())
         if (
             epoch < now.date()
             and LinkedDeadlineService().are_camp_registration_deadline_items_checked(
                 visum=visum
             )
         ):  
-            print("Sending_mail_notify_responsible_changed")
             InuitsVisumMailService().notify_responsible_changed(
                 check=instance,
                 before_camp_registration_deadline=before_camp_registration_deadline,
                 now=now,
             )
+        # It is not necessary to trigger default_check_changed, only _check_deadline_complete
         # return self.default_check_changed(
         #     request=request,
         #     instance=instance,
         #     before_camp_registration_deadline=before_camp_registration_deadline,
         #     now=now,
-        #     #trigger=True,
+        #     trigger=True,
         # )
         return self._check_deadline_complete(
             request=request,
