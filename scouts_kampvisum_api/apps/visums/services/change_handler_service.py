@@ -59,21 +59,15 @@ class ChangeHandlerService:
 
         all_deadlines = visum.deadlines.all()
         for deadline in all_deadlines:
-            all_deadline_items = deadline.items.all()
             if deadline.parent.is_camp_registration:
+                all_deadline_items = deadline.items.all()
                 for item in all_deadline_items:
-                    try:
-                        item_linked_check_id = item.linked_check.id
-                        instance_id = instance.id
-                    except:
-                        item_linked_check_id = item.linked_check
-                        instance_id = instance
                     if (
                         not is_flag
                         and (
-                            item.linked_sub_category == instance.sub_category
-                            or item_linked_check_id == instance_id
-                            or item.flag == instance
+                            (item.linked_sub_category and item.linked_sub_category.id == instance.sub_category.id)
+                            or (item.linked_check and item.linked_check.id == instance.id)
+                            or (item.flag and item.flag.id == instance.id)
                         )
                     ) or (is_flag and item.flag == instance):
                         trigger = True
@@ -147,7 +141,7 @@ class ChangeHandlerService:
 
         return False
 
-    def _check_camp_visum_complete(self, request, visum): # this function is not working as it should
+    def _check_camp_visum_complete(self, request, visum):
         from apps.visums.serializers import CampVisumSerializer
         from apps.visums.models.enums import CheckState, CampVisumState
 
