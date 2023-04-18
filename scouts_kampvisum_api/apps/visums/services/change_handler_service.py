@@ -57,19 +57,20 @@ class ChangeHandlerService:
             is_flag = True
             visum = instance.deadline_item.linked_deadline.visum
 
-        for deadline in visum.deadlines.all():
+        all_deadlines = visum.deadlines.all()
+        for deadline in all_deadlines:
             if deadline.parent.is_camp_registration:
-                for item in deadline.items.all():
+                all_deadline_items = deadline.items.all()
+                for item in all_deadline_items:
                     if (
                         not is_flag
                         and (
-                            item.linked_sub_category == instance.sub_category
-                            or item.linked_check == instance
-                            or item.flag == instance
+                            (item.linked_sub_category and item.linked_sub_category.id == instance.sub_category.id)
+                            or (item.linked_check and item.linked_check.id == instance.id)
+                            or (item.flag and item.flag.id == instance.id)
                         )
                     ) or (is_flag and item.flag == instance):
                         trigger = True
-
         self._check_deadline_complete(
             request=request,
             visum=visum,
@@ -77,7 +78,7 @@ class ChangeHandlerService:
             now=now,
             trigger=trigger,
         )
-        self._check_camp_visum_complete(request=request, visum=visum)
+        # self._check_camp_visum_complete(request=request, visum=visum)  # this should not triggered
 
     # def default_deadline_flag_changed(self, instance: LinkedDeadlineFlag):
     def default_deadline_flag_changed(self, request, instance):
@@ -109,7 +110,6 @@ class ChangeHandlerService:
                 logger.debug(
                     "Setting CampVisum %s (%s) to state SIGNABLE", visum.name, visum.id)
                 from apps.visums.models.enums import CampVisumState
-
                 visum.state = CampVisumState.SIGNABLE
                 visum.updated_by = request.user
                 visum.updated_on = timezone.now()
@@ -149,7 +149,6 @@ class ChangeHandlerService:
             instance=visum, context={"request": request}
         ).data
         state = serializer_data.get("category_set").get("state")
-
         if CheckState.is_checked_or_irrelevant(state=state):
             logger.debug("Setting CampVisum %s (%s) to state SIGNABLE (category set state: %s)",
                          visum.name, visum.id, state)
@@ -169,27 +168,40 @@ class ChangeHandlerService:
     def change_camp_responsible(self, request, instance):
         from apps.visums.services import InuitsVisumMailService
         from apps.deadlines.services import LinkedDeadlineService
-
         epoch = GroupAdminSettings.get_responsibility_epoch_date()
         now = timezone.now()
         visum = instance.sub_category.category.category_set.visum
-
+        (
+                before_camp_registration_deadline,
+                now,
+            ) = self.calculate_camp_registration_deadline(now=now)
         if (
             epoch < now.date()
             and LinkedDeadlineService().are_camp_registration_deadline_items_checked(
                 visum=visum
             )
-        ):
-            (
-                before_camp_registration_deadline,
-                now,
-            ) = self.calculate_camp_registration_deadline(now=now)
-
+        ):  
             InuitsVisumMailService().notify_responsible_changed(
                 check=instance,
                 before_camp_registration_deadline=before_camp_registration_deadline,
                 now=now,
             )
+        # It is not necessary to trigger default_check_changed, only _check_deadline_complete
+        # return self.default_check_changed(
+        #     request=request,
+        #     instance=instance,
+        #     before_camp_registration_deadline=before_camp_registration_deadline,
+        #     now=now,
+        #     trigger=True,
+        # )
+        return self._check_deadline_complete(
+            request=request,
+            visum=visum,
+            before_camp_registration_deadline=before_camp_registration_deadline,
+            now=now,
+            trigger=True,
+        )
+    
 
     def change_sleeping_location(self, request, instance):
         (
