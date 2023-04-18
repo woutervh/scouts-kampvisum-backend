@@ -163,6 +163,8 @@ class InuitsVisumMailService(EmailService):
             if not visum.camp_registration_mail_sent_after_deadline:
                 sending_camp_registration_mail = True
                 template = self.template_camp_registration_after_deadline
+                logger.debug(
+                        "Camp registration mail has been sent - after deadline")
             # After deadline and camp registration mail has been sent already
             else:
                 sending_camp_changed_mail = True
@@ -170,6 +172,8 @@ class InuitsVisumMailService(EmailService):
                 subject = VisumSettings.get_email_registration_changed_subject().format(
                     visum.name
                 )
+                logger.debug(
+                        "Camp registration mail has already been sent - sending mail with changes to the registration")
 
         if not sending_camp_registration_mail and sending_camp_changed_mail:
             # Only send out 1 email per day for changed checks
