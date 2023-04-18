@@ -86,11 +86,6 @@ class ScoutsPermissionService(PermissionService):
                 is_section_leader = True
                 allowed = True
 
-            if not allowed and not is_admin:
-                logger.warn("Not allowed to retrieve data for group %s",
-                            scouts_group.group_admin_id, user=user)
-                raise PermissionDenied()
-
             if is_shire_president:
                 user = self.add_user_to_group(
                     user=user,
@@ -113,6 +108,11 @@ class ScoutsPermissionService(PermissionService):
                     user=user,
                     group_name=ScoutsPermissionService.SECTION_LEADER
                 )
+        
+        if not allowed and not is_admin:
+                logger.warn("Not allowed to retrieve data for group %s",
+                            scouts_group.group_admin_id, user=user)
+                raise PermissionDenied()
 
         if GroupAdminSettings.is_debug():
             test_groups = GroupAdminSettings.get_test_groups()
