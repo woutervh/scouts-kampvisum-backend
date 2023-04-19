@@ -129,3 +129,9 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
                     )
 
             return obj
+
+class CampVisumEngagementSimpleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CampVisumEngagement
+        exclude = ["id"]
