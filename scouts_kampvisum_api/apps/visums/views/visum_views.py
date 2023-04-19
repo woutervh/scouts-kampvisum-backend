@@ -50,8 +50,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         data = request.data
 
         logger.debug("CAMP VISUM CREATE REQUEST DATA: %s", data)
-        serializer = CampVisumSerializer(
-            data=data, context={"request": request})
+        serializer = CampVisumSerializer(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
@@ -61,8 +60,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             request, **validated_data
         )
 
-        output_serializer = CampVisumSerializer(
-            visum, context={"request": request})
+        output_serializer = CampVisumSerializer(visum, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -71,8 +69,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug(f"Requesting visum {pk}", user=request.user)
         instance = self.get_object(pk=pk)
         logger.debug(f"Visum retrieved: {instance.name}")
-        serializer = CampVisumSerializer(
-            instance, context={"request": request})
+        serializer = CampVisumSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -112,8 +109,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     def list(self, request):
         group_admin_id = self.request.query_params.get("group", None)
         year = self.request.query_params.get("year", None)
-        logger.debug("Listing visums for group %s",
-                      group_admin_id, user=request.user)
+        logger.debug("Listing visums for group %s", group_admin_id, user=request.user)
 
         return self._list_response(
             request=request,
@@ -150,17 +146,24 @@ class CampVisumViewSet(viewsets.GenericViewSet):
                 group_admin_ids=scouts_group_admin_ids,
                 year=request.GET.get("year", None),
             ),
-            order_by_group=True,
+            list_dc_overview=True,
         )
 
-    def _list_response(self, request, instances, order_by_group: bool = False):
+    def _list_response(self, request, instances, list_dc_overview: bool = False):
         page = self.paginate_queryset(instances)
 
         serializer = (
-            CampVisumOverviewSerializer(page, many=True, context={"request": request})
+            CampVisumOverviewSerializer(
+                page,
+                many=True,
+                context={"request": request, "list_dc_overview": list_dc_overview},
+            )
             if page is not None
             else CampVisumOverviewSerializer(
-                instances, many=True, context={"request": request}
+                instances,
+                list_dc_overview,
+                many=True,
+                context={"request": request, "list_dc_overview": list_dc_overview},
             )
         )
         response = serializer.data
@@ -176,21 +179,12 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             )
         )
 
-        if order_by_group:
+        if list_dc_overview:
             visums = []
-            for visum in serializer.data:
+            for visum in response:
                 visums.append({"group": visum.get("group"), "value": visum})
             response = visums
-            response.sort(
-                key=lambda k: (
-                    k.get("group"),
-                    (
-                        k.get("sections", [{"age_group": 0}])[0].get("age_group", 0)
-                        if len(k.get("sections", [{"age_group": 0}])) > 0
-                        else 0,
-                    ),
-                )
-            )
+
         return (
             self.get_paginated_response(response)
             if page is not None
@@ -203,8 +197,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     def destroy(self, request, pk):
         instance = CampVisum.objects.safe_get(id=pk)
 
-        self.camp_visum_service.delete_visum(
-            request=request, instance=instance)
+        self.camp_visum_service.delete_visum(request=request, instance=instance)
 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 

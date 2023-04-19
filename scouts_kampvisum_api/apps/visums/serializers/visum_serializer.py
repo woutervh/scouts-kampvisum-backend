@@ -12,6 +12,7 @@ from apps.visums.models import CampVisum
 from apps.visums.serializers import (
     LinkedCategorySetSerializer,
     CampVisumEngagementSerializer,
+    CampVisumEngagementSimpleSerializer,
 )
 
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
@@ -28,7 +29,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumSerializer(serializers.ModelSerializer):
-
     group = ScoutsGroupSerializer(required=False)
     year = CampYearSerializer()
     sections = ScoutsSectionSerializer(many=True)
@@ -63,13 +63,16 @@ class CampVisumSerializer(serializers.ModelSerializer):
             sections = data.get("sections", [])
             if sections and len(sections) > 0:
                 section = ScoutsSection.objects.safe_get(
-                    id=sections[0], user=self.context['request'].user, raise_error=True)
+                    id=sections[0], user=self.context["request"].user, raise_error=True
+                )
                 group = section.group
         if not group:
             raise ValidationError(
-                f"[{self.context['request'].user.username}] Scouts group's group admin id must be provided")
-        group = self.context['request'].user.get_scouts_group(
-            group_admin_id=group, raise_error=True)
+                f"[{self.context['request'].user.username}] Scouts group's group admin id must be provided"
+            )
+        group = self.context["request"].user.get_scouts_group(
+            group_admin_id=group, raise_error=True
+        )
         data["group"] = group
         data["group_name"] = group.name
 
@@ -81,18 +84,26 @@ class CampVisumSerializer(serializers.ModelSerializer):
     def to_representation(self, obj: CampVisum) -> dict:
         data = super().to_representation(obj)
 
-        data["group_group_admin_id"] = data.get(
-            "group", {}).get("group_admin_id", None)
+        data["group_group_admin_id"] = data.get("group", {}).get("group_admin_id", None)
 
         return data
 
 
 class CampVisumOverviewSerializer(serializers.Serializer):
-
     def to_representation(self, data: dict) -> dict:
-
         # data["group"] = self.context['request'].user.get_scouts_group(
         #     data["group"])
         data["group_group_admin_id"] = data["group"]
-
+        if self.context["list_dc_overview"]:
+            camp = CampVisum.objects.get(id=data["id"])
+            if camp.state != "DATA_REQUIRED":
+                if camp.camp_registration_mail_sent_before_deadline:
+                    data["registration_status"] = "on_time"
+                else:
+                    data["registration_status"] = "late"
+            else:
+                data["registration_status"] = "not_complete"
+            data["engagement"] = CampVisumEngagementSimpleSerializer(
+                camp.engagement
+            ).data
         return data
