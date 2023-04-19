@@ -148,6 +148,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         )
         
     def _list_response(self, request, instances, order_by_group: bool = False):
+        print(f"ORDERED_BY_GROUP: {order_by_group}") #>>> True
         page = self.paginate_queryset(instances)
 
         serializer = (
@@ -156,6 +157,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             else CampVisumOverviewSerializer(instances, many=True, context={"request": request})
         )
         response = serializer.data
+        print(f"RESPONSE1: {response}")
 
         response.sort(
             key=lambda k: (k.get("group"), (
@@ -168,13 +170,20 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         )
 
         if order_by_group:
-            visums = {}
+            visums = []
             for visum in serializer.data:
-                if visum.get("group") not in visums:
-                    visums[visum.get("group")] = []
-                visums[visum.get("group")].append(visum)
+                visums.append({"group":visum.get("group"), "value":visum})
             response = visums
-
+            response.sort(
+                key=lambda k: (k.get("group"), (
+                        k.get("sections", [{"age_group": 0}])[0]
+                        .get("age_group", 0)
+                        if len(k.get("sections", [{"age_group": 0}])) > 0
+                        else 0,
+                    )
+                )
+            )
+            print(f"RESPONSE2: {response}")
         return (
             self.get_paginated_response(response)
             if page is not None
