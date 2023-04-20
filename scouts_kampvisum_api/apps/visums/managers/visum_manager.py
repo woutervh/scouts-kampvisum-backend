@@ -102,18 +102,15 @@ class CampVisumManager(models.Manager):
         self,
         group: ScoutsGroup = None,
         group_admin_id: str = None,
-        year: CampYear = None,
-        year_number: int = None,
+        year=None,
     ):
         if group:
             if isinstance(group, ScoutsGroup):
                 group_admin_id = group.group_admin_id
             else:
                 group_admin_id = group
-        if year:
+        if year and isinstance(year, CampYear):
             year = year.year
-        else:
-            year = year_number
 
         if not group_admin_id:
             raise ValidationError(f"Can't query CampVisum without a group")
@@ -122,7 +119,7 @@ class CampVisumManager(models.Manager):
             results=self.get_queryset().get_all_for_group_and_year(
                 group_admin_id=group_admin_id, year=year
             ),
-            year=year
+            year=year,
         )
 
     def _parse_to_visum(self, results: List, year: int = None):
@@ -145,9 +142,7 @@ class CampVisumManager(models.Manager):
                         "leaders": result[8],
                     },
                     "year": result[9] if year else None,
-                    "sections": ScoutsSection.objects.get_for_visum(
-                        visum_id=result[0]
-                    ),
+                    "sections": ScoutsSection.objects.get_for_visum(visum_id=result[0]),
                     "camp_types": CampType.objects.get_for_visum(visum_id=result[0]),
                     "category_set": {
                         "categories": LinkedCategory.objects.get_for_visum(
@@ -162,14 +157,10 @@ class CampVisumManager(models.Manager):
         self,
         request,
         group_admin_ids: List[str],
-        year: CampYear = None,
-        year_number: int = None,
+        year=None,
     ):
         if year and isinstance(year, CampYear):
             year = year.year
-        else:
-            year = year_number
-
         return self._parse_to_simple_visum(
             request=request,
             results=self.get_queryset().get_all_for_groups_and_year(
@@ -186,9 +177,7 @@ class CampVisumManager(models.Manager):
                     "group": result[1],
                     "group_name": result[2],
                     "name": result[3],
-                    "sections": ScoutsSection.objects.get_for_visum(
-                        visum_id=result[0]
-                    ),
+                    "sections": ScoutsSection.objects.get_for_visum(visum_id=result[0]),
                     "date_start": result[4],
                     "date_end": result[5],
                     "state": result[6],

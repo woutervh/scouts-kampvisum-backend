@@ -114,7 +114,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         return self._list_response(
             request=request,
             instances=CampVisum.objects.get_all_for_group_and_year(
-                group_admin_id=group_admin_id, year_number=year
+                group_admin_id=group_admin_id, year=year
             ),
         )
 
