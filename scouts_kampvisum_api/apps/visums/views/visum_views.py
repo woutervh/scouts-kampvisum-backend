@@ -181,8 +181,32 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
         if list_dc_overview:
             visums = []
+            group_labels = []
+            group_visums = []
             for visum in response:
-                visums.append({"group": visum.get("group"), "value": visum})
+                group_label = visum.get("group") + " " + visum.get("group_name")
+                if group_label not in group_labels:
+                    if group_labels:
+                        last_group = group_labels.pop()
+                        visums.append({"group": last_group, "camps": group_visums})
+                        group_visums = []
+                    group_labels.append(group_label)
+                    group_visums.append(visum)
+                else:
+                    group_visums.append(visum)
+            visums.append({"group": group_labels.pop(), "camps": group_visums})
+
+            ## Another posibility to get visums for response, but with visums[-1] = it should works too because the response is sorted before
+            # visums = []
+            # group_labels = []
+            # for visum in response:
+            #     group_label = visum.get("group") + " " + visum.get("group_name")
+            #     if group_label not in group_labels:
+            #         group_labels.append(group_label)
+            #         visums.append({"group": group_label, "camps": [visum]})
+            #     else:
+            #         visums[-1]["camps"].append(visum)
+
             response = visums
 
         return (
