@@ -179,7 +179,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             )
         )
 
-        if list_dc_overview:
+        if list_dc_overview and response:
             visums = []
             group_labels = []
             group_visums = []
