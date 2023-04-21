@@ -49,6 +49,7 @@ class InuitsVisumMailService(EmailService):
 
     def notify_responsible_changed(
         self,
+        request,
         check: LinkedParticipantCheck,
         before_camp_registration_deadline: bool = False,
         now: datetime.datetime = None,
@@ -109,6 +110,13 @@ class InuitsVisumMailService(EmailService):
             subject,
         )
 
+        visum.camp_registration_mail_last_sent = now
+        visum.updated_by = request.user
+        visum.updated_on = timezone.now()
+
+        visum.full_clean()
+        visum.save()
+
         result = self._send_prepared_email(
             template_path=template,
             dictionary=dictionary,
@@ -135,10 +143,11 @@ class InuitsVisumMailService(EmailService):
         To clarify:
         - Before the camp registration deadline:
           -> emails should be sent once when all the camp registration deadline items have been checked
+          -> if some deadline check is changed after registration is complete but before the deadline - do not send mail
         - After the camp registration deadline:
           -> emails should be sent when the camp registration deadline items have been checked and on subsequent changes.
              -> If the camp registration mail hasn't been sent yet: the camp registration after deadline mail
-             -> If the camp registration mail has already been sent: the camp registration changed mail
+             -> If the camp registration mail has already been sent: the camp registration changed mail (not for number checks and 2. responsible)
 
         https://redmine.inuits.eu/issues/87010
         https://redmine.inuits.eu/issues/92716
@@ -160,11 +169,11 @@ class InuitsVisumMailService(EmailService):
                 return
         else:
             # After deadline and camp registration mail has not yet been set
-            if not visum.camp_registration_mail_sent_after_deadline:
+            if not (visum.camp_registration_mail_sent_after_deadline or visum.camp_registration_mail_sent_before_deadline): # tady je chyba má to čekovat i before dl
                 sending_camp_registration_mail = True
                 template = self.template_camp_registration_after_deadline
                 logger.debug(
-                        "Camp registration mail has been sent - after deadline")
+                        "Camp registration mail has been sent")
             # After deadline and camp registration mail has been sent already
             else:
                 sending_camp_changed_mail = True

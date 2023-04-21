@@ -6,11 +6,13 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from scouts_auth.groupadmin.settings import GroupAdminSettings
+from apps.visums.models.linked_check import LinkedParticipantCheck
 
 
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
+
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -74,6 +76,7 @@ class ChangeHandlerService:
         self._check_deadline_complete(
             request=request,
             visum=visum,
+            instance=instance,
             before_camp_registration_deadline=before_camp_registration_deadline,
             now=now,
             trigger=trigger,
@@ -90,6 +93,7 @@ class ChangeHandlerService:
         self,
         request,
         visum,
+        instance,
         before_camp_registration_deadline: bool = False,
         now: datetime.datetime = None,
         trigger: bool = False,
@@ -101,6 +105,11 @@ class ChangeHandlerService:
             return
 
         from apps.deadlines.services import LinkedDeadlineService
+        if type(instance) is LinkedParticipantCheck and (visum.camp_registration_mail_sent_after_deadline or visum.camp_registration_mail_sent_before_deadline):
+                logger.debug(
+                    "1. or 2. responsible person was changed(LinkedParticipantCheck) after registration"
+                )
+                return
 
         if LinkedDeadlineService().are_camp_registration_deadline_items_checked(
             visum=visum
@@ -129,6 +138,7 @@ class ChangeHandlerService:
                 "CAMP REGISTRATION DEADLINE complete - OK to send registration email (%s deadline)",
                 "before" if before_camp_registration_deadline else "after",
             )
+
             return InuitsVisumMailService().notify_camp_registered(
                 request=request,
                 visum=visum,
@@ -181,7 +191,9 @@ class ChangeHandlerService:
                 visum=visum
             )
         ):  
+            logger.debug("1. responsible person was changed - sending email")
             InuitsVisumMailService().notify_responsible_changed(
+                request=request,
                 check=instance,
                 before_camp_registration_deadline=before_camp_registration_deadline,
                 now=now,
@@ -197,6 +209,7 @@ class ChangeHandlerService:
         return self._check_deadline_complete(
             request=request,
             visum=visum,
+            instance=instance,
             before_camp_registration_deadline=before_camp_registration_deadline,
             now=now,
             trigger=True,
