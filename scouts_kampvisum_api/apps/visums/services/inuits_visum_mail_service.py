@@ -169,11 +169,13 @@ class InuitsVisumMailService(EmailService):
                 return
         else:
             # After deadline and camp registration mail has not yet been set
-            if not (visum.camp_registration_mail_sent_after_deadline or visum.camp_registration_mail_sent_before_deadline): # tady je chyba má to čekovat i before dl
+            if not (
+                visum.camp_registration_mail_sent_after_deadline
+                or visum.camp_registration_mail_sent_before_deadline
+            ):
                 sending_camp_registration_mail = True
                 template = self.template_camp_registration_after_deadline
-                logger.debug(
-                        "Camp registration mail has been sent")
+                logger.debug("Camp registration mail has been sent")
             # After deadline and camp registration mail has been sent already
             else:
                 sending_camp_changed_mail = True
@@ -182,7 +184,8 @@ class InuitsVisumMailService(EmailService):
                     visum.name
                 )
                 logger.debug(
-                        "Camp registration mail has already been sent - sending mail with changes to the registration")
+                    "Camp registration mail has already been sent - sending mail with changes to the registration"
+                )
 
         if not sending_camp_registration_mail and sending_camp_changed_mail:
             # Only send out 1 email per day for changed checks
@@ -191,12 +194,13 @@ class InuitsVisumMailService(EmailService):
                 hours = time_delta.days * 24 + time_delta.seconds / 3600
 
                 if hours < delta:
-                    logger.debug(
-                        "Camp registration mail has already been sent today")
+                    logger.debug("Camp registration mail has already been sent today")
                     return
 
         dictionary = self._prepare_dictionary_camp_registered(visum=visum)
-        recipient = visum.updated_by.email if visum.updated_by else visum.created_by.email
+        recipient = (
+            visum.updated_by.email if visum.updated_by else visum.created_by.email
+        )
         recipient = VisumSettings.get_camp_registration_notification_to(
             address=recipient, send_to=recipient, label="CAMP REGISTRATION: recipient"
         )
