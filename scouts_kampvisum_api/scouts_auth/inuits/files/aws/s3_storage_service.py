@@ -7,12 +7,14 @@ from storages.backends.s3boto3 import boto3, S3Boto3Storage
 from botocore.config import Config
 from botocore.exceptions import ClientError
 from scouts_auth.inuits.files import CustomStorage, StorageSettings
+from environs import Env
 
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
+env = Env()
 
 
 class S3StorageService(CustomStorage, S3Boto3Storage):
@@ -31,7 +33,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
             's3',
             aws_access_key_id=self.access_key,
             aws_secret_access_key=self.access_secret,
-            endpoint_url='http://localhost:9000',
+            endpoint_url= env.str("S3_ENDPOINT_URL"),
             config=Config(signature_version="v4"),
         )
 
