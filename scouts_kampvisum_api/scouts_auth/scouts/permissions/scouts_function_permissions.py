@@ -15,7 +15,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
-
     authenticated_users_only = True
     perms_map = {
         "GET": ["%(app_label)s.view_%(model_name)s"],
@@ -32,8 +31,14 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
 
         queryset = self._queryset(view)
         perms = self.get_required_permissions(request.method, queryset.model)
-        required_permission = [perm % {'app_label': queryset.model._meta.app_label,
-                                       'model_name': queryset.model._meta.model_name} for perm in self.perms_map[request.method]]
+        required_permission = [
+            perm
+            % {
+                "app_label": queryset.model._meta.app_label,
+                "model_name": queryset.model._meta.model_name,
+            }
+            for perm in self.perms_map[request.method]
+        ]
 
         # logger.info(f"REQUIRED PERMISSION: {required_permission}")
 
@@ -41,34 +46,41 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         # If the user doesn't have the required permission on any auth group, look no further
         if not permission:
             logger.warn(
-                f"Permission {required_permission} not set on method {request.method} or for user", user=request.user)
+                f"Permission {required_permission} not set on method {request.method} or for user",
+                user=request.user,
+            )
             return False
 
         from scouts_auth.groupadmin.models import ScoutsUser
+
         user: ScoutsUser = request.user
 
         if user.has_role_administrator():
             return True
-        
-        if user.has_role_district_commissioner(ignore_group=True) and group_admin_id == "any":
-            print("YES!")
+
+        if (
+            user.has_role_district_commissioner(ignore_group=True)
+            and group_admin_id == "any"
+        ):
             return True
 
-        groups = user.groups.all() # returns auth_groups not scouts_groups
+        groups = user.groups.all()  # returns auth_groups not scouts_groups
         group_roles = user.get_roles_for_group(group_admin_id=group_admin_id)
         # logger.debug(f"PERMISSION GROUPS: {groups}")
         for group in groups:
             for role in group_roles:
-                logger.debug(
-                    f"ROLE FOR GROUP {group_admin_id}: {role}", user=user)
+                logger.debug(f"ROLE FOR GROUP {group_admin_id}: {role}", user=user)
                 permissions: List[str] = [
-                    permission.content_type.app_label + "." + permission.codename for permission in group.permissions.all()]
+                    permission.content_type.app_label + "." + permission.codename
+                    for permission in group.permissions.all()
+                ]
 
                 if any(perm in perms for perm in permissions):
                     return True
 
         logger.warn(
-            f"Permission {required_permission} not granted for user {user.email}")
+            f"Permission {required_permission} not granted for user {user.email}"
+        )
 
         return False
 
@@ -81,11 +93,12 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
                 model = view.queryset.get(pk=view.kwargs.get("pk"))
                 if model.group:
                     request.GET._mutable = True
-                    request.GET['group'] = model.group
+                    request.GET["group"] = model.group
                     request.GET._mutable = False
                 return model.group
             except Exception:
                 pass
 
         raise ScoutsAuthException(
-            f"[{request.user.username}] {request.path}: Permissions can only be set if the group is passed as a GET param and the user object is present")
+            f"[{request.user.username}] {request.path}: Permissions can only be set if the group is passed as a GET param and the user object is present"
+        )
