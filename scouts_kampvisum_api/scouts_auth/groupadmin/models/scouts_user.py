@@ -335,7 +335,7 @@ class ScoutsUser(User):
         ]
 
     def get_scouts_district_commissioner_group_names(self) -> List[str]:
-        return [scouts_group.group_admin_id for scouts_group in self.get_scouts_district_commissioner_groups()]
+        return [(scouts_group.group_admin_id, scouts_group.name) for scouts_group in self.get_scouts_district_commissioner_groups(for_underlying_scouts_groups=True)]
 
     def has_role_shire_president(
         self,

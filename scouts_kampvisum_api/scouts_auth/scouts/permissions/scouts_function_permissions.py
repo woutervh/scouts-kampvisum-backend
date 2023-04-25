@@ -1,3 +1,4 @@
+from typing import List
 from rest_framework import permissions
 
 from django.contrib.auth.models import Group, Permission
@@ -48,8 +49,12 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
 
         if user.has_role_administrator():
             return True
+        
+        if user.has_role_district_commissioner(ignore_group=True) and group_admin_id == "any":
+            print("YES!")
+            return True
 
-        groups = user.groups.all()
+        groups = user.groups.all() # returns auth_groups not scouts_groups
         group_roles = user.get_roles_for_group(group_admin_id=group_admin_id)
         # logger.debug(f"PERMISSION GROUPS: {groups}")
         for group in groups:
@@ -63,7 +68,7 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
                     return True
 
         logger.warn(
-            f"Permission {required_permission} not granted for user", user=request.user)
+            f"Permission {required_permission} not granted for user {user.email}")
 
         return False
 

@@ -136,7 +136,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             scouts_group_admin_ids = request.user.get_scouts_shire_president_groups()
         elif request.user.has_role_district_commissioner(ignore_group=True):
             scouts_group_admin_ids = (
-                request.user.get_scouts_district_commissioner_groups()
+                request.user.get_scouts_district_commissioner_group_names()
             )
 
         return self._list_response(
