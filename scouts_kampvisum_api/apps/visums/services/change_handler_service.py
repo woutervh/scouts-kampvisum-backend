@@ -115,10 +115,10 @@ class ChangeHandlerService:
             visum=visum
         ):
             # Set the visum as signable if all required checks are completed
-            if not visum.is_signable():
+            from apps.visums.models.enums import CampVisumState
+            if visum.state == CampVisumState.DATA_REQUIRED:
                 logger.debug(
                     "Setting CampVisum %s (%s) to state SIGNABLE", visum.name, visum.id)
-                from apps.visums.models.enums import CampVisumState
                 visum.state = CampVisumState.SIGNABLE
                 visum.updated_by = request.user
                 visum.updated_on = timezone.now()
