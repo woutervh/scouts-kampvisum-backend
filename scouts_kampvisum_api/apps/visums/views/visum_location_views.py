@@ -100,42 +100,13 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
                     date_in_range = True
 
             if date_in_range:
-                logistics = LinkedCategory.objects.filter(
-                    category_set__id=campvisum.category_set.id, parent__name="logistics"
-                )
-                for linked_category in logistics:
-                    linked_sub_categories_logistics_locations = (
-                        LinkedSubCategory.objects.filter(
-                            category=linked_category.id,
-                            parent__name="logistics_locations",
-                        )
-                    )
-                    for (
-                        linked_sub_category
-                    ) in linked_sub_categories_logistics_locations:
-                        linked_location_checks = LinkedLocationCheck.objects.filter(
-                            sub_category=linked_sub_category.id,
-                            parent__name="logistics_locations_location",
-                        )
-                        for linked_location_check in linked_location_checks:
-                            for (
-                                linked_location
-                            ) in linked_location_check.locations.all():
-                                for camp_location in CampLocation.objects.filter(
-                                    location_id=linked_location.id
-                                ):
-                                    location = CampLocationMinimalSerializer(
-                                        camp_location, many=False
-                                    ).data
-                                    location["visum_id"] = campvisum.id
-                                    location["name"] = linked_location.name
-                                    location["start_date"] = linked_location.start_date
-                                    location["end_date"] = linked_location.end_date
-                                    location["camp"] = CampMinimalSerializer(
-                                        campvisum, many=False
-                                    ).data
-                                    location["camp"]["group"] = ScoutsGroupSerializer(
-                                        group, many=False
-                                    ).data
-                                    locations.append(location)
+                location = campvisum.location
+                if location:
+                    location["camp"] = CampMinimalSerializer(
+                        campvisum, many=False
+                    ).data
+                    location["camp"]["group"] = ScoutsGroupSerializer(
+                        group, many=False
+                    ).data
+                    locations.append(location)
         return Response(locations)
