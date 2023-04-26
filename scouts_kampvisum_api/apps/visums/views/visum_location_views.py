@@ -12,6 +12,10 @@ from apps.visums.services import CampVisumService
 from apps.locations.models import CampLocation
 from apps.locations.serializers import CampLocationMinimalSerializer
 from apps.camps.serializers import CampMinimalSerializer
+from apps.visums.models import LinkedCategory
+from apps.visums.models import LinkedSubCategory
+from apps.visums.models import LinkedLocationCheck
+from apps.camps.models.camp_year import CampYear
 
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 from scouts_auth.groupadmin.serializers.scouts_group_serializer import (
@@ -23,10 +27,6 @@ from scouts_auth.groupadmin.models.scouts_user import ScoutsUser
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
-from apps.visums.models import LinkedCategory
-from apps.visums.models import LinkedSubCategory
-from apps.visums.models import LinkedLocationCheck
-from apps.visums.models import LinkedDurationCheck
 
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class CampVisumLocationViewSet(viewsets.GenericViewSet):
     """
-    A viewset for viewing and editing camp instances.
+    A viewset for viewing camp location.
     """
 
     serializer_class = CampLocationMinimalSerializer
@@ -53,52 +53,53 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
 
         user: ScoutsUser = request.user
         group_admin_id = self.request.GET.get("group", None)
-        group: ScoutsGroup = user.get_scouts_group(group_admin_id)
-        campvisums = set(CampVisum.objects.all().filter(group=group_admin_id))
+        year: int = self.request.GET.get("year")
+        year: CampYear = CampYear.objects.get(year=year)
+
+        if group_admin_id == "any":
+            campvisums = set(CampVisum.objects.all().filter(year=year))
+        else:
+            campvisums = set(
+                CampVisum.objects.all().filter(group=group_admin_id, year=year)
+            )
+
         locations = list()
-        in_range = True
+        date_in_range = True
+
+        if request.query_params.get("start_date"):
+            start_date = datetime.strptime(
+                request.query_params.get("start_date"),
+                "%Y-%m-%d",
+            ).date()
+        else:
+            start_date = None
+
+        if request.query_params.get("end_date"):
+            end_date = datetime.strptime(
+                request.query_params.get("end_date"),
+                "%Y-%m-%d",
+            ).date()
+        else:
+            end_date = None
+
         for campvisum in campvisums:
-            if request.query_params.get("start_date") and request.query_params.get(
-                "end_date"
-            ):
-                in_range = False
-                plannings = LinkedCategory.objects.filter(
-                    category_set__id=campvisum.category_set.id, parent__name="planning"
-                )
-                for planning in plannings:
-                    linked_sub_categories_planning_date = (
-                        LinkedSubCategory.objects.filter(
-                            category=planning.id, parent__name="planning_date"
-                        )
-                    )
-                    for linked_planning_date in linked_sub_categories_planning_date:
-                        logger.debug(linked_planning_date)
-                        linked_planning_date_leaders_checks = (
-                            LinkedDurationCheck.objects.filter(
-                                sub_category=linked_planning_date.id,
-                                parent__name="planning_date_leaders",
-                            )
-                        )
-                        for (
-                            linked_planning_date_leaders_check
-                        ) in linked_planning_date_leaders_checks:
-                            if (
-                                linked_planning_date_leaders_check.start_date
-                                and linked_planning_date_leaders_check.end_date
-                                and (
-                                    linked_planning_date_leaders_check.start_date
-                                    <= datetime.strptime(
-                                        request.query_params.get("end_date"), "%Y-%m-%d"
-                                    ).date()
-                                    and linked_planning_date_leaders_check.end_date
-                                    >= datetime.strptime(
-                                        request.query_params.get("start_date"),
-                                        "%Y-%m-%d",
-                                    ).date()
-                                )
-                            ):
-                                in_range = True
-            if in_range:
+            group: ScoutsGroup = user.get_scouts_group(campvisum.group)
+            if start_date and end_date:
+                date_in_range = False
+                if (campvisum.start_date and campvisum.start_date >= start_date) and (
+                    campvisum.end_date and campvisum.end_date <= end_date
+                ):
+                    date_in_range = True
+            elif start_date:
+                date_in_range = False
+                if campvisum.start_date and campvisum.start_date >= start_date:
+                    date_in_range = True
+            elif end_date:
+                date_in_range = False
+                if campvisum.end_date and campvisum.end_date <= end_date:
+                    date_in_range = True
+
+            if date_in_range:
                 logistics = LinkedCategory.objects.filter(
                     category_set__id=campvisum.category_set.id, parent__name="logistics"
                 )
