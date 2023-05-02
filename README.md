@@ -327,4 +327,3 @@ In frontend repo: `/src/locales/nl.json`
 2. **`insomnia`**  
    Sets up test data and returns a dict of uuid's to use in insomnia.  
    This command should only be ran in a development environment, as it makes some changes to the db.  
-   P
