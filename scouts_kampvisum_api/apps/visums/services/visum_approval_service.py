@@ -223,6 +223,8 @@ class CampVisumApprovalService:
                 )
 
                 state = CampVisumState.NOT_SIGNABLE
+            elif approval == CampVisumApprovalState.APPROVED_FEEDBACK:
+                state = CampVisumState.REVIEWED_FEEDBACK
             else:
                 if global_approval:
                     disapproved_sub_categories: List[
@@ -233,6 +235,14 @@ class CampVisumApprovalService:
                     else:
                         # Party !
                         state = CampVisumState.APPROVED
+                elif approval == CampVisumApprovalState.APPROVED:
+                    disapproved_sub_categories: List[
+                        LinkedSubCategory
+                    ] = LinkedSubCategory.objects.all().can_be_acknowledged(visum=visum)
+                    if disapproved_sub_categories.count() > 0:
+                        state = CampVisumState.REVIEWED_FEEDBACK
+                    else:
+                        state = CampVisumState.SIGNABLE
                 else:
                     state = visum.state
 
