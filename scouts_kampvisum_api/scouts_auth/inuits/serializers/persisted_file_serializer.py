@@ -26,7 +26,6 @@ class PersistedFileSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         logger.debug("PERSISTED FILE SERIALIZER TO INTERNAL VALUE: %s", data)
-        data["uuid_location"] = data.get("uuid_location")
 
         # If an id is present, assume it is a simple instance input
         file = PersistedFile.objects.safe_get(pk=data.get("id", None))
@@ -48,7 +47,6 @@ class PersistedFileSerializer(serializers.ModelSerializer):
             "id": value.id,
             "name": self.get_name(value),
             "original_name": value.original_name,
-            "directory_path": value.directory_path,
             "content_type": value.content_type,
             "created_by": value.created_by,
             "created_on": value.created_on,

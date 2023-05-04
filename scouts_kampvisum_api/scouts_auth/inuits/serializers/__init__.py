@@ -23,5 +23,3 @@ from .inuits_country_serializer import InuitsCountrySerializer
 from .inuits_address_serializer import InuitsAddressSerializer
 from .inuits_person_serializer import InuitsPersonSerializer
 from .persisted_file_serializer import PersistedFileSerializer, PersistedFileDetailedSerializer
-from .s3_file_serializer import (
-    S3FileSerializer, S3PresignedUrlFileSerializer, S3PresignedUrlPostFileSerializer)

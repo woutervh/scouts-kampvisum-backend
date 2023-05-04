@@ -13,8 +13,6 @@ from scouts_auth.inuits.filters import PersistedFileFilter
 from scouts_auth.inuits.services import PersistedFileService
 from scouts_auth.inuits.serializers import PersistedFileSerializer, PersistedFileDetailedSerializer
 
-from scouts_auth.inuits.files.aws import S3StorageService
-
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
@@ -36,7 +34,6 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
 
     persisted_file_service = PersistedFileService()
     authorization_service = ScoutsPermissionService()
-    s3_file_service = S3StorageService()
 
     def get_queryset(self):
         return PersistedFile.objects.allowed(group=self.request.GET.get("group"))
@@ -70,11 +67,14 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: PersistedFileSerializer})
     def retrieve(self, request, pk=None):
         """
-        Gets and returns a s3 link to upload a file towards.
+        Gets and returns a PersistedFile instance from the db.
         """
+
         instance = self.get_object()
-        presigned_url = self.s3_file_service.generate_presigned_url(instance.directory_path + '/' + instance.original_name)
-        return Response(presigned_url)
+        serializer = PersistedFileDetailedSerializer(
+            instance, context={"request": request})
+
+        return Response(serializer.data)
 
     @swagger_auto_schema(
         request_body=PersistedFileSerializer,
