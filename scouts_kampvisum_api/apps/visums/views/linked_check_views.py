@@ -693,6 +693,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
     )
     def search_files(self, request):
+        
         term = self.request.GET.get("term", None)
         group_admin_id = self.request.GET.get("group", None)
         if term and not group_admin_id:
@@ -706,6 +707,12 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                 PersistedFile.objects.allowed(group_admin_id).filter(original_name__icontains=term)
             )
             
+            is_admin = request.user.has_role_administrator()
+            if is_admin:
+                instances = (
+                    PersistedFile.objects.filter(original_name__icontains=term)
+                )
+                
             page = self.paginate_queryset(instances)
             if page is not None:
                 serializer = PersistedFileSerializer(page, many=True)
@@ -714,11 +721,12 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                 serializer = PersistedFileSerializer(instances, many=True)
                 return Response(serializer.data)
 
-        return self._list(
-            self.get_queryset().filter(
-                parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK
-            )
-        )
+        return Response('Term can not be empty')
+        # return self._list(
+        #     self.get_queryset().filter(
+        #         parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK
+        #     )
+        # )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCommentCheckSerializer})
     def retrieve_comment_check(self, request, check_id=None):
