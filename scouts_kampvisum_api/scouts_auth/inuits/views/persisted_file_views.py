@@ -1,3 +1,4 @@
+from http.client import NOT_FOUND
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
@@ -69,12 +70,21 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         """
         Gets and returns a PersistedFile instance from the db.
         """
-
-        instance = self.get_object()
+        try:
+            instance = self.get_object(pk)
+        except PersistedFile.DoesNotExist:
+            raise NOT_FOUND("PersistedFile not found.")
+        except PersistedFile.MultipleObjectsReturned:
+            # This should not happen if the primary key is unique.
+            raise Exception("Multiple PersistedFile objects returned for the same primary key.")
+        
         serializer = PersistedFileDetailedSerializer(
             instance, context={"request": request})
 
         return Response(serializer.data)
+
+    def get_object(self, pk):
+        return PersistedFile.objects.filter(pk=pk).get()
 
     @swagger_auto_schema(
         request_body=PersistedFileSerializer,
