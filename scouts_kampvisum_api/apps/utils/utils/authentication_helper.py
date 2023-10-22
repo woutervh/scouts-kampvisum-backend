@@ -42,7 +42,7 @@ class AuthenticationHelper:
 
     @staticmethod
     def has_rights_for_group(user: settings.AUTH_USER_MODEL, group_admin_id: str = None) -> bool:
-        AuthenticationHelper.load_groups(user=user))
+        AuthenticationHelper.load_groups(user=user)
 
         if user.has_role_administrator():
             return True
