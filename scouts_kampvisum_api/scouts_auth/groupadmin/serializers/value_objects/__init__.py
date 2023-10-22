@@ -43,3 +43,40 @@ from .ga_response_member_search_serializer import (
 from .ga_member_medical_flash_card_serializer import (
     AbstractScoutsMedicalFlashCardSerializer,
 )
+
+
+__all__ = [
+    # value_objects
+    "AbstractScoutsGeoCoordinateSerializer",
+    "AbstractScoutsPositionSerializer",
+    "AbstractScoutsValueSerializer",
+    "AbstractScoutsLinkSerializer",
+    "AbstractScoutsContactSerializer",
+    "AbstractScoutsAddressSerializer",
+    "AbstractScoutsGroupSpecificFieldSerializer",
+    "AbstractScoutsGroupSerializer",
+    "AbstractScoutsGroupingSerializer",
+    "AbstractScoutsFunctionDescriptionSerializer",
+    "AbstractScoutsFunctionSerializer",
+    "ScoutsAllowedCallsSerializer",
+    "AbstractScoutsResponseSerializer",
+    "AbstractScoutsMemberPersonalDataSerializer",
+    "AbstractScoutsMemberGroupAdminDataSerializer",
+    "AbstractScoutsMemberScoutsDataSerializer",
+    "AbstractScoutsMemberSerializer",
+    "AbstractScoutsMemberSearchFrontendSerializer",
+    "AbstractScoutsMemberFrontendSerializer",
+    "AbstractScoutsGroupListResponseSerializer",
+    "AbstractScoutsFunctionDescriptionListResponseSerializer",
+    "AbstractScoutsFunctionListResponseSerializer",
+    "AbstractScoutsMemberListMemberSerializer",
+    "AbstractScoutsMemberListResponseSerializer",
+    "AbstractScoutsMemberSearchMemberSerializer",
+    "AbstractScoutsMemberSearchResponseSerializer",
+    "AbstractScoutsMedicalFlashCardSerializer",
+    # serializers
+    "ScoutsGroupSerializer",
+    "ScoutsFunctionSerializer",
+    "ScoutsUserSerializer",
+    "ScoutsUserSessionSerializer",
+]

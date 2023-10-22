@@ -3,3 +3,12 @@ from .oidc_refresh_view import OIDCRefreshView
 from .logout_view import LogoutView
 from .current_user_view import CurrentUserView
 from .permissions_view import PermissionsViewSet
+
+
+__all__ = [
+    "OIDCAuthCodeView",
+    "OIDCRefreshView",
+    "LogoutView",
+    "CurrentUserView",
+    "PermissionsViewSet",
+]

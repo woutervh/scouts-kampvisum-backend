@@ -5,3 +5,12 @@ from .ga_member_viewset import AbstractScoutsMemberView
 from .ga_member_medical_flash_card_viewset import (
     AbstractScoutsMemberMedicalFlashCardView,
 )
+
+
+__all__ = [
+    "ScoutsAllowedCallsView",
+    "AbstractScoutsFunctionView",
+    "AbstractScoutsGroupView",
+    "AbstractScoutsMemberView",
+    "AbstractScoutsMemberMedicalFlashCardView",
+]

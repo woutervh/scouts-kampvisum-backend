@@ -30,3 +30,32 @@ from .ga_response_member_list import (
     AbstractScoutsMemberListResponse,
 )
 from .ga_medical_flash_card import AbstractScoutsMedicalFlashCard
+
+
+__all__ = [
+    "AbstractScoutsGeoCoordinate",
+    "AbstractScoutsPosition",
+    "AbstractScoutsValue",
+    "AbstractScoutsLink",
+    "AbstractScoutsContact",
+    "AbstractScoutsAddress",
+    "AbstractScoutsGroupSpecificField",
+    "AbstractScoutsGroup",
+    "AbstractScoutsGrouping",
+    "AbstractScoutsFunctionDescription",
+    "AbstractScoutsFunction",
+    "ScoutsAllowedCalls",
+    "AbstractScoutsResponse",
+    "AbstractScoutsMemberSearchMember",
+    "AbstractScoutsMemberSearchResponse",
+    "AbstractScoutsMemberPersonalData",
+    "AbstractScoutsMemberGroupAdminData",
+    "AbstractScoutsMemberScoutsData",
+    "AbstractScoutsMember",
+    "AbstractScoutsGroupListResponse",
+    "AbstractScoutsFunctionDescriptionListResponse",
+    "AbstractScoutsFunctionListResponse",
+    "AbstractScoutsMemberListMember",
+    "AbstractScoutsMemberListResponse",
+    "AbstractScoutsMedicalFlashCard",
+]

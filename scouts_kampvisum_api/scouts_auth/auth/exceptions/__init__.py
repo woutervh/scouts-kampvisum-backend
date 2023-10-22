@@ -4,3 +4,11 @@ from .exceptions import (
     TokenRefreshException,
     InvalidArgumentException,
 )
+
+
+__all__ = [
+    "ScoutsAuthException",
+    "TokenRequestException",
+    "TokenRefreshException",
+    "InvalidArgumentException",
+]
